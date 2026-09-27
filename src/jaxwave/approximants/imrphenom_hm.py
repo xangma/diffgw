@@ -197,8 +197,10 @@ def _production_hhat(
     eta: jnp.ndarray,
     chi_s: jnp.ndarray,
     chi_a: jnp.ndarray,
+    *,
+    hm_21_pn_variant: str = "binary_compatible",
 ) -> jnp.ndarray:
-    """London Eq. (4) complex Arun-compatible multipole amplitude factors."""
+    """London Eq. (4) factors with selectable (2,1) PN spin convention."""
     if (l, m) == (2, 2):
         return -jnp.ones_like(v_m)
     if (l, m) == (3, 3):
@@ -218,7 +220,9 @@ def _production_hhat(
         ) * chi_s
         one = jnp.ones_like(v_m)
         c_tail = delta * (-PI * one + 1j * (-0.5 - 2.0 * math.log(2.0)) * one)
-        c = c_tail + c_spa + c_td
+        # The published Mishra Eq. (12b) polynomial is opt-in; the default
+        # retains the established binary-compatible HM carrier.
+        c = c_tail + c_spa + (c_td if hm_21_pn_variant == "mishra_eq12b" else -c_td)
         return -(math.sqrt(2.0) / 3.0) * (
             delta * v_m
             - 1.5 * (chi_a + delta * chi_s) * (v_m * v_m)
@@ -394,6 +398,7 @@ class IMRPhenomHM:
         sample_frequencies: Optional[jnp.ndarray] = None,
         base_22=None,
         hm_mapping_transitions: str = "phenomd_runtime",
+        hm_21_pn_variant: str = "binary_compatible",
     ) -> Union[
         Tuple[jnp.ndarray, jnp.ndarray],
         Tuple[jnp.ndarray, jnp.ndarray, Dict[Tuple[int, int], Union[Tuple[jnp.ndarray, jnp.ndarray], jnp.ndarray]]],
@@ -406,8 +411,12 @@ class IMRPhenomHM:
                 raise ValueError("Must provide frequency grid via 'f' or 'sample_frequencies'")
         if hm_mapping_transitions not in ("phenomd_runtime", "london_2018"):
             raise ValueError(f"Unknown HM mapping transitions: {hm_mapping_transitions}")
+        if hm_21_pn_variant not in ("binary_compatible", "mishra_eq12b"):
+            raise ValueError(f"Unknown HM (2,1) PN variant: {hm_21_pn_variant}")
         if hm_mapping_transitions == "london_2018" and base_22 not in (None, IMRPhenomD):
             raise ValueError("london_2018 HM mapping transitions require the D carrier")
+        if hm_21_pn_variant == "mishra_eq12b" and base_22 not in (None, IMRPhenomD):
+            raise ValueError("mishra_eq12b HM (2,1) PN variant requires the D carrier")
 
         dtype = jnp.float64
         f_arr = as_array(f, dtype=dtype)
@@ -603,14 +612,23 @@ class IMRPhenomHM:
                 ga_safe = f_map_amp_safe
                 v_ga = (2.0 * PI * ga_safe / float(m)) ** (1.0 / 3.0)
                 v_x = (2.0 * PI * x_safe / float(m)) ** (1.0 / 3.0)
-                hhat_ga = _production_hhat(l, m, v_ga, delta_eval, eta_eval, chi_s_eval, chi_a_eval)
-                hhat_x = _production_hhat(l, m, v_x, delta_eval, eta_eval, chi_s_eval, chi_a_eval)
+                hhat_ga = _production_hhat(
+                    l, m, v_ga, delta_eval, eta_eval, chi_s_eval, chi_a_eval,
+                    hm_21_pn_variant=hm_21_pn_variant,
+                )
+                hhat_x = _production_hhat(
+                    l, m, v_x, delta_eval, eta_eval, chi_s_eval, chi_a_eval,
+                    hm_21_pn_variant=hm_21_pn_variant,
+                )
                 hlm_ga = hhat_ga * (v_ga ** -3.5)
                 hlm_x = hhat_x * (v_x ** -3.5)
                 h22_ga = -((2.0 * PI * ga_safe / 2.0) ** (1.0 / 3.0)) ** -3.5
                 mode_at_22_x = 2.0 * x_safe / float(m)
                 v_22_x = (2.0 * PI * mode_at_22_x / float(m)) ** (1.0 / 3.0)
-                h22_at_x = _production_hhat(l, m, v_22_x, delta_eval, eta_eval, chi_s_eval, chi_a_eval) * (v_22_x ** -3.5)
+                h22_at_x = _production_hhat(
+                    l, m, v_22_x, delta_eval, eta_eval, chi_s_eval, chi_a_eval,
+                    hm_21_pn_variant=hm_21_pn_variant,
+                ) * (v_22_x ** -3.5)
                 tiny = jnp.finfo(dtype).tiny
                 nonzero = jnp.abs(h22_at_x) > tiny
                 safe_h22_at_x = jnp.where(nonzero, h22_at_x, 1.0)

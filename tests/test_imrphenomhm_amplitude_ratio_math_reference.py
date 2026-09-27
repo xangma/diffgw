@@ -249,7 +249,8 @@ def test_public_beta21_values_and_one_sided_slopes(backend, variant, case):
                        tc=0.0, f_ref=None)
     mode = np.asarray(model(
         f=array(x / m_seconds), hm_mapping_transitions=variant,
-        return_unprojected_modes=True, **public_args)[2][(2, 1)])
+        hm_21_pn_variant="mishra_eq12b", return_unprojected_modes=True,
+        **public_args)[2][(2, 1)])
     if name == "torch":
         hp, _ = module.IMRPhenomD()(f=array(mapped / m_seconds), **public_args)
     else:
@@ -288,7 +289,30 @@ def test_public_beta21_symmetric_zero(backend, variant):
                        tc=0.0, f_ref=None)
     mode = np.asarray(model(
         f=array(x / ((m1 + m2) * float(module.MSUN_SEC))),
-        hm_mapping_transitions=variant, return_unprojected_modes=True,
+        hm_mapping_transitions=variant, hm_21_pn_variant="mishra_eq12b",
+        return_unprojected_modes=True,
         **public_args)[2][(2, 1)])
     assert np.all(np.isfinite(mode))
     np.testing.assert_array_equal(mode, np.zeros_like(mode))
+
+
+def test_public_beta21_default_and_paper_variant_are_separate(backend):
+    """The existing default stays exact while the paper option is observable."""
+    _, module, array = backend
+    model = module.IMRPhenomHM(modes=((2, 1),))
+    args = dict(
+        f=array([70.0, 100.0]), mass1=35.0, mass2=20.0,
+        chi1=0.2, chi2=-0.1, distance=100.0, inclination=0.0,
+        phic=0.0, tc=0.0, f_ref=None, return_unprojected_modes=True,
+    )
+
+    def mode(**options):
+        return np.asarray(model(**args, **options)[2][(2, 1)])
+
+    default = mode()
+    explicit_default = mode(hm_21_pn_variant="binary_compatible")
+    paper = mode(hm_21_pn_variant="mishra_eq12b")
+    np.testing.assert_array_equal(default, explicit_default)
+    assert np.max(np.abs(default - paper)) / np.max(np.abs(default)) > 1e-6
+    with pytest.raises(ValueError, match="Unknown HM \\(2,1\\) PN variant"):
+        mode(hm_21_pn_variant="unknown")

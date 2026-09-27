@@ -18,9 +18,17 @@ $\chi_a(4771/1344-11941\eta/336)+\delta\chi_s(4771/1344-2549\eta/336)
 +\delta[-\pi-i(1/2+2\log2)]$. With $\delta^2=1-4\eta$, both native
 production implementations had used `c_tail + c_spa - c_td`, yielding
 $\chi_a(3427/1344-2101\eta/336)+\delta\chi_s(3427/1344-965\eta/336)$
-for the spin terms. The production correction is exactly one sign per
-frontend: `- c_td` to `+ c_td` in Torch and JAX `_production_hhat` for
-(2,1). No source coefficient, map, D carrier, or tolerance was changed.
+for the spin terms. The initial correction changed `- c_td` to `+ c_td`
+in both frontends. Exact-head CI run
+[36294348734](https://github.com/xangma/diffgw/actions/runs/36294348734)
+then failed the strict binary-oracle gate only for
+`IMRPhenomHM_diagnostic` and `IMRPhenomHM_holdout_5`; all other catalog
+and holdout cases passed. The printed equation and the established binary
+behavior therefore need distinct claims. The public default now keeps
+`- c_td` as `hm_21_pn_variant="binary_compatible"`, while
+`hm_21_pn_variant="mishra_eq12b"` selects the printed `+ c_td` coefficient.
+The source gate explicitly selects the latter. Neither source coefficient,
+map, D carrier, nor tolerance changed.
 
 Host `len`; original base `b111a76`; isolated branch
 `codex/hm-leading-44-amplitude`; source copied to
@@ -51,11 +59,13 @@ maximum absolute discrepancy `0.05467972`, maximum relative discrepancy
 `0.57887378`; the first measured/expected ratio was
 `0.031046`/`0.025903`.
 
-After the two-line correction, the exact ratio-file suffix was
+After the initial two-line correction, the exact ratio-file suffix was
 `tests/test_imrphenomhm_amplitude_ratio_math_reference.py
 --reference-device=cpu -ra`. Log:
 `/home/xangma/tmp/diffgw-hm21-source-gate-20260927/hm21-green.log`;
-**32 passed in 44.14 s**, no skips or warnings. The independent source
+**32 passed in 44.14 s**, no skips or warnings. This was before the
+binary-compatible default was restored; the tests now select
+`mishra_eq12b` explicitly. The independent source
 reduction and printed coefficients are exact symbolic checks. For the
 public quotient, the frozen tolerance is `rtol=1e-10, atol=1e-12`;
 for one-sided join secants at geometric step `1e-7`, it is
@@ -77,9 +87,33 @@ tests/test_imrphenom_hm.py tests/test_phenomhm_reconstruction.py
 warning.
 
 This is source fidelity for the printed 1.5PN (2,1) amplitude ratio and
-sampled implementation agreement through the public mode. The public
+sampled implementation agreement through the public opt-in mode. The public
 quotient necessarily uses the native D carrier and QNM frequencies as
 supplied inputs; it is not an independent qualification of either.
 Higher PN terms, odd-mode phase/parity, projection, LAL agreement,
 physical accuracy, and the complete HM waveform remain unqualified.
 No LAL code, constants, or binary output entered these tests.
+
+## Binary-compatible default and explicit paper option
+
+The integrated checkout at `9cbb2a2` initially put the printed coefficient
+on the default path. The strict binary oracle in CI run 36294348734 failed
+only `IMRPhenomHM_diagnostic` and `IMRPhenomHM_holdout_5` (18/19 catalog
+and 15/16 holdout cases passed). The subsequent remedy restored the old
+`- c_td` default and named the printed `+ c_td` path `mishra_eq12b`; the
+source gate explicitly selects the latter. This preserves the existing
+binary and paper gates with their original tolerances.
+
+The remedy was checked on `len` in the isolated tree
+`/home/xangma/tmp/diffgw-hm21-dual-variant-20260927`, using the environment
+prefix above. The amplitude-ratio file passed **34 tests in 47.93 s**,
+including a new public default-versus-explicit-default equality and paper
+option distinction for Torch and JAX; log `hm21-dual-source.log`. Direct
+strict replay through the frozen parity harness passed both formerly failing
+cases; log `hm21-dual-binary.log`. The diagnostic plus/cross complex L2
+errors were `1.0523665e-7`/`1.0669251e-7`; holdout_5 errors were
+`5.5745474e-7`/`5.4138847e-7`, all below the unchanged `1e-6` gate.
+The corresponding PSD mismatches were at most `1.6432e-14` and
+`1.1969e-12`, below the unchanged `1e-8` gate. This replay did not rerun
+the whole strict catalog; the earlier CI run already showed its other
+cases passing at the same integrated head.

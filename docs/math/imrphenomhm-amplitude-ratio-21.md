@@ -11,7 +11,11 @@ print the corresponding complete SPA polynomial through $V_1^4$.
 This source-first version froze the equation and gate before the scalar,
 production correction, and public checks. The sampled CPU FP64 gate passed
 on `len`; see the [validation receipt](../validation/imrphenomhm_amplitude_ratio_21_20260927.md).
-It is not a whole-HM qualification.
+The printed equation is available through the public
+`hm_21_pn_variant="mishra_eq12b"` option. The default
+`hm_21_pn_variant="binary_compatible"` preserves the established HM binary
+behavior; the source gate does not assert that the printed equation is the
+binary model. This is not a whole-HM qualification.
 
 ## Inputs, conventions, and options
 
@@ -27,7 +31,8 @@ component excludes that point. Equal masses with unequal spins are valid.
 The public `hm_mapping_transitions` setting chooses `phenomd_runtime`
 (default) or `london_2018` outer amplitude-map cutoff. The D carrier,
 QNM frequencies, phase, distance, and projection remain supplied by the
-public assembly. The two Eq. (5) joins are $f_0^A$ and $f_{21}^{\rm RD}$;
+public assembly. The `mishra_eq12b` option requires that D carrier.
+The two Eq. (5) joins are $f_0^A$ and $f_{21}^{\rm RD}$;
 one-sided slopes are used there.
 
 ## Mathematics and components
@@ -69,7 +74,7 @@ amplitude ratio independent of the path toward this point is claimed.
 
 | Component | Source | Scalar | Native production | Gate |
 | --- | --- | --- | --- | --- |
-| `hm.amp.beta21.1p5pn.eq4.v1` | London Eqs. (3)–(4); Mishra Eqs. (11), (12a), (12b) | `diffgw_reference.imrphenomhm_amplitude_ratio` | Torch/JAX public `IMRPhenomHM` D-carrier (2,1) | `test_imrphenomhm_amplitude_ratio_math_reference.py` |
+| `hm.amp.beta21.1p5pn.eq4.v1` | London Eqs. (3)–(4); Mishra Eqs. (11), (12a), (12b) | `diffgw_reference.imrphenomhm_amplitude_ratio` | Torch/JAX public `IMRPhenomHM` D-carrier (2,1) with `hm_21_pn_variant="mishra_eq12b"` | `test_imrphenomhm_amplitude_ratio_math_reference.py` |
 
 ## Implementation mapping
 
@@ -78,7 +83,7 @@ envelopes, and separately reduce the printed $v^4$ spin coefficients.
 An mpmath scalar evaluates $P$, $B$, $|B|$, the Eq. (5) composition, and
 the analytic one-sided magnitude slopes. It imports no native helper or
 calibration data. The public test divides the unprojected Torch/JAX (2,1)
-mode magnitude by the public PhenomD (2,2) carrier magnitude at the
+mode magnitude with `hm_21_pn_variant="mishra_eq12b"` by the public PhenomD (2,2) carrier magnitude at the
 independently mapped frequency. This checks the production-called ratio,
 including its complex polynomial, through Eq. (3). It does not use the
 older public `h_hat_multipole` helper as a substitute for production.
@@ -97,8 +102,9 @@ spin coefficients, a hand-reduced nonspinning scalar, equal-mass unequal-spin
 nonzero behavior, and rejection of the $0/0$ equal-mass equal-spin point.
 Capture the pre-correction public failure before changing production.
 The [receipt](../validation/imrphenomhm_amplitude_ratio_21_20260927.md)
-records that failure, the two-line production correction, and the passing
-source/public and neighboring HM checks.
+records that failure, the source-option implementation, and the passing
+source/public and neighboring HM checks. The strict binary oracle separately
+qualifies the default `binary_compatible` option.
 
 Passing this gate establishes only the sampled (2,1) 1.5PN magnitude
 factor. Higher PN orders, independent QNM and D-amplitude correctness,

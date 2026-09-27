@@ -282,6 +282,8 @@ def _production_hhat(
     eta: torch.Tensor,
     chi_s: torch.Tensor,
     chi_a: torch.Tensor,
+    *,
+    hm_21_pn_variant: str = "binary_compatible",
 ) -> torch.Tensor:
     if (l, m) == (2, 2):
         return -torch.ones_like(v_m)
@@ -307,7 +309,10 @@ def _production_hhat(
             -math.pi * one,
             (-0.5 - 2.0 * math.log(2.0)) * one,
         )
-        c = c_tail + c_spa + c_td
+        # Keep the established binary-compatible carrier as the default.
+        # Mishra Eq. (12b) prints the opposite sign for this TD spin term;
+        # expose that source-traceable polynomial as an explicit variant.
+        c = c_tail + c_spa + (c_td if hm_21_pn_variant == "mishra_eq12b" else -c_td)
         return -(torch.sqrt(v_m.new_tensor(2.0)) / 3.0) * (
             delta * v_m
             - 1.5 * (chi_a + delta * chi_s) * v_m.square()
@@ -907,6 +912,7 @@ class IMRPhenomHM(nn.Module):
         reference_frame: Optional[str] = None,
         sample_frequencies: Optional[torch.Tensor] = None,
         hm_mapping_transitions: str = "phenomd_runtime",
+        hm_21_pn_variant: str = "binary_compatible",
     ) -> Union[
         Tuple[torch.Tensor, torch.Tensor],
         Tuple[torch.Tensor, torch.Tensor, Dict[Tuple[int, int], Union[Tuple[torch.Tensor, torch.Tensor], torch.Tensor]]],
@@ -927,8 +933,12 @@ class IMRPhenomHM(nn.Module):
 
         if hm_mapping_transitions not in ("phenomd_runtime", "london_2018"):
             raise ValueError(f"Unknown HM mapping transitions: {hm_mapping_transitions}")
+        if hm_21_pn_variant not in ("binary_compatible", "mishra_eq12b"):
+            raise ValueError(f"Unknown HM (2,1) PN variant: {hm_21_pn_variant}")
         if hm_mapping_transitions == "london_2018" and not isinstance(self.base_22, IMRPhenomD):
             raise ValueError("london_2018 HM mapping transitions require the D carrier")
+        if hm_21_pn_variant == "mishra_eq12b" and not isinstance(self.base_22, IMRPhenomD):
+            raise ValueError("mishra_eq12b HM (2,1) PN variant requires the D carrier")
 
         # Keep custom/XAS carriers on the established opaque-carrier path.
         # The Torch-native London route below relies on the IMRPhenomD
@@ -1191,14 +1201,23 @@ class IMRPhenomHM(nn.Module):
                 ga_safe = f_map_amp_safe
                 v_ga = torch.pow(2.0 * PI * ga_safe / float(m), 1.0 / 3.0)
                 v_x = torch.pow(2.0 * PI * x_safe / float(m), 1.0 / 3.0)
-                hhat_ga = _production_hhat(l, m, v_ga, delta_eval, eta_eval, chi_s_eval, chi_a_eval)
-                hhat_x = _production_hhat(l, m, v_x, delta_eval, eta_eval, chi_s_eval, chi_a_eval)
+                hhat_ga = _production_hhat(
+                    l, m, v_ga, delta_eval, eta_eval, chi_s_eval, chi_a_eval,
+                    hm_21_pn_variant=hm_21_pn_variant,
+                )
+                hhat_x = _production_hhat(
+                    l, m, v_x, delta_eval, eta_eval, chi_s_eval, chi_a_eval,
+                    hm_21_pn_variant=hm_21_pn_variant,
+                )
                 hlm_ga = hhat_ga * v_ga.pow(-3.5)
                 hlm_x = hhat_x * v_x.pow(-3.5)
                 h22_ga = -torch.pow(2.0 * PI * ga_safe / 2.0, 1.0 / 3.0).pow(-3.5)
                 mode_at_22_x = 2.0 * x_safe / float(m)
                 v_22_x = torch.pow(2.0 * PI * mode_at_22_x / float(m), 1.0 / 3.0)
-                h22_at_x = _production_hhat(l, m, torch.pow(2.0 * PI * mode_at_22_x / float(m), 1.0 / 3.0), delta_eval, eta_eval, chi_s_eval, chi_a_eval) * v_22_x.pow(-3.5)
+                h22_at_x = _production_hhat(
+                    l, m, v_22_x, delta_eval, eta_eval, chi_s_eval, chi_a_eval,
+                    hm_21_pn_variant=hm_21_pn_variant,
+                ) * v_22_x.pow(-3.5)
                 tiny = torch.finfo(dtype).tiny
                 nonzero = torch.abs(h22_at_x) > tiny
                 safe_h22_at_x = torch.where(nonzero, h22_at_x, torch.ones_like(h22_at_x))
