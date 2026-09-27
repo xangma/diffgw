@@ -63,6 +63,16 @@ the six-mode sum at source angles and nonzero phase/time shifts.
 
 ## Evidence and limitations
 
+The focused CPU FP64 gate covers six per-mode complex plus/cross contributions
+and their sum at face-on, edge-on, and two generic inclinations with nonzero
+azimuth, orbital phase, and time shift. It separately checks the `m=2` pole
+selection, odd-ℓ orientation, azimuth/phase/time covariance, body-exchange
+`(-1)^m` parity, and the equal-mass/equal-spin odd-mode zero. The reference
+builds all harmonics with SymPy Wigner matrices and evaluates them with
+50-digit mpmath; it imports no Torch/JAX projection helper.
+[The focused len validation](../validation/imrphenomhm_projection_20260927.md)
+passed 13/13 strict math-reference cases on both frontends, with no skips.
+
 This component is conditional on the public positive-frequency carrier
 adapter above. It checks source harmonic normalization, the six angular
 coefficients, and their assembly with live carriers. It cannot qualify the
@@ -72,5 +82,5 @@ is implied by passing this gate.
 
 ## Reproduce the checks
 
-With SymPy, Torch, JAX, and pytest installed, run
+With SymPy, mpmath, Torch, JAX, and pytest installed, run
 `PYTHONPATH=src JAX_ENABLE_X64=1 JAX_PLATFORMS=cpu python -m pytest -q tests/test_imrphenomhm_projection_math_reference.py`.
