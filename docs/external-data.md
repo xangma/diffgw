@@ -72,3 +72,9 @@ projected-strain holdout has a [frozen protocol](validation/imrphenomhm_sxs_3619
 external-data preparation script, and strict test. Its model matches pass, but
 its predeclared Lev2–Lev3 resolution screen fails, so it supplies no physical
 qualification. Its raw and derived SXS arrays also remain outside Git.
+The later [SXS:BBH:3630v3.0](https://doi.org/10.26138/SXS:BBH:3630v3.0)
+projection holdout has its own [frozen protocol](validation/imrphenomhm_sxs_3630_projection_protocol_20260927.md),
+[red receipt](validation/imrphenomhm_sxs_3630_projection_receipt_20260927.md),
+preparation script, and strict test. Its predeclared common time/orbital-phase
+Lev2–Lev3 screen passes, but one model/NR amplitude gate fails. Its raw and
+derived arrays also remain outside Git.
