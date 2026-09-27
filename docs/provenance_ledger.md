@@ -119,6 +119,7 @@ not validation of the retained official ROM or surviving equation components.
   - London et al. (2018), *First higher-multipole model of gravitational waves from spinning and coalescing black-hole binaries*, Phys. Rev. Lett. 120, 161102 ([DOI:10.1103/PhysRevLett.120.161102](https://doi.org/10.1103/PhysRevLett.120.161102))
   - García-Quirós et al. (2020), *IMRPhenomXHM: A multi-mode frequency-domain model for the gravitational wave signal from non-precessing black-hole binaries*, Phys. Rev. D 102, 064002 ([DOI:10.1103/PhysRevD.102.064002](https://doi.org/10.1103/PhysRevD.102.064002)) [Eq. (3)]
 - **Executable component**: The [London Eq. (5) frequency-map specification](math/imrphenomhm-frequency-map.md) separately checks the amplitude map and its Eq. (8) D-carrier phase variant with independent scalar expressions and Torch/JAX values and derivatives. This component result does not certify the full IMRPhenomHM waveform.
+- **Six-mode binary holdout**: The [pinned LALSuite 7.26.15 receipt](validation/imrphenomhm_lal_six_modes_20260927.md) records fixed-convention complex comparisons of all six aligned-spin HM/D modes on three held-out systems in Torch and JAX. It establishes sampled binary agreement, with a documented weak-tail cutoff difference; it is not an independent mathematical derivation or a domain-wide accuracy claim.
 - **Common Time Shift Invariance**:
   Higher modes satisfy exact linear time translation:
   $$\tilde{h}_{\ell m}(f; t_c) = \tilde{h}_{\ell m}(f; 0) \exp(-2\pi i f t_c)$$
