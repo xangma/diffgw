@@ -77,6 +77,8 @@ batched phases and frequency/parameter gradients for all three mode roles.
 It proves the printed phase shape and join algebra for supplied inputs, not
 the fitted inputs or agreement with numerical relativity. The `(3,2)`
 spheroidal phase and mixed spherical reconstruction are outside this slice.
+The [validation receipt](../validation/xhm_nonmix_ringdown_phase_component_20260927.json)
+records the fixed cases and len run.
 
 ## Reproduce the checks
 
