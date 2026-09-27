@@ -34,14 +34,16 @@ The `sxs 2026.0.6` decoder reports `frame_type='inertial'` and a single
 identity quaternion `[1,0,0,0]` for **both** resolutions (77 stored modes
 each); preparation requires these decoded frame properties. No rotating
 frame conversion or frame alignment is applied.
-The [SXS database guidance](https://data.black-holes.org/waveforms/) also
-notes that extraneous center-of-mass translations and boosts can mix modes
-and recommends `CoM`-suffixed files. These frozen `Strain_N2.h5` identities
-are not `CoM`-suffixed, and their sidecars do not assert a center-of-mass
-correction. An inertial identity quaternion does not establish that such a
-correction was applied. This source-conditioning ambiguity limits causal
-attribution of the subdominant-mode residuals; it does not turn a failed
-fixed-file gate into a pass.
+[SXS Catalog 3, Sec. 4.1](https://arxiv.org/html/2505.13378v2) states that
+center-of-mass and memory corrections were applied to **all** v3.0 catalog
+waveforms. Both pinned `Strain_N2.json` sidecars record nonzero
+`modifications.transform.space_translation` and `boost_velocity` values,
+as well as `add_memory`. The older
+[SXS database guidance](https://data.black-holes.org/waveforms/) recommends
+`CoM`-suffixed files, but absence of that suffix from these v3.0 identities
+does not mean they lack the correction. This corrects an earlier mistaken
+source-conditioning caveat; the frozen files, metrics, and failed gates are
+unchanged. The residuals still require a mode/convention and model diagnosis.
 
 Host `len`; cwd `/tmp/diffgw-hm-sxs-2265-20260927/repo`; external data
 directory `/tmp/diffgw-hm-sxs-2265-20260927/data`. The isolated Python
@@ -138,9 +140,73 @@ time-domain polarization FFT and symmetry projection of the six positive-m
 targets agree to matches `0.9999997–0.99999995` across the four projections,
 which checks the target-side truncation/projection convention internally.
 
+A further **Torch-only, read-only** post-hoc diagnostic on the pinned fixture
+used the unchanged default waveform and `(2,2)` alignment. The table separates
+the magnitude of the normalized complex coherence (`|C|`, which removes a
+constant phase *within each displayed band*) from its phase and the model/NR
+norm ratio. Bands were fixed for this diagnosis as `30–80`, `81–180`, and
+`181–350 Hz`, with flat weighting and no extra alignment:
+
+| Mode | `|C|` 30–80 | phase 30–80 (rad) | `|C|` 81–180 | `|C|` 181–350 | ratio 181–350 |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| `(2,2)` | 0.999970 | 0.000000 | 0.992200 | 0.998241 | 1.004469 |
+| `(2,1)` | 0.996899 | 2.003904 | 0.976059 | 0.998874 | 0.398569 |
+| `(3,3)` | 0.999916 | -2.391516 | 0.999304 | 0.996663 | 1.065596 |
+| `(3,2)` | 0.999743 | -0.046438 | 0.881401 | 0.469789 | 2.739360 |
+| `(4,4)` | 0.999828 | 1.607431 | 0.991374 | 0.992630 | 1.342192 |
+| `(4,3)` | 0.999867 | -2.371692 | 0.951798 | 0.761145 | 1.029753 |
+
+Thus all six mode shapes agree strongly in this early band after their
+individual constant phases are *diagnostically* ignored. The `(3,2)` and
+`(4,3)` coherences deteriorate later; the `(2,1)` amplitude ratio decreases.
+No band-specific phase correction is used for acceptance. As another post-hoc
+comparison, selecting the published `london_2018` transition pair
+(`f0^A=0.018`, `f0^φ=0.014` times the mode/22 ringdown ratio) instead of the
+default `phenomd_runtime` pair does not rescue this case: full-band
+phase-free `(3,2)` coherence falls from `0.724978` to `0.456220` and `(4,3)`
+from `0.576375` to `0.121922` after each option's single 22 alignment.
+This compares two existing named model variants, not a fitted correction or
+a new gate result.
+
+London [Eqs. (3), (8)–(9)](https://arxiv.org/html/1708.00404v4)
+relate inspiral mode phases at commensurate frequencies. To separate relative
+phase from the single-22 time/orbital alignment, a second Torch-only
+diagnostic formed
+`T_lm(f)=u_lm(f)^2 conj[u_22(2f/m)]^m`, where `u=H/|H|` for the
+positive-frequency carrier. This cancels a common time shift and orbital
+rotation; squaring also removes the odd-`m` branch, so it must be read
+alongside the signed matches above. The 22 phase at `2f/m` was interpolated
+from its unwrapped phase on the frozen 1 Hz grid. The displayed mode bins
+were `30–80 Hz`, restricted further to `2f/m >= 30 Hz`; all sampled
+amplitudes were nonzero. The circular mean angle and its magnitude `R`
+describe `T_native conj(T_NR)`:
+
+| Mode | bins | default `f_ref=30` angle (rad) | `R` | diagnostic `f_ref=None` angle (rad) | `R` |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| `(2,1)` | 51 | -2.134725 | 0.988680 | 1.893796 | 0.988680 |
+| `(3,3)` | 36 | 1.484389 | 0.999668 | -2.544133 | 0.999668 |
+| `(3,2)` | 51 | -0.100539 | 0.999423 | -0.100539 | 0.999423 |
+| `(4,4)` | 21 | -3.014785 | 0.999963 | 1.494542 | 0.999963 |
+| `(4,3)` | 36 | 1.529702 | 0.999620 | -2.498820 | 0.999620 |
+
+The native assembly includes a finite-`f_ref` constant phase gauge
+`(m/2-1)*slope_peak*M_seconds*f_ref`. Switching from `None` to `30 Hz`
+changes the doubled invariant by `+2.254664` rad for `m=1`,
+`-2.254664` for `m=3`, and `-4.509327` (equivalently `+1.773858`)
+for `m=4`, with circular concentration `1.000000` in each case.
+The gauge therefore explains a deterministic part of the relative phase,
+but neither setting resolves this holdout: after its own single-22 alignment,
+`f_ref=None` gives signed full-band matches `0.572025` for `(2,1)`,
+`0.303798` for `(3,3)`, `0.677924` for `(3,2)`, `-0.617501`
+for `(4,4)`, and `0.538430` for `(4,3)`. These post-hoc results
+do not change the frozen default-`f_ref=30` gate. A detailed
+reference-frame/phase prescription and high-frequency mode-shape diagnosis
+are still needed; [XHM's distinct low-frequency phase
+limit](https://arxiv.org/html/2001.10914v2) is not an HM acceptance
+criterion.
+
 The next investigation should derive the native-versus-SXS **relative mode
-phase convention** from published equations and verify the source's
-center-of-mass treatment, then test any justified change on a separate case
-without fitting this holdout or revising its gate. A correction needs a new
-predeclared protocol and independent holdout; the red result here remains the
-historical result.
+phase convention** from published equations, then test any justified change on
+a separate case without fitting this holdout or revising its gate. A correction
+needs a new predeclared protocol and independent holdout; the red result here
+remains the historical result.
