@@ -44,7 +44,7 @@ def _paper_quotient(case, frequency, merger):
         return complex(window * mp.exp(-mp.j * (tidal + spin)))
 
 
-def _native_quotients(backend, case, frequencies):
+def _native_quotients(backend, case, frequencies, *, taper=True):
     _, m1, m2, chi1, chi2, lam1, lam2 = case
     options = dict(
         mass1=m1, mass2=m2, chi1=chi1, chi2=chi2,
@@ -61,7 +61,7 @@ def _native_quotients(backend, case, frequencies):
         bns_plus, bns_cross = IMRPhenomD_NRTidalv2(
             amplitude_variant="paper_2019")(
                 f=f, lambda1=lam1, lambda2=lam2,
-                apply_merger_taper=True, **options)
+                apply_merger_taper=taper, **options)
     else:
         jax = require_module("jax")
         jax.config.update("jax_enable_x64", True)
@@ -73,7 +73,7 @@ def _native_quotients(backend, case, frequencies):
         bbh_plus, bbh_cross = IMRPhenomD.evaluate(f=f, **options)
         bns_plus, bns_cross = IMRPhenomD_NRTidalv2.evaluate(
             f=f, lambda1=lam1, lambda2=lam2,
-            apply_merger_taper=True, amplitude_variant="paper_2019", **options)
+            apply_merger_taper=taper, amplitude_variant="paper_2019", **options)
     assert np.all(np.abs(np.asarray(bbh_plus)) > 0)
     assert np.all(np.abs(np.asarray(bbh_cross)) > 0)
     return (np.asarray(bns_plus / bbh_plus),
