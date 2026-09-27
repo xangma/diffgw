@@ -1,0 +1,39 @@
+{
+  "schema": "diffgw.seobnrv4.flux-selector-source-closure-plan.v1",
+  "component_id": "V4-FLUX-4-9",
+  "purpose": "Attempt to close only the nine unresolved rows in the frozen 35-mode public-equation provenance matrix without changing the historical-fidelity criterion.",
+  "frozen_at_commit": "fdf5dfb7df2a94446fc18fd8a7784178225d5771",
+  "prior_matrix_path": "dev/native_rom/evidence/2026-09-27/flux_symbolic_provenance_matrix.json",
+  "prior_matrix_sha256": "d9c5e555e3941ec36497469f05992f8389834a4b98d431f30be07eef714fd79f",
+  "historical_fidelity_criterion": "A row passes only if a version-pinned primary public equation or an author-owned, publicly accessible, licensing-compatible source uniquely states the final algebra. Naturalness, PN matching, implementation behavior, binary-oracle agreement, or NR preference is not selection evidence.",
+  "rows": {
+    "bfh_pan_coexistence": {
+      "modes": ["2,1", "3,1", "3,3", "4,1", "4,3"],
+      "question": "Does an eligible source explicitly state whether BFH finite-mass terms replace the overlapping Pan terms while Pan contributes only non-overlapping higher-order test-particle terms, or prescribe another unique merge?",
+      "pass_condition": "One final non-double-counted algebraic merge is explicitly prescribed for every listed mode."
+    },
+    "ell8_even_m_truncation": {
+      "modes": ["8,2", "8,4", "8,6", "8,8"],
+      "question": "Does an eligible source explicitly state whether Pan's generic leading even-parity spin term augments or is omitted from the printed ell=8 residuals?",
+      "pass_condition": "The include/omit decision and residual-factor placement are explicit for every listed mode."
+    }
+  },
+  "eligible_source_search": [
+    "Published primary papers, errata, and supplements cited by the v4 source chain.",
+    "Public author-owned equation notebooks or data carrying explicit reuse terms compatible with the intended MIT implementation.",
+    "Direct public author clarification that states the algebra and can be archived and hashed."
+  ],
+  "ineligible_evidence": [
+    "LALSimulation or another implementation's source code.",
+    "A binary oracle, frontend output, or NR agreement.",
+    "An inferred merge based only on PN consistency or avoidance of double counting.",
+    "Unlicensed or terms-unknown code as an implementation source."
+  ],
+  "outputs": {
+    "audit": "dev/native_rom/evidence/2026-09-27/flux_selector_source_closure_audit.json",
+    "result": "dev/native_rom/evidence/2026-09-27/flux_selector_source_closure.json"
+  },
+  "production_change": false,
+  "historical_fidelity_claim": false,
+  "release_qualified": false
+}

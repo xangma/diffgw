@@ -1,0 +1,100 @@
+{
+  "schema": "diffgw.seobnrv4.flux-selector-source-closure-audit.v1",
+  "component_id": "V4-FLUX-4-9",
+  "scope": "Only the nine incomplete rows in flux_symbolic_provenance_matrix.json",
+  "method": "Review every public arXiv source revision in the cited Pan, BFH, Taracchini, and Bohe chain, plus the Pan erratum. No implementation or executable behavior was used.",
+  "sources": [
+    {
+      "id": "pan-v1",
+      "url": "https://arxiv.org/e-print/1006.0431v1",
+      "file": "1006.0431v1.tar",
+      "sha256": "aaa02d2ea697cc797c7f8b26858d6c75cea380bfb58d17dd59e20a4a1dc88e10"
+    },
+    {
+      "id": "pan-v2",
+      "url": "https://arxiv.org/e-print/1006.0431v2",
+      "file": "1006.0431v2.tar",
+      "sha256": "b0bfa5736cc19e32b79861cd3156a88bfd41143e657366457670404af060f7fc"
+    },
+    {
+      "id": "bfh-v1",
+      "url": "https://arxiv.org/e-print/1209.6349v1",
+      "file": "1209.6349v1.tar",
+      "sha256": "550bd2e74a0f54025e0c193d13ebb8a96ade5103f0d74d1bf9218fd940e7f0a2"
+    },
+    {
+      "id": "bfh-v2",
+      "url": "https://arxiv.org/e-print/1209.6349v2",
+      "file": "1209.6349v2.tar",
+      "sha256": "b1cee0cec2092c3640ee5fff460dd88a59b1c6c2be0039fca837ffad0d6f7385"
+    },
+    {
+      "id": "taracchini-2014-v1",
+      "url": "https://arxiv.org/e-print/1311.2544v1",
+      "file": "1311.2544v1.tar",
+      "sha256": "d36532ad40b3354ac3e6ea0cb9880f762c0ad3d4667b57ea1c91032ca89e1650"
+    },
+    {
+      "id": "bohe-v1",
+      "url": "https://arxiv.org/e-print/1611.03703v1",
+      "file": "1611.03703v1.tar",
+      "sha256": "7bd9200c1c7675ac0980b89b125cf1b17f0f295570b357edf1435a4be6dbf39a"
+    },
+    {
+      "id": "bohe-v2",
+      "url": "https://arxiv.org/e-print/1611.03703v2",
+      "file": "1611.03703v2.tar",
+      "sha256": "2ace0a82f0009fd03a516b29d3a652486f2eac39ea81f33a4d4d740c09304e21"
+    },
+    {
+      "id": "bohe-v3",
+      "url": "https://arxiv.org/e-print/1611.03703v3",
+      "file": "1611.03703v3.tar",
+      "sha256": "6d9f2e99524c9878ea06d31425939bee4e8dab52948878037d75132bcfeac488"
+    },
+    {
+      "id": "pan-erratum",
+      "url": "https://pure.mpg.de/rest/items/item_1940500_2/component/file_1940499/content",
+      "file": "pan-erratum.pdf",
+      "sha256": "77292d0cf0048077ac30d9430b73702b904566735a0835defa48a9598c1ad1c4"
+    }
+  ],
+  "revision_findings": [
+    "Pan v1 and v2 both explicitly prescribe replacing every test-particle term whose generic-mass-ratio counterpart is known, then adding the remaining test-particle terms.",
+    "BFH v1 and v2 both state that their mode equations reduce in the test-mass limit to Pan; v2 corrects the Pan equation cross-reference from (21) to (22).",
+    "Pan v2 and its erratum change typographical and nonspinning terms but do not alter the replacement rule or the ell=8 ambiguity.",
+    "Bohe v1-v3 retain Taracchini 2014's expressions and explicitly describe replacement only for the new (2,2) corrections."
+  ],
+  "eligible_source_findings": [
+    {
+      "id": "bfh-pan-replacement",
+      "finding": "Pan Sec. IV prescribes replacing all test-particle f_lm and rho_lm terms having known generic-mass-ratio counterparts. BFH Eqs. (52)-(53) supply those counterparts for the five questioned modes and explicitly identify their test-mass limit with Pan. Taracchini 2014 adopts both sources. This uniquely prevents double counting: BFH controls overlapping orders and Pan contributes only non-overlapping orders."
+    },
+    {
+      "id": "ell8-conflict",
+      "finding": "Pan derives the generic even-parity rule f_lm^spin=-2*l*q*v^3/3 and rho_lm^spin=-2*q*v^3/3, but also calls Appendices B-C the complete expressions for 4<l<=8 while printing f_82,f_84,f_86,f_88 and rho_82,rho_84,rho_86,rho_88 without those terms. The nearby rho cross-reference says 4<l<8. Taracchini 2014 says to include all known Pan spin effects but does not choose between the generic rule and the complete ell=8 lists."
+    },
+    {
+      "id": "erratum-scope",
+      "finding": "The Pan erratum corrects Eq. (36h), nonspinning h_44/h_42 terms, and typographical errors in Eqs. (41)-(42); it supplies no ell=8 include/omit selector."
+    }
+  ],
+  "author_owned_asset_search": {
+    "result": "No public author-owned equation notebook, supplement, or licensed data asset stating either missing ell=8 decision was located.",
+    "qualification": "This is a bounded public search result, not a claim that no private clarification exists.",
+    "rejected": [
+      "Implementation repositories and LAL mirrors: excluded by the frozen criterion.",
+      "Executable/model outputs and NR comparisons: excluded as selector evidence.",
+      "Repositories without explicit reuse terms or without the questioned algebra: ineligible or nonresponsive."
+    ]
+  },
+  "clean_room": {
+    "lal_source_consulted": false,
+    "binary_oracle_queried": false,
+    "native_or_nr_selector_used": false,
+    "implementation_source_copied": false
+  },
+  "production_change": false,
+  "historical_fidelity_claim": false,
+  "release_qualified": false
+}

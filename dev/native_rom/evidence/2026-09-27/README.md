@@ -81,13 +81,25 @@ selects nonspinning `rho43**4 + f43_spin` for this low-`ell` odd-`m` mode,
 and Taracchini 2014 explicitly adopts that prescription. The primary-source
 finding therefore corrects the earlier audit on this one requirement.
 
-The matrix does not close the aggregate. It has complete decisions for 26 of
-35 modes, but no explicit primary-source BFH/Pan coexistence rule for `(2,1)`,
-`(3,1)`, `(3,3)`, `(4,1)`, or `(4,3)`, and no explicit generic-spin versus
-tabulated-residual truncation rule for `(8,2)`, `(8,4)`, `(8,6)`, or `(8,8)`.
-The refined source count is therefore 5 of 6, not a pass. The run used SymPy
-1.14.0 and Python 3.12.3 on `len`; it inspected no implementation source,
-queried no binary oracle, and made no production or release change.
+The matrix initially left nine rows open. The subsequent
+[frozen source-closure plan](flux_selector_source_closure_plan.json),
+[revision audit](flux_selector_source_closure_audit.json),
+[evaluator](../../diagnose_flux_selector_source_closure.py), and
+[exact result](flux_selector_source_closure.json) review every public revision
+of the relevant Pan, BFH, Taracchini, and Bohé sources plus the Pan erratum.
+Pan's explicit rule to replace every test-particle term having a known
+generic-mass-ratio counterpart, combined with BFH's stated Pan test-mass
+limit, closes the five overlap rows. The selector is therefore complete for
+31 of 35 modes.
+
+The four even-`m`, `ell=8` rows remain blocked. Pan derives a generic
+`rho_lm` spin term but also labels its appendices complete while printing all
+four `ell=8` residuals without that term; Taracchini 2014 does not choose
+between those forms. The smallest missing contract is an eligible include or
+omit statement for `-2*chi_Kerr*v**3/3` in each affected `rho_lm`. The focused
+run on `len` passed its evaluator and regression check, but the aggregate gate
+still fails. No implementation source, binary oracle, production code,
+criterion, or release status changed.
 
 ## JAX whole-path blocker
 

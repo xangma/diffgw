@@ -1,0 +1,150 @@
+{
+  "audit_sha256": "c069fde0d315f3bdbd39c455ffa9e88c301288d883a9c77fda6f4364718283c6",
+  "clean_room": {
+    "binary_oracle_queried": false,
+    "implementation_source_copied": false,
+    "lal_source_consulted": false,
+    "native_or_nr_selector_used": false
+  },
+  "complete_final_mode_selector": false,
+  "component_id": "V4-FLUX-4-9",
+  "conclusion": "The explicit Pan replacement rule closes the five BFH/Pan overlap rows. The four ell=8 rows remain source-underdetermined, so the 35-mode selector and V4-FLUX-4-9 remain blocked.",
+  "fail_count": 4,
+  "failed_modes": [
+    "8,2",
+    "8,4",
+    "8,6",
+    "8,8"
+  ],
+  "historical_fidelity_claim": false,
+  "pass_count": 5,
+  "passed_modes": [
+    "2,1",
+    "3,1",
+    "3,3",
+    "4,1",
+    "4,3"
+  ],
+  "plan_sha256": "5794d6156db36acc2ba82251d1e380b66efb9f4ddbfd712322cdce248815b529",
+  "prior_matrix_sha256": "d9c5e555e3941ec36497469f05992f8389834a4b98d431f30be07eef714fd79f",
+  "prior_selector_complete_mode_count": 26,
+  "process": {
+    "command": "/tmp/diffgw-waveform-library-1315f6e/venv-latest/bin/python dev/native_rom/diagnose_flux_selector_source_closure.py --source-dir sources --json-out dev/native_rom/evidence/2026-09-27/flux_selector_source_closure.json --log-path /home/xangma/tmp/diffgw-flux-selector-source-closure-20260927/flux_selector_source_closure.log",
+    "cwd": "/home/xangma/tmp/diffgw-flux-selector-source-closure-20260927",
+    "duration_seconds": 0.3591248947195709,
+    "host": "len",
+    "log_path": "/home/xangma/tmp/diffgw-flux-selector-source-closure-20260927/flux_selector_source_closure.log",
+    "pid": 3299089,
+    "python_version": "3.12.3"
+  },
+  "production_change": false,
+  "refined_selector_complete_mode_count": 31,
+  "release_qualified": false,
+  "row_count": 9,
+  "rows": [
+    {
+      "bfh_equation": "BFH Eq. (53a)",
+      "evidence": "Pan Sec. IV replacement rule; BFH Eqs. (52)-(53) and stated Pan test-mass limit; Taracchini 2014 mode-source composition and low-ell odd-m prescription.",
+      "missing_contract": null,
+      "mode": "2,1",
+      "pan_equations": "Pan Eqs. (28b), (29b)",
+      "question": "bfh_pan_coexistence",
+      "selector": "Replace Pan test-particle terms at every overlapping PN order with the BFH generic-mass-ratio counterpart; retain Pan terms only where no generic counterpart is known. Place the combined spin residual in f_lm outside (rho_lm_NS)^ell.",
+      "status": "pass"
+    },
+    {
+      "bfh_equation": "BFH Eq. (53c)",
+      "evidence": "Pan Sec. IV replacement rule; BFH Eqs. (52)-(53) and stated Pan test-mass limit; Taracchini 2014 mode-source composition and low-ell odd-m prescription.",
+      "missing_contract": null,
+      "mode": "3,1",
+      "pan_equations": "Pan Eqs. (28e), (29e)",
+      "question": "bfh_pan_coexistence",
+      "selector": "Replace Pan test-particle terms at every overlapping PN order with the BFH generic-mass-ratio counterpart; retain Pan terms only where no generic counterpart is known. Place the combined spin residual in f_lm outside (rho_lm_NS)^ell.",
+      "status": "pass"
+    },
+    {
+      "bfh_equation": "BFH Eq. (53d)",
+      "evidence": "Pan Sec. IV replacement rule; BFH Eqs. (52)-(53) and stated Pan test-mass limit; Taracchini 2014 mode-source composition and low-ell odd-m prescription.",
+      "missing_contract": null,
+      "mode": "3,3",
+      "pan_equations": "Pan Eqs. (28c), (29c)",
+      "question": "bfh_pan_coexistence",
+      "selector": "Replace Pan test-particle terms at every overlapping PN order with the BFH generic-mass-ratio counterpart; retain Pan terms only where no generic counterpart is known. Place the combined spin residual in f_lm outside (rho_lm_NS)^ell.",
+      "status": "pass"
+    },
+    {
+      "bfh_equation": "BFH Eq. (53e)",
+      "evidence": "Pan Sec. IV replacement rule; BFH Eqs. (52)-(53) and stated Pan test-mass limit; Taracchini 2014 mode-source composition and low-ell odd-m prescription.",
+      "missing_contract": null,
+      "mode": "4,1",
+      "pan_equations": "Pan Eqs. (28i), (29i)",
+      "question": "bfh_pan_coexistence",
+      "selector": "Replace Pan test-particle terms at every overlapping PN order with the BFH generic-mass-ratio counterpart; retain Pan terms only where no generic counterpart is known. Place the combined spin residual in f_lm outside (rho_lm_NS)^ell.",
+      "status": "pass"
+    },
+    {
+      "bfh_equation": "BFH Eq. (53f)",
+      "evidence": "Pan Sec. IV replacement rule; BFH Eqs. (52)-(53) and stated Pan test-mass limit; Taracchini 2014 mode-source composition and low-ell odd-m prescription.",
+      "missing_contract": null,
+      "mode": "4,3",
+      "pan_equations": "Pan Eqs. (28g), (29g)",
+      "question": "bfh_pan_coexistence",
+      "selector": "Replace Pan test-particle terms at every overlapping PN order with the BFH generic-mass-ratio counterpart; retain Pan terms only where no generic counterpart is known. Place the combined spin residual in f_lm outside (rho_lm_NS)^ell.",
+      "status": "pass"
+    },
+    {
+      "bfh_equation": null,
+      "evidence": "Pan's generic even-parity equation includes rho_lm^spin=-2*q*v^3/3, while its stated complete ell=8 f_lm and rho_lm lists omit that term; Taracchini 2014 does not select between them.",
+      "missing_contract": "One eligible sentence or equation stating whether this mode's rho_lm includes -2*chi_Kerr*v^3/3 (equivalently whether f_lm includes -16*chi_Kerr*v^3/3) or intentionally truncates it.",
+      "mode": "8,2",
+      "pan_equations": "Pan Appendix B f_lm and Appendix C rho_lm",
+      "question": "ell8_even_m_truncation",
+      "selector": null,
+      "status": "fail"
+    },
+    {
+      "bfh_equation": null,
+      "evidence": "Pan's generic even-parity equation includes rho_lm^spin=-2*q*v^3/3, while its stated complete ell=8 f_lm and rho_lm lists omit that term; Taracchini 2014 does not select between them.",
+      "missing_contract": "One eligible sentence or equation stating whether this mode's rho_lm includes -2*chi_Kerr*v^3/3 (equivalently whether f_lm includes -16*chi_Kerr*v^3/3) or intentionally truncates it.",
+      "mode": "8,4",
+      "pan_equations": "Pan Appendix B f_lm and Appendix C rho_lm",
+      "question": "ell8_even_m_truncation",
+      "selector": null,
+      "status": "fail"
+    },
+    {
+      "bfh_equation": null,
+      "evidence": "Pan's generic even-parity equation includes rho_lm^spin=-2*q*v^3/3, while its stated complete ell=8 f_lm and rho_lm lists omit that term; Taracchini 2014 does not select between them.",
+      "missing_contract": "One eligible sentence or equation stating whether this mode's rho_lm includes -2*chi_Kerr*v^3/3 (equivalently whether f_lm includes -16*chi_Kerr*v^3/3) or intentionally truncates it.",
+      "mode": "8,6",
+      "pan_equations": "Pan Appendix B f_lm and Appendix C rho_lm",
+      "question": "ell8_even_m_truncation",
+      "selector": null,
+      "status": "fail"
+    },
+    {
+      "bfh_equation": null,
+      "evidence": "Pan's generic even-parity equation includes rho_lm^spin=-2*q*v^3/3, while its stated complete ell=8 f_lm and rho_lm lists omit that term; Taracchini 2014 does not select between them.",
+      "missing_contract": "One eligible sentence or equation stating whether this mode's rho_lm includes -2*chi_Kerr*v^3/3 (equivalently whether f_lm includes -16*chi_Kerr*v^3/3) or intentionally truncates it.",
+      "mode": "8,8",
+      "pan_equations": "Pan Appendix B f_lm and Appendix C rho_lm",
+      "question": "ell8_even_m_truncation",
+      "selector": null,
+      "status": "fail"
+    }
+  ],
+  "schema": "diffgw.seobnrv4.flux-selector-source-closure.v1",
+  "script_sha256": "ebbc58a9e1471a6ba70c6e89e56c475a0e97dfb7316420ee89eb48106de892fd",
+  "source_sha256": {
+    "bfh-v1": "550bd2e74a0f54025e0c193d13ebb8a96ade5103f0d74d1bf9218fd940e7f0a2",
+    "bfh-v2": "b1cee0cec2092c3640ee5fff460dd88a59b1c6c2be0039fca837ffad0d6f7385",
+    "bohe-v1": "7bd9200c1c7675ac0980b89b125cf1b17f0f295570b357edf1435a4be6dbf39a",
+    "bohe-v2": "2ace0a82f0009fd03a516b29d3a652486f2eac39ea81f33a4d4d740c09304e21",
+    "bohe-v3": "6d9f2e99524c9878ea06d31425939bee4e8dab52948878037d75132bcfeac488",
+    "pan-erratum": "77292d0cf0048077ac30d9430b73702b904566735a0835defa48a9598c1ad1c4",
+    "pan-v1": "aaa02d2ea697cc797c7f8b26858d6c75cea380bfb58d17dd59e20a4a1dc88e10",
+    "pan-v2": "b0bfa5736cc19e32b79861cd3156a88bfd41143e657366457670404af060f7fc",
+    "taracchini-2014-v1": "d36532ad40b3354ac3e6ea0cb9880f762c0ad3d4667b57ea1c91032ca89e1650"
+  },
+  "status": "diagnostic_complete"
+}
