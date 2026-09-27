@@ -511,6 +511,22 @@ def _amplitude_window(
     return torch.sigmoid(arg if rising else -arg)
 
 
+def nsbh_amplitude_window_sum(
+    frequency_hz: torch.Tensor,
+    total_mass_sec: torch.Tensor,
+    centers_hz: tuple[torch.Tensor, torch.Tensor, torch.Tensor],
+    width_mf: torch.Tensor,
+    carriers: tuple[torch.Tensor, torch.Tensor, torch.Tensor],
+) -> torch.Tensor:
+    """Thompson Eq. (4): blend supplied PN, premerger and ringdown carriers."""
+    f0, f1, f2 = centers_hz
+    a_pn, a_pm, a_rd = carriers
+    w_ins = _amplitude_window(frequency_hz, f0, width_mf, total_mass_sec, rising=False)
+    w_pm = _amplitude_window(frequency_hz, f1, width_mf, total_mass_sec, rising=False)
+    w_rd = _amplitude_window(frequency_hz, f2, width_mf, total_mass_sec, rising=True)
+    return a_pn * w_ins + a_pm * w_pm + a_rd * w_rd
+
+
 def _legacy_phase_offsets(m1, m2, s1, s2, mf_ref, mf_anchor, remnant_mass, remnant_spin):
     """Retain the inherited NSBH affine gauge, not a published prescription.
 
@@ -830,11 +846,10 @@ class IMRPhenomNSBH(nn.Module):
         lorentz_bar = (sigma_bar ** 2.0) / ((f_bar - f_rd_bar) ** 2.0 + (sigma_bar ** 2.0) / 4.0)
         a_rd_dimless = eps_tide_u * delta1_u * lorentz_bar * torch.pow(f_bar, -7.0 / 6.0)
 
-        w_ins = _amplitude_window(f_eval, f0_tilde_u, d_win_mf_u, m_sec_u, rising=False)
-        w_pm = _amplitude_window(f_eval, f1_tilde_u, d_win_mf_u, m_sec_u, rising=False)
-        w_rd = _amplitude_window(f_eval, f2_tilde_u, d_win_mf_u, m_sec_u, rising=True)
-
-        full_amp_dimless = a_pn_dimless * w_ins + a_pm_dimless * w_pm + a_rd_dimless * w_rd
+        full_amp_dimless = nsbh_amplitude_window_sum(
+            f_eval, m_sec_u, (f0_tilde_u, f1_tilde_u, f2_tilde_u), d_win_mf_u,
+            (a_pn_dimless, a_pm_dimless, a_rd_dimless),
+        )
 
         norm = ((m_sec_u ** 2.0) / d_sec_u) * (0.5 * math.sqrt(5.0 / (4.0 * PI)))
         full_amp = norm * full_amp_dimless

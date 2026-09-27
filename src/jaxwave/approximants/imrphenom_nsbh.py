@@ -546,6 +546,22 @@ def _amplitude_window(
     return jax.nn.sigmoid(arg if rising else -arg)
 
 
+def nsbh_amplitude_window_sum(
+    frequency_hz: jnp.ndarray,
+    total_mass_sec: jnp.ndarray,
+    centers_hz: tuple[jnp.ndarray, jnp.ndarray, jnp.ndarray],
+    width_mf: jnp.ndarray,
+    carriers: tuple[jnp.ndarray, jnp.ndarray, jnp.ndarray],
+) -> jnp.ndarray:
+    """Thompson Eq. (4): blend supplied PN, premerger and ringdown carriers."""
+    f0, f1, f2 = centers_hz
+    a_pn, a_pm, a_rd = carriers
+    w_ins = _amplitude_window(frequency_hz, f0, width_mf, total_mass_sec, rising=False)
+    w_pm = _amplitude_window(frequency_hz, f1, width_mf, total_mass_sec, rising=False)
+    w_rd = _amplitude_window(frequency_hz, f2, width_mf, total_mass_sec, rising=True)
+    return a_pn * w_ins + a_pm * w_pm + a_rd * w_rd
+
+
 def _legacy_phase_offsets(
     m1: jnp.ndarray,
     m2: jnp.ndarray,
@@ -868,11 +884,10 @@ class IMRPhenomNSBH:
         lorentz_bar = (sigma_bar ** 2.0) / ((f_bar - f_rd_bar) ** 2.0 + (sigma_bar ** 2.0) / 4.0)
         a_rd_dimless = eps_tide_u * delta1_u * lorentz_bar * (f_bar ** (-7.0 / 6.0))
 
-        w_ins = _amplitude_window(f_eval, f0_tilde_u, d_win_mf_u, m_sec_u, rising=False)
-        w_pm = _amplitude_window(f_eval, f1_tilde_u, d_win_mf_u, m_sec_u, rising=False)
-        w_rd = _amplitude_window(f_eval, f2_tilde_u, d_win_mf_u, m_sec_u, rising=True)
-
-        full_amp_dimless = a_pn_dimless * w_ins + a_pm_dimless * w_pm + a_rd_dimless * w_rd
+        full_amp_dimless = nsbh_amplitude_window_sum(
+            f_eval, m_sec_u, (f0_tilde_u, f1_tilde_u, f2_tilde_u), d_win_mf_u,
+            (a_pn_dimless, a_pm_dimless, a_rd_dimless),
+        )
 
         norm = ((m_sec_u ** 2.0) / d_sec_u) * (0.5 * math.sqrt(5.0 / (4.0 * PI)))
         full_amp = norm * full_amp_dimless
