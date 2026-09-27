@@ -217,6 +217,62 @@ def test_q10_msa_flux_spin_couplings_obey_published_scalar_averages():
                    - float(published["s1l"])) > 5e-4
 
 
+def test_q10_msa_appendix_c_quadratic_phase_diagnostic():
+    """The printed Appendix C (117)--(118) does not select either phase path.
+
+    This is a diagnostic of the frozen q=10 case, not a waveform acceptance
+    threshold. The independently checked roots and c1 are common inputs.
+    """
+    m1, m2 = 60., 6.
+    chi1, chi2 = (.2, .1, .8), (.1, 0., .1)
+    args = (t([20.]), t(m1), t(m2), t(chi1), t(chi2))
+    equation = assemble_precession_msa_angles(
+        *args, f_ref=20., compatibility="equation",
+    )
+    compatibility = assemble_precession_msa_angles(
+        *args, f_ref=20., compatibility="v223",
+    )
+
+    # Chatziioannou et al., arXiv:1703.03967v3, Appendix C (116)--(118).
+    with mp.workdps(50):
+        def scalar(value):
+            return mp.mpf(float(value))
+        q = mp.mpf(1) / 10
+        eta = q / (1 + q)**2
+        delta_m = (1 - q) / (1 + q)
+        n1, n2 = 1 / (1 + q), q / (1 + q)
+        s1 = [n1**2 * scalar(component) for component in chi1]
+        s2 = [n2**2 * scalar(component) for component in chi2]
+        s1sq = sum(component**2 for component in s1)
+        s2sq = sum(component**2 for component in s2)
+        xi = (1 + q) * s1[2] + (1 + 1/q) * s2[2]
+        c1, sav = scalar(equation["c1"]), scalar(equation["sav"])
+        psi1 = 3 * (2 * xi * eta**2 - c1) / (eta * delta_m**2)
+        first = (c1**2 * eta / (q * delta_m**4)
+                 - 2 * c1 * eta**3 * (1 + q) * xi / (q * delta_m**4)
+                 - eta**2 * (delta_m**2 * s1sq - eta**2 * xi**2) / delta_m**4)
+        second = (c1**2 * eta**2 / delta_m**4
+                  - 2 * c1 * eta**3 * (1 + q) * xi / delta_m**4
+                  - eta**2 * (delta_m**2 * s2sq - eta**2 * xi**2) / delta_m**4)
+        root_delta = mp.sqrt(first * second)
+        g2_over_g0 = mp.mpf(743) / 336 + 11 * eta / 4
+        psi2 = 3 * g2_over_g0 + 3 / (2 * eta**3) * (
+            2 * root_delta - 2 * eta**2 * sav / delta_m**2
+            - 10 * eta * c1**2 / delta_m**4
+            + 2 * eta**2 * (7 + 6*q + 7*q**2) * c1 * xi
+              / (delta_m**2 * (1-q)**2)
+            - eta**3 * (3 + 4*q + 3*q**2) * xi**2
+              / (delta_m**2 * (1-q)**2)
+            + eta * (q * (2+q) * s1sq + (1+2*q) * s2sq) / (1-q)**2
+        )
+
+        assert math.isclose(float(psi1), float(equation["psi1"]),
+                            rel_tol=2e-12, abs_tol=2e-12)
+        assert first < 0 and second < 0  # fixes the real square-root branch
+        assert abs(float(psi2 - scalar(equation["psi2"]))) > .25
+        assert abs(float(psi2 - scalar(compatibility["psi2"]))) > 2.
+
+
 def test_opening_angle_uses_precession_averaged_j_at_any_nutation_phase():
     # Recover J from the triangle and check the defining averaged dJ/dL.
     l=t([.6,1.,1.4]).requires_grad_();eta,c1,sav=t(.22),t(.02),t(.04)

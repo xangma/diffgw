@@ -32,6 +32,27 @@ inputs. The published-equation flux path passes this isolated downstream gate;
 the initial-reference PV223 compatibility path differs already in the first
 spin projection by more than `5e-4`. This establishes which path follows the
 published averaging prescription, but cannot identify an undocumented PV223
-implementation convention. A defensible next experiment needs an author
-specification of that convention (including the quadratic-nutation phase) or,
-for PV300, author-provided intermediate state at the same frozen q=10 input.
+implementation convention.
+
+The adjacent
+`tests/test_clean_room_msa.py::test_q10_msa_appendix_c_quadratic_phase_diagnostic`
+evaluates [Appendix C, Eqs. (116)–(118)](https://arxiv.org/html/1703.03967)
+directly with 50-digit scalar arithmetic and the same upstream `c1` and
+averaged spin magnitude. For this case the printed Eq. (117) gives
+`psi2=9.7078492509`; the limiting-root equation path gives `9.4134154957`
+and the PV223 compatibility path gives `7.3367234407`. Eq. (116) agrees with
+the equation path at `2e-12`, and the q=10 case passes the separate
+small-velocity cubic-root expansion check in
+`tests/test_precession_msa_pn_clean.py`. Both evaluations use the same
+upstream `c1` and averaged spin magnitude; the two factors under Eq. (118)'s
+square root are negative at this input, so the test uses the positive real
+root of their positive product. The cause of the remaining Eq. (117) versus
+root-expansion difference is unresolved: no particular input, branch,
+printed term, or approximation has been established as responsible. The
+printed formula therefore does not independently validate either path or
+justify replacing a coefficient or relaxing the whole-waveform gates.
+
+A defensible next experiment needs an author specification of the PV223
+convention and a reconciliation of Eq. (117) with the cubic-root expansion,
+or, for PV300, author-provided intermediate state at the same frozen q=10
+input.
