@@ -52,6 +52,19 @@ dependencies.
 
 ## Scope of this notice
 
+The independent IMRPhenomHM physical holdout obtains the official
+[SXS:BBH:2265v3.0](https://doi.org/10.26138/SXS:BBH:2265v3.0) Lev3/Lev2
+N2 strain and metadata from the SXS Collaboration's
+[CaltechDATA record](https://data.caltech.edu/records/258wv-a5t45).
+The record's metadata cite [SXS Catalog 3](https://doi.org/10.26138/SXSCatalog3)
+and the [SXS catalog paper](https://doi.org/10.1103/PhysRevD.99.064045).
+The [SXS waveform database](https://data.black-holes.org/waveforms/) asks
+users to acknowledge the first scientific publication describing each
+simulation. These raw and conditioned validation arrays remain external and
+are not distributed with the software. The CaltechDATA v3 record API did not
+state a per-record SPDX licence; this notice does not infer one from older
+SXS deposits.
+
 The native Numerical Relativity higher-harmonic calibrations in `xhm_native_fits.py`
 for modes (2,1), (3,3), (4,4), and (3,2) use public SXS datasets under CC-BY-4.0.
 Versioned dataset links, creator records, and processing changes are listed in

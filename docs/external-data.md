@@ -51,3 +51,12 @@ not change the numerical parity results or replace missing waveform drivers.
 The paper-era arXiv v2 archive inventory and the absence of an authoritative
 `122022` release mapping are recorded in the
 [XHM/XPHM release-qualification receipt](validation/xhm_xphm_release_qualification_20260925.json).
+
+The optional independent IMRPhenomHM physical holdout uses the official
+[SXS:BBH:2265v3.0 record](https://doi.org/10.26138/SXS:BBH:2265v3.0).
+Its six exact source-file identities, conditioning, and fixed gates are in the
+[precommitted protocol](validation/imrphenomhm_sxs_2265_protocol_20260927.md).
+The [prepare script](../scripts/prepare_imrphenomhm_sxs_nr_holdout.py) downloads
+and verifies Lev3/Lev2 N2 strain to a user-selected directory outside the
+repository, then writes a derived fixture beside the raw files. It is not a
+runtime dependency and no SXS waveform array is packaged with diffgw.
