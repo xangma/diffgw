@@ -39,7 +39,13 @@ from torchwave.approximants.nsbh_phase_baseline import NSBHPhaseBaseline
 from torchwave.approximants.taylorf2 import TaylorF2
 from torchwave.approximants.kerr_qnm_interp import evaluate_kerr_qnm_220
 from torchwave.approximants.nsbh_clean_phase import nrtidalv2_frequency_phase
-from torchwave.approximants.nsbh_clean_amplitude import positive_tidal_frequency, delta2_prime_plus, gamma1_prime_small_lambda, outer_pn_center
+from torchwave.approximants.nsbh_clean_amplitude import (
+    positive_tidal_frequency,
+    delta2_prime_plus,
+    delta2_prime_small_lambda,
+    gamma1_prime_small_lambda,
+    outer_pn_center,
+)
 
 
 # Coefficients transcribed from the author-released ``BHNSremnant.py``
@@ -733,7 +739,7 @@ class IMRPhenomNSBH(nn.Module):
             gamma1_prime_small_lambda(lam_safe) * gamma1,
         )
         delta2_prime_gt1 = delta2_prime_plus(f_tide, f_rd_tilde)
-        delta2_prime_le1 = delta2 - 2.0 * (delta2 - 0.81248) * lam_safe + (delta2 - 0.81248) * (lam_safe ** 2.0)
+        delta2_prime_le1 = delta2_prime_small_lambda(delta2, lam_safe)
         delta2_prime = torch.where(lam2 > 1.0, delta2_prime_gt1, delta2_prime_le1)
         sigma_lorentz = delta2_prime * f_rd / q_factor
 

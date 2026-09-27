@@ -81,6 +81,11 @@ def delta2_prime_plus(f_tide: jnp.ndarray, f_rd_tilde: jnp.ndarray) -> jnp.ndarr
     return 0.81248 * 0.5 * (1.0 + jnp.tanh(4.0 * (x - 0.0188092) / 0.338737))
 
 
+def delta2_prime_small_lambda(delta2: jnp.ndarray, lambda2: jnp.ndarray) -> jnp.ndarray:
+    """Thompson Eq. (29), closed 0<=Lambda<=1 branch with supplied delta2."""
+    return delta2 - 2.0 * (delta2 - 0.81248) * lambda2 + (delta2 - 0.81248) * (lambda2 ** 2.0)
+
+
 def gamma1_prime_small_lambda(lambda2: jnp.ndarray) -> jnp.ndarray:
     """Compatibility quadratic; its linear sign differs from printed Eq. 26."""
     return 1.0 + 0.5 * lambda2 - 0.25 * (lambda2 ** 2.0)
@@ -771,7 +776,7 @@ class IMRPhenomNSBH:
             gamma1_prime_small_lambda(lam_safe) * gamma1,
         )
         delta2_prime_gt1 = delta2_prime_plus(f_tide, f_rd_tilde)
-        delta2_prime_le1 = delta2 - 2.0 * (delta2 - 0.81248) * lam_safe + (delta2 - 0.81248) * (lam_safe ** 2.0)
+        delta2_prime_le1 = delta2_prime_small_lambda(delta2, lam_safe)
         delta2_prime = jnp.where(lam2 > 1.0, delta2_prime_gt1, delta2_prime_le1)
         sigma_lorentz = delta2_prime * f_rd / q_factor
 
@@ -1004,6 +1009,7 @@ __all__ = [
     "nsbh_frequencies",
     "positive_tidal_frequency",
     "delta2_prime_plus",
+    "delta2_prime_small_lambda",
     "gamma1_prime_small_lambda",
     "outer_pn_center",
     "nrtidalv2_frequency_phase",

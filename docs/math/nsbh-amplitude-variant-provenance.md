@@ -56,10 +56,13 @@ These are discrepancy and regression checks, **not** a qualification of the
 paper-literal formulas. No limit or input may be changed after comparison.
 
 Do not modify the native defaults or run binary fitting. With no uniquely
-published correction for all three variants, the next amplitude assembly
-component remains blocked. The independent disruption root, torus/ISCO,
-branch selection, and scoped branch factors keep their existing status;
-remnant/QNM supply and whole-waveform qualification remain separate gates.
+published correction for all three variants, full amplitude assembly
+remains blocked. The independently printed [low-$\Lambda$ Eq. (29)
+branch](nsbh-low-lambda-ringdown-width.md) can be gated conditionally;
+that does not resolve the large-$\Lambda$ discrepancy. The disruption
+root, torus/ISCO, branch selection, and scoped branch factors keep their
+existing status; remnant/QNM supply and whole-waveform qualification
+remain separate gates.
 
 ## Reproduce the checks
 
