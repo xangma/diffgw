@@ -17,12 +17,15 @@ autodiff against independent central differences to `2e-5` relative.
 ## Inputs, conventions, and options
 
 Inputs are dimensionless Fourier frequencies `Mf > 0`, symmetric mass ratio
-`0 < eta <= 1/4`, a positive inspiral phase cut `f_ins`, ring frequency
+`1e-6 <= eta <= 1/4` for native comparisons, a positive inspiral phase cut `f_ins`, ring frequency
 `f_ring > f_ins`, damping frequency `f_damp > 0`, and five supplied fitted
 phase-derivative targets. The default nodes are the paper's `[C1,C2,E2,E3,E5]`
 subset. This component leaves the additive phase constant at zero; the full
 model fixes it at an attachment. The scalar evaluator uses mpmath at 70 decimal
 digits, while native comparisons use CPU float64.
+The production node helpers retain the pre-existing `eta` floor of `1e-6` outside
+this declared comparison domain; the scalar reference evaluates the printed
+formula for any positive `eta`.
 
 ## Mathematics and components
 

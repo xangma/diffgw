@@ -201,7 +201,7 @@ def _spherical_32_from_spheroidal(h22, h32_s, alpha222, alpha232, alpha322, alph
 
 def _nonmix_intermediate_phase_nodes(eta, f_ins, f_ring):
     """Default [C1,C2,E2,E3,E5] nodes of XHM Table 7."""
-    start = (1.0 + 0.001 * (0.25 / eta - 1.0)) * f_ins
+    start = (1.0 + 0.001 * (0.25 / torch.clamp(eta, min=1e-6) - 1.0)) * f_ins
     return torch.stack((
         start,
         ((math.sqrt(3.0) + 2.0) * start - (math.sqrt(3.0) - 2.0) * f_ring) / 4.0,
