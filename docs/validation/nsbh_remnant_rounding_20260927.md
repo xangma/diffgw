@@ -1,7 +1,7 @@
 # NSBH remnant printed-precision interval — 27 September 2026
 
 The [six-section v1 specification](../math/nsbh-remnant-rounding-interval.md)
-was frozen as commit `6e18fd4` **before** native Torch/JAX comparison. It
+was frozen as commit `a0904b2` **before** native Torch/JAX comparison. It
 uses [Jiménez-Forteza et al. (2017)](https://arxiv.org/html/1611.00332v2),
 Eqs. (7)–(28) and Tables 1–4, 7–10, for the BBH final mass/spin, and
 [Zappa et al. (2019)](https://arxiv.org/html/1903.11622v2), Supplementary
