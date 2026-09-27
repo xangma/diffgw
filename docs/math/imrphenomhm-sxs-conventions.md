@@ -104,6 +104,13 @@ the current implementation. The frozen [2265](../validation/imrphenomhm_sxs_2265
 failures remain red. A future physical qualification needs a separately
 predeclared NR gate after any source-justified model change.
 
+The [full-carrier reference-frequency audit](../validation/imrphenomhm_published_options_20260927.md)
+includes the D carrier's own phase subtraction. After an orbital compensation,
+it leaves the common analytic phase $e^{-iB}$, generally not a physical
+polarization rotation. Removing the explicit HM-relative factor restores
+orbital covariance in the diagnostic while preserving $(2,2)$; this is not yet
+a production change or a physical qualification result.
+
 ## Reproduce the checks
 
 With SymPy, mpmath, NumPy, Torch, JAX and CPU FP64 available, run

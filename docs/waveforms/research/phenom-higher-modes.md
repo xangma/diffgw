@@ -67,6 +67,14 @@ but each fails the second view's match and norm gates in both frontends.
 The matches are 0.971608 and 0.972273, and norm ratios 0.750351 and 1.223703.
 This option therefore remains physically unqualified under those gates.
 
+A [controlled option and phase-gauge diagnostic](../../validation/imrphenomhm_published_options_20260927.md)
+finds a finite-reference covariance defect if `f_ref` is intended only to set
+the orbital phase origin. The predicted extra analytic phase is reproduced by
+both frontends and the independent scalar carrier. Diagnostic factor removal
+restores orbital covariance but leaves NR disagreement. Runtime mapping helps
+the spinning case; none of the tested options closes both cases. These seen-case
+probes leave all frozen outcomes unchanged.
+
 The historical [frozen catalog and holdout](../../provenance_ledger.md#3-reference-evidence-by-model) each contain one passing HM case at declared complex relative L2 ≤ 10^-6 and mismatch ≤ 10^-8. That is case-specific and does not establish a domain bound. XHM has 0/1 passing full-waveform cases in each set at those strict gates. Its separate native phase tests use restricted ringdown windows, reference amplitudes and affine phase alignment, so they cannot be cited as whole-waveform accuracy. The paper's own NR quality control is evidence for the published model, not automatically for either native implementation or the alternate native-fit route.
 
 The [maintained pinned-binary six-mode holdout](../../validation/imrphenomhm_lal_six_modes_20260927.md) compares each native HM/D complex carrier against LALSuite 7.26.15 on three independently selected aligned-spin systems, with a fixed Fourier/orbital-phase adapter and no per-case alignment. Both frontends pass the declared integrated and supported-bin residual gates for all six modes. This is sampled implementation agreement with the same-model binary; it does not replace independent equation/fitted-input provenance or NR accuracy evidence.

@@ -174,6 +174,13 @@ matches are 0.971608 and 0.972273 versus the 0.980 floor. These results leave
 physical qualification open; they do not invalidate the separate bounded
 mathematical implementation checks.
 
+The subsequent [source-option and gauge diagnostic](../validation/imrphenomhm_published_options_20260927.md)
+identifies a finite-reference covariance problem in the documented API adapter.
+The independent reference reproduces this adapter, so its passing implementation
+checks do not establish that changing `f_ref` preserves the physical template
+family. Mapping choices also affect the NR scores; neither observation closes
+the physical gates.
+
 ## Reproduce the checks
 
 Use the optional reference, Torch and JAX dependencies with FP64 enabled:

@@ -127,3 +127,7 @@ twelve raw files, both fixtures and both metrics files. Both generated-document
 checks and the final strict MkDocs build passed on len.
 All earlier NR results remain unchanged. Whole-family physical qualification
 and an error bound over the parameter domain remain open.
+
+The completed [source-option and reference-frequency diagnostic](imrphenomhm_published_options_20260927.md)
+records controlled ablations and a source-derived covariance defect. It leaves
+this frozen result unchanged; no complete physical repair is established.
