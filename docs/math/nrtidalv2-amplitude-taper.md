@@ -136,6 +136,13 @@ taper boundary for the nonzero-tide cases if their untapered amplitudes
 continue to agree inside the window. This is a diagnostic inference, not
 an identification of the pinned binary's internal merger calculation.
 
+The separate [premerger complex-composition holdout](../validation/nrtidalv2_composed_holdout_20260927.md)
+passes for the default `binary_compatible` D variant on three new
+nonspinning systems through 1200 Hz. It jointly checks the tidal phase and
+default amplitude against the pinned public binary and checks the phase
+against the independent paper reference. The result does not resolve the
+default amplitude's paper provenance or the failed nonzero-tide taper gate.
+
 This gate tests only literature transcription and named-binary agreement
 for this slice. It does not validate the NR calibration, self-spin,
 nonzero spins, other modes, other distances/inclinations, FP32/GPU or
