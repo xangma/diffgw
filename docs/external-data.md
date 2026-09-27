@@ -66,3 +66,9 @@ The independent second case uses
 [red receipt](validation/imrphenomhm_sxs_3631_receipt_20260927.md),
 `scripts/prepare_imrphenomhm_sxs_3631_nr_holdout.py`, and strict external-data
 test. Both cases currently fail physical six-mode gates.
+The separate [SXS:BBH:3619v3.0](https://doi.org/10.26138/SXS:BBH:3619v3.0)
+projected-strain holdout has a [frozen protocol](validation/imrphenomhm_sxs_3619_projection_protocol_20260927.md),
+[red receipt](validation/imrphenomhm_sxs_3619_projection_receipt_20260927.md),
+external-data preparation script, and strict test. Its model matches pass, but
+its predeclared Lev2–Lev3 resolution screen fails, so it supplies no physical
+qualification. Its raw and derived SXS arrays also remain outside Git.
