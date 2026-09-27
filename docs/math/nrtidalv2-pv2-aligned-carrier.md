@@ -8,7 +8,7 @@ face-on IMRPhenomD BBH carrier with its phase and time origin already set.
 It adds the published finite-size correction before Pv2 rotation. It does
 not select BNS precession angles or qualify a complete Pv2 BNS waveform.
 
-## Inputs and conventions
+## Inputs, conventions, and options
 
 Inputs are positive GW frequencies in Hz; component masses in solar masses;
 dimensionless aligned spins and positive tidal deformabilities; luminosity
@@ -46,7 +46,13 @@ enters the formula.
 | --- | --- | --- | --- |
 | `nrtidalv2-pv2-aligned-carrier/v1` | `nrtidalv2_pv2_terms.assembled_carrier_from_bbh`, composing independent phase, spin, amplitude and taper references | Torch/JAX `assemble_nrtidalv2_pv2_aligned_carrier` with supplied face-on carrier | `test_nrtidalv2_pv2_aligned_carrier_math_reference.py` |
 
-## Acceptance and limitations
+## Implementation mapping
+
+The scalar reference composes the independent tidal phase, self-spin,
+amplitude, and taper references. The Torch and JAX assembly helpers accept
+the supplied face-on carrier and apply these terms before rotation.
+
+## Evidence and limitations
 
 The three frozen spinning systems of the [aligned-additive-term
 specification](nrtidalv2-pv2-aligned-additive-terms.md) use 100 Mpc,
@@ -70,7 +76,7 @@ public Pv2 driver. The published Love–Q Eq. (28) versus Fig. 7 and merger
 fit versus pinned-binary conflicts remain open. Zero or negative Lambda,
 zero live BBH amplitude, and binary parity are outside this gate.
 
-## Reproduce
+## Reproduce the checks
 
 ```sh
 PYTHONPATH=src:tests JAX_ENABLE_X64=1 python -m pytest -q \
