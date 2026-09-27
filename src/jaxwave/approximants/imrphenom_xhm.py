@@ -198,6 +198,24 @@ def _spheroidal_32_ringdown_phase(frequency, ring, damp, a2, a4, a_lambda, time_
     )
 
 
+def _spheroidal_32_alignment(
+    ring22, damp22, ring32, damp32, a2, a4, a_lambda,
+    base_time, carrier_slope, carrier_phase, delta_t, delta_phi,
+):
+    """XHM Eqs. (49)-(50) offsets at the author notebook's reference nodes."""
+    f0 = ring22 + damp22
+    f1 = ring22
+    unaligned_slope = _spheroidal_32_ringdown_phase_derivative(
+        f0, ring32, damp32, a2, a4, a_lambda, base_time,
+    )
+    final_time = base_time + carrier_slope + delta_t - unaligned_slope
+    unaligned_phase = _spheroidal_32_ringdown_phase(
+        f1, ring32, damp32, a2, a4, a_lambda, final_time, 0.0,
+    )
+    final_phase = carrier_phase + delta_phi - unaligned_phase
+    return final_time, final_phase
+
+
 def _value_and_derivative(function, frequency: jnp.ndarray):
     """Value and pointwise frequency derivative using forward-mode autodiff in JAX."""
     val, deriv = jax.jvp(function, (frequency,), (jnp.ones_like(frequency),))
@@ -1044,20 +1062,11 @@ class IMRPhenomXHM:
                     _, carrier_dp_at_f0 = eval_carrier_phi_and_deriv(f0_align)
                     carrier_p_at_f1, _ = eval_carrier_phi_and_deriv(f1_align)
 
-                    def eval_dphi_32_s(f_in: jnp.ndarray) -> jnp.ndarray:
-                        return _spheroidal_32_ringdown_phase_derivative(
-                            f_in, f_ring["32"], f_damp["32"],
-                            alpha2_32, alpha4_32, alpha_lam_32, dt_rd_32,
-                        )
-
-                    time_shift_32 = (carrier_dp_at_f0 + delta_t_32_s) - eval_dphi_32_s(f0_align)
-                    dt_rd_32 = dt_rd_32 + time_shift_32
-
-                    phi_32_s_base_at_f1 = _spheroidal_32_ringdown_phase(
-                        f1_align, f_ring["32"], f_damp["32"],
-                        alpha2_32, alpha4_32, alpha_lam_32, dt_rd_32, 0.0,
+                    dt_rd_32, phi_rd_32_s_shift = _spheroidal_32_alignment(
+                        f_ring["22"], f_damp["22"], f_ring["32"], f_damp["32"],
+                        alpha2_32, alpha4_32, alpha_lam_32, dt_rd_32,
+                        carrier_dp_at_f0, carrier_p_at_f1, delta_t_32_s, delta_phi_32_s,
                     )
-                    phi_rd_32_s_shift = (carrier_p_at_f1 + delta_phi_32_s) - phi_32_s_base_at_f1
 
                     def eval_phi_32_s(f_in: jnp.ndarray) -> jnp.ndarray:
                         return _spheroidal_32_ringdown_phase(

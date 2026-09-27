@@ -33,8 +33,11 @@ The arXiv:2001.10914v2 source archive is identified by SHA-256
 Its `anc/ParspaceFits/IMRPhenomXHM_PhaseFits.nb` (SHA-256
 `48cc263ab9f2837220cd11fbfd99205562b8863af077074f46d730e35382108b`)
 identifies the reference frequencies, and its `PhaseFits/32/deltadPhiS.m`
-and `deltaPhiS.m` hold the respective fit records. The arXiv page grants
-arXiv a non-exclusive distribution license; it does not state that the
+and `deltaPhiS.m` hold the respective fit records (SHA-256
+`07107d0436b316792e0b2cd343b8cce3efa2a96276a26304f6ecbdfb7c975455`
+and `e92a6657458934bea6bb8466b97c7cd90a45d57d98eff9b546e7d64804fac772`).
+The [arXiv license](https://arxiv.org/licenses/nonexclusive-distrib/1.0/license.html)
+grants arXiv a non-exclusive distribution license; it does not state that the
 ancillary fit records can be redistributed under this repository's MIT license.
 No fit coefficients are embedded in this specification or reference.
 

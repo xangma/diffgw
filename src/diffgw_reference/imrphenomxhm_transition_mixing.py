@@ -2,7 +2,7 @@
 """Paper-era XHM (3,2) phase join and spherical/spheroidal mixing.
 
 Only the algebra printed in Garcia-Quiros et al., arXiv:2001.10914v2,
-Eqs. (38), (40), (46)--(48), Table 7, and (A1)--(A3) is implemented. All
+Eqs. (38), (40), (46)--(47), (49)--(50), Table 7, and (A1)--(A3) is implemented. All
 collocation targets, QNM frequencies, amplitudes, and mixing coefficients
 are caller data.  In particular, this is not a release-122022 fit provider.
 """
@@ -17,6 +17,7 @@ COMPONENT_IDS = {
     "intermediate_phase_join": "xhm.phase.32.intermediate-ringdown-join.v1",
     "spherical_spheroidal_mixing": "xhm.mixing.32.spherical-spheroidal.v1",
     "spheroidal_ringdown_phase_shape": "xhm.phase.32.spheroidal-ringdown-shape.v1",
+    "spheroidal_ringdown_alignment": "xhm.phase.32.spheroidal-alignment.v1",
 }
 
 
@@ -73,6 +74,30 @@ def ringdown_spheroidal_phase_derivative(frequency, f_ring32, f_damp32, coeffici
         raise ValueError("frequencies must be positive")
     a2, a4, alam, dphi = map(mp.mpf, coefficients)
     return a2 / f**2 + a4 / f**4 + alam * damp / (damp**2 + (f - ring)**2) + dphi
+
+
+def ringdown_spheroidal_alignment(
+    f_ring22, f_damp22, f_ring32, f_damp32,
+    a2, a4, a_lambda, base_time, carrier_slope, carrier_phase, delta_t, delta_phi,
+):
+    """Eqs. (49)-(50) offsets at the author notebook's reference frequencies.
+
+    All fitted quantities and carrier values are caller-supplied; this does
+    not evaluate or redistribute the ancillary parameter-space surfaces.
+    """
+
+    r22, d22, r32, d32 = map(mp.mpf, (f_ring22, f_damp22, f_ring32, f_damp32))
+    a2, a4, alam, time = map(mp.mpf, (a2, a4, a_lambda, base_time))
+    slope, phase, dt, dphi = map(mp.mpf, (carrier_slope, carrier_phase, delta_t, delta_phi))
+    if min(r22, d22, r32, d32) <= 0:
+        raise ValueError("QNM frequencies must be positive")
+    f0 = r22 + d22
+    f1 = r22
+    unaligned_slope = ringdown_spheroidal_phase_derivative(f0, r32, d32, (a2, a4, alam, time))
+    final_time = time + slope + dt - unaligned_slope
+    unaligned_phase = ringdown_spheroidal_phase(f1, r32, d32, (a2, a4, alam, final_time))
+    final_phase = phase + dphi - unaligned_phase
+    return final_time, final_phase
 
 
 def _intermediate_row(f, ring, damp):
