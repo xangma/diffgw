@@ -646,14 +646,20 @@ def factorized_42_amplitude(m1, m2, chi1, chi2, omega,
 
 
 def factorized_43_amplitude(m1, m2, chi1, chi2, omega,
-                            omega_zero_radial, pphi, h_real, *, digits=60):
+                            omega_zero_radial, pphi, h_real, *,
+                            higher_spin="taylor_f", digits=60):
     """Conditional pre-NQC |R h43/M| with regularized odd-mass spin term.
 
     Pan 1006.0431v2 Eqs. (29g), (38g), (41g) and DIN 0811.2069v2
     Eq. (101) give the J-source leading mode, nonspin rho, and spin
     additions. Taracchini 1202.0790v2 Appendix A adds the printed
-    test-particle v**6 term. No division by mass difference is needed.
+    test-particle v**6 term. ``higher_spin="pan_rho"`` places Pan's
+    Eq. (29g) Kerr-spin terms inside rho before its fourth power; the
+    default uses their Taylor linearization in the residual. No division
+    by mass difference is needed. Neither choice is asserted historical.
     """
+    if higher_spin not in {"taylor_f", "pan_rho"}:
+        raise ValueError("higher_spin must be taylor_f or pan_rho")
     with mp.workdps(digits):
         m1, m2, s1, s2, w, w0, j, hr = map(
             lambda value: mp.mpf(str(value)),
@@ -671,8 +677,11 @@ def factorized_43_amplitude(m1, m2, chi1, chi2, omega,
                -mp.mpf(6894273)/7047040*v**4
                +(mp.mpf(1664224207351)/195343948800-1571*el3/770)*v**6)
         c = x2**4-x1**4
-        residual = (c*(rho**4+3*q**2/2*v**4-12113*q/1540*v**5)
-                    -5*n/2*(delta*cs-ca)*v)
+        if higher_spin == "pan_rho":
+            mass_residual = c*(rho+3*q**2/8*v**4-12113*q/6160*v**5)**4
+        else:
+            mass_residual = c*(rho**4+3*q**2/2*v**4-12113*q/1540*v**5)
+        residual = mass_residual-5*n/2*(delta*cs-ca)*v
         return +(mp.mpf(9)/5*mp.sqrt(2*mp.pi/7)*n*vphi**5*j*v
                  *_tail_modulus(4, 3, w, hr)*abs(residual))
 

@@ -1,0 +1,72 @@
+{
+  "schema": "diffgw.seobnrv4.flux-43-pan-rho-plan.v1",
+  "component": "V4-FLUX-43-AMPLITUDE",
+  "aggregate_component": "V4-FLUX-4-9",
+  "purpose": "Prospectively discriminate and directly qualify the published Pan rho43 higher-spin placement against both native frontends without using GPL implementation source.",
+  "source_scope": "Pan et al. 1006.0431v2 Eqs. (29g), (38g), (41g); Damour-Iyer-Nagar 0811.2069v2 Eq. (101); Taracchini et al. 1202.0790v2 Eq. (52b).",
+  "configuration": {
+    "lmax": 4,
+    "spin_truncation": "tabulated",
+    "retain_pan_cubic_spin": false,
+    "mode_21_higher_spin": "taylor_f",
+    "mode_31_higher_spin": "taylor_f",
+    "mode_32_spin_square": "pan_f26",
+    "mode_33_higher_spin": "taylor_f",
+    "mode_43_branches": ["taylor_f", "pan_rho"],
+    "frontend_pan_rho_branch": "lal_v4_rho",
+    "reference_digits": 50,
+    "precision_check_digits": 70
+  },
+  "rows": [
+    {
+      "name": "strong_discriminator",
+      "role": "discriminator",
+      "m1": 45.0,
+      "m2": 5.0,
+      "chi1": -0.8,
+      "chi2": 0.3,
+      "omega": 0.1,
+      "omega_zero_radial": 0.095,
+      "p_phi": 2.6,
+      "heff_over_mu": 0.89,
+      "hreal_over_M": 0.973
+    },
+    {
+      "name": "zero_spin_control",
+      "role": "control",
+      "m1": 30.0,
+      "m2": 20.0,
+      "chi1": 0.0,
+      "chi2": 0.0,
+      "omega": 0.04,
+      "omega_zero_radial": 0.039,
+      "p_phi": 3.0,
+      "heff_over_mu": 0.95,
+      "hreal_over_M": 0.988
+    },
+    {
+      "name": "equal_mass_unequal_spin_control",
+      "role": "control",
+      "m1": 20.0,
+      "m2": 20.0,
+      "chi1": -0.9,
+      "chi2": 0.7,
+      "omega": 0.08,
+      "omega_zero_radial": 0.077,
+      "p_phi": 3.0,
+      "heff_over_mu": 0.91,
+      "hreal_over_M": 0.975
+    }
+  ],
+  "gates": {
+    "frontend_relative_error_at_most": 4e-12,
+    "frontend_absolute_error_at_most": 2e-14,
+    "strong_row_relative_branch_separation_at_least": 0.1,
+    "control_row_absolute_branch_difference_at_most": 2e-14,
+    "scalar_50_to_70_digit_relative_error_at_most": 1e-35,
+    "finite_nonnegative_amplitudes": true
+  },
+  "separation_definition": "abs(pan_rho - taylor_f) / abs(taylor_f)",
+  "interpretation": "A pass establishes the printed Pan rho43 placement and its frontend implementation at these finite supplied states. It does not establish which branch historical SEOBNRv4 selected, qualify other flux switches, validate evolved torque or NQC, close V4-FLUX-4-9, qualify release, or permit catalog promotion.",
+  "release_qualified": false
+}

@@ -1,4 +1,4 @@
-# SEOBNRv4 source specification: paper components 0.8.14
+# SEOBNRv4 source specification: paper components 0.8.15
 
 **Status: incomplete research specification.** This version establishes an
 independent executable source of truth for the components marked `executable`
@@ -79,6 +79,7 @@ trained basis, parameter interpolation, or holdout definition yet.
 | `V4-HAM-EQUATORIAL-PR0` / 0.8.11 | Bohé Eqs. (2)–(3), (25), (29)–(31); Barausse–Buonanno Eqs. (161)–(164) | executable | `hamiltonian.aligned_effective_hamiltonian` at supplied `r,p_phi`, `p_r*=0` | `SEOBNRv4Hamiltonian.effective_hamiltonian` | Paper-value check only; historical derivative convention and orbit dynamics remain open |
 | `V4-FLUX-NORM-9` / 0.8.11 | Bohé Eq. (9); Pan mode sum | executable | `flux.emitted_flux` | `energy_flux_from_modes`; `emitted_flux_from_modes` | Supplied pre-NQC positive-`m` modes only; full torque is `V4-FLUX-4-9` |
 | `V4-FLUX-TAIL-MODULUS` / 0.8.11 | [Damour–Iyer–Nagar Eqs. (19), (59)](https://arxiv.org/html/0811.2069); [Pan Eq. (26)](https://arxiv.org/html/1006.0431) | executable | `flux._tail_modulus` | Torch `_tail_abs_squared`; JAX `_tail_modulus` | Supplied mode indices, frequency, and real energy only; mode residuals and full torque remain `V4-FLUX-4-9` |
+| `V4-FLUX-43-AMPLITUDE` / 0.8.15 | Pan Eqs. (29g), (38g), (41g); DIN Eq. (101); Taracchini Eq. (52b) | conditional | `flux.factorized_43_amplitude` with explicit higher-spin placement | Torch/JAX `SEOBNRv4PublishedFlux.amplitudes` | Both printed placements pass a three-row frozen discriminator; historical branch selection and full torque remain open |
 | `V4-NQC-7` / 0.8.11 | Bohé Eq. (7) and peak fits | conditional | `nqc.match_22` | Manifest-linked NQC modules | Historical fit differentiation and source/wheel inputs |
 | `V4-RD-PEAK-CONTINUATION` / 0.8.11 | Bohé Eqs. (10), (12)–(14); pinned historical LAL ringdown source, Eqs. (57)–(58) of T1600383 | conditional | `ringdown.peak_preserving_shape` | `seobnrv4_peak_preserving_shape` | Historical rule integrated; domain-wide waveform validation remains open |
 | `V4-QNM-NATIVE-220-SPLINE` / 0.8.11 | Bohé Sec. II.C; independent Berti and Cook author data | conditional | `qnm.native_signed_220_spline` with supplied native controls | Torch/JAX `evaluate_kerr_qnm_220` | Finite-point value/derivative checks and one fixed-boundary waveform witness pass; continuous error, historical compatibility, and domain-wide impact remain open |
@@ -461,11 +462,12 @@ finds that the active ordinary-v4 flux path uses the `v` and `v**3` terms,
 whereas its complex-waveform path uses only the leading `v` term. Both omit
 spin-dependent `rho21` terms through `v**3` and directly retain the published
 Eq. (29b) spin coefficients from `v**4` through `v**7`; this scalar
-reference instead adds Eq. (28b) Taylor higher-spin terms as a residual. A compiled
-pre-NQC `(2,1)` comparison and a public-equation derivation of any correction
-remain necessary. Pan prints both the Taylor residual `f21` in Eq. (28b) and
-the spin-resummed `rho21` in Eq. (29b); their agreement through a chosen PN
-order does not make their finite-frequency hybrids interchangeable.
+reference instead adds Eq. (28b) Taylor higher-spin terms as a residual. The
+pinned compiled-source component audit checks the historical branch at fixed
+states, but it is behavioral evidence rather than an independent public-equation
+derivation of the historical selector. Pan prints both the Taylor residual
+`f21` in Eq. (28b) and the spin-resummed `rho21` in Eq. (29b); their agreement
+through a chosen PN order does not make their finite-frequency hybrids interchangeable.
 The development-only [frozen rho-hybrid discriminator](../evidence/2026-09-23/mode_21_rho_hybrid_diagnostic.json)
 evaluates a separate scalar candidate built from Pan Eq. (29b)'s printed
 `v**4`--`v**7` spin coefficients in `rho21`, with the two audited auxiliary
@@ -484,7 +486,13 @@ Its quadratic-peak complex relative L2 improves from `0.0080719610` to
 or close the waveform discrepancy.
 
 All 35 Torch and JAX mode moduli now have conditional scalar references and
-frozen point checks. The [JAX 35-mode tests](../../../tests/test_clean_room_jax_seobnrv4_published_flux.py)
+frozen point checks. The prospectively frozen
+[Pan-rho43 discriminator](../evidence/2026-09-27/flux_43_pan_rho_plan.json)
+checks the Taylor-f and printed Pan Eq. (29g) rho placements against both
+frontends on one separating row and two controls. The separating row differs by
+`0.1511343331`, while the controls coincide; this qualifies both pieces of
+published algebra but not the historical selector. The
+[JAX 35-mode tests](../../../tests/test_clean_room_jax_seobnrv4_published_flux.py)
 cover two mass-ratio/spin points, both declared high-`ell` truncations, the
 `(2,1)` hybrid choice, the `(3,3)` source-placement choice, batching, JIT,
 and derivatives. This establishes the declared factorized reconstruction only:

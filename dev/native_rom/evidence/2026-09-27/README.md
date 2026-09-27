@@ -59,6 +59,25 @@ does not identify the historical flux switches or Cartesian root procedure and
 does not validate integration, events, or convergence. `V4-ODE-IC` and
 `V4-FLUX-4-9` therefore remain pending.
 
+## Published Pan-rho43 discriminator
+
+The [prospectively frozen plan](flux_43_pan_rho_plan.json),
+[focused tests](../../reference/tests/test_flux_43_branch.py), and
+[machine-readable result](flux_43_pan_rho.json) add an explicit independent
+scalar branch for Pan Eq. (29g)'s higher-spin terms inside `rho43**4`. The
+existing Taylor-f placement and the printed Pan-rho placement both agree with
+Torch and JAX at the unchanged `4e-12` relative / `2e-14` absolute gates on
+three frozen supplied states. The strong row separates the branches by
+`0.15113433306957774`; zero-spin and equal-mass unequal-spin controls coincide,
+and each scalar branch is stable from 50 to 70 digits at `1e-35` relative.
+
+The CPU-only run on `len` passed all 16 checks in 5.84 s; the bounded published,
+focused, and frontend regression passed 60 tests in 14.45 s. This removes
+formula-level dependence on implementation source for this discriminator, but
+the papers do not select the exact historical branch. No production code,
+release threshold, catalog entry, or release status changed; `V4-FLUX-4-9`
+remains pending.
+
 ## Historical-fidelity release boundary
 
 The [frozen release plan](historical_fidelity_release_plan.json),

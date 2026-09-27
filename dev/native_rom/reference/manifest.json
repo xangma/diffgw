@@ -1,5 +1,5 @@
 {
-  "specification": "seobnrv4-paper-components/0.8.14",
+  "specification": "seobnrv4-paper-components/0.8.15",
   "model": "SEOBNRv4 dominant (2,2) mode, aligned-spin black-hole binaries",
   "source": {
     "id": "bohe-2017-v3",
@@ -205,9 +205,9 @@
       "status": "conditional",
       "reference": "flux.factorized_43_amplitude",
       "torch": "src/torchwave/approximants/eob/seobnrv4_flux.py:SEOBNRv4PublishedFlux.amplitudes",
-      "jax": "src/jaxwave/approximants/eob/seobnrv4_amplitude43.py:seobnrv4_published_amplitude43",
-      "test": "dev/native_rom/reference/tests/test_published.py:test_factorized_43_newtonian_limit_and_equal_mass_spin; dev/native_rom/reference/tests/test_torch.py:test_factorized_43_amplitude_against_reference; dev/native_rom/reference/tests/test_jax.py:test_factorized_43_amplitude_against_reference; dev/native_rom/reference/tests/test_jax.py:test_six_mode_partial_flux_against_scalar_reference; tests/test_clean_room_jax_seobnrv4_amplitude43.py:test_batched_jit_exchange_and_equal_mass_unequal_spin",
-      "condition": "Regularized pre-NQC J-source modulus of a declared finite-mass nonspin and spin hybrid at frozen points. The historical v4 hybrid choice, complete (2,1) spin prescription, and other JAX mode amplitudes are unverified."
+      "jax": "src/jaxwave/approximants/eob/seobnrv4_amplitude43.py:seobnrv4_published_amplitude43; src/jaxwave/approximants/eob/seobnrv4_flux.py:SEOBNRv4PublishedFlux.amplitudes",
+      "test": "dev/native_rom/reference/tests/test_published.py:test_factorized_43_newtonian_limit_and_equal_mass_spin; dev/native_rom/reference/tests/test_torch.py:test_factorized_43_amplitude_against_reference; dev/native_rom/reference/tests/test_jax.py:test_factorized_43_amplitude_against_reference; dev/native_rom/reference/tests/test_jax.py:test_six_mode_partial_flux_against_scalar_reference; dev/native_rom/reference/tests/test_flux_43_branch.py:test_frontends_match_frozen_scalar_branches; dev/native_rom/reference/tests/test_flux_43_branch.py:test_frozen_branch_discriminator_and_precision; tests/test_clean_room_jax_seobnrv4_amplitude43.py:test_batched_jit_exchange_and_equal_mass_unequal_spin",
+      "condition": "Regularized pre-NQC J-source modulus of a declared finite-mass nonspin and spin hybrid at frozen points. A prospectively frozen three-row discriminator directly checks both the Taylor-f placement and Pan Eq. (29g) rho43 placement against Torch and JAX at 4e-12 relative / 2e-14 absolute tolerance; the strong row separates them by 0.1511343331 while zero-spin and equal-mass controls coincide. This establishes the printed branch algebra, not which branch historical v4 selected. The complete (2,1) spin prescription and full historical torque remain unverified."
     },
     {
       "id": "V4-FLUX-55-AMPLITUDE",

@@ -1,0 +1,66 @@
+{
+  "schema": "diffgw.seobnrv4.flux-43-pan-rho.v1",
+  "status": "diagnostic_complete",
+  "component": "V4-FLUX-43-AMPLITUDE",
+  "aggregate_component": "V4-FLUX-4-9",
+  "plan_sha256": "21147a926b879dc12bf5c6a1ed89f2123fca87fc041f42d42c147eb8fe439a9d",
+  "process": {
+    "host": "len",
+    "cwd": "/home/xangma/tmp/diffgw-seobnr-flux43-pan-rho-20260927",
+    "pid": 2992883,
+    "python": "/home/xangma/.cache/diffgw-taylorf2-hm-venv/bin/python",
+    "command": "env CUDA_VISIBLE_DEVICES= JAX_PLATFORMS=cpu PYTHONPATH=src:. /home/xangma/.cache/diffgw-taylorf2-hm-venv/bin/python -m pytest dev/native_rom/reference/tests/test_flux_43_branch.py -q",
+    "log": "/home/xangma/tmp/diffgw-seobnr-flux43-pan-rho-20260927/flux43-pan-rho.log",
+    "log_sha256": "2c6cd66f4bdaa2de2b37c86d2652ee23b09560c946608098e75d59a8872f112a",
+    "duration_seconds": 5.84,
+    "exit_code": 0
+  },
+  "environment": {
+    "jax": "0.11.2",
+    "scipy": "1.18.1",
+    "torch": "2.14.0+cpu"
+  },
+  "bounded_regression": {
+    "host": "len",
+    "pid": 3073051,
+    "command": "env CUDA_VISIBLE_DEVICES= JAX_PLATFORMS=cpu PYTHONPATH=src:. /home/xangma/.cache/diffgw-taylorf2-hm-venv/bin/python -m pytest dev/native_rom/reference/tests/test_published.py dev/native_rom/reference/tests/test_flux_43_branch.py dev/native_rom/reference/tests/test_torch.py::test_factorized_43_amplitude_against_reference dev/native_rom/reference/tests/test_jax.py::test_factorized_43_amplitude_against_reference -q",
+    "log": "/home/xangma/tmp/diffgw-seobnr-flux43-pan-rho-20260927/flux43-regression.log",
+    "log_sha256": "47cdb074b66cef7b2c124314a8db852eae2313ceacc14efbbd28cb353352652a",
+    "pytest_tests_passed": 60,
+    "duration_seconds": 14.45,
+    "exit_code": 0
+  },
+  "coverage": {
+    "frozen_rows": 3,
+    "branches": 2,
+    "frontend_branch_comparisons": 12,
+    "scalar_discriminator_precision_checks": 3,
+    "validation_checks": 1,
+    "pytest_tests_passed": 16
+  },
+  "strong_discriminator": {
+    "taylor_f_amplitude": 0.003785223322289576,
+    "pan_rho_amplitude": 0.0032131461199559296,
+    "relative_branch_separation": 0.15113433306957774,
+    "definition": "abs(pan_rho - taylor_f) / abs(taylor_f)"
+  },
+  "gates": {
+    "frontend_relative_error_at_most": {"threshold": 4e-12, "passed": true},
+    "frontend_absolute_error_at_most": {"threshold": 2e-14, "passed": true},
+    "strong_row_relative_branch_separation_at_least": {"threshold": 0.1, "passed": true},
+    "control_row_absolute_branch_difference_at_most": {"threshold": 2e-14, "passed": true},
+    "scalar_50_to_70_digit_relative_error_at_most": {"threshold": 1e-35, "passed": true},
+    "finite_nonnegative_amplitudes": {"passed": true}
+  },
+  "source_change": true,
+  "production_change": false,
+  "release_qualified": false,
+  "historical_selector_qualified": false,
+  "remaining_blockers": [
+    "independent evidence selecting the exact historical higher-mode hybrid and truncations",
+    "remaining mode-switch conventions including 31, 32, and high-ell choices",
+    "evolved-domain torque and NQC-free dynamics checks",
+    "JAX waveform coupling and domain-wide whole-waveform qualification"
+  ],
+  "interpretation": "All prospectively frozen formula-level checks passed without changing their gates. The public scalar reference now independently represents Pan's printed rho43 placement and both frontends match it, but no published or permissively licensed evidence selects that placement as the historical SEOBNRv4 convention. V4-FLUX-4-9 remains pending and catalog exclusion remains required."
+}
