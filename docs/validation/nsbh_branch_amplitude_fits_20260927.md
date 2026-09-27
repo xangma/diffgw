@@ -29,6 +29,9 @@ tests/test_clean_room_nsbh.py tests/parity/test_nsbh_parity.py` ran from
 FP64. The log is `pytest.log` in that directory.
 The combined fit and neighboring NSBH run passed **101/101** in 74.30 s,
 with no skips or expected failures.
+The test was subsequently renamed to
+`tests/test_nsbh_branch_amplitude_fits_math_reference.py` for the strict
+CI gate; the command above records the name used for this run.
 
 Environment: Python 3.12.3, Torch 2.14.0+cpu, JAX 0.11.2, NumPy 2.5.3,
 mpmath 1.3.0, pytest 9.1.1. This qualifies the branch factors at supplied

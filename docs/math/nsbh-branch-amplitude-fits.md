@@ -88,6 +88,6 @@ model, joining frequencies, amplitude assembly, or a binary waveform.
 ## Reproduce the checks
 
 Run `JAX_ENABLE_X64=1 PYTHONPATH=src pytest -q
-tests/test_nsbh_branch_amplitude_fits.py` with reference, Torch and JAX extras
+tests/test_nsbh_branch_amplitude_fits_math_reference.py` with reference, Torch and JAX extras
 on CPU. The [validation receipt](../validation/nsbh_branch_amplitude_fits_20260927.md)
 records measured results and versions.
