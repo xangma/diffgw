@@ -1,8 +1,8 @@
-"""Independent restricted (2,1), (3,3), and (4,4) SPA ratios for London Eq. (4).
+"""Independent restricted HM SPA ratios for London Eq. (4).
 
 London et al., arXiv:1708.00404v4, Eqs. (3)–(4), retain only the
 leading-frequency term for ell=|m|. Mishra et al., arXiv:1601.05588v1,
-Eqs. (11), (12a), (12b), (12c), (12f), supply the terms and SPA factor.
+Eqs. (11), (12a), (12b), (12c), (12d), (12f), supply terms and SPA factors.
 The amplitude map is a separate reference component with supplied QNM inputs.
 """
 
@@ -29,6 +29,10 @@ COMPONENT_SOURCES = {
         (LONDON, "Eqs. (3)–(4), paragraph after Eq. (4)"),
         (MISHRA, "Eqs. (7), (11), (12a), (12b) and V_m definition"),
     ),
+    "hm.amp.beta32.1p5pn.eq4.v1": (
+        (LONDON, "Eqs. (3)–(4), paragraph after Eq. (4)"),
+        (MISHRA, "Eqs. (7), (11), (12a), (12d) and V_m definition"),
+    ),
 }
 COMPONENT_BINDINGS = {
     "hm.amp.beta33.leading.eq4.v1": {
@@ -48,6 +52,12 @@ COMPONENT_BINDINGS = {
         "torch": ("torchwave.approximants.imrphenom_hm", "IMRPhenomHM"),
         "jax": ("jaxwave.approximants.imrphenom_hm", "IMRPhenomHM"),
         "tests": ("test_public_beta21_values_and_one_sided_slopes",),
+    },
+    "hm.amp.beta32.1p5pn.eq4.v1": {
+        "reference": "beta32_1p5pn",
+        "torch": ("torchwave.approximants.imrphenom_hm", "IMRPhenomHM"),
+        "jax": ("jaxwave.approximants.imrphenom_hm", "IMRPhenomHM"),
+        "tests": ("test_public_beta32_values_and_one_sided_slopes",),
     },
 }
 
@@ -104,6 +114,23 @@ def symbolic_eq4_beta21() -> sp.Expr:
     def h22(z):
         return -_v(2, z) ** sp.Rational(-7, 2)
     return sp.factor(h21(G) / h22(G) * h21(X) / h21(2 * X))
+
+
+def symbolic_p32(v: sp.Expr) -> sp.Expr:
+    """Mishra Eq. (12d), truncated at the London spin-dependent order."""
+    return (1 - 3 * ETA) * v**2 + 4 * ETA * CHI_S * v**3
+
+
+def symbolic_eq4_beta32() -> sp.Expr:
+    """Build Eq. (4) from full SPA envelopes; its m=2 quotient is unity."""
+    def h32(z):
+        v = _v(2, z)
+        return -sp.sqrt(sp.Rational(5, 7)) / 3 * v ** sp.Rational(-7, 2) * symbolic_p32(v)
+
+    def h22(z):
+        return -_v(2, z) ** sp.Rational(-7, 2)
+
+    return sp.cancel(h32(G) / h22(G) * h32(X) / h32(2 * X / 2))
 
 
 def beta33_leading(mapped_frequency, delta) -> mp.mpf:
@@ -223,3 +250,39 @@ def beta21_eq5_one_sided_slopes(join, f0, f_rd_21, f_rd_22,
     left = mp.re(mp.conj(b) * (db_dg * left_g + db_dx)) / abs(b)
     right = mp.re(mp.conj(b) * (db_dg * right_g + db_dx)) / abs(b)
     return left, right
+
+
+def beta32_1p5pn(mapped_frequency, eta, chi_s) -> mp.mpf:
+    """Magnitude of the printed (3,2) spin-dependent London Eq. (4) factor."""
+    g, e, cs = (mp.mpf(str(v)) for v in (mapped_frequency, eta, chi_s))
+    if g <= 0 or e <= 0 or e > mp.mpf(1) / 4 or abs(cs) > 1:
+        raise ValueError("require mapped_frequency>0, 0<eta<=1/4, |chi_s|<=1")
+    v = mp.root(mp.pi * g, 3)
+    p = (1 - 3 * e) * v**2 + 4 * e * cs * v**3
+    return mp.sqrt(mp.mpf(5) / 7) / 3 * abs(p)
+
+
+def beta32_on_eq5(x, f0, f_rd_32, f_rd_22, eta, chi_s) -> mp.mpf:
+    """Compose the printed (3,2) factor with London's Eq. (5) map."""
+    g = eq5_frequency_map(x, f0, f_rd_32, f_rd_22, 2)
+    return beta32_1p5pn(g, eta, chi_s)
+
+
+def beta32_eq5_one_sided_slopes(join, f0, f_rd_32, f_rd_22, eta, chi_s):
+    """Analytic left/right d|beta_32|/d(Mf) at an Eq. (5) join."""
+    j, f0, fr, e, cs = (mp.mpf(str(v)) for v in
+                         (join, f0, f_rd_32, eta, chi_s))
+    if j != f0 and j != fr:
+        raise ValueError("join must equal f0 or f_rd_32")
+    g = eq5_frequency_map(j, f0, fr, f_rd_22, 2)
+    if g <= 0 or e <= 0 or e > mp.mpf(1) / 4 or abs(cs) > 1:
+        raise ValueError("require mapped_frequency>0, 0<eta<=1/4, |chi_s|<=1")
+    v = mp.root(mp.pi * g, 3)
+    p = (1 - 3 * e) * v**2 + 4 * e * cs * v**3
+    if p == 0:
+        raise ValueError("magnitude slope undefined at a zero")
+    dp_dg = (2 * (1 - 3 * e) * v + 12 * e * cs * v**2) * v / (3 * g)
+    base_slope = mp.sign(p) * mp.sqrt(mp.mpf(5) / 7) / 3 * dp_dg
+    low, middle, high = branch_slopes(f0, fr, f_rd_22, 2)
+    left, right = (low, middle) if j == f0 else (middle, high)
+    return base_slope * left, base_slope * right

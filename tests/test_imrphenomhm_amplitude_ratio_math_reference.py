@@ -316,3 +316,100 @@ def test_public_beta21_default_and_paper_variant_are_separate(backend):
     assert np.max(np.abs(default - paper)) / np.max(np.abs(default)) > 1e-6
     with pytest.raises(ValueError, match="Unknown HM \\(2,1\\) PN variant"):
         mode(hm_21_pn_variant="unknown")
+
+
+def test_beta32_source_reduction_and_scalar_domain():
+    binding = ref.COMPONENT_BINDINGS["hm.amp.beta32.1p5pn.eq4.v1"]
+    assert callable(getattr(ref, binding["reference"]))
+    assert all(callable(globals()[test]) for test in binding["tests"])
+    vg = (sp.pi * ref.G) ** sp.Rational(1, 3)
+    expected = sp.sqrt(sp.Rational(5, 7)) / 3 * ref.symbolic_p32(vg)
+    expression = ref.symbolic_eq4_beta32()
+    assert sp.simplify(expression - expected) == 0
+    assert ref.X not in expression.free_symbols
+    v = sp.symbols("v")
+    assert sp.Poly(ref.symbolic_p32(v), v).coeff_monomial(v**3) == 4 * ref.ETA * ref.CHI_S
+    with mp.workdps(60):
+        observed = ref.beta32_1p5pn(1 / mp.pi, mp.mpf(1) / 4, mp.mpf(1) / 5)
+        expected_scalar = mp.sqrt(mp.mpf(5) / 7) * mp.mpf(9) / 60
+        assert abs(observed - expected_scalar) < mp.mpf("1e-55")
+        nonspin = ref.beta32_1p5pn(1 / mp.pi, mp.mpf(1) / 4, 0)
+        assert abs(nonspin - mp.sqrt(mp.mpf(5) / 7) / 12) < mp.mpf("1e-55")
+        negative_brace = ref.beta32_1p5pn(1 / mp.pi, mp.mpf(1) / 4, -1)
+        assert abs(negative_brace - mp.sqrt(mp.mpf(5) / 7) / 4) < mp.mpf("1e-55")
+        for join in (".02", ".06"):
+            slopes = ref.beta32_eq5_one_sided_slopes(
+                join, ".02", ".06", ".05", ".24", ".1")
+            assert all(mp.isfinite(s) for s in slopes)
+    for g, eta, cs in ((0, .2, .1), (.02, 0, .1),
+                       (.02, .251, .1), (.02, .2, 1.1)):
+        with pytest.raises(ValueError):
+            ref.beta32_1p5pn(g, eta, cs)
+
+
+@pytest.mark.parametrize("variant", ("phenomd_runtime", "london_2018"))
+@pytest.mark.parametrize("case", ((35.0, 20.0, 0.2, -0.1),
+                                  (35.0, 20.0, 0.0, 0.0),
+                                  (30.0, 30.0, 0.2, -0.1)))
+def test_public_beta32_values_and_one_sided_slopes(backend, variant, case):
+    """Measure printed 1.5PN (3,2) via its unprojected public D-carrier mode."""
+    name, module, array = backend
+    m1, m2, chi1, chi2 = case
+    eta = m1 * m2 / (m1 + m2) ** 2
+    chi_s = (chi1 + chi2) / 2
+    model = module.IMRPhenomHM(modes=((3, 2),))
+    qnm_args = (array(m1), array(m2), array(chi1), array(chi2))
+    fr = float(module.IMRPhenomHM.mode_qnm_frequencies(3, 2, *qnm_args)[0])
+    f22 = float(module.IMRPhenomHM.mode_qnm_frequencies(2, 2, *qnm_args)[0])
+    f0 = float(fmap.outer_map_cutoffs(variant, fr, f22)[0])
+    h = 1e-7
+    x = np.array((f0 / 2, f0 - h, f0, f0 + h,
+                  (f0 + fr) / 2, fr - h, fr, fr + h, fr * 1.1))
+    mapped = np.array([float(fmap.eq5_frequency_map(
+        str(value), str(f0), str(fr), str(f22), 2)) for value in x])
+    m_seconds = (m1 + m2) * float(module.MSUN_SEC)
+    public_args = dict(mass1=m1, mass2=m2, chi1=chi1, chi2=chi2,
+                       distance=100.0, inclination=0.0, phic=0.0,
+                       tc=0.0, f_ref=None)
+    mode = np.asarray(model(
+        f=array(x / m_seconds), hm_mapping_transitions=variant,
+        hm_32_pn_variant="mishra_eq12d", return_unprojected_modes=True,
+        **public_args)[2][(3, 2)])
+    if name == "torch":
+        hp, _ = module.IMRPhenomD()(f=array(mapped / m_seconds), **public_args)
+    else:
+        hp, _ = module.IMRPhenomD.evaluate(
+            f=array(mapped / m_seconds), **public_args)
+    carrier = np.abs(np.asarray(hp)) / math.sqrt(5.0 / (16.0 * math.pi))
+    assert np.all(np.isfinite(carrier)) and np.all(carrier > 0)
+    observed = np.abs(mode) / carrier
+    expected = np.array([float(ref.beta32_1p5pn(str(g), str(eta), str(chi_s)))
+                         for g in mapped])
+    np.testing.assert_allclose(observed, expected, rtol=1e-10, atol=1e-12)
+    for join, lower, center, upper in ((f0, 1, 2, 3), (fr, 5, 6, 7)):
+        left, right = ref.beta32_eq5_one_sided_slopes(
+            str(join), str(f0), str(fr), str(f22), str(eta), str(chi_s))
+        secants = ((observed[center] - observed[lower]) / h,
+                   (observed[upper] - observed[center]) / h)
+        np.testing.assert_allclose(secants, (float(left), float(right)),
+                                   rtol=5e-5, atol=5e-8)
+
+
+def test_public_beta32_default_and_paper_variant_are_separate(backend):
+    """Keep the established binary-compatible default exact."""
+    _, module, array = backend
+    model = module.IMRPhenomHM(modes=((3, 2),))
+    args = dict(f=array([70.0, 100.0]), mass1=35.0, mass2=20.0,
+                chi1=0.2, chi2=-0.1, distance=100.0, inclination=0.0,
+                phic=0.0, tc=0.0, f_ref=None, return_unprojected_modes=True)
+
+    def mode(**options):
+        return np.asarray(model(**args, **options)[2][(3, 2)])
+
+    default = mode()
+    explicit_default = mode(hm_32_pn_variant="binary_compatible")
+    paper = mode(hm_32_pn_variant="mishra_eq12d")
+    np.testing.assert_array_equal(default, explicit_default)
+    assert np.max(np.abs(default - paper)) / np.max(np.abs(default)) > 1e-6
+    with pytest.raises(ValueError, match="Unknown HM \\(3,2\\) PN variant"):
+        mode(hm_32_pn_variant="unknown")
