@@ -105,3 +105,48 @@ These results do not identify whether model calibration, inter-mode phase
 convention, or the more restrictive flat-band statistic dominates the model
 disagreement. The gate remains red pending a source-derived diagnosis and a
 future, separately predeclared holdout after any correction.
+
+## Cross-case phase-convention diagnostic (not an acceptance result)
+
+The [2265 receipt](imrphenomhm_sxs_2265_receipt_20260927.md) defines the
+doubled relative-phase invariant
+`T_lm(f) = u_lm(f)^2 conj[u_22(2f/m)]^m`, with `u = H/|H|`. It cancels a
+common time and orbital-phase shift and removes the odd-`m` orbital branch.
+For this case, a read-only Torch calculation on `len` used the fixture's
+`35–85 Hz` mode-frequency grid, retaining only bins with `2f/m ≥ 35 Hz`.
+The comparison took the circular mean of `T_model conj(T_NR)` with the native
+`f_ref=None` option; the 2265 calculation used `30–80 Hz` and
+`2f/m ≥ 30 Hz`. Both calculations used the frozen NR conditioning, and neither
+changed a gate or model output.
+
+| Mode | 2265 residual (rad) | 3631 residual (rad) | After diagnostic `c` on 2265 | After diagnostic `c` on 3631 |
+| --- | ---: | ---: | ---: | ---: |
+| `(2,1)` | +1.894 | +1.849 | -0.462 | -0.507 |
+| `(3,3)` | -2.544 | -2.558 | -0.188 | -0.202 |
+| `(3,2)` | -0.101 | -0.190 | -0.101 | -0.190 |
+| `(4,4)` | +1.495 | +1.425 | -0.076 | -0.146 |
+| `(4,3)` | -2.499 | -2.579 | -0.143 | -0.223 |
+
+Here `c = -exp(iπ/4)` is an **algebraic diagnostic factor**, uniformly
+applied to all model modes, so the invariant changes by `c^(2-m)`. It was
+not fitted per mode or applied to a production waveform. The
+[2019 SXS catalog convention paper](https://arxiv.org/abs/1904.04831)
+documents an overall strain-sign revision, and the
+[SXS third-catalog paper](https://arxiv.org/html/2505.13378v2)
+confirms it was retroactively applied to earlier simulations. The `π/4`
+factor has the form of a stationary-phase Fourier term. A direct
+time-domain-to-frequency-domain stationary-phase check of both pinned SXS
+files at `f_22=40 Hz` reproduced the `(3,3)`, `(3,2)`, `(4,4)`, and `(4,3)`
+NR invariant phases within `0.05 rad`. These observations make a convention
+explanation plausible for much of the *early-band* constant offset, but they
+do not establish which exact NR convention the
+[2018 HM model paper](https://arxiv.org/html/1708.00404v4) used.
+
+The native finite-`f_ref` assembly adds a mode-dependent phase gauge
+`(m/2-1) B`, with `B = slope_peak M_seconds f_ref`. This changes the doubled
+invariant by `(m-2) B`: measured `B` was `4.028 rad` for 2265 and
+`5.479 rad` for 3631. Thus the smaller offsets above at `f_ref=None` do
+not repair the **frozen finite-`f_ref`** comparisons. A constant phase factor
+also cannot fix the high-band `(3,2)` and `(4,3)` mode-shape losses in the
+2265 receipt. A production phase change requires a source-derived convention
+map and a new independent holdout; the current physical gates remain red.
