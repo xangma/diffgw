@@ -13,7 +13,7 @@ import sys
 import pytest
 
 
-MODEL_IDS = {"TaylorF2", "TaylorF2_HM", "IMRPhenomD", "IMRPhenomXAS"}
+MODEL_IDS = {"TaylorF2", "TaylorF2_HM", "TaylorF2_Eccentric", "IMRPhenomD", "IMRPhenomXAS"}
 
 
 def test_catalog_import_needs_no_optional_math_or_tensor_packages():
@@ -35,7 +35,7 @@ import diffgw.waveforms as waveforms
 import diffgw.reference as reference
 
 assert {definition.id for definition in waveforms.list_waveforms()} == {
-    "TaylorF2", "TaylorF2_HM", "IMRPhenomD", "IMRPhenomXAS"
+    "TaylorF2", "TaylorF2_HM", "TaylorF2_Eccentric", "IMRPhenomD", "IMRPhenomXAS"
 }
 assert waveforms.get_waveform("TaylorF2").id == "TaylorF2"
 assert callable(reference.get_reference_module)
@@ -219,7 +219,7 @@ def test_catalog_models_are_bound_to_public_backend_dispatch(backend):
     root = Path(__file__).resolve().parents[1]
     code = f'''
 import diffgw
-model_ids = {{"TaylorF2", "TaylorF2_HM", "IMRPhenomD", "IMRPhenomXAS"}}
+model_ids = {{"TaylorF2", "TaylorF2_HM", "TaylorF2_Eccentric", "IMRPhenomD", "IMRPhenomXAS"}}
 frontend = getattr(diffgw, {backend!r})
 assert model_ids.issubset(set(diffgw.list_approximants(backend={backend!r})))
 for model_id in model_ids:

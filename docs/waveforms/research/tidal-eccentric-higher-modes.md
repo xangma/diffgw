@@ -2,8 +2,9 @@
 
 This family research ledger began at foundation `5bc907d`. It follows the
 [six-section specification template](../../math/waveform-spec-template.md).
-`TaylorF2_HM` now has a [versioned leading-carrier specification](../../math/taylorf2-hm.md);
-the other four rows remain provisional. The component IDs below are historical
+`TaylorF2_HM` has a [versioned leading-carrier specification](../../math/taylorf2-hm.md),
+and `TaylorF2_Eccentric` has a [versioned nonspinning amplitude-off slice](../../math/taylorf2-eccentric.md).
+The remaining three rows remain provisional. The component IDs below are historical
 research identifiers, not registered catalog IDs.
 
 ## Scope and status
@@ -11,18 +12,17 @@ research identifiers, not registered catalog IDs.
 | Native approximant | Implemented mathematical scope | Research status |
 | --- | --- | --- |
 | `TaylorF2_HM` | Frequency-domain, aligned-spin SPA inspiral, leading amplitudes for `(2,2), (2,1), (3,1), (3,2), (3,3), (4,2), (4,3), (4,4)` | [Independent leading-carrier reference](../../math/taylorf2-hm.md) covers all eight modes; exact external eight-mode waveform comparison remains unavailable. |
-| `TaylorF2_Eccentric` | Frequency-domain `(2,2)` quasi-circular TaylorF2 plus an order-`e0²` eccentric phase through relative 3PN; optional project amplitude factor | [Paper-literal eccentric phase](../../math/taylorf2-eccentric-phase.md) has a scoped scalar and Torch/JAX reference; full-model independent reference remains pending. |
+| `TaylorF2_Eccentric` | Frequency-domain `(2,2)` quasi-circular TaylorF2 plus an order-`e0²` eccentric phase through relative 3PN; optional project amplitude factor | The [nonspinning amplitude-off composition](../../math/taylorf2-eccentric.md) has an independent scalar reference and two strict LAL holdouts in Torch/JAX; spins and optional amplitude remain provisional. |
 | `IMRPhenomD_NRTidal` | Frequency-domain aligned-spin `(2,2)` IMRPhenomD plus 2017 NRTidal phase and BNS merger taper | Component-level independent reference pending. |
 | `IMRPhenomD_NRTidalv2` | Same BBH carrier plus 2019 phase, historical default tidal amplitude, EOS-dependent self-spin, and merger taper | [Nonspinning phase](../../math/nrtidalv2-phase.md) and [amplitude/taper](../../math/nrtidalv2-amplitude-taper.md) have scoped independent references. The published D option is phase-only; the historical default amplitude and high-frequency taper retain provenance and binary gaps. Self-spin and whole-waveform qualification remain pending. |
 | `IMRPhenomNSBH` | Frequency-domain aligned-spin `(2,2)` PhenomD-like phase with NRTidalv2 term and a disruption-dependent PhenomC-like amplitude | Source-fidelity and independent reference pending, especially inherited phase/remnant conventions. |
 
 Torch and JAX expose all five through their respective `get_fd_waveform`
-dispatchers. `TaylorF2_HM` is registered in
-`src/diffgw_core/waveform_definitions/catalog.py` for the leading-carrier
-scope; the other four are not. The historical
+dispatchers. `TaylorF2_HM` and the narrow `TaylorF2_Eccentric` slice are registered in
+`src/diffgw_core/waveform_definitions/catalog.py`; the other three are not. The historical
 [`model_manifest.json`](../../model_manifest.json) statuses describe *declared*
 CPU FP64 waveform comparisons, not independently executable scalar expressions
-for the remaining four models or a parameter-domain certificate. This ledger's
+for the remaining provisional models or a parameter-domain certificate. This ledger's
 foundation audit did not rerun comparisons; the HM specification links its
 subsequent maintained checks.
 
@@ -104,7 +104,9 @@ work, not native availability or verification.
 
 The table names the native entry points. The independent
 `diffgw_reference.taylorf2_hm` module covers the declared leading HM carrier;
-no complete scalar reference exists yet for the other four models. Existing
+`diffgw_reference.taylorf2_eccentric` composes the bounded nonspinning
+amplitude-off eccentric slice. No complete scalar reference exists yet for
+the remaining three models. Existing
 scalar TaylorF2 nonspinning, aligned-spin, tidal, spin-quadrupole and
 IMRPhenomD amplitude/phase/remnant/intrinsic modules can be reused as
 qualified carrier components, but they cannot be treated as references for
@@ -133,7 +135,8 @@ locations; by itself it does **not** confirm coefficient-by-coefficient
 equivalence. The later [HM leading-carrier reference](../../math/taylorf2-hm.md)
 adds an executable eight-mode comparison within its declared scope.
 `docs/model_manifest.json` records one dominant-only HM LAL diagnostic; two
-eccentric catalog cases; and one catalog plus one holdout for each tidal/NSBH
+historical eccentric catalog cases plus two separately frozen nonspinning
+eccentric holdouts; and one catalog plus one holdout for each tidal/NSBH
 model. The latter declared cases passed their historical CPU FP64 gates, but
 the suite did not establish independent scalar reference behavior, full domain
 accuracy, or physical validity. The HM `(2,2)` external diagnostic says
@@ -144,16 +147,17 @@ PhenomD/remnant calibration provenance remains open.
 
 Remaining independent-reference blockers are concrete: (1) HM tidal terms,
 Kerr and smooth cutoff options, and an exact same-model external eight-mode
-waveform comparison; (2) a full-model eccentric oracle and provenance for the
-optional amplitude factor beyond the scoped 3PN phase/gauge gate; (3) v1 tidal
-phase, v2 self-spin and whole-waveform composition, historical D-amplitude
-normalization, and the high-frequency binary taper discrepancy; (4) NSBH
+waveform comparison; (2) eccentric aligned-spin cross terms and provenance for
+the optional amplitude factor beyond the scoped nonspinning amplitude-off
+version; (3) v1 tidal phase, v2 self-spin and whole-waveform composition,
+historical D-amplitude normalization, and the high-frequency binary taper
+discrepancy; (4) NSBH
 disruption root, every amplitude branch, supplementary remnant coefficients
 and intrinsic/affine phase split. The published validity regions must be
 separated from permissive native input acceptance. This ledger makes no
 whole-model verification claim.
 
-To promote the remaining models, create four `docs/math/<model>.md` pages, each with
+To promote the remaining models, create three `docs/math/<model>.md` pages, each with
 these same six headings, exact option/front-end inventory, composition
 equation, links to versioned component pages, and distinct source,
 independent-reference, backend, external-comparison and physics evidence.

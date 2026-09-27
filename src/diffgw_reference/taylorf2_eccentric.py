@@ -13,6 +13,14 @@ import sympy as sp
 V, V0, ETA, E0 = sp.symbols("v v0 eta e0", positive=True)
 R = sp.Rational
 
+SPEC_VERSION = "taylorf2-eccentric-nonspinning-e2-3pn/v1"
+COMPONENT_IDS = {
+    "paper_phase": "tf2.ecc.paper_phase.v1",
+    "reference_phase": "tf2.ecc.reference_phase.v1",
+    "polarizations": "tf2.ecc.polarizations.v1",
+}
+F0 = sp.Symbol("f0_ecc", positive=True)
+
 
 @lru_cache(maxsize=1)
 def pn_terms() -> dict[int, sp.Expr]:
@@ -107,3 +115,56 @@ def anchored_phase(frequency: float, mass1: float, mass2: float, e0: float,
     """Project phase gauge: subtract the paper term at the waveform's f_ref."""
     return evaluate(frequency, mass1, mass2, e0, f0, ecc_order) - evaluate(
         f_ref, mass1, mass2, e0, f0, ecc_order)
+
+
+@lru_cache(maxsize=1)
+def waveform_expr() -> dict[str, sp.Expr]:
+    """Compose the unchanged nonspinning TaylorF2 carrier with Eq. (6.26).
+
+    This is the 3PN, order-e0², amplitude-off, explicit-reference-frequency
+    slice. It deliberately has no spin or optional amplitude expression.
+    """
+    from diffgw_reference import taylorf2 as base
+
+    carrier = base.waveform_expr(reference_frequency=True)
+    v = (sp.pi * base.M_SEC * base.F)**R(1, 3)
+    v0 = (sp.pi * base.M_SEC * F0)**R(1, 3)
+    paper = phase_expr(6).subs({V: v, V0: v0, ETA: base.ETA})
+    delta = paper - paper.subs(base.F, base.F_REF)
+    factor = sp.exp(-sp.I * delta)
+    return {
+        "amplitude": carrier["amplitude"],
+        "phase": carrier["phase"] + delta,
+        "h_plus": carrier["h_plus"] * factor,
+        "h_cross": carrier["h_cross"] * factor,
+    }
+
+
+def evaluate_waveform(*, frequency, mass_seconds, eta, distance_seconds,
+                      e0, f0_ecc, f_ref, inclination="0", tc="0", phic="0",
+                      dps: int = 80) -> dict:
+    """High-precision scalar waveform for the documented narrow slice.
+
+    Inputs use the base reference's geometric seconds. The comparable-mass,
+    low-eccentricity bound is explicit rather than inferred from native API
+    acceptance. Frequencies must be positive and the caller must keep the
+    sampled band in the slow-inspiral regime.
+    """
+    import mpmath as mp
+    from diffgw_reference import taylorf2 as base
+
+    if not (mp.mpf(str(e0)) > 0 and mp.mpf(str(e0)) <= mp.mpf("0.1")):
+        raise ValueError("this reference requires 0 < e0 <= 0.1")
+    if not (mp.mpf(str(eta)) >= mp.mpf(2) / 9):
+        raise ValueError("this reference requires comparable masses (q <= 2)")
+    if not (mp.mpf(str(frequency)) > 0 and mp.mpf(str(f0_ecc)) > 0
+            and mp.mpf(str(f_ref)) > 0):
+        raise ValueError("frequency, f0_ecc, and f_ref must be positive")
+    values = {
+        base.F: frequency, base.M_SEC: mass_seconds, base.ETA: eta,
+        base.D_SEC: distance_seconds, base.IOTA: inclination,
+        base.TC: tc, base.PHIC: phic, base.F_REF: f_ref,
+        F0: f0_ecc, E0: e0,
+    }
+    return {name: base.evaluate(expr, values, dps=dps)
+            for name, expr in waveform_expr().items()}

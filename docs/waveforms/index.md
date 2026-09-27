@@ -18,6 +18,7 @@ in the current public dispatch inventory.
 | Model and specification | Definition version | Scope | Backends |
 | --- | --- | --- | --- |
 | [TaylorF2](../math/taylorf2.md) | `taylorf2-nonspinning-3.5pn/v1` | Nonspinning 3.5PN inspiral with restricted quadrupole amplitude and positive frequencies. | `torch`, `jax` |
+| [TaylorF2_Eccentric](../math/taylorf2-eccentric.md) | `taylorf2-eccentric-nonspinning-e2-3pn/v1` | Nonspinning comparable-mass (q <= 2), 0 < e0 <= 0.1, positive-frequency inspiral: restricted quadrupole amplitude and 3PN order-e0² eccentric phase at explicit f0_ecc and f_ref, with amplitude correction off. | `torch`, `jax` |
 | [TaylorF2_HM](../math/taylorf2-hm.md) | `taylorf2-hm-leading-carrier/v1` | Eight leading nonspinning SPA mode amplitudes with inherited aligned-spin TaylorF2 phase and negative-m polarization projection. | `torch`, `jax` |
 | [IMRPhenomD](../math/imrphenomd-intrinsic.md) | `imrphenomd-intrinsic-composition/v1` | Aligned-spin (2,2) IMR composition with declared fit rows and QNM data. | `torch`, `jax` |
 | [IMRPhenomXAS](../math/imrphenomxas.md) | `imrphenomxas-composed-polarizations-carrier/v1` | Aligned-spin (2,2) carrier composition with supplied fit and QNM outputs. | `torch`, `jax` |

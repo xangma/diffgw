@@ -102,3 +102,31 @@ def test_project_reference_frequency_gauge_on_both_polarizations(backend, f0, f_
             assert abs(actual - expected) < 3e-10
     # The explicit f_ref gauge sets the eccentric correction to zero here.
     assert float(paper.anchored_phase(f_ref, 1.6, 1.2, 0.025, f0, f_ref)) == 0.0
+
+
+@pytest.mark.parametrize("m1,m2,e0,f0,f_ref,frequency", (
+    (1.55, 1.25, .06, 28., 43., 70.),
+    (1.85, 1.15, .035, 32., 48., 110.),
+))
+def test_nonspinning_composed_scalar_waveform(backend, m1, m2, e0, f0, f_ref, frequency):
+    """Compare complete amplitude-off polarizations to the paper/base composition."""
+    from diffgw_core.constants import C_SI, MPC_SI, MSUN_SEC
+
+    model, _, array, name = backend
+    distance = 160.
+    expected = paper.evaluate_waveform(
+        frequency=frequency, mass_seconds=(m1+m2)*MSUN_SEC,
+        eta=m1*m2/(m1+m2)**2, distance_seconds=distance*MPC_SI/C_SI,
+        e0=e0, f0_ecc=f0, f_ref=f_ref, inclination=.65, phic=.4,
+    )
+    kwargs = dict(
+        f=array([frequency]), mass1=array(m1), mass2=array(m2),
+        chi1=array(0.), chi2=array(0.), e0=array(e0),
+        f0_ecc=array(f0), f_ref=array(f_ref), distance=array(distance),
+        inclination=array(.65), phic=array(.4), tc=array(0.),
+        ecc_order=6, include_amplitude_correction=False,
+        phasing_convention="reference_frequency", f_isco_cutoff=True,
+    )
+    actual = model()(**kwargs) if name == "torch" else model.evaluate(**kwargs)
+    for value, key in zip(actual, ("h_plus", "h_cross")):
+        np.testing.assert_allclose(complex(value[0]), complex(expected[key]), rtol=3e-10)

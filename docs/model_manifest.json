@@ -220,7 +220,20 @@
         "ecc_order": "Up to 6 (3PN eccentric phase expansion)"
       },
       "status": "verified_declared_cases",
-      "notes": "The declared frozen catalog and available holdout cases passed the CPU FP64 gates for polarizations and detector projections. Results are historical and configuration-specific; they do not establish full-domain accuracy. See the pinned validation artifacts and docs/provenance_ledger.md.",
+      "notes": "The historical catalog includes a circular case and a spinning eccentric case. A separate versioned slice now covers only nonspinning, comparable-mass, nonzero low-eccentricity inspiral with explicit f0_ecc/f_ref and optional amplitude correction off; two new frozen holdouts passed Torch and JAX CPU FP64 direct LAL gates. The native API accepts wider inputs than the qualified slice. Historical aggregate counts below remain tied to their pinned artifacts.",
+      "scoped_qualification": {
+        "reference_version": "taylorf2-eccentric-nonspinning-e2-3pn/v1",
+        "specification": "docs/math/taylorf2-eccentric.md",
+        "receipt": "docs/validation/taylorf2_eccentric_nonspinning_holdout_20260927.json",
+        "test": "tests/test_taylorf2_eccentric_holdout.py",
+        "scope": "nonspinning q<=2, 0<e0<=0.1, positive-frequency band below Schwarzschild ISCO, 3PN O(e0^2), explicit f0_ecc/f_ref, reference-frequency gauge, amplitude correction off",
+        "holdout_case_ids": [
+          "TF2Ecc_nonspin_offcatalog_20260927",
+          "TF2Ecc_nonspin_offcatalog_second_20260927"
+        ],
+        "backends": ["torch", "jax"],
+        "status": "sampled_pass"
+      },
       "primary_references": [
         {
           "citation": "Moore, Favata, Arun, Mishra (2016), Phys. Rev. D 93, 124061",

@@ -70,11 +70,11 @@ not validation of the retained official ROM or surviving equation components.
   - Huerta et al. (2014), *Accurate and efficient waveforms for compact binaries on eccentric orbits*, Phys. Rev. D 90, 084016 ([DOI:10.1103/PhysRevD.90.084016](https://doi.org/10.1103/PhysRevD.90.084016))
 - **Mathematical Form**:
   $$\Delta\Psi_{\rm paper}(f) = -\frac{2355}{1462}\frac{3}{128\eta v^5}e_0^2\left(\frac{v_0}{v}\right)^{19/3}P_{3\rm PN}(v,v_0,\eta).$$
-  Equation (6.26) of Moore et al. (2016) gives the eccentric SPA term, including mixed powers of $v$ and $v_0$; Eqs. (4.17)–(4.18) concern the preceding eccentricity evolution. The native waveform subtracts $\Delta\Psi_{\rm paper}(f_{\rm ref})$ to set its explicit reference-frequency gauge. This subtraction is a project convention, not part of Eq. (6.26). The [scoped specification](math/taylorf2-eccentric-phase.md) and independent SymPy/mpmath reference check each PN truncation against Torch and JAX CPU float64 and test distinct $f_{0,\rm ecc}$ and $f_{\rm ref}$ through both polarization quotients. The named `tests/test_taylorf2_eccentric_math_reference.py` module enters the strict math inventory automatically; the [execution receipt](validation/taylorf2_eccentric_phase_20260927.md) records the focused gate. The optional native amplitude factor is a project option whose primary derivation remains pending and is outside this gate.
+  Equation (6.26) of Moore et al. (2016) gives the eccentric SPA term, including mixed powers of $v$ and $v_0$; Eqs. (4.17)–(4.18) concern the preceding eccentricity evolution. The native waveform subtracts $\Delta\Psi_{\rm paper}(f_{\rm ref})$ to set its explicit reference-frequency gauge. This subtraction is a project convention, not part of Eq. (6.26). The [phase component specification](math/taylorf2-eccentric-phase.md) and independent SymPy/mpmath reference check each PN truncation against Torch and JAX CPU float64 and test distinct $f_{0,\rm ecc}$ and $f_{\rm ref}$ through both polarization quotients. The named `tests/test_taylorf2_eccentric_math_reference.py` module enters the strict math inventory automatically; the [execution receipt](validation/taylorf2_eccentric_phase_20260927.md) records the focused gate. The [versioned nonspinning amplitude-off composition](math/taylorf2-eccentric.md) reuses the qualified TaylorF2 carrier. The optional native amplitude factor is a project option whose primary derivation remains pending and is outside this slice.
 - **Reference Frequency Priority**:
   $f_{0,\rm ecc}$ resolves from an explicit value, then $f_{\rm lower}$, then a positive $f_{\rm ref}$, then the lowest positive frequency-grid sample (20 Hz if none exists). The final grid fallback makes the result dependent on the supplied positive grid.
 - **Verification Result**:
-  The two [frozen catalog cases][frozen-catalog] passed, with a maximum polarization complex relative $L_2$ error of approximately $1.64 \times 10^{-12}$.
+  The two historical [frozen catalog cases][frozen-catalog] passed, with a maximum polarization complex relative $L_2$ error of approximately $1.64 \times 10^{-12}$; they include circular and spinning configurations and are not the basis of the nonspinning versioned claim. Two separate [frozen off-catalog holdouts](validation/taylorf2_eccentric_nonspinning_holdout_20260927.json) with $e_0=0.06$ and $0.035$ passed the unchanged direct LAL/PyCBC CPU float64 gates in both Torch and JAX, including both polarizations and six detector projections per backend. `tests/test_taylorf2_eccentric_holdout.py` enforces those cases in strict binary CI. This is sampled evidence within $q\le2$, $0<e_0\le0.1$, positive frequencies below ISCO, explicit $f_{0,\rm ecc}$/$f_{\rm ref}$, and amplitude off; spin and optional amplitude remain provisional.
 
 ### 2.3 IMRPhenomD (Aligned-Spin IMR)
 - **Primary References**:
@@ -265,7 +265,7 @@ the removed model entries.
 | Approximant | Catalog cases passed | Holdout cases passed | Scope |
 |---|---|---|---|
 | TaylorF2 | 4/4 | — | Declared aligned-spin/tidal cases |
-| TaylorF2_Eccentric | 2/2 | — | Declared circular/eccentric cases |
+| TaylorF2_Eccentric | 2/2 historical | 2/2 new in Torch and JAX | Nonspinning, amplitude-off low-e slice; historical catalog includes a spinning case |
 | IMRPhenomD | 1/1 | 3/3 | Declared aligned-spin cases |
 | IMRPhenomPv2 | 1/1 | 1/1 | Declared precessing cases |
 | IMRPhenomXP | 1/1 | 1/1 | Supported MSA path; additional domain limits in manifest |

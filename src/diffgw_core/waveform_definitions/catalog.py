@@ -10,7 +10,7 @@ from __future__ import annotations
 from .schema import (
     ComponentDefinition, ConventionDefinition, OptionDefinition,
     ParameterDefinition, SourceDefinition, SourceRef, UnitDefinition,
-    WaveformDefinition, validate_catalog,
+    VerificationClaim, WaveformDefinition, validate_catalog,
 )
 
 
@@ -317,6 +317,75 @@ TAYLORF2 = WaveformDefinition(
              "The analytic positive-frequency domain is broader than the physically reliable slow-inspiral regime."),
 )
 
+_TF2_ECC_VERSION = "taylorf2-eccentric-nonspinning-e2-3pn/v1"
+_TF2_ECC_COMPONENTS = tuple(
+    ComponentDefinition(
+        id=f"tf2.ecc.{name}.v1", name=name.replace("_", " ").title(),
+        spec_version=_TF2_ECC_VERSION,
+        scope="nonspinning, comparable-mass, order-e0² 3PN eccentric phase with restricted amplitude",
+        variant="paper" if name == "paper_phase" else "project_adapter" if name == "reference_phase" else "composed_reference",
+        implementation="native_and_reference",
+        evidence=("source_transcription", "sampled_torch_jax_comparison", "two_case_lal_holdout"),
+        source_refs=_source("moore2016" if name == "paper_phase" else "project",
+                            "Eq. (6.26)" if name == "paper_phase" else "explicit f_ref subtraction and amplitude-off composition"),
+        reference_module="diffgw_reference.taylorf2_eccentric",
+    ) for name in ("paper_phase", "reference_phase", "polarizations")
+)
+
+TAYLORF2_ECCENTRIC = WaveformDefinition(
+    id="TaylorF2_Eccentric", name="TaylorF2_Eccentric nonspinning low-e slice",
+    aliases=(), domain="frequency", modes=((2, 2),),
+    scope="Nonspinning comparable-mass (q <= 2), 0 < e0 <= 0.1, positive-frequency inspiral: restricted quadrupole amplitude and 3PN order-e0² eccentric phase at explicit f0_ecc and f_ref, with amplitude correction off.",
+    reference_version=_TF2_ECC_VERSION,
+    reference_module="diffgw_reference.taylorf2_eccentric",
+    spec_page="math/taylorf2-eccentric.md",
+    components=(*tuple(component for component in _TF2_COMPONENTS
+                       if component.id not in {"tf2.ns35.paper_phase.v1", "tf2.ns35.coalescence_phase.v1"}),
+                *_TF2_ECC_COMPONENTS),
+    sources=(
+        SourceDefinition("buonanno2009", "Buonanno et al., nonspinning PN phase", "https://arxiv.org/pdf/0907.0700v1", "0907.0700v1"),
+        SourceDefinition("arun2008", "Arun et al., restricted amplitude and polarizations", "https://arxiv.org/pdf/0810.5336v1", "0810.5336v1"),
+        SourceDefinition("moore2016", "Moore et al., low-eccentricity 3PN SPA phase", "https://arxiv.org/pdf/1605.00304v2", "1605.00304v2"),
+        SourceDefinition("project", "DiffGW explicit reference-frequency composition", "docs/math/taylorf2-eccentric.md", _TF2_ECC_VERSION, kind="project_convention"),
+    ),
+    parameters=(*tuple(parameter for parameter in _COMMON_PARAMETERS if parameter.name != "f_ref"),
+                ParameterDefinition("f_ref", "Explicit phase reference frequency", "Hz", "> 0"),
+                ParameterDefinition("f0_ecc", "Frequency defining e0", "Hz", "> 0"),
+                ParameterDefinition("e0", "Eccentricity at f0_ecc", "dimensionless", "0 < e0 <= 0.1"),
+                ParameterDefinition("chi1", "Aligned spin of body 1", "dimensionless", "= 0"),
+                ParameterDefinition("chi2", "Aligned spin of body 2", "dimensionless", "= 0")),
+    units=_COMMON_UNITS,
+    conventions=(*_COMMON_CONVENTIONS,
+                 ConventionDefinition("eccentricity_reference", "e0 belongs to f0_ecc, separately from phase-origin f_ref."),
+                 ConventionDefinition("phase_gauge", "Subtract both circular and eccentric intrinsic phases at explicit f_ref; this is a project convention.")),
+    options=(
+        OptionDefinition("phasing_convention", ("coalescence", "reference_frequency"), "coalescence",
+                         "Only explicit reference_frequency is included in this versioned slice; coalescence remains a native option."),
+        OptionDefinition("ecc_order", ("0", "2", "3", "4", "5", "6"), "6",
+                         "Only 6 (relative 3PN, order e0²) is included in the composed model slice."),
+        OptionDefinition("include_amplitude_correction", ("false", "true"), "false",
+                         "Only false is qualified; the optional true branch has unresolved source provenance."),
+        OptionDefinition("f_isco_cutoff", ("false", "true"), "true",
+                         "The holdout bands end below Schwarzschild ISCO, so the default hard cutoff is inactive."),
+    ),
+    carrier_parameters=(), capabilities=("fd", "plus_cross", "torch", "jax", "scalar_reference"),
+    evidence=("symbolic_source_transcription", "sampled_torch_jax_comparison", "two_case_strict_lal_holdout"),
+    caveats=("The native API accepts aligned spin and a wider eccentricity range; these are outside this definition.",
+             "Physical accuracy is not established beyond the low-eccentricity, slow-inspiral comparable-mass regime.",
+             "The hard cutoff boundary, optional amplitude factor, and aligned-spin eccentric composition remain provisional."),
+    claims=(VerificationClaim(
+        component_ids=("tf2.ecc.polarizations.v1",),
+        scope="Two frozen nonspinning, nonzero-eccentricity, off-catalog binaries below Schwarzschild ISCO",
+        variant="amplitude_off_reference_frequency_3pn",
+        backends=("torch", "jax", "lal"),
+        options=(("phasing_convention", "reference_frequency"), ("ecc_order", "6"),
+                 ("include_amplitude_correction", "false"), ("f_isco_cutoff", "true")),
+        domain="positive-frequency, q <= 2, e0 <= 0.1", precision="float64",
+        device="cpu", category="external_oracle", status="sampled_pass",
+        evidence_path="docs/validation/taylorf2_eccentric_nonspinning_holdout_20260927.json",
+    ),),
+)
+
 _TF2_HM_VERSION = "taylorf2-hm-leading-carrier/v1"
 _TF2_HM_MODES = ((2, 2), (2, 1), (3, 1), (3, 2), (3, 3), (4, 2), (4, 3), (4, 4))
 _TF2_HM_COMPONENTS = (
@@ -463,5 +532,5 @@ IMRPHENOMXAS = WaveformDefinition(
     fit_asset_ids=("author_fit_asset",),
 )
 
-WAVEFORMS = (TAYLORF2, TAYLORF2_HM, IMRPHENOMD, IMRPHENOMXAS)
+WAVEFORMS = (TAYLORF2, TAYLORF2_ECCENTRIC, TAYLORF2_HM, IMRPHENOMD, IMRPHENOMXAS)
 validate_catalog(WAVEFORMS)

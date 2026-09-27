@@ -94,9 +94,11 @@ The [2026-09-27 execution receipt](../validation/taylorf2_eccentric_phase_202609
 records the pinned base, backend environment, and focused test result.
 
 This establishes sampled paper-coefficient agreement and native gauge
-composition. It does not establish a same-model external waveform oracle,
-physical accuracy, spin-eccentric couplings, oscillatory eccentric terms,
-cutoff behavior, GPU/FP32 behavior, or the optional amplitude factor.
+composition. A separate [versioned nonspinning amplitude-off waveform
+slice](taylorf2-eccentric.md) has two strict same-model LAL holdouts. This
+phase component alone does not establish physical accuracy,
+spin-eccentric couplings, oscillatory eccentric terms, cutoff behavior,
+GPU/FP32 behavior, or the optional amplitude factor.
 
 ## Reproduce the checks
 
