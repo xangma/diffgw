@@ -36,7 +36,7 @@ implementation convention.
 
 The adjacent
 `tests/test_clean_room_msa.py::test_q10_msa_appendix_c_quadratic_phase_diagnostic`
-evaluates [Appendix C, Eqs. (116)–(118)](https://arxiv.org/html/1703.03967)
+evaluates [Appendix C, Eqs. (116)–(118)](https://arxiv.org/html/1703.03967v3)
 directly with 50-digit scalar arithmetic and the same upstream `c1` and
 averaged spin magnitude. For this case the printed Eq. (117) gives
 `psi2=9.7078492509`; the limiting-root equation path gives `9.4134154957`
@@ -46,13 +46,23 @@ small-velocity cubic-root expansion check in
 `tests/test_precession_msa_pn_clean.py`. Both evaluations use the same
 upstream `c1` and averaged spin magnitude; the two factors under Eq. (118)'s
 square root are negative at this input, so the test uses the positive real
-root of their positive product. The cause of the remaining Eq. (117) versus
-root-expansion difference is unresolved: no particular input, branch,
-printed term, or approximation has been established as responsible. The
-printed formula therefore does not independently validate either path or
-justify replacing a coefficient or relaxing the whole-waveform gates.
+root of their positive product. Algebraic expansion of the Appendix B cubic
+with `J² = L² + 2c1/v + S_av²` isolates the discrepancy to the second
+factor of Eq. (118)'s `Delta`: its printed `c1² eta² / delta_m⁴` must be
+`c1² q eta / delta_m⁴` for the factorized cubic discriminant. In source
+notation, the required increment to that factor is
+`c1² q³(q+2)/(1-q)⁴`. Writing `F` and `G` for the two printed Eq. (118)
+factors and `B_{-2}, C_{-2}, D_{-2}` for the `v^-2` coefficients of
+[Appendix B, Eqs. (97)–(99)](https://arxiv.org/html/1703.03967v3), the cubic gives
+`C_{-2}²-4B_{-2}D_{-2}=(4 delta_m⁴/eta)² F [G+c1² q³(q+2)/(1-q)⁴]`.
+All other terms in Eq. (117) agree identically with
+the cubic expansion. With this *inferred* correction, the 50-digit scalar
+calculation recovers `psi2=9.4134154957`; it does not recover the PV223
+compatibility value. This is an algebraic reconciliation, not a published
+author erratum or evidence for changing a production coefficient. The
+independent PV223 phase convention and the frozen whole-waveform gate remain
+unresolved.
 
 A defensible next experiment needs an author specification of the PV223
-convention and a reconciliation of Eq. (117) with the cubic-root expansion,
-or, for PV300, author-provided intermediate state at the same frozen q=10
-input.
+convention, or, for PV300, author-provided intermediate state at the same
+frozen q=10 input.

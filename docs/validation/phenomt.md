@@ -162,6 +162,10 @@ instead of the precession-averaged contractions in
 [Chatziioannou et al.](https://arxiv.org/html/1703.03967). At q=10 this changes
 `beta3` by `-0.00201653`. A later compatibility-only transformation changes
 the quadratic nutation coefficient `psi2` from `9.41342` to `7.33672`.
+The [q=10 phase diagnostic](phenomt_q10_gate_blocker_20260927.md) reconciles
+the equation path with Appendix C by identifying an algebraic discrepancy in
+the printed Eq. (118); its inferred correction does not explain the v223
+compatibility convention.
 `tests/test_clean_room_msa.py` fixes the common equation path and the location
 of this split without treating binary behavior as equation provenance.
 

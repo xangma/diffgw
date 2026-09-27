@@ -218,10 +218,11 @@ def test_q10_msa_flux_spin_couplings_obey_published_scalar_averages():
 
 
 def test_q10_msa_appendix_c_quadratic_phase_diagnostic():
-    """The printed Appendix C (117)--(118) does not select either phase path.
+    """The printed Appendix C (118) differs from the cubic discriminant.
 
     This is a diagnostic of the frozen q=10 case, not a waveform acceptance
-    threshold. The independently checked roots and c1 are common inputs.
+    threshold. The independently checked roots and c1 are common inputs. The
+    inferred second-bracket correction is not an author-published erratum.
     """
     m1, m2 = 60., 6.
     chi1, chi2 = (.2, .1, .8), (.1, 0., .1)
@@ -255,6 +256,11 @@ def test_q10_msa_appendix_c_quadratic_phase_diagnostic():
                   - 2 * c1 * eta**3 * (1 + q) * xi / delta_m**4
                   - eta**2 * (delta_m**2 * s2sq - eta**2 * xi**2) / delta_m**4)
         root_delta = mp.sqrt(first * second)
+        # Expanding the Appendix B cubic with J^2=L^2+2*c1/v+S_av^2
+        # changes only the c1^2 coefficient in Eq. (118)'s second bracket:
+        # eta^2 -> q*eta. The other Eq. (117) terms match identically.
+        corrected_second = second + c1**2 * (q*eta - eta**2) / delta_m**4
+        corrected_delta = mp.sqrt(first * corrected_second)
         g2_over_g0 = mp.mpf(743) / 336 + 11 * eta / 4
         psi2 = 3 * g2_over_g0 + 3 / (2 * eta**3) * (
             2 * root_delta - 2 * eta**2 * sav / delta_m**2
@@ -269,8 +275,12 @@ def test_q10_msa_appendix_c_quadratic_phase_diagnostic():
         assert math.isclose(float(psi1), float(equation["psi1"]),
                             rel_tol=2e-12, abs_tol=2e-12)
         assert first < 0 and second < 0  # fixes the real square-root branch
+        assert corrected_second < 0
         assert abs(float(psi2 - scalar(equation["psi2"]))) > .25
         assert abs(float(psi2 - scalar(compatibility["psi2"]))) > 2.
+        corrected_psi2 = psi2 + 3 * (corrected_delta - root_delta) / eta**3
+        assert math.isclose(float(corrected_psi2), float(equation["psi2"]),
+                            rel_tol=2e-12, abs_tol=2e-12)
 
 
 def test_opening_angle_uses_precession_averaged_j_at_any_nutation_phase():
