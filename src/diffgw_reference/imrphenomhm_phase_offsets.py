@@ -14,7 +14,7 @@ from .imrphenomhm_frequency_map import eq8_phase_frequency_map
 
 SOURCE = "https://arxiv.org/html/1708.00404v4"
 COMPONENT_SOURCES = {
-    "hm.phase.offsets.eq9.v1": (SOURCE, "Methods, Eqs. (3), (8)--(9)"),
+    "hm.phase.offsets.eq9.v1": (SOURCE, "Methods, Eqs. (3), (8)--(9), (13)"),
 }
 COMPONENT_BINDINGS = {
     "hm.phase.offsets.eq9.v1": {

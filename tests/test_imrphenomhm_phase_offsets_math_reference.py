@@ -107,6 +107,17 @@ def _symbolic_branch_derivatives(ell, m, branch):
 
 
 @pytest.mark.parametrize("ell,m,fr", MODES)
+def test_symbolic_one_sided_join_frequency_derivatives(ell, m, fr):
+    low_symbols, low = _symbolic_branch_derivatives(ell, m, 0)
+    _, middle = _symbolic_branch_derivatives(ell, m, 1)
+    _, high = _symbolic_branch_derivatives(ell, m, 2)
+    f, f0, f_rd_lm, f22 = low_symbols
+    left = sp.simplify((low[0] - middle[0]).subs(f, f0))
+    right = sp.simplify((middle[0] - high[0]).subs(f, f_rd_lm))
+    assert left == 0 and right == 0, (ell, m, fr, f22)
+
+
+@pytest.mark.parametrize("ell,m,fr", MODES)
 def test_frontend_phase_derivatives(backend, ell, m, fr):
     name, fn, array = backend
     f0 = .014 * fr / F22

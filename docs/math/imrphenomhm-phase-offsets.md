@@ -20,7 +20,7 @@ The phase origin is fixed by the printed low-frequency PN/symmetry offset.
 
 ## Mathematics and components
 
-[London et al., arXiv:1708.00404v4, Methods Eqs. (3), (8)–(9)](https://arxiv.org/html/1708.00404v4)
+[London et al., arXiv:1708.00404v4, Methods Eqs. (3), (8)–(9), (13)](https://arxiv.org/html/1708.00404v4)
 give $\phi_{\ell m}=\kappa\phi_{22}[g(f)]+\Delta_{\ell m}$.
 The [frequency-map component](imrphenomhm-frequency-map.md) specifies $g$:
 for the PhenomD phase, its slopes are $2/m$, $s=(f_{22}^{\rm RD}-2f_0^\phi/m)/
@@ -35,12 +35,14 @@ $$
 $$
 
 The one-sided phase derivatives agree at both joins because $\kappa_i g_i'=1$
-for all three branches, assuming a differentiable carrier. These formulas use
-the paper's PhenomD-specific multiplicative high-frequency map.
+for all three branches, assuming a differentiable carrier. The high-frequency
+map here is the paper's PhenomD-specific multiplicative Eq. (13), rather than
+its earlier additive map. The high offset is the continuity value implied by
+Eqs. (3) and (8)–(9) after that substitution.
 
 | Component ID/version | Source | Variant | Status | Scalar reference | Torch | JAX | Maintained check |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| `hm.phase.offsets.eq9.v1` | London Methods Eqs. (3), (8)–(9) | supplied carrier/QNM | executable, conditional | `mapped_phase` | `_production_mapped_phase_c1` | `_production_mapped_phase_c1` | `test_imrphenomhm_phase_offsets_math_reference.py` |
+| `hm.phase.offsets.eq9.v1` | London Methods Eqs. (3), (8)–(9), (13) | supplied carrier/QNM | executable, conditional | `mapped_phase` | `_production_mapped_phase_c1` | `_production_mapped_phase_c1` | `test_imrphenomhm_phase_offsets_math_reference.py` |
 
 ## Implementation mapping
 
@@ -56,8 +58,14 @@ phase correction is not covered here.
 
 The hand-reduced low-branch value, independent 70-digit scalar values around
 both joins, and symbolic derivatives with respect to all four frequency inputs
-are checked for the five non-22 modes in both CPU FP64 frontends. This tests
-the source transcription and sampled implementation agreement. It does not
+and symbolic one-sided frequency derivatives at both joins are checked for
+the five non-22 modes in both CPU FP64 frontends. This tests the source
+transcription and sampled implementation agreement. The paper specifies
+$f_0^A=0.018 f_{\ell m}^{\rm RD}/f_{22}^{\rm RD}$ and
+$f_0^\phi=0.014 f_{\ell m}^{\rm RD}/f_{22}^{\rm RD}$, whereas the public
+Torch/JAX assembly currently passes the opposite assignments. This component
+gate supplies the printed phase transition and therefore does not qualify
+the public assembly's transition choice. It also does not
 establish amplitude scaling, fitted QNM values, Eq. (14) carrier correction,
 whole-mode binary agreement, or physical accuracy across the model domain.
 
