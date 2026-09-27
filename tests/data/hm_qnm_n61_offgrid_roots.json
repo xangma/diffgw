@@ -1,0 +1,516 @@
+{
+  "specification_id": "hm.qnm.n61.offgrid-six-mode/v1",
+  "reference": "Cook--Zalutskiy 2014, arXiv:1410.7698v2, Eqs. 23--56",
+  "reference_solver_sha256": "36792fc5ad7201cfd5e4cac5221d48ca0db70f38b9d6fec4c3232caf60f84717",
+  "variant": "n61_main; hypothesized 61-node a=0.995 sin(theta) training grid",
+  "spins": [
+    -0.71,
+    0.37,
+    0.79
+  ],
+  "modes": [
+    [
+      2,
+      2,
+      0
+    ],
+    [
+      2,
+      1,
+      0
+    ],
+    [
+      3,
+      3,
+      0
+    ],
+    [
+      3,
+      2,
+      0
+    ],
+    [
+      4,
+      4,
+      0
+    ],
+    [
+      4,
+      3,
+      0
+    ]
+  ],
+  "solver_frequency_error_ceiling": 1e-09,
+  "minimum_training_grid_distance": 0.001,
+  "python": "3.12.3",
+  "rows": [
+    {
+      "spin": -0.71,
+      "mode": [
+        2,
+        2,
+        0
+      ],
+      "omega_exp_minus_iwt": [
+        0.30913800134180325,
+        -0.08869799769725766
+      ],
+      "angular_eigenvalue": [
+        4.553259388547062,
+        -0.1481304495505409
+      ],
+      "radial_residual": [
+        -4.440892098500626e-15,
+        5.551115123125783e-15
+      ],
+      "cf_depth": 1024,
+      "cf_error": 0.0,
+      "angular_error": 8.89287949701369e-15,
+      "estimated_frequency_error": 2.6706260961902107e-16,
+      "branch_origin": "large-ell WKB then separation/spin continuation",
+      "grid_distance": 0.006428752719385145
+    },
+    {
+      "spin": -0.71,
+      "mode": [
+        2,
+        1,
+        0
+      ],
+      "omega_exp_minus_iwt": [
+        0.3466948165530515,
+        -0.08680566934977062
+      ],
+      "angular_eigenvalue": [
+        4.296000990478849,
+        -0.06516337713507646
+      ],
+      "radial_residual": [
+        2.220446049250313e-15,
+        -4.440892098500626e-15
+      ],
+      "cf_depth": 1024,
+      "cf_error": 0.0,
+      "angular_error": 1.5991282817705664e-14,
+      "estimated_frequency_error": 2.0350809178216079e-16,
+      "branch_origin": "large-ell WKB then separation/spin continuation",
+      "grid_distance": 0.006428752719385145
+    },
+    {
+      "spin": -0.71,
+      "mode": [
+        3,
+        3,
+        0
+      ],
+      "omega_exp_minus_iwt": [
+        0.49350243664619375,
+        -0.09190467066581853
+      ],
+      "angular_eigenvalue": [
+        10.643401778291322,
+        -0.10878969360283519
+      ],
+      "radial_residual": [
+        5.329070518200751e-15,
+        -1.1546319456101628e-14
+      ],
+      "cf_depth": 1024,
+      "cf_error": 0.0,
+      "angular_error": 7.114582967285246e-15,
+      "estimated_frequency_error": 2.9155199854941186e-16,
+      "branch_origin": "large-ell WKB then separation/spin continuation",
+      "grid_distance": 0.006428752719385145
+    },
+    {
+      "spin": -0.71,
+      "mode": [
+        3,
+        2,
+        0
+      ],
+      "omega_exp_minus_iwt": [
+        0.5309269355350177,
+        -0.09111897387325155
+      ],
+      "angular_eigenvalue": [
+        10.4462065180456,
+        -0.06623485165284634
+      ],
+      "radial_residual": [
+        4.085620730620576e-14,
+        -4.75175454539567e-14
+      ],
+      "cf_depth": 1024,
+      "cf_error": 0.0,
+      "angular_error": 6.572857864924091e-14,
+      "estimated_frequency_error": 1.5307329280165838e-15,
+      "branch_origin": "large-ell WKB then separation/spin continuation",
+      "grid_distance": 0.006428752719385145
+    },
+    {
+      "spin": -0.71,
+      "mode": [
+        4,
+        4,
+        0
+      ],
+      "omega_exp_minus_iwt": [
+        0.6621778737733807,
+        -0.09291792258678065
+      ],
+      "angular_eigenvalue": [
+        18.677739718069258,
+        -0.08470769969726569
+      ],
+      "radial_residual": [
+        0.0,
+        3.9968028886505635e-15
+      ],
+      "cf_depth": 1024,
+      "cf_error": 0.0,
+      "angular_error": 2.1316444702508496e-14,
+      "estimated_frequency_error": 6.745662629576721e-17,
+      "branch_origin": "large-ell WKB then separation/spin continuation",
+      "grid_distance": 0.006428752719385145
+    },
+    {
+      "spin": -0.71,
+      "mode": [
+        4,
+        3,
+        0
+      ],
+      "omega_exp_minus_iwt": [
+        0.6993782381874714,
+        -0.092511641233588
+      ],
+      "angular_eigenvalue": [
+        18.508169227366828,
+        -0.055111073272965494
+      ],
+      "radial_residual": [
+        -8.881784197001252e-15,
+        6.217248937900877e-15
+      ],
+      "cf_depth": 1024,
+      "cf_error": 0.0,
+      "angular_error": 3.908056258401703e-14,
+      "estimated_frequency_error": 1.9224971428872238e-16,
+      "branch_origin": "large-ell WKB then separation/spin continuation",
+      "grid_distance": 0.006428752719385145
+    },
+    {
+      "spin": 0.37,
+      "mode": [
+        2,
+        2,
+        0
+      ],
+      "omega_exp_minus_iwt": [
+        0.43338685650222547,
+        -0.08717039759224567
+      ],
+      "angular_eigenvalue": [
+        3.554034686642771,
+        0.09375796026866641
+      ],
+      "radial_residual": [
+        4.440892098500626e-16,
+        -6.661338147750939e-16
+      ],
+      "cf_depth": 1024,
+      "cf_error": 0.0,
+      "angular_error": 1.0658719261875218e-14,
+      "estimated_frequency_error": 3.53089365833293e-17,
+      "branch_origin": "large-ell WKB then separation/spin continuation",
+      "grid_distance": 0.01342389020242618
+    },
+    {
+      "spin": 0.37,
+      "mode": [
+        2,
+        1,
+        0
+      ],
+      "omega_exp_minus_iwt": [
+        0.4045974297816227,
+        -0.08750923254165485
+      ],
+      "angular_eigenvalue": [
+        3.7879401968615434,
+        0.04886603039356069
+      ],
+      "radial_residual": [
+        -1.9984014443252818e-15,
+        -2.220446049250313e-16
+      ],
+      "cf_depth": 1024,
+      "cf_error": 0.0,
+      "angular_error": 5.329233146045158e-15,
+      "estimated_frequency_error": 8.890888360767982e-17,
+      "branch_origin": "large-ell WKB then separation/spin continuation",
+      "grid_distance": 0.01342389020242618
+    },
+    {
+      "spin": 0.37,
+      "mode": [
+        3,
+        3,
+        0
+      ],
+      "omega_exp_minus_iwt": [
+        0.6936597433963085,
+        -0.09057596778093455
+      ],
+      "angular_eigenvalue": [
+        9.453503242688083,
+        0.07596369091592346
+      ],
+      "radial_residual": [
+        -1.7763568394002505e-15,
+        -1.1102230246251565e-16
+      ],
+      "cf_depth": 1024,
+      "cf_error": 0.0,
+      "angular_error": 2.4869135148635004e-14,
+      "estimated_frequency_error": 4.867496849577406e-17,
+      "branch_origin": "large-ell WKB then separation/spin continuation",
+      "grid_distance": 0.01342389020242618
+    },
+    {
+      "spin": 0.37,
+      "mode": [
+        3,
+        2,
+        0
+      ],
+      "omega_exp_minus_iwt": [
+        0.662300304958994,
+        -0.09093014374025073
+      ],
+      "angular_eigenvalue": [
+        9.649255523906064,
+        0.05158441382888454
+      ],
+      "radial_residual": [
+        -1.1546319456101628e-14,
+        7.993605777301127e-15
+      ],
+      "cf_depth": 1024,
+      "cf_error": 0.0,
+      "angular_error": 7.110064197072443e-15,
+      "estimated_frequency_error": 3.8442076261107103e-16,
+      "branch_origin": "large-ell WKB then separation/spin continuation",
+      "grid_distance": 0.01342389020242618
+    },
+    {
+      "spin": 0.37,
+      "mode": [
+        4,
+        4,
+        0
+      ],
+      "omega_exp_minus_iwt": [
+        0.9388233724292334,
+        -0.0921858367062284
+      ],
+      "angular_eigenvalue": [
+        17.399931616298005,
+        0.06351054446255569
+      ],
+      "radial_residual": [
+        6.217248937900877e-15,
+        -7.327471962526033e-15
+      ],
+      "cf_depth": 1024,
+      "cf_error": 0.0,
+      "angular_error": 7.105518972093957e-14,
+      "estimated_frequency_error": 1.9495856827754633e-16,
+      "branch_origin": "large-ell WKB then separation/spin continuation",
+      "grid_distance": 0.01342389020242618
+    },
+    {
+      "spin": 0.37,
+      "mode": [
+        4,
+        3,
+        0
+      ],
+      "omega_exp_minus_iwt": [
+        0.9058074788048783,
+        -0.09240712256325981
+      ],
+      "angular_eigenvalue": [
+        17.55798600681685,
+        0.04922934354275186
+      ],
+      "radial_residual": [
+        -2.531308496145357e-14,
+        1.0880185641326534e-14
+      ],
+      "cf_depth": 1024,
+      "cf_error": 0.0,
+      "angular_error": 2.8421712818535595e-14,
+      "estimated_frequency_error": 5.593997815924412e-16,
+      "branch_origin": "large-ell WKB then separation/spin continuation",
+      "grid_distance": 0.01342389020242618
+    },
+    {
+      "spin": 0.79,
+      "mode": [
+        2,
+        2,
+        0
+      ],
+      "omega_exp_minus_iwt": [
+        0.5796835285070563,
+        -0.07630513097152518
+      ],
+      "angular_eigenvalue": [
+        2.622034115455298,
+        0.20347928902490417
+      ],
+      "radial_residual": [
+        -8.881784197001252e-16,
+        3.3306690738754696e-16
+      ],
+      "cf_depth": 1024,
+      "cf_error": 0.0,
+      "angular_error": 1.784146017590271e-15,
+      "estimated_frequency_error": 3.6894260100919053e-17,
+      "branch_origin": "large-ell WKB then separation/spin continuation",
+      "grid_distance": 0.014971909403072692
+    },
+    {
+      "spin": 0.79,
+      "mode": [
+        2,
+        1,
+        0
+      ],
+      "omega_exp_minus_iwt": [
+        0.4773496303992401,
+        -0.07848496944562482
+      ],
+      "angular_eigenvalue": [
+        3.414950245254242,
+        0.1109659667463612
+      ],
+      "radial_residual": [
+        4.440892098500626e-16,
+        -1.3322676295501878e-15
+      ],
+      "cf_depth": 1024,
+      "cf_error": 0.0,
+      "angular_error": 1.8652490251804595e-14,
+      "estimated_frequency_error": 6.062748924263542e-17,
+      "branch_origin": "large-ell WKB then separation/spin continuation",
+      "grid_distance": 0.014971909403072692
+    },
+    {
+      "spin": 0.79,
+      "mode": [
+        3,
+        3,
+        0
+      ],
+      "omega_exp_minus_iwt": [
+        0.912687729331737,
+        -0.07774593081718649
+      ],
+      "angular_eigenvalue": [
+        8.280841946668053,
+        0.1721428847751911
+      ],
+      "radial_residual": [
+        -2.6645352591003757e-15,
+        1.1102230246251565e-16
+      ],
+      "cf_depth": 1024,
+      "cf_error": 0.0,
+      "angular_error": 2.487296051779077e-14,
+      "estimated_frequency_error": 6.614384096667511e-17,
+      "branch_origin": "large-ell WKB then separation/spin continuation",
+      "grid_distance": 0.014971909403072692
+    },
+    {
+      "spin": 0.79,
+      "mode": [
+        3,
+        2,
+        0
+      ],
+      "omega_exp_minus_iwt": [
+        0.8013085071239325,
+        -0.07970523800281315
+      ],
+      "angular_eigenvalue": [
+        8.993291288279442,
+        0.11691675972497506
+      ],
+      "radial_residual": [
+        -7.105427357601002e-15,
+        3.552713678800501e-15
+      ],
+      "cf_depth": 1024,
+      "cf_error": 0.0,
+      "angular_error": 5.329522249959877e-15,
+      "estimated_frequency_error": 2.1092599066705668e-16,
+      "branch_origin": "large-ell WKB then separation/spin continuation",
+      "grid_distance": 0.014971909403072692
+    },
+    {
+      "spin": 0.79,
+      "mode": [
+        4,
+        4,
+        0
+      ],
+      "omega_exp_minus_iwt": [
+        1.2352577481352738,
+        -0.07890835720645911
+      ],
+      "angular_eigenvalue": [
+        16.064229032986688,
+        0.150209171395871
+      ],
+      "radial_residual": [
+        1.4654943925052066e-14,
+        -4.440892098500626e-16
+      ],
+      "cf_depth": 1024,
+      "cf_error": 0.0,
+      "angular_error": 4.996003610813204e-16,
+      "estimated_frequency_error": 2.708649396465707e-16,
+      "branch_origin": "large-ell WKB then separation/spin continuation",
+      "grid_distance": 0.014971909403072692
+    },
+    {
+      "spin": 0.79,
+      "mode": [
+        4,
+        3,
+        0
+      ],
+      "omega_exp_minus_iwt": [
+        1.117092882430657,
+        -0.08030581803437163
+      ],
+      "angular_eigenvalue": [
+        16.664119906246526,
+        0.11613592130709184
+      ],
+      "radial_residual": [
+        4.884981308350689e-15,
+        -6.661338147750939e-15
+      ],
+      "cf_depth": 1024,
+      "cf_error": 0.0,
+      "angular_error": 4.973884530508967e-14,
+      "estimated_frequency_error": 1.6109091879264257e-16,
+      "branch_origin": "large-ell WKB then separation/spin continuation",
+      "grid_distance": 0.014971909403072692
+    }
+  ]
+}
