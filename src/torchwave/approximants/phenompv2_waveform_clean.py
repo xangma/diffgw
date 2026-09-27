@@ -180,6 +180,11 @@ def _geometry(m1, m2, s1x, s1y, s1z, s2x, s2y, s2z, iota, phi, fref):
     return alpha0, theta, zeta, phi_j
 
 
+def face_on_to_positive_22(face_on):
+    """Invert the zero-angle Pv2 projection of face-on plus strain."""
+    return 2 * face_on / math.sqrt(5 / (4 * math.pi))
+
+
 def waveform(frequency, mass1, mass2, spin1x=0., spin1y=0., spin1z=0.,
              spin2x=0., spin2y=0., spin2z=0., distance=100., inclination=0.,
              phic=0., tc=0., f_ref=None, convention=0,
@@ -284,7 +289,7 @@ def waveform(frequency, mass1, mass2, spin1x=0., spin1y=0., spin1z=0.,
 
             k=_phase_time_shift(torch.zeros_like(inc),frd,M,d_call)
         carrier=carrier*torch.exp(1j*torch.where(f>0,f,torch.ones_like(f))*k)
-        h22=2*carrier/math.sqrt(5/(4*math.pi))
+        h22=face_on_to_positive_22(carrier)
         p,c=project_twisted_positive_modes({(2,2):h22},alpha,gamma,beta,g[1],zeta)
         hp.append(torch.where(f>0,p,torch.zeros_like(p))); hc.append(torch.where(f>0,c,torch.zeros_like(c)))
     out=torch.complex128 if fi.dtype==torch.float64 else torch.complex64

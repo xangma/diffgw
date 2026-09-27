@@ -18,8 +18,9 @@ and polarization-basis angle `zeta`, in radians. All are evaluated pointwise
 on the same grid. The spin-weighted harmonics have azimuth zero. The output
 is `(h_plus,h_cross)` in the inverse-rotated polarization basis. This gate
 uses arbitrary normalized mode values and nondegenerate angles. It does not
-infer the angle dynamics or the dimensional conversion from Eq. (24)'s
-absolute tidal amplitude to `h^L_{2,-2}`.
+infer the angle dynamics. The dimensional conversion from Eq. (24)'s
+absolute tidal amplitude to `h^L_{2,-2}` is covered by a separate
+[normalization gate](nrtidalv2-pv2-tidal-mode-normalization.md).
 
 ## Mathematics and components
 
@@ -68,8 +69,9 @@ or output rescaling. The [execution receipt](../validation/nrtidalv2_pv2_positiv
 records the run.
 
 This operator gate does not establish the source-frame angle map, the
-IMRPhenomD-to-Pv2 mode normalization, Eq. (24)'s absolute-amplitude injection,
-the native tidal Pv2 assembly, a pinned-binary match, or physical validation.
+IMRPhenomD-to-Pv2 BBH carrier normalization, the native tidal Pv2 assembly,
+a pinned-binary match, or physical validation. Eq. (24)'s supplied-mode
+normalization is tested separately in the linked gate.
 The historical paper-D and `binary_compatible` variants are unchanged.
 
 ## Reproduce the checks

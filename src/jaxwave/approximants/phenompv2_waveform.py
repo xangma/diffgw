@@ -91,6 +91,11 @@ def _project(h22, alpha, gamma, beta, theta, zeta):
     return c2*hp+s2*hc, c2*hc-s2*hp
 
 
+def face_on_to_positive_22(face_on):
+    """Invert the zero-angle Pv2 projection of face-on plus strain."""
+    return 2 * face_on / math.sqrt(5 / (4 * math.pi))
+
+
 def waveform(f, mass1, mass2, spin1x=0., spin1y=0., spin1z=0.,
              spin2x=0., spin2y=0., spin2z=0., distance=100., inclination=0.,
              phic=0., tc=0., f_ref=None, convention=0,
@@ -163,7 +168,7 @@ def waveform(f, mass1, mass2, spin1x=0., spin1y=0., spin1z=0.,
         _,_,phase_samples = d_call(nodes,0.,0.,True)
         slope = _natural_cubic_derivative(nodes,phase_samples,frd)
         carrier = carrier*jnp.exp(1j*ff*slope)
-        hp,hc = _project(2*carrier/math.sqrt(5/(4*math.pi)),alpha,gamma,beta,theta,zeta)
+        hp,hc = _project(face_on_to_positive_22(carrier),alpha,gamma,beta,theta,zeta)
         return jnp.where(f > 0,hp,0.),jnp.where(f > 0,hc,0.)
 
     hp,hc = jax.vmap(single)(*[value.reshape(-1) for value in vals])

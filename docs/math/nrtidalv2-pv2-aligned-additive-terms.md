@@ -62,8 +62,9 @@ physical comparison with a matching convention. The Fig. 7 versus Eqs.
 (28)–(29) Love–Q conflict and the printed-fit versus pinned-LAL merger
 boundary difference remain open in the linked component receipts.
 The supplied-mode projection operator has a separate
-[positive-22 gate](nrtidalv2-pv2-positive-22-projection.md), which does not
-resolve the missing carrier assembly or Eq. (24) normalization into that mode.
+[positive-22 gate](nrtidalv2-pv2-positive-22-projection.md). A subsequent
+[normalization gate](nrtidalv2-pv2-tidal-mode-normalization.md) resolves the
+Eq. (24) supplied-mode scale; the native carrier assembly remains missing.
 The historical `binary_compatible` default is unchanged.
 
 ## Reproduce the checks

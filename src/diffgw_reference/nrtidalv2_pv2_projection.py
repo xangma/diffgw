@@ -1,13 +1,26 @@
 """Scalar positive-frequency (2,2) twist-up boundary for NRTidalv2 Pv2.
 
-This accepts a supplied aligned-frame mode. It does not generate that mode or
-infer how the published absolute tidal amplitude is normalized into it.
+This accepts a supplied aligned-frame mode. A separate scalar conversion
+normalizes the published face-on tidal amplitude into that mode.
 """
 
 import mpmath as mp
 
 
 SPEC_VERSION = "nrtidalv2-pv2-positive-22-projection/v1"
+TIDAL_MODE_SPEC_VERSION = "nrtidalv2-pv2-tidal-mode-normalization/v1"
+
+
+def mode_from_face_on_strain(face_on, *, dps=80):
+    """Convert a signed face-on plus strain to the supplied positive-22 mode.
+
+    Dietrich et al. (2019), Eqs. (22)--(24), inherit the plus-strain
+    normalization of Hotokezaka et al. (2016), Eqs. (15), (17), (24).
+    The inverse projection follows Pratten et al. (2020), Eqs. (11)--(13).
+    """
+    with mp.workdps(dps):
+        value = mp.mpc(str(face_on.real), str(face_on.imag))
+        return complex(2 * value / mp.sqrt(5 / (4 * mp.pi)))
 
 
 def _wigner_d(m, mp_index, angle):
