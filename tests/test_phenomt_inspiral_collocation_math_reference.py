@@ -7,6 +7,7 @@ import pytest
 
 from diffgw_core import phenomt_fits as fits
 from diffgw_reference.phenomt_inspiral_collocation import THETA_NODES, frequency, solve
+from diffgw_reference.phenomt_taylor_t3 import coefficients as t3_coefficients
 
 
 @pytest.mark.parametrize("backend", ["torchwave", "jaxwave"])
@@ -36,9 +37,7 @@ def test_thm_frequency_collocation_against_scalar_solve(backend, m1, m2, chi1, c
     t0 = fits._IMRPhenomT_Inspiral_TaylorT3_t0(eta, spin, dchi, delta)
     fitted = [fits._IMRPhenomT_Inspiral_Freq_CP(eta, spin, dchi, delta, i)
               for i in range(1, 6)]
-    pn = np.asarray(implementation._pn_coefficients(
-        array(eta), array(chi1), array(chi2), array(delta)
-    ))
+    pn = np.asarray([float(value) for value in t3_coefficients(eta, delta, chi1, chi2)])
     scalar_coefficients, targets = solve(eta, t0, fitted, pn)
     native = model._coeff(*map(array, (m1, m2, chi1, chi2)))
     native_coefficients = np.asarray(native[7])
