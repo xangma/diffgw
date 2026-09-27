@@ -1,0 +1,60 @@
+{
+  "schema": "diffgw.seobnrv4.flux-symbolic-provenance-matrix-audit.v1",
+  "component_id": "V4-FLUX-4-9",
+  "source_scope": "sha_pinned_public_primary_equations_only",
+  "review_method": "Direct equation and cross-reference review of the six pinned publications. The matrix is organized by the 35 positive-m modes in the Bohe flux sum. No implementation source, binary output, native frontend output, or NR comparison supplied a selector.",
+  "source_findings": [
+    {
+      "id": "mode_basis",
+      "evidence": "Bohe Eqs. (8)-(9) select ell=2..8 and exclude NQC from radiation reaction. Taracchini 2012 Appendix A, Eqs. (A8)-(A14), prints the corresponding 35 positive-m residuals."
+    },
+    {
+      "id": "source_and_power",
+      "evidence": "Taracchini 2012 Eq. (17) fixes H_eff for even parity and p_phi*v_Omega for odd parity. Its discussion above Eq. (A8a) replaces rho_lm^ell by nonspinning rho_lm^ell plus spinning f_lm for m=1,3 and ell<=4. Taracchini 2014 explicitly adopts this exception and rho factorization otherwise."
+    },
+    {
+      "id": "rho43_normal_forms",
+      "evidence": "Pan Eq. (28g) prints the Taylor f_43^L spin terms 3*q^2*v^4/2-12113*q*v^5/1540; Eq. (29g) prints the corresponding rho_43^L terms divided by four. They agree after expansion through v^5 but define different untruncated functions. Taracchini 2012 Eqs. (A10b), (A15d) and Taracchini 2014's exact low-ell odd-m cross-reference select the nonspinning rho_43^4 plus spinning f_43 form."
+    },
+    {
+      "id": "generic_and_test_particle_spin",
+      "evidence": "Taracchini 2014 directs the model to include comparable-mass spin-orbit and spin-spin terms through 2PN from BFH and all known Pan test-particle spin effects with q replaced by chi_Kerr. BFH Eqs. (52)-(53) print nonzero 2PN-spin modes (2,1), (2,2), (3,1), (3,3), (4,1), and (4,3), and state that their test-mass limit reduces to Pan."
+    },
+    {
+      "id": "v4_22_override",
+      "evidence": "Bohe Eqs. (4)-(7) explicitly print the final v4 (2,2) amplitude and phase changes and state which predecessor test-particle terms they replace."
+    }
+  ],
+  "unresolved_decisions": [
+    {
+      "field": "coexistence_decision",
+      "modes": ["2,1", "3,1", "3,3", "4,1", "4,3"],
+      "evidence": "After the explicit v4 (2,2) override, the cited chain still does not give a final factorized equation stating which overlapping BFH finite-mass terms replace, coexist with, or truncate the Pan test-particle terms for these modes. The instruction to include both sources is not an algebraic double-counting rule."
+    },
+    {
+      "field": "truncation_decision",
+      "modes": ["8,2", "8,4", "8,6", "8,8"],
+      "evidence": "Pan derives a generic leading spin term for even-parity modes, while the ell=8 residual list used by Taracchini 2012 is printed without it. Taracchini 2014 says to include all known test-particle spin effects but does not state whether the generic term augments the tabulated ell=8 residuals."
+    }
+  ],
+  "requirement_findings": {
+    "rho43_higher_spin_placement": {
+      "satisfied": true,
+      "selected_form": "nonspinning_rho43_to_fourth_power_plus_spinning_f43",
+      "evidence": "The two Pan normal forms are PN-equivalent through the printed v^5 spin order, but the later model chain is not neutral: Taracchini 2012 explicitly prescribes nonspinning rho_lm^ell plus spinning f_lm for this low-ell odd-m mode, and Taracchini 2014 explicitly adopts that prescription."
+    },
+    "complete_final_mode_selector": {
+      "satisfied": false,
+      "evidence": "The matrix covers all 35 modes, but at least the listed BFH/Pan coexistence fields and ell=8 truncation fields have no unique primary-source selection. Therefore no complete final 35-mode historical selector can be constructed from the pinned equations."
+    }
+  },
+  "clean_room": {
+    "lal_source_consulted": false,
+    "binary_oracle_queried": false,
+    "native_or_nr_selector_used": false,
+    "historical_coefficients_transcribed_from_implementation": false
+  },
+  "conclusion": "Primary sources resolve the (4,3) higher-spin power placement in favor of nonspinning rho_43^4 plus spinning f_43, but they do not provide all overlap and truncation decisions needed for one final historical 35-mode selector. V4-FLUX-4-9 remains pending and release remains blocked.",
+  "historical_fidelity_claim": false,
+  "release_qualified": false
+}

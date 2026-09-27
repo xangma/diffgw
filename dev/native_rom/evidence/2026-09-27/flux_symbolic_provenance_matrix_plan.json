@@ -1,0 +1,84 @@
+{
+  "schema": "diffgw.seobnrv4.flux-symbolic-provenance-matrix-plan.v1",
+  "component_id": "V4-FLUX-4-9",
+  "purpose": "Re-evaluate the two remaining historical-flux source requirements with a 35-mode public-equation provenance matrix and an exact symbolic normal-form comparison of Pan's two published (4,3) higher-spin representations.",
+  "frozen_at_commit": "657072151a3eede76511c200ddb5a8c8b07fe98d",
+  "historical_fidelity_criterion": {
+    "prior_plan_path": "dev/native_rom/evidence/2026-09-27/flux_historical_source_gate_plan.json",
+    "prior_plan_sha256": "437b933307e9e6f9223d2bfc3d15067648e3592e8c24cf9f9907a2ced754461a",
+    "rule": "A requirement passes only when the pinned public primary sources uniquely prescribe the historical algebra. Agreement with implementation source, a binary oracle, NR data, or a conditional frontend is not selection evidence."
+  },
+  "primary_sources": {
+    "bohe": {
+      "citation": "Bohe et al., Phys. Rev. D 95, 044028 (2017), arXiv:1611.03703v3, Sec. II.B, Eqs. (4)-(9)",
+      "source_sha256": "6d9f2e99524c9878ea06d31425939bee4e8dab52948878037d75132bcfeac488",
+      "pdf_sha256": "db9dc054368f131bdc152b319e54441c665547668221891723b309b005ac23ba"
+    },
+    "taracchini_2012": {
+      "citation": "Taracchini et al., Phys. Rev. D 86, 024011 (2012), arXiv:1202.0790v2, Sec. II.B and Appendix A",
+      "source_sha256": "7dec357a85ac0c51eea0108562418e29ced24c0192829259874805667a90ef84",
+      "pdf_sha256": "d6d126be90bc789835ec363451f4ec51728a8d6ddc09eff078620fdc46860745"
+    },
+    "taracchini_2014": {
+      "citation": "Taracchini et al., Phys. Rev. D 89, 061502 (2014), arXiv:1311.2544v1, factorized-waveform discussion following Eq. (2)",
+      "source_sha256": "d36532ad40b3354ac3e6ea0cb9880f762c0ad3d4667b57ea1c91032ca89e1650",
+      "pdf_sha256": "f57b099e701c1206802d9887f6843ce75fc8753ac9c3ae5c2137933160f85967"
+    },
+    "pan": {
+      "citation": "Pan et al., Phys. Rev. D 83, 064003 (2011), arXiv:1006.0431v2, Eqs. (28g), (29g), (41g), Secs. III-V, and Appendices B-C",
+      "source_sha256": "b0bfa5736cc19e32b79861cd3156a88bfd41143e657366457670404af060f7fc",
+      "pdf_sha256": "4b51940aae4299c129b08d64f7f5ae92a5f9de00e96f2653abe719e76d596c19"
+    },
+    "din": {
+      "citation": "Damour, Iyer, and Nagar, Phys. Rev. D 79, 064004 (2009), arXiv:0811.2069v2, Secs. II-IV and appendices",
+      "source_sha256": "a419abd101e74405ed224d37e261a57101da399fee83d4a026aa327495e5efc8",
+      "pdf_sha256": "a60049d73b78f21fd0421ada236f9635c5023de8ab28a489aa3c1bd78857ba21"
+    },
+    "bfh": {
+      "citation": "Buonanno, Faye, and Hinderer, Phys. Rev. D 87, 044009 (2013), arXiv:1209.6349v2, Eqs. (52)-(53)",
+      "source_sha256": "b1cee0cec2092c3640ee5fff460dd88a59b1c6c2be0039fca837ffad0d6f7385",
+      "pdf_sha256": "1252291e97215e07fb92a028d8faffb6bcd95122b895312c6692a993fd318af0"
+    }
+  },
+  "matrix": {
+    "expected_modes": [
+      "2,1", "2,2",
+      "3,1", "3,2", "3,3",
+      "4,1", "4,2", "4,3", "4,4",
+      "5,1", "5,2", "5,3", "5,4", "5,5",
+      "6,1", "6,2", "6,3", "6,4", "6,5", "6,6",
+      "7,1", "7,2", "7,3", "7,4", "7,5", "7,6", "7,7",
+      "8,1", "8,2", "8,3", "8,4", "8,5", "8,6", "8,7", "8,8"
+    ],
+    "required_fields": [
+      "mode", "parity", "effective_source", "baseline_equation",
+      "residual_power_rule", "comparable_mass_spin_equation",
+      "test_particle_spin_equation", "v4_override",
+      "replacement_decision", "coexistence_decision",
+      "power_placement_decision", "truncation_decision"
+    ],
+    "complete_selector_rule": "Every expected mode must have all four decision fields explicitly selected by a pinned primary source. A cross-reference is sufficient only when it identifies one algebraic prescription."
+  },
+  "rho43_symbolic_check": {
+    "nonspin_normal_form": "R(v)=1+r2*v**2+r4*v**4+r6*v**6",
+    "pan_taylor_spin": "S_f(v)=3*q**2*v**4/2-12113*q*v**5/1540",
+    "pan_rho_spin": "S_rho(v)=3*q**2*v**4/8-12113*q*v**5/6160",
+    "taylor_form": "R(v)**4+S_f(v)",
+    "rho_form": "(R(v)+S_rho(v))**4",
+    "published_spin_order": 5,
+    "resolved_rule": "The requirement passes only if the forms agree through the published spin order and the later model papers explicitly select one of the two finite-frequency normal forms. The selected form must be reported even though their first difference is beyond the published order."
+  },
+  "mandatory_requirements": [
+    "rho43_higher_spin_placement",
+    "complete_final_mode_selector"
+  ],
+  "clean_room_exclusions": [
+    "Do not inspect, copy, or translate LALSimulation source.",
+    "Do not query a LALSimulation binary oracle.",
+    "Do not use agreement with native frontends or NR data to choose a historical branch."
+  ],
+  "result_path": "dev/native_rom/evidence/2026-09-27/flux_symbolic_provenance_matrix.json",
+  "production_change": false,
+  "historical_fidelity_claim": false,
+  "release_qualified": false
+}

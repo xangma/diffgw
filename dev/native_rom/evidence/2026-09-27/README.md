@@ -68,14 +68,26 @@ missing historical branches. The audit did not inspect LAL source, query a
 binary oracle, transcribe historical coefficients, retune a fit or threshold,
 change production code, or qualify release.
 
-The next clean-room experiment is a prospectively frozen, mode-by-mode
-provenance matrix and symbolic normal-form derivation for all 35 amplitudes,
-starting with the two published `(4,3)` higher-spin placements. It must use
-only the pinned public equations and record every replacement, coexistence,
-power, and truncation decision. If both `(4,3)` forms remain consistent with
-that source chain, neither agreement with a GPL implementation nor preference
-against NR can select the historical branch; a separately licensable primary
-source or author clarification would then be required to close this gate.
+The documented clean-room follow-up is now complete. Its
+[frozen plan](flux_symbolic_provenance_matrix_plan.json),
+[source audit](flux_symbolic_provenance_matrix_audit.json),
+[evaluator](../../diagnose_flux_symbolic_provenance_matrix.py), and
+[35-mode result](flux_symbolic_provenance_matrix.json) add the SHA-pinned
+Buonanno--Faye--Hinderer equations and record every replacement, coexistence,
+power, and truncation field. The exact symbolic expansion shows that Pan's
+Taylor-`f43` and spin-inside-`rho43**4` forms agree through their printed
+`v**5` spin order and first differ at `v**6`. Taracchini 2012 explicitly
+selects nonspinning `rho43**4 + f43_spin` for this low-`ell` odd-`m` mode,
+and Taracchini 2014 explicitly adopts that prescription. The primary-source
+finding therefore corrects the earlier audit on this one requirement.
+
+The matrix does not close the aggregate. It has complete decisions for 26 of
+35 modes, but no explicit primary-source BFH/Pan coexistence rule for `(2,1)`,
+`(3,1)`, `(3,3)`, `(4,1)`, or `(4,3)`, and no explicit generic-spin versus
+tabulated-residual truncation rule for `(8,2)`, `(8,4)`, `(8,6)`, or `(8,8)`.
+The refined source count is therefore 5 of 6, not a pass. The run used SymPy
+1.14.0 and Python 3.12.3 on `len`; it inspected no implementation source,
+queried no binary oracle, and made no production or release change.
 
 ## JAX whole-path blocker
 
@@ -132,10 +144,12 @@ and each scalar branch is stable from 50 to 70 digits at `1e-35` relative.
 
 The CPU-only run on `len` passed all 16 checks in 5.84 s; the bounded published,
 focused, and frontend regression passed 60 tests in 14.45 s. This removes
-formula-level dependence on implementation source for this discriminator, but
-the papers do not select the exact historical branch. No production code,
-release threshold, catalog entry, or release status changed; `V4-FLUX-4-9`
-remains pending.
+formula-level dependence on implementation source for this discriminator. The
+later [public-equation provenance matrix](flux_symbolic_provenance_matrix.json)
+selects the Taylor-`f43` placement from the Taracchini cross-reference, while
+the complete 35-mode selector remains absent. No production code, release
+threshold, catalog entry, or release status changed; `V4-FLUX-4-9` remains
+pending.
 
 ## Historical-fidelity release boundary
 
