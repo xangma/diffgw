@@ -88,4 +88,4 @@ underlying NR calibration or imply whole-waveform qualification.
 Run `JAX_ENABLE_X64=1 PYTHONPATH=src pytest -q
 tests/test_nsbh_disruption_reference.py` with the `reference`, `torch`, and
 `jax` extras on CPU. The measured result and environment are recorded in
-the linked validation receipt once the gate is run.
+the [27 September 2026 validation receipt](../validation/nsbh_disruption_root_20260927.md).
