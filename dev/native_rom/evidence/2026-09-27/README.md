@@ -68,6 +68,15 @@ missing historical branches. The audit did not inspect LAL source, query a
 binary oracle, transcribe historical coefficients, retune a fit or threshold,
 change production code, or qualify release.
 
+The next clean-room experiment is a prospectively frozen, mode-by-mode
+provenance matrix and symbolic normal-form derivation for all 35 amplitudes,
+starting with the two published `(4,3)` higher-spin placements. It must use
+only the pinned public equations and record every replacement, coexistence,
+power, and truncation decision. If both `(4,3)` forms remain consistent with
+that source chain, neither agreement with a GPL implementation nor preference
+against NR can select the historical branch; a separately licensable primary
+source or author clarification would then be required to close this gate.
+
 ## JAX whole-path blocker
 
 The [frozen directional-amplification plan](jax_nqc_directional_amplification_plan.json),
