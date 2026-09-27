@@ -65,6 +65,13 @@ The class projection is
 The [angular specification](kerr-angular-projection.md) gives the Galerkin
 operator and mirror symmetry; the [QNM specification](kerr-qnm-scalar-qualification.md)
 gives the continued-fraction residual and branch.
+For the same complex frequency and angular oblateness, the separated
+Teukolsky ansatz in [Cook and Zalutskiy, Eq. (3)](https://arxiv.org/html/1410.7698v2)
+has `exp(-i omega t) exp(+i m phi)`. The v1 direct class below instead has
+`exp(+i omega t)`. Its scalar-reference agreement verifies the declared
+composition, but does **not** show that this carrier and `S(a q)` form that
+separated solution. The positive real spherical-coefficient anchor is also
+distinct from an equatorial-real phase choice.
 
 The finite-quality-factor **single-mode** energy coefficient is
 
@@ -137,16 +144,31 @@ complex oblateness, nor a full intrinsic-gradient claim, is made.
 The existing pinned public-binary
 `KerrRingdown_holdout_off_axis_energy_onset` exercises the **dispatcher**, which
 selects `kerr220_fd` when no explicit `energy_mode` is passed. It is not
-binary evidence for this direct-class slice. A fresh direct-class diagnostic
-uses `(53 Msun, spin 0.35, 230 Mpc, epsilon 0.017, theta 1.1, phi 0.41,
+binary evidence for this direct-class slice. A staged diagnostic compares
+`(53 Msun, spin 0.35 or 0.7, 230 Mpc, epsilon 0.017, theta 1.1, phi 0.41,
 t0=0)` against LALSuite `6.2.1` `SimBlackHoleRingdown` public output. The
 public time series is transformed by the repository's converged Simpson
-adapter on a 1 Hz grid over 50–500 Hz; refinement from 65536 to 131072 Hz
-changes it by `1.021e-8` relative L2. The direct class differs from that
-binary by `1.232` in plus and `1.555` in cross relative L2. The underlying
-convention/model mismatch is unresolved. This version is **sampled
-implementation verification only**, with no binary compatibility or physical
-accuracy claim, even for the frozen case.
+adapter on a 1 Hz grid over 50–500 Hz. Refinement from 65536 to 131072 Hz
+changes it by at most `1.26e-8` relative L2.
+
+| Diagnostic waveform; plus/cross relative L2 | Spin 0.35 | Spin 0.7 |
+| --- | --- | --- |
+| Direct class v1 as declared | `1.232 / 1.554` | `1.238 / 1.536` |
+| Direct class with empirical `phi -> -phi`, intrinsic phase `pi` | `5.05e-4 / 1.30e-2` | `1.01e-3 / 2.05e-2` |
+| Independent scalar spectral angular factor, paper's minus carrier, equatorial-real phase | `1.92e-4 / 1.99e-4` | `3.65e-4 / 3.83e-4` |
+| Separate `kerr220_fd` inferred-table route | `5.23e-8 / 5.85e-8` | `1.00e-7 / 9.03e-8` |
+
+The phase map is an empirical binary diagnostic, not a sourced definition
+of the public API's phase input. The paper-carrier row uses the independent
+scalar QNM, spectral angular solution and energy integral; its equatorial
+phase is `arg S(pi/2,0)`, computed without the binary. Even after that
+choice, the independent spectral angular values differ from the separately
+inferred table shape at the inclination and mirror by `1.87e-4 / 3.70e-4`
+for spin 0.35 and `3.51e-4 / 9.12e-4` for spin 0.7. The table row is a
+different conditional route and cannot qualify the independent direct class.
+This v1 definition remains **sampled implementation verification only**:
+the paper-carrier and angular-profile results explain much of the mismatch,
+but do not establish public-binary compatibility or physical accuracy.
 
 ## Reproduce the checks
 
@@ -158,4 +180,6 @@ Torch, JAX, SymPy and mpmath. For a JSON receipt, run
 JAX_PLATFORMS=cpu python scripts/audit_kerr220_direct_class.py`.
 With LALSuite installed, the diagnostic binary comparison is reproducible
 with `PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src:tests python
-scripts/audit_kerr220_direct_class_binary.py`.
+scripts/audit_kerr220_direct_class_binary.py` (and `--spin 0.7` for the
+second column). This audit reads public binary waveform output only; it
+does not inspect LAL implementation or fit the independent scalar model.
