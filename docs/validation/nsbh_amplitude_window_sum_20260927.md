@@ -33,7 +33,18 @@ Python files passed. An additional local strict LAL-binary suite produced
 returns `optimized_match=None` for each strict comparison, which its
 existing strict gate rejects. This is an environment limitation of that
 suite, not a changed tolerance or evidence for a waveform discrepancy.
-No len job was run for this slice.
+On `len` with CPU FP64, the new gate, its NSBH amplitude neighbors, and
+the HM mapping reference passed **142/142** in 72.03 s from the integrated
+checkout at `6ad7663`. The command used `JAX_ENABLE_X64=1`,
+`JAX_PLATFORMS=cpu`, and `PYTHONPATH=src:tests`, with
+`--reference-device=cpu -ra`; its test files were
+`test_nsbh_amplitude_window_sum_math_reference.py`,
+`test_nsbh_amplitude_variant_provenance_math_reference.py`,
+`test_nsbh_joining_frequencies_math_reference.py`,
+`test_nsbh_branch_amplitude_fits_math_reference.py`,
+`test_nsbh_clean_amplitude.py`, `test_clean_room_nsbh.py`,
+`parity/test_nsbh_parity.py`, and
+`test_imrphenomhm_frequency_map_math_reference.py` under `tests/`.
 
 This gate verifies only the three-window algebra with supplied inputs. The
 [low/no-torus joining-center discrepancy](../math/nsbh-joining-frequencies.md),

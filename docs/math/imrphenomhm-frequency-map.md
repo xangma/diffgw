@@ -110,7 +110,9 @@ Torch and JAX class calls and `get_fd_waveform`. It compares captured map
 frequencies and one-sided slopes with the independent scalar evaluator, checks
 that explicit `phenomd_runtime` reproduces the omitted-option complex mode,
 and rejects an unknown choice or non-D London carrier. It does not establish
-independent correctness of the full complex HM mode.
+independent correctness of the full complex HM mode. The
+[len validation receipt](../validation/imrphenomhm_mapping_selection_20260927.md)
+records the integrated CPU FP64 result.
 
 ## Reproduce the checks
 
