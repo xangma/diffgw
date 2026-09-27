@@ -17,6 +17,7 @@ SOURCE = "https://arxiv.org/pdf/1708.00404v4"
 COMPONENT_SOURCES = {
     "hm.fmap.eq5.v1": (SOURCE, "Eq. (5), page 2"),
     "hm.fmap.phase.eq8.v1": (SOURCE, "Eq. (8), page 3; Eq. (5) below ringdown"),
+    "hm.fmap.selection.london2018.v1": (SOURCE, "paragraph below Eq. (5), page 2"),
 }
 COMPONENT_BINDINGS = {
     "hm.fmap.eq5.v1": {
@@ -31,10 +32,31 @@ COMPONENT_BINDINGS = {
         "jax": ("jaxwave.approximants.imrphenom_hm", "frequency_mapping_phase"),
         "tests": ("test_frontend_values_and_joins", "test_frontend_frequency_derivatives"),
     },
+    "hm.fmap.selection.london2018.v1": {
+        "reference": "outer_map_cutoffs",
+        "torch": ("torchwave.approximants.imrphenom_hm", "IMRPhenomHM"),
+        "jax": ("jaxwave.approximants.imrphenom_hm", "IMRPhenomHM"),
+        "tests": ("test_public_transition_selection",),
+    },
 }
 
 F, F0, FR, F22 = sp.symbols("f f_0 f_RD_lm f_RD_22", positive=True)
 M = sp.symbols("m", integer=True, positive=True)
+
+
+def outer_map_cutoffs(variant: str, f_rd_lm, f_rd_22):
+    """Scalar D-carrier outer-map cutoffs from London's printed or runtime pair."""
+    rd_lm, rd_22 = mp.mpf(str(f_rd_lm)), mp.mpf(str(f_rd_22))
+    if rd_lm <= 0 or rd_22 <= 0:
+        raise ValueError("QNM ringdown frequencies must be positive")
+    if variant == "phenomd_runtime":
+        amp, phase = "0.014", "0.018"
+    elif variant == "london_2018":
+        amp, phase = "0.018", "0.014"
+    else:
+        raise ValueError(f"unknown HM outer-map transition setting: {variant}")
+    ratio = rd_lm / rd_22
+    return mp.mpf(amp) * ratio, mp.mpf(phase) * ratio
 
 
 def branch_expressions(*, phase_d_carrier: bool = False) -> tuple[sp.Expr, ...]:

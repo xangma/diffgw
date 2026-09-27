@@ -164,3 +164,90 @@ def test_frontend_parameter_derivatives(backend, phase_d_carrier):
             actual = jax.grad(lambda *xs: fn(*xs, 3), argnums=(0, 1, 2, 3))(*args)
             actual = [float(grad) for grad in actual]
         np.testing.assert_allclose(actual, expected, rtol=2e-13, atol=2e-14)
+
+
+@pytest.mark.parametrize("variant", ("phenomd_runtime", "london_2018"))
+def test_public_transition_selection(backend, monkeypatch, variant):
+    """Public (3,3) D mode must use the independently selected Eq. (5)/(8) maps."""
+    name, module, array = backend
+    model = module.IMRPhenomHM(modes=((3, 3),))
+    rd_lm = float(module.IMRPhenomHM.mode_qnm_frequencies(
+        3, 3, array(35.0), array(20.0), array(0.2), array(-0.1))[0])
+    rd_22 = float(module.IMRPhenomHM.mode_qnm_frequencies(
+        2, 2, array(35.0), array(20.0), array(0.2), array(-0.1))[0])
+    f0_amp, f0_phi = (float(x) for x in ref.outer_map_cutoffs(variant, rd_lm, rd_22))
+    h = 1e-6
+    grid = np.unique(np.array([
+        f0_amp / 2, f0_phi / 2, (max(f0_amp, f0_phi) + rd_lm) / 2,
+        *(join + offset for join in (f0_amp, f0_phi, rd_lm)
+          for offset in (-h, 0, h)),
+        rd_lm * 1.1,
+    ]))
+    frequencies = array(grid / (55.0 * float(module.MSUN_SEC)))
+    kwargs = dict(mass1=35.0, mass2=20.0, chi1=0.2, chi2=-0.1,
+                  return_unprojected_modes=True)
+    baseline = np.asarray(model(frequencies, **kwargs)[2][(3, 3)])
+    seen = {}
+    amp_fn = module.frequency_mapping_amplitude
+    phase_fn = module._production_mapped_phase_c1
+
+    def capture_amp(f, f0, r, q, m):
+        seen["amp_inputs"] = (float(f0), float(r), float(q), m)
+        result = amp_fn(f, f0, r, q, m)
+        seen["amp_map"] = np.asarray(result)
+        return result
+
+    def capture_phase(f, f0, r, q, m, ell, carrier_phase):
+        seen["phase_inputs"] = (float(f0), float(r), float(q), m)
+
+        def capture_carrier(y):
+            if np.asarray(y).shape == grid.shape:
+                seen["phase_map"] = np.asarray(y)
+            return carrier_phase(y)
+
+        return phase_fn(f, f0, r, q, m, ell, capture_carrier)
+
+    with monkeypatch.context() as patcher:
+        patcher.setattr(module, "frequency_mapping_amplitude", capture_amp)
+        patcher.setattr(module, "_production_mapped_phase_c1", capture_phase)
+        actual = np.asarray(model(frequencies, hm_mapping_transitions=variant,
+                                  **kwargs)[2][(3, 3)])
+
+    dispatch = importlib.import_module(f"{name}wave.waveforms").get_fd_waveform
+    dispatched = dispatch("IMRPhenomHM", sample_frequencies=frequencies,
+                          modes=((3, 3),), hm_mapping_transitions=variant,
+                          **kwargs)[2][(3, 3)]
+    np.testing.assert_allclose(np.asarray(dispatched), actual, rtol=1e-13, atol=0)
+
+    for key, f0, scalar, phase in (
+        ("amp", f0_amp, ref.eq5_frequency_map, False),
+        ("phase", f0_phi, ref.eq8_phase_frequency_map, True),
+    ):
+        native_f0, r, q, m = seen[f"{key}_inputs"]
+        np.testing.assert_allclose((native_f0, r, q), (f0, rd_lm, rd_22),
+                                   rtol=2e-11, atol=0)
+        assert m == 3
+        mapped = seen[f"{key}_map"]
+        expected = np.array([float(scalar(str(f), str(f0), str(rd_lm),
+                                          str(rd_22), 3)) for f in grid])
+        np.testing.assert_allclose(mapped, expected, rtol=2e-11, atol=2e-13)
+        slopes = tuple(float(s) for s in ref.branch_slopes(
+            f0, rd_lm, rd_22, 3, phase_d_carrier=phase))
+        for join, left, right in ((f0, slopes[0], slopes[1]),
+                                  (rd_lm, slopes[1], slopes[2])):
+            idx = int(np.argmin(abs(grid - join)))
+            np.testing.assert_allclose(
+                ((mapped[idx] - mapped[idx - 1]) / h,
+                 (mapped[idx + 1] - mapped[idx]) / h),
+                (left, right), rtol=2e-6, atol=2e-6)
+
+    if variant == "phenomd_runtime":
+        np.testing.assert_allclose(actual, baseline, rtol=1e-13, atol=0)
+    else:
+        assert np.max(abs(actual - baseline)) > 1e-8 * np.max(abs(baseline))
+
+    with pytest.raises(ValueError, match="Unknown HM mapping transitions"):
+        model(frequencies, hm_mapping_transitions="unknown", **kwargs)
+    non_d = module.IMRPhenomHM(modes=((3, 3),), base_22=object())
+    with pytest.raises(ValueError, match="require the D carrier"):
+        non_d(frequencies, hm_mapping_transitions="london_2018", **kwargs)

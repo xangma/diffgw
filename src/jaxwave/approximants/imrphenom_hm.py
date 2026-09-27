@@ -393,6 +393,7 @@ class IMRPhenomHM:
         reference_frame: Optional[str] = None,
         sample_frequencies: Optional[jnp.ndarray] = None,
         base_22=None,
+        hm_mapping_transitions: str = "phenomd_runtime",
     ) -> Union[
         Tuple[jnp.ndarray, jnp.ndarray],
         Tuple[jnp.ndarray, jnp.ndarray, Dict[Tuple[int, int], Union[Tuple[jnp.ndarray, jnp.ndarray], jnp.ndarray]]],
@@ -403,6 +404,10 @@ class IMRPhenomHM:
                 f = sample_frequencies
             else:
                 raise ValueError("Must provide frequency grid via 'f' or 'sample_frequencies'")
+        if hm_mapping_transitions not in ("phenomd_runtime", "london_2018"):
+            raise ValueError(f"Unknown HM mapping transitions: {hm_mapping_transitions}")
+        if hm_mapping_transitions == "london_2018" and base_22 not in (None, IMRPhenomD):
+            raise ValueError("london_2018 HM mapping transitions require the D carrier")
 
         dtype = jnp.float64
         f_arr = as_array(f, dtype=dtype)
@@ -578,8 +583,12 @@ class IMRPhenomHM:
             hm_fr_lm, hm_fd_lm = hm_qnm[(l, m)]
             hm_fr_lm = expand_param(hm_fr_lm)
             hm_fd_lm = expand_param(hm_fd_lm)
-            f0_amp = 0.014 * hm_fr_lm / hm_fr22
-            f0_phi = 0.018 * hm_fr_lm / hm_fr22
+            if hm_mapping_transitions == "london_2018":
+                f0_amp = 0.018 * hm_fr_lm / hm_fr22
+                f0_phi = 0.014 * hm_fr_lm / hm_fr22
+            else:
+                f0_amp = 0.014 * hm_fr_lm / hm_fr22
+                f0_phi = 0.018 * hm_fr_lm / hm_fr22
             f_map_amp = frequency_mapping_amplitude(
                 mf_eval, f0_amp, hm_fr_lm, hm_fr22, m
             )

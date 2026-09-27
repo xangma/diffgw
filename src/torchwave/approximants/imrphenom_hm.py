@@ -540,6 +540,7 @@ class IMRPhenomHM(nn.Module):
                 f = sample_frequencies
             else:
                 raise ValueError("Must provide frequency grid via 'f' or 'sample_frequencies'")
+
         device = f.device
         dtype = f.dtype if f.is_floating_point() else torch.float64
 
@@ -905,6 +906,7 @@ class IMRPhenomHM(nn.Module):
         phasing_convention: Optional[str] = None,
         reference_frame: Optional[str] = None,
         sample_frequencies: Optional[torch.Tensor] = None,
+        hm_mapping_transitions: str = "phenomd_runtime",
     ) -> Union[
         Tuple[torch.Tensor, torch.Tensor],
         Tuple[torch.Tensor, torch.Tensor, Dict[Tuple[int, int], Union[Tuple[torch.Tensor, torch.Tensor], torch.Tensor]]],
@@ -922,6 +924,11 @@ class IMRPhenomHM(nn.Module):
                 f = sample_frequencies
             else:
                 raise ValueError("Must provide frequency grid via 'f' or 'sample_frequencies'")
+
+        if hm_mapping_transitions not in ("phenomd_runtime", "london_2018"):
+            raise ValueError(f"Unknown HM mapping transitions: {hm_mapping_transitions}")
+        if hm_mapping_transitions == "london_2018" and not isinstance(self.base_22, IMRPhenomD):
+            raise ValueError("london_2018 HM mapping transitions require the D carrier")
 
         # Keep custom/XAS carriers on the established opaque-carrier path.
         # The Torch-native London route below relies on the IMRPhenomD
@@ -1161,8 +1168,12 @@ class IMRPhenomHM(nn.Module):
             hm_fr_lm, hm_fd_lm = hm_qnm[(l, m)]
             hm_fr_lm = expand_param(hm_fr_lm)
             hm_fd_lm = expand_param(hm_fd_lm)
-            f0_amp = 0.014 * hm_fr_lm / hm_fr22
-            f0_phi = 0.018 * hm_fr_lm / hm_fr22
+            if hm_mapping_transitions == "london_2018":
+                f0_amp = 0.018 * hm_fr_lm / hm_fr22
+                f0_phi = 0.014 * hm_fr_lm / hm_fr22
+            else:
+                f0_amp = 0.014 * hm_fr_lm / hm_fr22
+                f0_phi = 0.018 * hm_fr_lm / hm_fr22
             f_map_amp = frequency_mapping_amplitude(
                 mf_eval, f0_amp, hm_fr_lm, hm_fr22, m
             )

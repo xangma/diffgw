@@ -27,8 +27,9 @@ printed higher-mode mapping cutoffs. The public Torch and JAX HM assembly
 currently uses $0.014 f^{\rm RD}_{\ell m}/f^{\rm RD}_{22}$ for amplitude and
 $0.018 f^{\rm RD}_{\ell m}/f^{\rm RD}_{22}$ for phase, following the distinct
 [PhenomD carrier joins in Khan et al., Eqs. (37)--(38)](https://arxiv.org/html/1508.07253v2).
-The component reference evaluates either map for a supplied $f_0$; its tests
-do not validate the public assembly's choice of cutoff. These expressions use
+The component reference evaluates either map for a supplied $f_0$. Its
+component tests accept that input; the public selection gate additionally
+checks the assembly's actual cutoff choice. These expressions use
 geometric-frequency normalization and do not apply directly to hertz.
 
 The public D-carrier HM option `hm_mapping_transitions` selects only the two
@@ -103,6 +104,13 @@ frontend implementation agreement at the sampled CPU FP64 points. It does
 not audit QNM fits, phase-offset attachment, mode amplitude, polarizations,
 LAL agreement, or physical accuracy. The higher-mode ledger retains those
 gates.
+
+The public `(3,3)` D-carrier selection test checks both named choices through
+Torch and JAX class calls and `get_fd_waveform`. It compares captured map
+frequencies and one-sided slopes with the independent scalar evaluator, checks
+that explicit `phenomd_runtime` reproduces the omitted-option complex mode,
+and rejects an unknown choice or non-D London carrier. It does not establish
+independent correctness of the full complex HM mode.
 
 ## Reproduce the checks
 
