@@ -1,6 +1,6 @@
 # IMRPhenomHM six-mode pinned-binary holdout — 27 September 2026
 
-The maintained [`tests/test_imrphenomhm_lal_modes_binary.py`](../../tests/test_imrphenomhm_lal_modes_binary.py) compares the **complex, unprojected** `(2,2)`, `(2,1)`, `(3,3)`, `(3,2)`, `(4,4)`, and `(4,3)` HM/D modes from Torch and JAX with the public LALSuite 7.26.15 binary API. All six tests (three systems × two backends), covering all 36 mode/backend/system comparisons, pass the criteria frozen before the holdout systems were run. The test is included in the CI maintained binary-oracle step with `DIFFGW_REQUIRE_LAL_BINARY=1`.
+The maintained [`tests/test_imrphenomhm_lal_modes_binary.py`](https://github.com/xangma/diffgw/blob/main/tests/test_imrphenomhm_lal_modes_binary.py) compares the **complex, unprojected** `(2,2)`, `(2,1)`, `(3,3)`, `(3,2)`, `(4,4)`, and `(4,3)` HM/D modes from Torch and JAX with the public LALSuite 7.26.15 binary API. All six tests (three systems × two backends), covering all 36 mode/backend/system comparisons, pass the criteria frozen before the holdout systems were run. The test is included in the CI maintained binary-oracle step with `DIFFGW_REQUIRE_LAL_BINARY=1`.
 
 ## Source and fixed comparison contract
 
