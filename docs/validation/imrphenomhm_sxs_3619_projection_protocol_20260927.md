@@ -104,9 +104,12 @@ the result; their final matches must agree within `1e-5`, or optimization is
 infeasible. The maximizing time/angles and PSD-weighted template/NR norm ratio
 are diagnostic outputs, not fitted correction parameters.
 
-Apply the *same* optimizer to Lev2 versus Lev3 projected NR strains at each
-source angle as a numerical-resolution screen. A valid case needs resolution
-match `>=0.995` at both angles. For **each** Torch and JAX frontend, at both
+For the Lev2-versus-Lev3 numerical-resolution screen, retain the same fixed
+orbital azimuth because these are resolutions of the *same* simulation.
+Maximize the same PSD-weighted detector match over the stated discrete arrival
+times and candidate polarization grid `ψ=jπ/1024`, `j=0,...,1023`; the Lev3
+source polarization remains fixed. A valid case needs resolution match
+`>=0.995` at both angles. For **each** Torch and JAX frontend, at both
 source angles, require model/Lev3 optimized detector match `>=0.980` and
 PSD-weighted template/Lev3 norm ratio in `[0.85,1.15]`. Both backends must
 pass independently; mutual Torch/JAX parity alone cannot pass this gate.
