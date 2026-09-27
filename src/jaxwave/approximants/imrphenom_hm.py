@@ -218,7 +218,7 @@ def _production_hhat(
         ) * chi_s
         one = jnp.ones_like(v_m)
         c_tail = delta * (-PI * one + 1j * (-0.5 - 2.0 * math.log(2.0)) * one)
-        c = c_tail + c_spa - c_td
+        c = c_tail + c_spa + c_td
         return -(math.sqrt(2.0) / 3.0) * (
             delta * v_m
             - 1.5 * (chi_a + delta * chi_s) * (v_m * v_m)

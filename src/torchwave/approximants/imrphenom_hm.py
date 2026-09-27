@@ -307,7 +307,7 @@ def _production_hhat(
             -math.pi * one,
             (-0.5 - 2.0 * math.log(2.0)) * one,
         )
-        c = c_tail + c_spa - c_td
+        c = c_tail + c_spa + c_td
         return -(torch.sqrt(v_m.new_tensor(2.0)) / 3.0) * (
             delta * v_m
             - 1.5 * (chi_a + delta * chi_s) * v_m.square()
