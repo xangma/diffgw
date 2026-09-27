@@ -50,7 +50,7 @@ then computes both polarizations and the exact two-pole Fourier transform.
 
 ## Implementation mapping
 
-[`audit_kerr220_public_angular_gate.py`](../../scripts/audit_kerr220_public_angular_gate.py)
+[`audit_kerr220_public_angular_gate.py`](https://github.com/xangma/diffgw/blob/main/scripts/audit_kerr220_public_angular_gate.py)
 uses `diffgw_reference.kerr_qnm`, `diffgw_reference.kerr_angular`, and
 `diffgw_reference.kerr_ringdown` without passing native QNM or angular values
 into the scalar calculation. It compares the resulting complete TD and FD

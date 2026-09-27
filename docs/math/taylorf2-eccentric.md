@@ -94,12 +94,12 @@ base version; `tf2.ecc.paper_phase.v1`, `tf2.ecc.reference_phase.v1`, and
 
 ## Implementation mapping
 
-[`src/diffgw_reference/taylorf2_eccentric.py`](../../src/diffgw_reference/taylorf2_eccentric.py)
+[`src/diffgw_reference/taylorf2_eccentric.py`](https://github.com/xangma/diffgw/blob/main/src/diffgw_reference/taylorf2_eccentric.py)
 builds `waveform_expr()` from the independent base `waveform_expr()` and its
 own Moore polynomial, then evaluates it at high precision through
 `evaluate_waveform()`. It does not import either tensor frontend or LAL.
-The native [`Torch`](../../src/torchwave/approximants/taylorf2_eccentric.py)
-and [`JAX`](../../src/jaxwave/approximants/taylorf2_eccentric.py) classes
+The native [`Torch`](https://github.com/xangma/diffgw/blob/main/src/torchwave/approximants/taylorf2_eccentric.py)
+and [`JAX`](https://github.com/xangma/diffgw/blob/main/src/jaxwave/approximants/taylorf2_eccentric.py) classes
 add the eccentric phase to their existing TaylorF2 carrier; their
 `definition_id` metadata binds this scoped catalog entry. No production
 waveform coefficients or numerical paths changed for this promotion.
