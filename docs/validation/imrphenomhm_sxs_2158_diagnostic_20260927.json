@@ -1,0 +1,815 @@
+{
+  "case": "SXS:BBH:2158v3.0",
+  "scope": "post-result diagnostic; no new qualification gates",
+  "metrics_sha256": "a1497fbbda34d7cb73d14dfde0113b4dd0c4acc513abfbe2ded4bb4716c79526",
+  "fixture_sha256": "003806ce22416cd1ecf607c33471aaa1fa4ff93e9bf7a24ea2a3c626141bc0be",
+  "frozen_runner_sha256": "c1e32275d709d2b5a2020a37fd0ade4f263da6f6eff22478a6e5cae42d3bd431",
+  "diagnostic_sha256": "b9114f5630756a8e404e54af9903e487f9e15eb20d925f59e50fa3b6ffeb9b0e",
+  "psd_sha256": "0d20d2092bfaeb6073b0d656f4a3eb495bc3adbeb350ef279420cb4ffd0d67ea",
+  "versions": {
+    "numpy": "2.3.5",
+    "scipy": "1.16.3",
+    "torch": "2.14.0",
+    "jax": "0.11.2",
+    "jaxlib": "0.11.2",
+    "sympy": "1.14.0",
+    "pycbc": "2.11.0",
+    "lalsuite": "7.26.15"
+  },
+  "binary_modes": {
+    "(2, 2)": {
+      "relative_complex_l2": 2.9059447931928946e-06,
+      "max_supported_relative_error": 3.059006831812651e-13,
+      "torch_jax_relative_l2": 1.0603206992215402e-13
+    },
+    "(2, 1)": {
+      "relative_complex_l2": 1.9840535047132413e-05,
+      "max_supported_relative_error": 7.088459211336039e-06,
+      "torch_jax_relative_l2": 1.256005651605915e-13
+    },
+    "(3, 3)": {
+      "relative_complex_l2": 4.024946617107671e-06,
+      "max_supported_relative_error": 1.140195268957243e-05,
+      "torch_jax_relative_l2": 1.7215406430901406e-13
+    },
+    "(3, 2)": {
+      "relative_complex_l2": 8.329470698015046e-06,
+      "max_supported_relative_error": 2.697321940587958e-06,
+      "torch_jax_relative_l2": 2.2313665868457703e-13
+    },
+    "(4, 4)": {
+      "relative_complex_l2": 5.930679937644995e-06,
+      "max_supported_relative_error": 7.147369923571241e-06,
+      "torch_jax_relative_l2": 2.8621344036910364e-13
+    },
+    "(4, 3)": {
+      "relative_complex_l2": 1.141771354457321e-05,
+      "max_supported_relative_error": 1.25197831949859e-05,
+      "torch_jax_relative_l2": 3.4034761170804797e-13
+    }
+  },
+  "views": [
+    {
+      "inclination_rad": 0.7,
+      "source_psi_rad": 0.0,
+      "fixed_alignment": {
+        "orbital_phase_rad": 1.8469341076987233,
+        "polarization_rad": 1.5512603715165378,
+        "shift_seconds": 0.006103515625
+      },
+      "model_full_nr": {
+        "match": 0.9940883571641848,
+        "norm_ratio": 1.0033134031204012,
+        "residual_power": 0.011873439623507075,
+        "amplitude_residual_power": 0.0059202541801064434,
+        "phase_residual_power": 0.005953185443400634
+      },
+      "binary_full_nr": {
+        "match": 0.9940883361874799,
+        "norm_ratio": 1.0033134320589734,
+        "residual_power": 0.011873482249845864,
+        "amplitude_residual_power": 0.0059202406057766895,
+        "phase_residual_power": 0.005953241644069174
+      },
+      "six_nr_full_nr": {
+        "match": 0.999864503316459,
+        "norm_ratio": 1.0000687902649725,
+        "residual_power": 0.0002710167408878324,
+        "amplitude_residual_power": 0.0001367527582359017,
+        "phase_residual_power": 0.00013426398265193083
+      },
+      "model_six_nr": {
+        "match": 0.9941401578408389,
+        "norm_ratio": 1.0032443896730032,
+        "residual_power": 0.011768233605446038,
+        "amplitude_residual_power": 0.005900867317324354,
+        "phase_residual_power": 0.005867366288121685
+      },
+      "frequency_bands": [
+        {
+          "low_hz_inclusive": 30,
+          "high_hz_exclusive": 60,
+          "reference_power_fraction": 0.4068898956105127,
+          "residual_power": 0.0024732290979456455,
+          "amplitude_residual_power": 0.001118638458538343,
+          "phase_residual_power": 0.001354590639407303
+        },
+        {
+          "low_hz_inclusive": 60,
+          "high_hz_exclusive": 100,
+          "reference_power_fraction": 0.2755296448256723,
+          "residual_power": 0.0026603240730836927,
+          "amplitude_residual_power": 0.001403908254669007,
+          "phase_residual_power": 0.0012564158184146862
+        },
+        {
+          "low_hz_inclusive": 100,
+          "high_hz_exclusive": 200,
+          "reference_power_fraction": 0.2985718740723601,
+          "residual_power": 0.003278892407550848,
+          "amplitude_residual_power": 0.0019594398479464434,
+          "phase_residual_power": 0.0013194525596044043
+        },
+        {
+          "low_hz_inclusive": 200,
+          "high_hz_exclusive": 400,
+          "reference_power_fraction": 0.01895463506296819,
+          "residual_power": 0.003199652895216032,
+          "amplitude_residual_power": 0.001386810817806833,
+          "phase_residual_power": 0.0018128420774092
+        },
+        {
+          "low_hz_inclusive": 400,
+          "high_hz_exclusive": 1025,
+          "reference_power_fraction": 5.3950428486715615e-05,
+          "residual_power": 0.0002613411497108571,
+          "amplitude_residual_power": 5.145680114581653e-05,
+          "phase_residual_power": 0.00020988434856504052
+        }
+      ],
+      "projected_mode_pairs": {
+        "(2, 2)": {
+          "match": 0.9993017634391211,
+          "norm_ratio": 1.010098424340033,
+          "residual_power": 0.0015125534740717316,
+          "amplitude_residual_power": 0.0001843882353260274,
+          "phase_residual_power": 0.0013281652387457038,
+          "nr_power_fraction_of_full": 0.9390946016408287,
+          "frequency_bands": [
+            {
+              "low_hz_inclusive": 30,
+              "high_hz_exclusive": 60,
+              "reference_power_fraction": 0.41853811274090913,
+              "residual_power": 0.00010485048125182889,
+              "amplitude_residual_power": 6.473233640785628e-06,
+              "phase_residual_power": 9.837724761104318e-05
+            },
+            {
+              "low_hz_inclusive": 60,
+              "high_hz_exclusive": 100,
+              "reference_power_fraction": 0.28655283290919453,
+              "residual_power": 0.0005385697365189848,
+              "amplitude_residual_power": 2.0639469848814332e-05,
+              "phase_residual_power": 0.0005179302666701703
+            },
+            {
+              "low_hz_inclusive": 100,
+              "high_hz_exclusive": 200,
+              "reference_power_fraction": 0.2888433039424482,
+              "residual_power": 0.0007616999454623372,
+              "amplitude_residual_power": 0.00015620573031150474,
+              "phase_residual_power": 0.0006054942151508326
+            },
+            {
+              "low_hz_inclusive": 200,
+              "high_hz_exclusive": 400,
+              "reference_power_fraction": 0.006065750371594247,
+              "residual_power": 0.00010743327045020029,
+              "amplitude_residual_power": 1.0697741808432923e-06,
+              "phase_residual_power": 0.00010636349626935701
+            },
+            {
+              "low_hz_inclusive": 400,
+              "high_hz_exclusive": 1025,
+              "reference_power_fraction": 3.585394070805483e-11,
+              "residual_power": 4.0388380148478995e-11,
+              "amplitude_residual_power": 2.7344079334134337e-11,
+              "phase_residual_power": 1.304430081434467e-11
+            }
+          ]
+        },
+        "(2, 1)": {
+          "match": 0.4808601921200221,
+          "norm_ratio": 0.8125795847859307,
+          "residual_power": 0.8788112311049348,
+          "amplitude_residual_power": 0.04415079422760901,
+          "phase_residual_power": 0.8346604368773258,
+          "nr_power_fraction_of_full": 0.0017061060307125649,
+          "frequency_bands": [
+            {
+              "low_hz_inclusive": 30,
+              "high_hz_exclusive": 60,
+              "reference_power_fraction": 0.28467174206330464,
+              "residual_power": 0.03712817678375445,
+              "amplitude_residual_power": 0.004600225747222301,
+              "phase_residual_power": 0.03252795103653215
+            },
+            {
+              "low_hz_inclusive": 60,
+              "high_hz_exclusive": 100,
+              "reference_power_fraction": 0.33268064923696294,
+              "residual_power": 0.2494897536648316,
+              "amplitude_residual_power": 0.023988856519249556,
+              "phase_residual_power": 0.22550089714558202
+            },
+            {
+              "low_hz_inclusive": 100,
+              "high_hz_exclusive": 200,
+              "reference_power_fraction": 0.38218475645261824,
+              "residual_power": 0.5910128812154322,
+              "amplitude_residual_power": 0.015550783119690438,
+              "phase_residual_power": 0.5754620980957417
+            },
+            {
+              "low_hz_inclusive": 200,
+              "high_hz_exclusive": 400,
+              "reference_power_fraction": 0.00046285187168261456,
+              "residual_power": 0.0011804190654849504,
+              "amplitude_residual_power": 1.0928466015152824e-05,
+              "phase_residual_power": 0.0011694905994697974
+            },
+            {
+              "low_hz_inclusive": 400,
+              "high_hz_exclusive": 1025,
+              "reference_power_fraction": 3.7543156753340617e-10,
+              "residual_power": 3.7543156753340617e-10,
+              "amplitude_residual_power": 3.7543156753340617e-10,
+              "phase_residual_power": 0.0
+            }
+          ]
+        },
+        "(3, 3)": {
+          "match": 0.9472586786468233,
+          "norm_ratio": 1.0840839118428758,
+          "residual_power": 0.12142214016742778,
+          "amplitude_residual_power": 0.00927050952701445,
+          "phase_residual_power": 0.11215163064041332,
+          "nr_power_fraction_of_full": 0.040853422263129144,
+          "frequency_bands": [
+            {
+              "low_hz_inclusive": 30,
+              "high_hz_exclusive": 60,
+              "reference_power_fraction": 0.25860636936955456,
+              "residual_power": 0.04584019981367727,
+              "amplitude_residual_power": 0.0014956193854465778,
+              "phase_residual_power": 0.04434458042823071
+            },
+            {
+              "low_hz_inclusive": 60,
+              "high_hz_exclusive": 100,
+              "reference_power_fraction": 0.22900546954576387,
+              "residual_power": 0.02420585151183454,
+              "amplitude_residual_power": 0.0027508196272582196,
+              "phase_residual_power": 0.021455031884576325
+            },
+            {
+              "low_hz_inclusive": 100,
+              "high_hz_exclusive": 200,
+              "reference_power_fraction": 0.2841896585629949,
+              "residual_power": 0.014909399394235232,
+              "amplitude_residual_power": 0.00405871452589879,
+              "phase_residual_power": 0.01085068486833644
+            },
+            {
+              "low_hz_inclusive": 200,
+              "high_hz_exclusive": 400,
+              "reference_power_fraction": 0.22819805630314702,
+              "residual_power": 0.0364664601120118,
+              "amplitude_residual_power": 0.0009653496183943454,
+              "phase_residual_power": 0.03550111049361746
+            },
+            {
+              "low_hz_inclusive": 400,
+              "high_hz_exclusive": 1025,
+              "reference_power_fraction": 4.4621853960375844e-07,
+              "residual_power": 2.293356689199637e-07,
+              "amplitude_residual_power": 6.37001651678271e-09,
+              "phase_residual_power": 2.2296565240318103e-07
+            }
+          ]
+        },
+        "(3, 2)": {
+          "match": 0.014001755460694057,
+          "norm_ratio": 0.8859545988778622,
+          "residual_power": 1.7601057119873034,
+          "amplitude_residual_power": 0.20821769226933143,
+          "phase_residual_power": 1.5518880197179719,
+          "nr_power_fraction_of_full": 0.00012591496402046036,
+          "frequency_bands": [
+            {
+              "low_hz_inclusive": 30,
+              "high_hz_exclusive": 60,
+              "reference_power_fraction": 0.1685559072845145,
+              "residual_power": 0.012049648826865853,
+              "amplitude_residual_power": 0.011946117388129446,
+              "phase_residual_power": 0.00010353143873640877
+            },
+            {
+              "low_hz_inclusive": 60,
+              "high_hz_exclusive": 100,
+              "reference_power_fraction": 0.2688521958585894,
+              "residual_power": 0.1570327127903929,
+              "amplitude_residual_power": 0.019462182604026327,
+              "phase_residual_power": 0.13757053018636656
+            },
+            {
+              "low_hz_inclusive": 100,
+              "high_hz_exclusive": 200,
+              "reference_power_fraction": 0.5502611354162439,
+              "residual_power": 1.3760259163723059,
+              "amplitude_residual_power": 0.03993754646137236,
+              "phase_residual_power": 1.3360883699109334
+            },
+            {
+              "low_hz_inclusive": 200,
+              "high_hz_exclusive": 400,
+              "reference_power_fraction": 0.012330760690864584,
+              "residual_power": 0.2149973884439473,
+              "amplitude_residual_power": 0.13687181813874638,
+              "phase_residual_power": 0.07812557030520094
+            },
+            {
+              "low_hz_inclusive": 400,
+              "high_hz_exclusive": 1025,
+              "reference_power_fraction": 7.4978768125054e-10,
+              "residual_power": 4.55537918700474e-08,
+              "amplitude_residual_power": 2.7677056908681082e-08,
+              "phase_residual_power": 1.7876734961366315e-08
+            }
+          ]
+        },
+        "(4, 4)": {
+          "match": 0.7315827051909023,
+          "norm_ratio": 1.345713491067656,
+          "residual_power": 0.8419433676271612,
+          "amplitude_residual_power": 0.17049942987133151,
+          "phase_residual_power": 0.6714439377558297,
+          "nr_power_fraction_of_full": 0.003247659804538026,
+          "frequency_bands": [
+            {
+              "low_hz_inclusive": 30,
+              "high_hz_exclusive": 60,
+              "reference_power_fraction": 0.1800155767208698,
+              "residual_power": 0.09353884322947861,
+              "amplitude_residual_power": 0.0025537411127343605,
+              "phase_residual_power": 0.09098510211674428
+            },
+            {
+              "low_hz_inclusive": 60,
+              "high_hz_exclusive": 100,
+              "reference_power_fraction": 0.2213012036653051,
+              "residual_power": 0.0877021363447042,
+              "amplitude_residual_power": 0.005845377988908056,
+              "phase_residual_power": 0.08185675835579616
+            },
+            {
+              "low_hz_inclusive": 100,
+              "high_hz_exclusive": 200,
+              "reference_power_fraction": 0.3162246232401375,
+              "residual_power": 0.07021253442594613,
+              "amplitude_residual_power": 0.019551638149435776,
+              "phase_residual_power": 0.05066089627651033
+            },
+            {
+              "low_hz_inclusive": 200,
+              "high_hz_exclusive": 400,
+              "reference_power_fraction": 0.27324587125888533,
+              "residual_power": 0.5436946450343345,
+              "amplitude_residual_power": 0.1298727123303117,
+              "phase_residual_power": 0.4138219327040228
+            },
+            {
+              "low_hz_inclusive": 400,
+              "high_hz_exclusive": 1025,
+              "reference_power_fraction": 0.00921272511480249,
+              "residual_power": 0.04679520859269767,
+              "amplitude_residual_power": 0.012675960289941616,
+              "phase_residual_power": 0.03411924830275603
+            }
+          ]
+        },
+        "(4, 3)": {
+          "match": -0.033610016552250536,
+          "norm_ratio": 0.9843880619369684,
+          "residual_power": 2.0351904545951,
+          "amplitude_residual_power": 0.17713621273559335,
+          "phase_residual_power": 1.8580542418595063,
+          "nr_power_fraction_of_full": 0.0001327720428930145,
+          "frequency_bands": [
+            {
+              "low_hz_inclusive": 30,
+              "high_hz_exclusive": 60,
+              "reference_power_fraction": 0.059674241113873774,
+              "residual_power": 0.007884618627574834,
+              "amplitude_residual_power": 0.0005472563212061294,
+              "phase_residual_power": 0.007337362306368704
+            },
+            {
+              "low_hz_inclusive": 60,
+              "high_hz_exclusive": 100,
+              "reference_power_fraction": 0.11693062906912594,
+              "residual_power": 0.009791083882890869,
+              "amplitude_residual_power": 0.0011408600418945595,
+              "phase_residual_power": 0.00865022384099631
+            },
+            {
+              "low_hz_inclusive": 100,
+              "high_hz_exclusive": 200,
+              "reference_power_fraction": 0.34783650108593017,
+              "residual_power": 0.666375532266261,
+              "amplitude_residual_power": 0.007122716666615089,
+              "phase_residual_power": 0.6592528155996459
+            },
+            {
+              "low_hz_inclusive": 200,
+              "high_hz_exclusive": 400,
+              "reference_power_fraction": 0.47555524650178016,
+              "residual_power": 1.349619977424037,
+              "amplitude_residual_power": 0.16702499399996013,
+              "phase_residual_power": 1.1825949834240768
+            },
+            {
+              "low_hz_inclusive": 400,
+              "high_hz_exclusive": 1025,
+              "reference_power_fraction": 3.382229289741579e-06,
+              "residual_power": 0.0015192423943360689,
+              "amplitude_residual_power": 0.00130038570591736,
+              "phase_residual_power": 0.0002188566884187093
+            }
+          ]
+        }
+      }
+    },
+    {
+      "inclination_rad": 1.2,
+      "source_psi_rad": 0.4,
+      "fixed_alignment": {
+        "orbital_phase_rad": 1.7737211911623556,
+        "polarization_rad": 1.9663567393385297,
+        "shift_seconds": 0.00634765625
+      },
+      "model_full_nr": {
+        "match": 0.9864990065224811,
+        "norm_ratio": 1.0742266374731584,
+        "residual_power": 0.034515847362376,
+        "amplitude_residual_power": 0.023082070063722544,
+        "phase_residual_power": 0.011433777298653455
+      },
+      "binary_full_nr": {
+        "match": 0.9864989634033761,
+        "norm_ratio": 1.0742266791162418,
+        "residual_power": 0.034515947308261435,
+        "amplitude_residual_power": 0.023082015484652347,
+        "phase_residual_power": 0.011433931823609085
+      },
+      "six_nr_full_nr": {
+        "match": 0.9988249380769728,
+        "norm_ratio": 1.0034281939748932,
+        "residual_power": 0.0023699330403933673,
+        "amplitude_residual_power": 0.0012051207153069494,
+        "phase_residual_power": 0.0011648123250864182
+      },
+      "model_six_nr": {
+        "match": 0.987735823626515,
+        "norm_ratio": 1.0705565619178092,
+        "residual_power": 0.031237217415964733,
+        "amplitude_residual_power": 0.020612833534259925,
+        "phase_residual_power": 0.010624383881704806
+      },
+      "frequency_bands": [
+        {
+          "low_hz_inclusive": 30,
+          "high_hz_exclusive": 60,
+          "reference_power_fraction": 0.4139891871134548,
+          "residual_power": 0.004292303898097314,
+          "amplitude_residual_power": 0.002181109265358039,
+          "phase_residual_power": 0.0021111946327392753
+        },
+        {
+          "low_hz_inclusive": 60,
+          "high_hz_exclusive": 100,
+          "reference_power_fraction": 0.2765161577786723,
+          "residual_power": 0.006719731409861414,
+          "amplitude_residual_power": 0.005252807172577505,
+          "phase_residual_power": 0.0014669242372839094
+        },
+        {
+          "low_hz_inclusive": 100,
+          "high_hz_exclusive": 200,
+          "reference_power_fraction": 0.27794890304584907,
+          "residual_power": 0.015164722547079536,
+          "amplitude_residual_power": 0.010240916043783316,
+          "phase_residual_power": 0.004923806503296218
+        },
+        {
+          "low_hz_inclusive": 200,
+          "high_hz_exclusive": 400,
+          "reference_power_fraction": 0.031172087742548198,
+          "residual_power": 0.0070452195110450744,
+          "amplitude_residual_power": 0.005135744140891338,
+          "phase_residual_power": 0.0019094753701537357
+        },
+        {
+          "low_hz_inclusive": 400,
+          "high_hz_exclusive": 1025,
+          "reference_power_fraction": 0.00037366431947604236,
+          "residual_power": 0.0012938699962926675,
+          "amplitude_residual_power": 0.00027149344111234943,
+          "phase_residual_power": 0.0010223765551803181
+        }
+      ],
+      "projected_mode_pairs": {
+        "(2, 2)": {
+          "match": 0.9965197180373535,
+          "norm_ratio": 1.0139532273415335,
+          "residual_power": 0.007252378809412049,
+          "amplitude_residual_power": 0.0002774956927299081,
+          "phase_residual_power": 0.00697488311668214,
+          "nr_power_fraction_of_full": 1.0160088980273185,
+          "frequency_bands": [
+            {
+              "low_hz_inclusive": 30,
+              "high_hz_exclusive": 60,
+              "reference_power_fraction": 0.41854291584924674,
+              "residual_power": 0.0006748304152790536,
+              "amplitude_residual_power": 2.3362601111735414e-05,
+              "phase_residual_power": 0.0006514678141673181
+            },
+            {
+              "low_hz_inclusive": 60,
+              "high_hz_exclusive": 100,
+              "reference_power_fraction": 0.28655352727745304,
+              "residual_power": 0.00042729046400372415,
+              "amplitude_residual_power": 4.286110055302014e-05,
+              "phase_residual_power": 0.00038442936345070377
+            },
+            {
+              "low_hz_inclusive": 100,
+              "high_hz_exclusive": 200,
+              "reference_power_fraction": 0.28883814441121214,
+              "residual_power": 0.005467794569998372,
+              "amplitude_residual_power": 0.00020969839414576135,
+              "phase_residual_power": 0.005258096175852611
+            },
+            {
+              "low_hz_inclusive": 200,
+              "high_hz_exclusive": 400,
+              "reference_power_fraction": 0.006065412429912269,
+              "residual_power": 0.0006824633140976017,
+              "amplitude_residual_power": 1.5735725550590076e-06,
+              "phase_residual_power": 0.0006808897415425425
+            },
+            {
+              "low_hz_inclusive": 400,
+              "high_hz_exclusive": 1025,
+              "reference_power_fraction": 3.217573151847117e-11,
+              "residual_power": 4.603329762032627e-11,
+              "amplitude_residual_power": 2.4364332270362946e-11,
+              "phase_residual_power": 2.1668965349963313e-11
+            }
+          ]
+        },
+        "(2, 1)": {
+          "match": 0.5591572485816497,
+          "norm_ratio": 0.818410541665943,
+          "residual_power": 0.7545554413336495,
+          "amplitude_residual_power": 0.042077015507774325,
+          "phase_residual_power": 0.7124784258258754,
+          "nr_power_fraction_of_full": 0.0060215885995897585,
+          "frequency_bands": [
+            {
+              "low_hz_inclusive": 30,
+              "high_hz_exclusive": 60,
+              "reference_power_fraction": 0.2846816786638199,
+              "residual_power": 0.03291368795165514,
+              "amplitude_residual_power": 0.004195671582379982,
+              "phase_residual_power": 0.02871801636927517
+            },
+            {
+              "low_hz_inclusive": 60,
+              "high_hz_exclusive": 100,
+              "reference_power_fraction": 0.3328876534532983,
+              "residual_power": 0.22160993864199335,
+              "amplitude_residual_power": 0.023118326371077406,
+              "phase_residual_power": 0.19849161227091597
+            },
+            {
+              "low_hz_inclusive": 100,
+              "high_hz_exclusive": 200,
+              "reference_power_fraction": 0.38196723654507736,
+              "residual_power": 0.4991310833981162,
+              "amplitude_residual_power": 0.014751011944438749,
+              "phase_residual_power": 0.48438007145367745
+            },
+            {
+              "low_hz_inclusive": 200,
+              "high_hz_exclusive": 400,
+              "reference_power_fraction": 0.0004634310650054107,
+              "residual_power": 0.000900731069085799,
+              "amplitude_residual_power": 1.2005337078951736e-05,
+              "phase_residual_power": 0.0008887257320068473
+            },
+            {
+              "low_hz_inclusive": 400,
+              "high_hz_exclusive": 1025,
+              "reference_power_fraction": 2.7279922750269583e-10,
+              "residual_power": 2.7279922750269583e-10,
+              "amplitude_residual_power": 2.7279922750269583e-10,
+              "phase_residual_power": 0.0
+            }
+          ]
+        },
+        "(3, 3)": {
+          "match": 0.9765399643492025,
+          "norm_ratio": 1.0882010017529153,
+          "residual_power": 0.058837885302931506,
+          "amplitude_residual_power": 0.009988374704042765,
+          "phase_residual_power": 0.048849510598888715,
+          "nr_power_fraction_of_full": 0.09251999162037357,
+          "frequency_bands": [
+            {
+              "low_hz_inclusive": 30,
+              "high_hz_exclusive": 60,
+              "reference_power_fraction": 0.25860531890256194,
+              "residual_power": 0.023452205360885124,
+              "amplitude_residual_power": 0.0016596205246554613,
+              "phase_residual_power": 0.02179258483622966
+            },
+            {
+              "low_hz_inclusive": 60,
+              "high_hz_exclusive": 100,
+              "reference_power_fraction": 0.22900301307951312,
+              "residual_power": 0.015113038712423438,
+              "amplitude_residual_power": 0.0029663212062828923,
+              "phase_residual_power": 0.012146717506140546
+            },
+            {
+              "low_hz_inclusive": 100,
+              "high_hz_exclusive": 200,
+              "reference_power_fraction": 0.2841902928144546,
+              "residual_power": 0.010456258837010032,
+              "amplitude_residual_power": 0.004352432963390185,
+              "phase_residual_power": 0.006103825873619844
+            },
+            {
+              "low_hz_inclusive": 200,
+              "high_hz_exclusive": 400,
+              "reference_power_fraction": 0.22820092813820697,
+              "residual_power": 0.009816334735789021,
+              "amplitude_residual_power": 0.0010099938268469568,
+              "phase_residual_power": 0.008806340908942062
+            },
+            {
+              "low_hz_inclusive": 400,
+              "high_hz_exclusive": 1025,
+              "reference_power_fraction": 4.4706526355041256e-07,
+              "residual_power": 4.765682387265323e-08,
+              "amplitude_residual_power": 6.182867267646771e-09,
+              "phase_residual_power": 4.147395660500647e-08
+            }
+          ]
+        },
+        "(3, 2)": {
+          "match": 0.02204408368662088,
+          "norm_ratio": 0.8923581608953947,
+          "residual_power": 1.7569606513621772,
+          "amplitude_residual_power": 0.20820921719492586,
+          "phase_residual_power": 1.548751434167251,
+          "nr_power_fraction_of_full": 0.0035898828374551525,
+          "frequency_bands": [
+            {
+              "low_hz_inclusive": 30,
+              "high_hz_exclusive": 60,
+              "reference_power_fraction": 0.1685513425541851,
+              "residual_power": 0.011573683433138995,
+              "amplitude_residual_power": 0.011473827807512979,
+              "phase_residual_power": 9.985562562601845e-05
+            },
+            {
+              "low_hz_inclusive": 60,
+              "high_hz_exclusive": 100,
+              "reference_power_fraction": 0.2688522743069646,
+              "residual_power": 0.14554664265670056,
+              "amplitude_residual_power": 0.01870593814745147,
+              "phase_residual_power": 0.1268407045092491
+            },
+            {
+              "low_hz_inclusive": 100,
+              "high_hz_exclusive": 200,
+              "reference_power_fraction": 0.5502656060913313,
+              "residual_power": 1.3886724867605331,
+              "amplitude_residual_power": 0.038668964085812926,
+              "phase_residual_power": 1.35000352267472
+            },
+            {
+              "low_hz_inclusive": 200,
+              "high_hz_exclusive": 400,
+              "reference_power_fraction": 0.012330776296653446,
+              "residual_power": 0.21116779453769724,
+              "amplitude_residual_power": 0.1393604589491353,
+              "phase_residual_power": 0.07180733558856199
+            },
+            {
+              "low_hz_inclusive": 400,
+              "high_hz_exclusive": 1025,
+              "reference_power_fraction": 7.508656697894261e-10,
+              "residual_power": 4.39741071630051e-08,
+              "amplitude_residual_power": 2.820501317074218e-08,
+              "phase_residual_power": 1.576909399226292e-08
+            }
+          ]
+        },
+        "(4, 4)": {
+          "match": 0.8158429296431463,
+          "norm_ratio": 1.350833555355655,
+          "residual_power": 0.62061528375155,
+          "amplitude_residual_power": 0.1742605264512258,
+          "phase_residual_power": 0.4463547573003241,
+          "nr_power_fraction_of_full": 0.01539481981245863,
+          "frequency_bands": [
+            {
+              "low_hz_inclusive": 30,
+              "high_hz_exclusive": 60,
+              "reference_power_fraction": 0.18001640756937626,
+              "residual_power": 0.05074139041322466,
+              "amplitude_residual_power": 0.002738987714956018,
+              "phase_residual_power": 0.04800240269826864
+            },
+            {
+              "low_hz_inclusive": 60,
+              "high_hz_exclusive": 100,
+              "reference_power_fraction": 0.22130186678624475,
+              "residual_power": 0.05276114183295541,
+              "amplitude_residual_power": 0.00616620003254527,
+              "phase_residual_power": 0.046594941800410135
+            },
+            {
+              "low_hz_inclusive": 100,
+              "high_hz_exclusive": 200,
+              "reference_power_fraction": 0.3162244174395757,
+              "residual_power": 0.06500459018542598,
+              "amplitude_residual_power": 0.02029837053430094,
+              "phase_residual_power": 0.04470621965112505
+            },
+            {
+              "low_hz_inclusive": 200,
+              "high_hz_exclusive": 400,
+              "reference_power_fraction": 0.2732446697561131,
+              "residual_power": 0.4189021852413049,
+              "amplitude_residual_power": 0.13220176033278863,
+              "phase_residual_power": 0.28670042490851627
+            },
+            {
+              "low_hz_inclusive": 400,
+              "high_hz_exclusive": 1025,
+              "reference_power_fraction": 0.00921263844869026,
+              "residual_power": 0.03320597607863896,
+              "amplitude_residual_power": 0.012855207836634951,
+              "phase_residual_power": 0.020350768242004016
+            }
+          ]
+        },
+        "(4, 3)": {
+          "match": -0.06726005877441295,
+          "norm_ratio": 0.9925902522815355,
+          "residual_power": 2.1187587663390537,
+          "amplitude_residual_power": 0.17842142420498036,
+          "phase_residual_power": 1.9403373421340733,
+          "nr_power_fraction_of_full": 0.000272008290404607,
+          "frequency_bands": [
+            {
+              "low_hz_inclusive": 30,
+              "high_hz_exclusive": 60,
+              "reference_power_fraction": 0.05967125824511419,
+              "residual_power": 0.004461863597333035,
+              "amplitude_residual_power": 0.0004644214502893623,
+              "phase_residual_power": 0.003997442147043675
+            },
+            {
+              "low_hz_inclusive": 60,
+              "high_hz_exclusive": 100,
+              "reference_power_fraction": 0.1169230089785221,
+              "residual_power": 0.007168052988388055,
+              "amplitude_residual_power": 0.0009733357067573244,
+              "phase_residual_power": 0.0061947172816307315
+            },
+            {
+              "low_hz_inclusive": 100,
+              "high_hz_exclusive": 200,
+              "reference_power_fraction": 0.34783671870871485,
+              "residual_power": 0.6428409366747639,
+              "amplitude_residual_power": 0.006436516489544369,
+              "phase_residual_power": 0.6364044201852196
+            },
+            {
+              "low_hz_inclusive": 200,
+              "high_hz_exclusive": 400,
+              "reference_power_fraction": 0.47556563573551835,
+              "residual_power": 1.4627147195679107,
+              "amplitude_residual_power": 0.16922390392069414,
+              "phase_residual_power": 1.2934908156472162
+            },
+            {
+              "low_hz_inclusive": 400,
+              "high_hz_exclusive": 1025,
+              "reference_power_fraction": 3.3783321305530877e-06,
+              "residual_power": 0.0015731935106579656,
+              "amplitude_residual_power": 0.0013232466376951312,
+              "phase_residual_power": 0.0002499468729628344
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

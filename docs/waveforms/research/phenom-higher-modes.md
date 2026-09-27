@@ -71,6 +71,15 @@ red results remain red. The two green cases add bounded physical evidence;
 they do not qualify the whole aligned-spin domain, every view, or the
 inherited fit/QNM provenance.
 
+The [2158 closeout diagnostic](../../validation/imrphenomhm_sxs_2158_receipt_20260927.md#post-result-diagnostic-and-case-closeout)
+reproduces the weaker-view match with native HM (`0.98649901`) and the
+pinned LAL binary (`0.98649896`) under the same fixed alignment and
+reference projection. Its frequency-resolved complex residual and
+six-pair NR comparison point away from a frontend discrepancy or missing
+modes alone. The case is closed with bounded passing evidence; the
+diagnostic does not establish a unique physical cause, repair earlier
+failures, or promote HM to whole-family qualification.
+
 The maintained mode/regime diagnostic now localizes those two XHM failures without changing their gates. The 22 mode agrees with the pinned binary to numerical precision after one constant phase convention. Across 21, 32, 33 and 44, affine-aligned inspiral phase residuals are at most 1.33e-4 rad, while intermediate phase residuals span 6.24–28.80 rad. Intermediate amplitude relative L2 spans 0.77–7.04; the largest inspiral-amplitude residual is 0.48 for the catalog 32 mode. Ringdown residuals and the 32 mixing path remain mode-dependent, and the close full-polarization/projection metrics in the manifest only show that projection is not the dominant amplifier in these two cases. This black-box decomposition is diagnostic evidence, not a calibration fit or a complete-waveform verification claim.
 
 Paper/source discrepancies to resolve: HM offers a non-paper XAS carrier, and its public assembly reverses London's printed amplitude and phase transition frequencies; XHM's default and experimental phase joins differ; some XHM absolute amplitude vetoes remain disabled pending normalization; XHM code comments use equation labels that differ from the pinned v2 paper; fit-source labels are not interchangeable. None of these should be hidden behind a single unqualified model name.
