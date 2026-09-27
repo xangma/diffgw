@@ -386,6 +386,20 @@ def london_ringdown_properties(
     return f_rd, q_factor
 
 
+def nsbh_torus_mass_ratio(
+    q: jnp.ndarray,
+    chi: jnp.ndarray,
+    compactness: jnp.ndarray,
+    xi_tide: jnp.ndarray,
+) -> jnp.ndarray:
+    """Physical torus fraction from Thompson Appendix A Eqs. (11)--(12)."""
+    raw_ratio = (
+        0.296 * xi_tide * (1.0 - 2.0 * compactness)
+        - 0.171 * q * compactness * kerr_isco_radius(chi)
+    )
+    return jnp.maximum(raw_ratio, 0.0)
+
+
 def nsbh_frequencies(
     mass1: jnp.ndarray,
     mass2: jnp.ndarray,
@@ -592,11 +606,7 @@ class IMRPhenomNSBH:
         # -------------------------------------------------------------
         # 3. Step 3: Baryonic Torus Remnant Mass Ratio
         # -------------------------------------------------------------
-        r_isco = kerr_isco_radius(s1)
-        torus_ratio = jnp.maximum(
-            0.296 * xi_tide * (1.0 - 2.0 * c) - 0.171 * q * c * r_isco,
-            0.0,
-        )
+        torus_ratio = nsbh_torus_mass_ratio(q, s1, c, xi_tide)
         has_torus = torus_ratio > 0.0
 
         # -------------------------------------------------------------

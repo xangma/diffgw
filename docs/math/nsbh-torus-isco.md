@@ -73,5 +73,5 @@ implementations remains possible despite the independent scalar evaluation.
 
 Run `JAX_ENABLE_X64=1 PYTHONPATH=src pytest -q
 tests/test_nsbh_torus_reference.py` with the `reference`, `torch`, and `jax`
-extras on CPU. The measured result belongs in the corresponding validation
-receipt.
+extras on CPU. The measured result is in the
+[27 September 2026 validation receipt](../validation/nsbh_torus_isco_20260927.md).
