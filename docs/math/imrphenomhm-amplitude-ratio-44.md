@@ -10,9 +10,10 @@ the paragraph after Eq. (4)](https://arxiv.org/pdf/1708.00404v4).
 terms used here. This is a component specification, not a qualification of
 the complete HM model or its independent PhenomD carrier.
 
-This source-first version freezes the equation, domain, and numerical gate
-before the scalar and frontend checks are added. Its status remains pending
-until the recorded CPU FP64 gate passes on `len`.
+The equation, domain, and numerical gate were frozen first in commit
+`87d1898`. The independent scalar and public Torch/JAX checks passed the
+declared CPU FP64 gate on `len`; the [run receipt](../validation/imrphenomhm_amplitude_ratio_44_20260927.md)
+records the command and result. This is an executable component only.
 
 ## Inputs, conventions, and options
 
@@ -92,7 +93,7 @@ $3\times10^{-8}$. Check an exact SymPy reduction, a hand-reduced mpmath
 value, and scalar domain rejection. No LAL implementation or binary output
 is an input to this gate.
 
-Passing these checks establishes only the leading (4,4) factor at sampled
+The passing checks establish only the leading (4,4) factor at sampled
 public D-carrier points. Higher PN terms, independent QNM and D-amplitude
 correctness, phase, projection, full modes, LAL agreement, and physical
 accuracy remain separate. This component is retained in the provisional
