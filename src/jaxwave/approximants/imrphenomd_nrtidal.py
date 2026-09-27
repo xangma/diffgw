@@ -161,15 +161,14 @@ def _planck_taper_window(
 
 def _quadrupole_monopole_constants(
     lambda_val: jnp.ndarray,
+    *,
+    fit: str = "historical_2013",
 ) -> Tuple[jnp.ndarray, jnp.ndarray]:
-    """Compute spin-induced quadrupole CQ and octupole COc constants via universal I-Love-Q relations.
+    """Return CQ and COc with an explicit quadrupole-fit choice.
 
-    Literature:
-    - Yagi & Yunes (2013), Science 341, 365
-    - Dietrich et al. (2019) Eqs. 28-29 (arXiv:1905.06011)
-
-    Returns:
-        (C_Q, C_Oc): Dimensionless quadrupole and octupole constants (>= 1.0)
+    ``dietrich_2019`` uses printed Eqs. (28)–(29); the historical fit is kept
+    for the binary-compatible default. Lambda clamps are separate native
+    conventions and are outside the positive-Lambda paper-math gate.
     """
     lam_safe = jnp.maximum(lambda_val, 1.0)
     ln_lam = jnp.log(lam_safe)
@@ -177,8 +176,14 @@ def _quadrupole_monopole_constants(
     ln_lam3 = ln_lam2 * ln_lam
     ln_lam4 = ln_lam3 * ln_lam
 
-    # Yagi & Yunes (2013) Science 341, 365 Eq. (2) / Table S1:
-    ln_cq = 0.1940 + 0.0936 * ln_lam + 0.0474 * ln_lam2 - 0.00421 * ln_lam3 + 0.000123 * ln_lam4
+    if fit == "dietrich_2019":
+        # Dietrich et al. (2019), Eq. (28), printed decimal precision.
+        ln_cq = 0.1940 + 0.09163 * ln_lam + 0.04812 * ln_lam2 - 0.004286 * ln_lam3 + 0.00012450 * ln_lam4
+    elif fit == "historical_2013":
+        # Keep the inherited binary-compatible relation unchanged.
+        ln_cq = 0.1940 + 0.0936 * ln_lam + 0.0474 * ln_lam2 - 0.00421 * ln_lam3 + 0.000123 * ln_lam4
+    else:
+        raise ValueError("fit must be 'historical_2013' or 'dietrich_2019'")
     c_q = jnp.exp(ln_cq)
 
     ln_cq_safe = jnp.maximum(ln_cq, 1e-8)
@@ -204,6 +209,8 @@ def _nrtidal_self_spin_components(
     chi2: jnp.ndarray,
     lambda1: jnp.ndarray,
     lambda2: jnp.ndarray,
+    *,
+    fit: str = "historical_2013",
 ) -> Tuple[jnp.ndarray, jnp.ndarray]:
     """Compute (S23, S35) self-spin phase corrections from Dietrich et al. (2019) Eqs. 26-27.
 
@@ -216,8 +223,8 @@ def _nrtidal_self_spin_components(
     xa = mass1 / total_mass
     xb = mass2 / total_mass
 
-    cq1, coc1 = _quadrupole_monopole_constants(lambda1)
-    cq2, coc2 = _quadrupole_monopole_constants(lambda2)
+    cq1, coc1 = _quadrupole_monopole_constants(lambda1, fit=fit)
+    cq2, coc2 = _quadrupole_monopole_constants(lambda2, fit=fit)
 
     c_hat_q1 = cq1 - 1.0
     c_hat_q2 = cq2 - 1.0
@@ -388,18 +395,10 @@ class IMRPhenomD_NRTidal:
             f_eval = jnp.expand_dims(f_arr, 0)
             m_sec_eval = jnp.expand_dims(m_sec, -1)
             eta_eval = jnp.expand_dims(eta, -1)
-            lam1_eval = jnp.expand_dims(lam1, -1)
-            lam2_eval = jnp.expand_dims(lam2, -1)
-            s1_eval = jnp.expand_dims(s1, -1)
-            s2_eval = jnp.expand_dims(s2, -1)
         else:
             f_eval = f_arr
             m_sec_eval = m_sec
             eta_eval = eta
-            lam1_eval = lam1
-            lam2_eval = lam2
-            s1_eval = s1
-            s2_eval = s2
 
         # PN expansion parameter x = (pi * M * f)^(2/3)
         safe_f = jnp.maximum(f_eval, 1e-8)
@@ -442,6 +441,7 @@ class IMRPhenomD_NRTidal:
             pade_ratio = num / den
             psi_tidal = leading_factor * (x ** 2.5) * pade_ratio
 
+            self_spin_fit = "dietrich_2019" if amplitude_variant == "paper_2019" else "historical_2013"
             s23, s35 = _nrtidal_self_spin_components(
                 x=x,
                 mass1=m1,
@@ -450,6 +450,7 @@ class IMRPhenomD_NRTidal:
                 chi2=s2,
                 lambda1=lam1,
                 lambda2=lam2,
+                fit=self_spin_fit,
             )
 
             conv = reference_frame if reference_frame is not None else (
@@ -475,10 +476,15 @@ class IMRPhenomD_NRTidal:
                     chi2=s2,
                     lambda1=lam1,
                     lambda2=lam2,
+                    fit=self_spin_fit,
                 )
-                total_delta_psi = psi_tidal + (s23 - s23_ref) + s35
+                total_delta_psi = psi_tidal + (s23 - s23_ref)
+                if amplitude_variant == "binary_compatible":
+                    total_delta_psi = total_delta_psi + s35
             else:
-                total_delta_psi = psi_tidal + s23 + s35
+                total_delta_psi = psi_tidal + s23
+                if amplitude_variant == "binary_compatible":
+                    total_delta_psi = total_delta_psi + s35
 
         # 3. High-frequency BNS merger cutoff & Planck taper
         f_merger = _bns_merger_frequency(m1, m2, lam1, lam2)

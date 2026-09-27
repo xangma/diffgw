@@ -10,7 +10,6 @@ This statement does not claim zero source exposure by all prior contributors.
 """
 
 from typing import Optional, Tuple, Union
-import math
 import torch
 import torch.nn as nn
 
@@ -23,7 +22,6 @@ from torchwave.constants import (
 from torchwave.conversions import (
     as_tensor,
     component_masses_to_eta,
-    component_masses_to_delta,
     tidal_combinations,
 )
 from torchwave.approximants.imrphenomd import IMRPhenomD
@@ -158,15 +156,14 @@ def _planck_taper_window(
 
 def _quadrupole_monopole_constants(
     lambda_val: torch.Tensor,
+    *,
+    fit: str = "historical_2013",
 ) -> Tuple[torch.Tensor, torch.Tensor]:
-    """Compute spin-induced quadrupole CQ and octupole COc constants via universal I-Love-Q relations.
+    """Return CQ and COc with an explicit quadrupole-fit choice.
 
-    Literature:
-    - Yagi & Yunes (2013), Science 341, 365
-    - Dietrich et al. (2019) Eqs. 28-29 (arXiv:1905.06011)
-
-    Returns:
-        (C_Q, C_Oc): Dimensionless quadrupole and octupole constants (>= 1.0)
+    ``dietrich_2019`` uses printed Eqs. (28)–(29); the historical fit is kept
+    for the binary-compatible default. Lambda clamps are separate native
+    conventions and are outside the positive-Lambda paper-math gate.
     """
     # Safe log avoiding singular values when lambda -> 0
     lam_safe = torch.clamp(lambda_val, min=1.0)
@@ -175,9 +172,14 @@ def _quadrupole_monopole_constants(
     ln_lam3 = ln_lam2 * ln_lam
     ln_lam4 = ln_lam3 * ln_lam
 
-    # Yagi & Yunes (2013) Science 341, 365 Eq. (2) / Table S1:
-    # log(C_Q) = 0.1940 + 0.0936 ln(Lam) + 0.0474 ln(Lam)^2 - 0.00421 ln(Lam)^3 + 0.000123 ln(Lam)^4
-    ln_cq = 0.1940 + 0.0936 * ln_lam + 0.0474 * ln_lam2 - 0.00421 * ln_lam3 + 0.000123 * ln_lam4
+    if fit == "dietrich_2019":
+        # Dietrich et al. (2019), Eq. (28), printed decimal precision.
+        ln_cq = 0.1940 + 0.09163 * ln_lam + 0.04812 * ln_lam2 - 0.004286 * ln_lam3 + 0.00012450 * ln_lam4
+    elif fit == "historical_2013":
+        # Keep the inherited binary-compatible relation unchanged.
+        ln_cq = 0.1940 + 0.0936 * ln_lam + 0.0474 * ln_lam2 - 0.00421 * ln_lam3 + 0.000123 * ln_lam4
+    else:
+        raise ValueError("fit must be 'historical_2013' or 'dietrich_2019'")
     c_q = torch.exp(ln_cq)
 
     ln_cq_safe = torch.clamp(ln_cq, min=1e-8)
@@ -203,6 +205,8 @@ def _nrtidal_self_spin_components(
     chi2: torch.Tensor,
     lambda1: torch.Tensor,
     lambda2: torch.Tensor,
+    *,
+    fit: str = "historical_2013",
 ) -> Tuple[torch.Tensor, torch.Tensor]:
     """Compute (S23, S35) self-spin phase corrections from Dietrich et al. (2019) Eqs. 26-27.
 
@@ -221,8 +225,8 @@ def _nrtidal_self_spin_components(
             zero = torch.zeros_like(x)
             return zero, zero
 
-    cq1, coc1 = _quadrupole_monopole_constants(lambda1)
-    cq2, coc2 = _quadrupole_monopole_constants(lambda2)
+    cq1, coc1 = _quadrupole_monopole_constants(lambda1, fit=fit)
+    cq2, coc2 = _quadrupole_monopole_constants(lambda2, fit=fit)
 
     c_hat_q1 = cq1 - 1.0
     c_hat_q2 = cq2 - 1.0
@@ -382,18 +386,10 @@ class IMRPhenomD_NRTidal(nn.Module):
             f_eval = f.unsqueeze(0)
             m_sec_eval = m_sec.unsqueeze(-1)
             eta_eval = eta.unsqueeze(-1)
-            lam1_eval = lam1.unsqueeze(-1)
-            lam2_eval = lam2.unsqueeze(-1)
-            s1_eval = s1.unsqueeze(-1)
-            s2_eval = s2.unsqueeze(-1)
         else:
             f_eval = f
             m_sec_eval = m_sec
             eta_eval = eta
-            lam1_eval = lam1
-            lam2_eval = lam2
-            s1_eval = s1
-            s2_eval = s2
 
         # PN expansion parameter x = (pi * M * f)^(2/3)
         safe_f = torch.clamp(f_eval, min=1e-8)
@@ -440,7 +436,8 @@ class IMRPhenomD_NRTidal(nn.Module):
             pade_ratio = num / den
             psi_tidal = leading_factor * (x ** 2.5) * pade_ratio
 
-            # Spin-induced quadrupole-monopole terms up to 3.5PN (Dietrich et al. 2019 Eqs. 26-27)
+            # The paper D option has only 2PN+3PN self-spin (Table II).
+            self_spin_fit = "dietrich_2019" if variant == "paper_2019" else "historical_2013"
             s23, s35 = _nrtidal_self_spin_components(
                 x=x,
                 mass1=m1,
@@ -449,6 +446,7 @@ class IMRPhenomD_NRTidal(nn.Module):
                 chi2=s2,
                 lambda1=lam1,
                 lambda2=lam2,
+                fit=self_spin_fit,
             )
 
             # Determine phasing convention matching base IMRPhenomD priority
@@ -475,10 +473,15 @@ class IMRPhenomD_NRTidal(nn.Module):
                     chi2=s2,
                     lambda1=lam1,
                     lambda2=lam2,
+                    fit=self_spin_fit,
                 )
-                total_delta_psi = psi_tidal + (s23 - s23_ref) + s35
+                total_delta_psi = psi_tidal + (s23 - s23_ref)
+                if variant == "binary_compatible":
+                    total_delta_psi = total_delta_psi + s35
             else:
-                total_delta_psi = psi_tidal + s23 + s35
+                total_delta_psi = psi_tidal + s23
+                if variant == "binary_compatible":
+                    total_delta_psi = total_delta_psi + s35
 
         # 3. High-frequency BNS merger cutoff & Planck taper
         if apply_merger_taper:

@@ -9,7 +9,8 @@ taper for the dominant mode, zero component spins, CPU FP64, the four frozen
 binaries below, and 100 Mpc distance. [Dietrich et al. (2019), Table II](https://arxiv.org/pdf/1905.06011v2)
 assigns the amplitude correction to `IMRPhenomPv2_NRTidalv2` but **not**
 `IMRPhenomD_NRTidalv2`. The explicit D `amplitude_variant="paper_2019"`
-therefore uses tidal phase and taper without Eq. (24). The default
+therefore uses tidal phase and taper without Eq. (24); its [self-spin
+composition](nrtidalv2-self-spin.md) follows the printed 2PN+3PN D scope. The default
 `binary_compatible` variant preserves the historical native amplitude
 normalization and passes the frozen pinned-LAL catalog and holdout cases, but that normalization
 has unresolved paper provenance. The scalar Eq. (24) gate passes separately;
