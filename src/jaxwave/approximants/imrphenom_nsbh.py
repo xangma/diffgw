@@ -6,7 +6,7 @@ Literature-based reconstruction of the following models:
 - Pannarale et al. (2015), Phys. Rev. D 92, 081504 (arXiv:1509.06209)
 - Zappa et al. (2019), Phys. Rev. Lett. 123, 041102 (arXiv:1903.11622)
 - Jiménez-Forteza et al. (2017), Phys. Rev. D 95, 064024 (arXiv:1611.00332)
-- London et al. (2018), Phys. Rev. Lett. 120, 161102 (arXiv:1708.00404)
+- London and Fauchon-Jones (2019), arXiv:1810.03550, Eq. (22) for the 220 QNM fit
 - Santamaria et al. (2010), Phys. Rev. D 82, 064016 (arXiv:1005.3306)
 - Dietrich et al. (2019), Phys. Rev. D 100, 044003 (arXiv:1905.06011)
 """
