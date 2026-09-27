@@ -124,6 +124,19 @@ def _unsqueeze_to(arr: Union[float, jnp.ndarray], target: jnp.ndarray) -> jnp.nd
     return res
 
 
+def _ringdown_amplitude_ratio(frequency, ring, damp, sigma, a_lambda, lambda_fit):
+    """XHM Eq. (42) for supplied ringdown parameters, with native guards."""
+    width = _unsqueeze_to(damp * sigma, frequency)
+    ring = _unsqueeze_to(ring, frequency)
+    a_lambda = _unsqueeze_to(a_lambda, frequency)
+    lambda_fit = _unsqueeze_to(lambda_fit, frequency)
+    offset = frequency - ring
+    denominator = offset**2 + width**2
+    exponent = jnp.clip(offset * lambda_fit / width, -80.0, 80.0)
+    frequency_power = jnp.power(jnp.maximum(frequency, 1e-8), 1.0 / 12.0)
+    return (1.0 / frequency_power) * (jnp.abs(a_lambda) * width / jnp.maximum(denominator, 1e-12)) * jnp.exp(-exponent)
+
+
 def _value_and_derivative(function, frequency: jnp.ndarray):
     """Value and pointwise frequency derivative using forward-mode autodiff in JAX."""
     val, deriv = jax.jvp(function, (frequency,), (jnp.ones_like(frequency),))
@@ -936,14 +949,9 @@ class IMRPhenomXHM:
                 alambda_fit, lambda_fit = eval_native_ringdown_params(l, m, eta, delta)
 
                 def eval_h_rd(f_in: jnp.ndarray) -> jnp.ndarray:
-                    w = _unsqueeze_to(f_damp_lm * sigma_lm, f_in)
-                    f_ring_u = _unsqueeze_to(f_ring_lm, f_in)
-                    lam_u = _unsqueeze_to(lambda_fit, f_in)
-                    alam_u = _unsqueeze_to(alambda_fit, f_in)
-                    den = (f_in - f_ring_u) ** 2 + w**2
-                    exp_term = jnp.exp(-jnp.clip((f_in - f_ring_u) * lam_u / w, -80.0, 80.0))
-                    f_pow = jnp.power(jnp.maximum(f_in, 1e-8), 1.0 / 12.0)
-                    return (1.0 / f_pow) * (jnp.abs(alam_u) * w / jnp.maximum(den, 1e-12)) * exp_term
+                    return _ringdown_amplitude_ratio(
+                        f_in, f_ring_lm, f_damp_lm, sigma_lm, alambda_fit, lambda_fit,
+                    )
 
                 if (l, m) == (3, 2):
                     alpha2_32 = alpha2_22

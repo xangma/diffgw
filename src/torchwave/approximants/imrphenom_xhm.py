@@ -141,6 +141,19 @@ def _unsqueeze_to(tensor: Union[float, torch.Tensor], target: torch.Tensor) -> t
     return res
 
 
+def _ringdown_amplitude_ratio(frequency, ring, damp, sigma, a_lambda, lambda_fit):
+    """XHM Eq. (42) for supplied ringdown parameters, with native guards."""
+    width = _unsqueeze_to(damp * sigma, frequency)
+    ring = _unsqueeze_to(ring, frequency)
+    a_lambda = _unsqueeze_to(a_lambda, frequency)
+    lambda_fit = _unsqueeze_to(lambda_fit, frequency)
+    offset = frequency - ring
+    denominator = offset**2 + width**2
+    exponent = torch.clamp(offset * lambda_fit / width, min=-80.0, max=80.0)
+    frequency_power = torch.pow(torch.clamp(frequency, min=1e-8), 1.0 / 12.0)
+    return (1.0 / frequency_power) * (torch.abs(a_lambda) * width / torch.clamp(denominator, min=1e-12)) * torch.exp(-exponent)
+
+
 def _value_and_derivative(function, frequency: torch.Tensor):
     """Value and pointwise frequency derivative using forward-mode JVP, retaining parameter gradients."""
     is_scalar = frequency.dim() == 0
@@ -977,14 +990,9 @@ class IMRPhenomXHM(nn.Module):
                 alambda_fit, lambda_fit = eval_native_ringdown_params(l, m, eta, delta)
 
                 def eval_h_rd(f_in: torch.Tensor) -> torch.Tensor:
-                    w = _unsqueeze_to(f_damp_lm * sigma_lm, f_in)
-                    f_ring_u = _unsqueeze_to(f_ring_lm, f_in)
-                    lam_u = _unsqueeze_to(lambda_fit, f_in)
-                    alam_u = _unsqueeze_to(alambda_fit, f_in)
-                    den = (f_in - f_ring_u) ** 2 + w**2
-                    exp_term = torch.exp(-torch.clamp((f_in - f_ring_u) * lam_u / w, min=-80.0, max=80.0))
-                    f_pow = torch.pow(torch.clamp(f_in, min=1e-8), 1.0 / 12.0)
-                    return (1.0 / f_pow) * (torch.abs(alam_u) * w / torch.clamp(den, min=1e-12)) * exp_term
+                    return _ringdown_amplitude_ratio(
+                        f_in, f_ring_lm, f_damp_lm, sigma_lm, alambda_fit, lambda_fit,
+                    )
 
                 if (l, m) == (3, 2):
                     # The three inherited calibration conditions below are not
