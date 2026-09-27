@@ -82,6 +82,14 @@ construction. The
 published model does not supply independently derived ROM bases and spline
 tables, and no qualified generator/training set or independent ROM holdout
 exists. Full-waveform gradients and domain-wide convergence remain open.
+The [frozen historical-flux public-source gate](../2026-09-27/flux_historical_source_gate.json)
+finds 4 of 6 mandatory prescription fields. Public papers fix the mode sum,
+NQC exclusion, common factorized architecture, v4-specific `(2,2)`
+replacements, and low-`ell` odd-`m` rule. They do not uniquely select the
+published `(4,3)` higher-spin placement or provide one final per-mode spin
+selector across all 35 modes. Conditional component agreement cannot fill
+those source fields, so `V4-FLUX-4-9` remains pending and the release verdict
+is unchanged.
 The finite-point [native QNM spline certificate](../2026-09-27/README.md)
 passes its six declared value, derivative, backend, and single-row waveform-
 impact checks. It does not close `V4-QNM-INTERPOLATION`: continuous-domain

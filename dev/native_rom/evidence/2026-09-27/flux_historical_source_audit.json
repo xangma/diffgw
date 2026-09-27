@@ -1,0 +1,88 @@
+{
+  "schema": "diffgw.seobnrv4.flux-historical-source-audit.v1",
+  "component_id": "V4-FLUX-4-9",
+  "source_scope": "public_primary_sources_only",
+  "review_method": "Direct review of the SHA-pinned arXiv sources and PDFs for Bohé et al., both Taracchini et al. papers, Pan et al., and Damour-Iyer-Nagar. No implementation source, binary output, or previously extracted historical coefficient table was consulted for a missing prescription field.",
+  "source_findings": [
+    {
+      "source": "bohe",
+      "citations": [
+        "Sec. II.B, Eqs. (4)-(7); paper.tex lines 303-323: v4 adopts the expressions of Taracchini et al. 2014 and prints new (2,2) amplitude and phase corrections.",
+        "Sec. II.B, Eqs. (8)-(9); paper.tex lines 338-354: radiation reaction sums ell=2 through 8 and excludes the (2,2) NQC factor."
+      ],
+      "finding": "The v4 paper fixes the active multipole range, normalization, NQC exclusion, and v4-specific (2,2) replacements, but delegates the rest of the mode prescription to a chain of earlier papers."
+    },
+    {
+      "source": "taracchini_2014",
+      "citations": [
+        "Factorized waveform discussion following Eq. (2); paper.tex lines 247-270: h_lm is split into Newtonian, source, tail, phase, and residual-amplitude factors.",
+        "The same passage selects rho factorization except for ell<=4 odd-m modes and describes combining comparable-mass spin terms through 2PN with test-particle spin terms using chi_Kerr."
+      ],
+      "finding": "The predecessor selects the low-ell odd-m prescription by an exact cross-reference, but does not print one final expanded 35-mode coefficient inventory after combining all comparable-mass and test-particle spin terms."
+    },
+    {
+      "source": "taracchini_2012",
+      "citations": [
+        "Sec. II.B defines the radiation-reaction sum and factorized multipoles.",
+        "Appendix A; paper.tex from line 1839: explicit modes through ell=8 are given because they enter the flux."
+      ],
+      "finding": "This paper supplies the explicitly selected low-ell odd-m prescription and an earlier mode basis through ell=8. It does not identify the final v4 assembly after the later comparable-mass/test-particle spin updates."
+    },
+    {
+      "source": "pan",
+      "citations": [
+        "Secs. III-V distinguish energy- and angular-momentum-source odd-parity factors and f_lm versus rho_lm representations.",
+        "paper.tex lines 670-835 and 1510-1605 discuss source-dependent odd-parity alternatives, including the special (2,1) treatment; line 1334 records truncation of the flux sum at ell=8."
+      ],
+      "finding": "The factorized-mode paper deliberately studies alternative resummations and source choices. Those mathematical alternatives do not themselves select the final historical v4 branch for every affected mode."
+    },
+    {
+      "source": "din",
+      "citations": [
+        "Secs. II-IV define the nonspinning factorized multipolar waveform architecture and residual amplitude factors."
+      ],
+      "finding": "The nonspinning foundation is public, but it predates the spinning hybrid and cannot define the later model's complete per-mode spin selection."
+    }
+  ],
+  "requirements": [
+    {
+      "id": "active_mode_sum_and_nqc_exclusion",
+      "satisfied": true,
+      "evidence": "Bohé et al. Eqs. (8)-(9) sum ell=2 through 8 with the stated normalization, yielding 35 positive-m moduli after symmetry, and the following paragraph explicitly excludes N_22 from radiation reaction."
+    },
+    {
+      "id": "factorized_mode_architecture_and_source_parity",
+      "satisfied": true,
+      "evidence": "Taracchini et al. 2014 following Eq. (2), together with Taracchini et al. 2012 Sec. II.B, fixes the Newtonian/source/tail/phase/residual-amplitude architecture and the even/odd-parity effective-source split."
+    },
+    {
+      "id": "v4_specific_22_replacements",
+      "satisfied": true,
+      "evidence": "Bohé et al. Eqs. (4)-(7) print the new 2.5PN and 3.5PN rho_22 terms and 3PN phase term and state which predecessor test-particle terms they replace."
+    },
+    {
+      "id": "low_ell_odd_m_resummation_rule",
+      "satisfied": true,
+      "evidence": "Taracchini et al. 2014 explicitly sends ell<=4 odd-m modes to the prescription above Eq. (A8a) of Taracchini et al. 2012, which states that rho_lm^ell is replaced by its nonspinning limit plus the spinning part of f_lm for m=1,3 and ell<=4."
+    },
+    {
+      "id": "rho43_higher_spin_placement",
+      "satisfied": false,
+      "evidence": "Pan et al.'s printed (4,3) equations admit a Taylor-f placement and a rho_43-before-the-fourth-power placement for the higher-spin terms. Both satisfy the existing independent scalar/frontend checks, and the public v4 chain does not select one as the historical branch."
+    },
+    {
+      "id": "complete_final_mode_selector",
+      "satisfied": false,
+      "evidence": "Taracchini et al. 2014 says to include comparable-mass spin terms through 2PN and all known test-particle spin effects with chi_Kerr, but does not publish one final per-mode inventory resolving algebraic placement, overlap/replacement, and retained-term choices across all 35 modes."
+    }
+  ],
+  "clean_room": {
+    "lal_source_consulted": false,
+    "binary_oracle_queried": false,
+    "historical_coefficients_transcribed": false,
+    "fit_or_threshold_retuned": false
+  },
+  "conclusion": "Public primary sources define the common flux structure, low-ell odd-m rule, and important v4 choices, but do not uniquely determine the final historical 35-mode coefficient selector. The mandatory source gate must fail and V4-FLUX-4-9 must remain pending.",
+  "historical_fidelity_claim": false,
+  "release_qualified": false
+}

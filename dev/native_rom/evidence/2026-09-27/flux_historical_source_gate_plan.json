@@ -1,0 +1,90 @@
+{
+  "schema": "diffgw.seobnrv4.flux-historical-source-gate-plan.v1",
+  "component_id": "V4-FLUX-4-9",
+  "purpose": "Determine whether public primary sources provide a complete clean-room prescription for the historical SEOBNRv4 35-mode pre-NQC radiation-reaction flux. This is a source-completeness gate, not a numerical-proximity gate.",
+  "frozen_at_commit": "197ecd4dd979bdb3e0e19fa2b1a5bae88eb96016",
+  "primary_sources": {
+    "bohe": {
+      "citation": "Bohé et al., Phys. Rev. D 95, 044028 (2017), arXiv:1611.03703v3, Sec. II.B, Eqs. (4)-(9); source paper.tex lines 303-354",
+      "source_url": "https://arxiv.org/e-print/1611.03703v3",
+      "source_sha256": "6d9f2e99524c9878ea06d31425939bee4e8dab52948878037d75132bcfeac488",
+      "pdf_url": "https://arxiv.org/pdf/1611.03703v3",
+      "pdf_sha256": "db9dc054368f131bdc152b319e54441c665547668221891723b309b005ac23ba"
+    },
+    "taracchini_2012": {
+      "citation": "Taracchini et al., Phys. Rev. D 86, 024011 (2012), arXiv:1202.0790v2, Sec. II.B and Appendix A",
+      "source_url": "https://arxiv.org/e-print/1202.0790v2",
+      "source_sha256": "7dec357a85ac0c51eea0108562418e29ced24c0192829259874805667a90ef84",
+      "pdf_url": "https://arxiv.org/pdf/1202.0790v2",
+      "pdf_sha256": "d6d126be90bc789835ec363451f4ec51728a8d6ddc09eff078620fdc46860745"
+    },
+    "taracchini_2014": {
+      "citation": "Taracchini et al., Phys. Rev. D 89, 061502 (2014), arXiv:1311.2544v1, factorized waveform discussion following Eq. (2); source paper.tex lines 247-270",
+      "source_url": "https://arxiv.org/e-print/1311.2544v1",
+      "source_sha256": "d36532ad40b3354ac3e6ea0cb9880f762c0ad3d4667b57ea1c91032ca89e1650",
+      "pdf_url": "https://arxiv.org/pdf/1311.2544v1",
+      "pdf_sha256": "f57b099e701c1206802d9887f6843ce75fc8753ac9c3ae5c2137933160f85967"
+    },
+    "pan": {
+      "citation": "Pan et al., Phys. Rev. D 83, 064003 (2011), arXiv:1006.0431v2, Secs. III-V and Appendices B-C",
+      "source_url": "https://arxiv.org/e-print/1006.0431v2",
+      "source_sha256": "b0bfa5736cc19e32b79861cd3156a88bfd41143e657366457670404af060f7fc",
+      "pdf_url": "https://arxiv.org/pdf/1006.0431v2",
+      "pdf_sha256": "4b51940aae4299c129b08d64f7f5ae92a5f9de00e96f2653abe719e76d596c19"
+    },
+    "din": {
+      "citation": "Damour, Iyer, and Nagar, Phys. Rev. D 79, 064004 (2009), arXiv:0811.2069v2, Secs. II-IV and appendices",
+      "source_url": "https://arxiv.org/e-print/0811.2069v2",
+      "source_sha256": "a419abd101e74405ed224d37e261a57101da399fee83d4a026aa327495e5efc8",
+      "pdf_url": "https://arxiv.org/pdf/0811.2069v2",
+      "pdf_sha256": "a60049d73b78f21fd0421ada236f9635c5023de8ab28a489aa3c1bd78857ba21"
+    }
+  },
+  "context_only_sources": [
+    {
+      "citation": "Barausse and Buonanno, Phys. Rev. D 81, 084024 (2010), arXiv:0912.3517",
+      "reason": "Referenced for comparable-mass spin terms; it does not identify the final SEOBNRv4 mode-by-mode assembly."
+    },
+    {
+      "citation": "Buonanno, Faye, and Hinderer, Phys. Rev. D 87, 044009 (2013), arXiv:1209.6349v2",
+      "reason": "Publishes generic-mass-ratio spin terms; it does not prescribe their complete historical SEOBNRv4 merge with test-particle terms."
+    }
+  ],
+  "mandatory_requirements": [
+    {
+      "id": "active_mode_sum_and_nqc_exclusion",
+      "description": "The historical model fixes the active multipole range, flux normalization, and whether NQC corrections enter radiation reaction."
+    },
+    {
+      "id": "factorized_mode_architecture_and_source_parity",
+      "description": "The public prescription fixes the common factorized mode architecture and even/odd-parity effective-source rule."
+    },
+    {
+      "id": "v4_specific_22_replacements",
+      "description": "The v4 paper identifies the v4-specific (2,2) amplitude and phase replacements relative to the cited predecessor."
+    },
+    {
+      "id": "low_ell_odd_m_resummation_rule",
+      "description": "The public sources identify the historical residual-amplitude representation used for low-ell odd-m modes."
+    },
+    {
+      "id": "rho43_higher_spin_placement",
+      "description": "The public sources uniquely select whether the published higher-spin (4,3) terms enter the Taylor residual factor or the rho_43 factor before the fourth power."
+    },
+    {
+      "id": "complete_final_mode_selector",
+      "description": "The public sources provide one unambiguous final 35-mode selector after combining comparable-mass and test-particle spin terms, including per-mode replacement, coexistence, and truncation rules."
+    }
+  ],
+  "pass_rule": "Every mandatory requirement must be satisfied by the pinned public primary sources. A GPL implementation, binary-oracle match, conditional single-mode paper check, or numerical agreement cannot fill a missing prescription field.",
+  "audit_path": "dev/native_rom/evidence/2026-09-27/flux_historical_source_audit.json",
+  "result_path": "dev/native_rom/evidence/2026-09-27/flux_historical_source_gate.json",
+  "clean_room_exclusions": [
+    "Do not inspect or transcribe LALSimulation source or historical mode coefficients.",
+    "Do not query or fit to a LALSimulation binary oracle.",
+    "Do not infer a historical selector by choosing whichever algebraic placement or published alternative best matches an implementation or NR data."
+  ],
+  "production_change": false,
+  "historical_fidelity_claim": false,
+  "release_qualified": false
+}

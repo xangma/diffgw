@@ -45,6 +45,29 @@ use the latter and is not promoted to a historical prescription by this audit.
 No implementation source or binary oracle filled a missing field, and no
 coefficient, formula, threshold, production source, or release status changed.
 
+## Historical flux public-source gate
+
+The [frozen plan](flux_historical_source_gate_plan.json),
+[public-source audit](flux_historical_source_audit.json),
+[evaluator](../../diagnose_flux_historical_source_gate.py), and
+[machine-readable result](flux_historical_source_gate.json) test whether the
+version-pinned Bohé, Taracchini, Pan, and Damour--Iyer--Nagar publications
+uniquely define the historical `V4-FLUX-4-9` 35-mode pre-NQC torque. Four of
+six requirements are present: the active `ell=2..8` mode sum and NQC exclusion,
+the common factorized-mode architecture and source-parity rule, the v4-specific
+`(2,2)` replacements, and the selected low-`ell` odd-`m` resummation. The
+papers do not select the historical algebraic placement of the published
+`(4,3)` higher-spin terms or print one final per-mode selector after combining
+comparable-mass and test-particle spin results.
+
+The SHA-pinned audit ran on `len` with Python 3.12.3, JAX/JAXlib 0.11.2,
+NumPy 2.3.5, SciPy 1.16.3, and Torch 2.14.0+cu130. It satisfied 4 of 6
+requirements and the focused regression passed. The failed source gate keeps
+`V4-FLUX-4-9` pending; conditional scalar and frontend agreement cannot select
+missing historical branches. The audit did not inspect LAL source, query a
+binary oracle, transcribe historical coefficients, retune a fit or threshold,
+change production code, or qualify release.
+
 ## JAX whole-path blocker
 
 The [frozen directional-amplification plan](jax_nqc_directional_amplification_plan.json),
