@@ -238,6 +238,12 @@ evaluated series. No author-published numerical complex arrays fix that
 complete option set.
 The bounded independent-oracle search and its exact acceptance fields are
 recorded in the [2026-09-26 evidence receipt](../validation/taylorf2-hm-oracle-search-20260926.md).
+The [2026-09-27 minimal two-mode probe](../validation/taylorf2-hm-minimal-multimode-oracle-20260927.md)
+uses an unequal-mass `(2,2)+(3,3)` candidate and confirms that the public
+TaylorF2 mode-array API still returns the same single carrier. Even this
+smaller nonspinning multimode external gate remains open; the existing
+author-source composition already checks all eight modes more broadly within
+its stated, non-external evidence category.
 Public LAL TaylorF2 returns one frequency series and its public FD-mode
 dispatcher has no TaylorF2 generator. IMRPhenomXHM is a different full-IMR
 model and `gwfast`'s TEOBResumSPA uses different EOB dynamics and amplitude
