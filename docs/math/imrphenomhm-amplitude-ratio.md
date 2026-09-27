@@ -68,6 +68,9 @@ carrier at $g(x)$. Dividing the unprojected mode magnitude by the carrier
 magnitude removes the otherwise opaque carrier, testing the production-called
 ratio rather than an unused helper.
 
+The [CPU FP64 validation receipt](../validation/imrphenomhm_amplitude_ratio_20260927.md)
+records the integrated public-path run on `len`.
+
 ## Evidence and limitations
 
 Frozen CPU-FP64 gate: $m_1=35M_\odot$, $m_2=20M_\odot$,
