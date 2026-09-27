@@ -137,6 +137,26 @@ def _ringdown_amplitude_ratio(frequency, ring, damp, sigma, a_lambda, lambda_fit
     return (1.0 / frequency_power) * (jnp.abs(a_lambda) * width / jnp.maximum(denominator, 1e-12)) * jnp.exp(-exponent)
 
 
+def _nonmix_ringdown_phase_shifts(join, phase_at_join, slope_at_join, ring, damp, a2, a_lambda):
+    """XHM Eq. (43)--(44) C1 attachment for supplied join data."""
+    lorentzian = damp / (damp**2 + (join - ring)**2)
+    time_shift = slope_at_join - (a2 * ring**2 / join**2 + a_lambda * lorentzian)
+    base_phase = -a2 * ring**2 / join + a_lambda * jnp.arctan((join - ring) / damp) + time_shift * join
+    phase_shift = phase_at_join - base_phase
+    return time_shift, phase_shift
+
+
+def _nonmix_ringdown_phase(frequency, ring, damp, a2, a_lambda, time_shift, phase_shift):
+    """XHM Eq. (44) for non-mixing modes with supplied C1 shifts."""
+    ring = _unsqueeze_to(ring, frequency)
+    damp = _unsqueeze_to(damp, frequency)
+    a2 = _unsqueeze_to(a2, frequency)
+    a_lambda = _unsqueeze_to(a_lambda, frequency)
+    time_shift = _unsqueeze_to(time_shift, frequency)
+    phase_shift = _unsqueeze_to(phase_shift, frequency)
+    return -a2 * ring**2 / frequency + a_lambda * jnp.arctan((frequency - ring) / damp) + time_shift * frequency + phase_shift
+
+
 def _value_and_derivative(function, frequency: jnp.ndarray):
     """Value and pointwise frequency derivative using forward-mode autodiff in JAX."""
     val, deriv = jax.jvp(function, (frequency,), (jnp.ones_like(frequency),))
@@ -1303,31 +1323,15 @@ class IMRPhenomXHM:
                     # Ringdown phase connection at f_rd_p (Sovereign SXS NR calibrated)
                     alpha_2_lm, alpha_lambda_lm = eval_native_phase_params(l, m, eta)
 
-                    dphi_rd_val = eval_dphi_int(f_rd_p)
-                    lor_rd_at_cut = f_damp_lm / ((f_damp_lm**2) + (f_rd_p - f_ring_lm)**2)
-                    dt_rd = dphi_rd_val - (
-                        alpha_2_lm * (f_ring_lm**2) / (f_rd_p**2) + alpha_lambda_lm * lor_rd_at_cut
+                    dt_rd, dphi_rd_shift = _nonmix_ringdown_phase_shifts(
+                        f_rd_p, eval_phi_int(f_rd_p), eval_dphi_int(f_rd_p),
+                        f_ring_lm, f_damp_lm, alpha_2_lm, alpha_lambda_lm,
                     )
-                    phi_int_at_cut = eval_phi_int(f_rd_p)
-                    phi_rd_base = (
-                        -alpha_2_lm * (f_ring_lm**2) / f_rd_p
-                        + alpha_lambda_lm * jnp.arctan((f_rd_p - f_ring_lm) / f_damp_lm)
-                        + dt_rd * f_rd_p
-                    )
-                    dphi_rd_shift = phi_int_at_cut - phi_rd_base
 
                     def eval_phi_rd(f_in: jnp.ndarray) -> jnp.ndarray:
-                        damp_u = _unsqueeze_to(f_damp_lm, f_in)
-                        ring_u = _unsqueeze_to(f_ring_lm, f_in)
-                        a2_u = _unsqueeze_to(alpha_2_lm, f_in)
-                        alam_u = _unsqueeze_to(alpha_lambda_lm, f_in)
-                        dt_u = _unsqueeze_to(dt_rd, f_in)
-                        shift_u = _unsqueeze_to(dphi_rd_shift, f_in)
-                        return (
-                            -a2_u * (ring_u**2) / f_in
-                            + alam_u * jnp.arctan((f_in - ring_u) / damp_u)
-                            + dt_u * f_in
-                            + shift_u
+                        return _nonmix_ringdown_phase(
+                            f_in, f_ring_lm, f_damp_lm, alpha_2_lm,
+                            alpha_lambda_lm, dt_rd, dphi_rd_shift,
                         )
 
                     delta_target = (l % 2) * PI - (3.0 * PI / 8.0) * (m_flt - 2.0)
