@@ -37,8 +37,11 @@ the paper does not provide an unambiguous source for this adapter.
 [Eq. (29)](https://arxiv.org/pdf/2002.08383v1) prints
 $(A/2)\omega^-_{x_3,d_3}$ for $\Lambda>1$, with $A/2=b_0=0.81248$;
 the native helper uses $b_0\omega^+_{x_3,d_3}$. The opposite window sign
-is material away from its center. Neither correction is included in this
-gate or retuned to binary output.
+is material away from its center: for
+$x=(f_{\rm tide}-\widetilde f_{\rm RD})/\widetilde f_{\rm RD}=x_3+d_3/4$,
+the printed value is $0.09684999$ and the native
+value is $0.71563001$ (absolute difference $0.61878002$). Neither
+correction is included in this gate or retuned to binary output.
 
 On `len` (Linux x86-64 CPU), from
 `/home/xangma/tmp/diffgw-nsbh-joins-20260927`, the command
