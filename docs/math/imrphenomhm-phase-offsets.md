@@ -63,9 +63,13 @@ the five non-22 modes in both CPU FP64 frontends. This tests the source
 transcription and sampled implementation agreement. The paper specifies
 $f_0^A=0.018 f_{\ell m}^{\rm RD}/f_{22}^{\rm RD}$ and
 $f_0^\phi=0.014 f_{\ell m}^{\rm RD}/f_{22}^{\rm RD}$, whereas the public
-Torch/JAX assembly currently passes the opposite assignments. This component
-gate supplies the printed phase transition and therefore does not qualify
-the public assembly's transition choice. It also does not
+Torch/JAX assembly currently passes the opposite assignments. These are
+distinct source conventions: [Khan et al.'s PhenomD carrier](https://arxiv.org/html/1508.07253)
+joins amplitude at $Mf=0.014$ and phase at $Mf=0.018$, while London explicitly
+optimized separate higher-mode mapping transitions. The public assembly uses
+the PhenomD pair. This component gate supplies London's printed phase
+transition and therefore does not qualify the public assembly's transition
+choice. It also does not
 establish amplitude scaling, fitted QNM values, Eq. (14) carrier correction,
 whole-mode binary agreement, or physical accuracy across the model domain.
 
