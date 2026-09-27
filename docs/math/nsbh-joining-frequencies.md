@@ -63,6 +63,10 @@ published-source variant is established; this gate cannot infer a correction
 from binary output. Windows, amplitude assembly, and the whole waveform
 remain provisional.
 
+The [variant provenance gate](nsbh-amplitude-variant-provenance.md) compares
+the final 2020 revision with its cited 2015 amplitude model and records why
+these exceptions still cannot be promoted to paper-qualified amplitude gates.
+
 ## Reproduce the checks
 
 Run `JAX_ENABLE_X64=1 PYTHONPATH=src pytest -q

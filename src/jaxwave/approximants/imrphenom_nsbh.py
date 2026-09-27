@@ -82,7 +82,7 @@ def delta2_prime_plus(f_tide: jnp.ndarray, f_rd_tilde: jnp.ndarray) -> jnp.ndarr
 
 
 def gamma1_prime_small_lambda(lambda2: jnp.ndarray) -> jnp.ndarray:
-    """Continuous quadratic for the Eq. 26 small-tidal branch."""
+    """Compatibility quadratic; its linear sign differs from printed Eq. 26."""
     return 1.0 + 0.5 * lambda2 - 0.25 * (lambda2 ** 2.0)
 
 
