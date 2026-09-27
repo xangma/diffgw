@@ -31,6 +31,18 @@ The component reference evaluates either map for a supplied $f_0$; its tests
 do not validate the public assembly's choice of cutoff. These expressions use
 geometric-frequency normalization and do not apply directly to hertz.
 
+The public D-carrier HM option `hm_mapping_transitions` selects only the two
+outer-map cutoffs. `phenomd_runtime` (default) retains `(0.014, 0.018)` for
+amplitude and phase, respectively; `london_2018` selects the paper-printed
+`(0.018, 0.014)`. Both pairs multiply
+$f^{\rm RD}_{\ell m}/f^{\rm RD}_{22}$. The opt-in variant does not change
+the PhenomD carrier's own Eqs. (37)--(38) joins, QNM fits, PN amplitude,
+phase offsets, or projection. It is available for the public Torch/JAX
+`IMRPhenomHM` D-carrier path, including `get_fd_waveform`; a non-D carrier
+with `london_2018` is rejected rather than assigned a D-specific Eq. (8)
+interpretation. This is the bounded component `hm.fmap.selection.london2018.v1`,
+not a whole-waveform paper-fidelity claim.
+
 The paper's Eq. (5) applies to a generic carrier. For the IMRPhenomD phase,
 Eq. (8) replaces only the $f>f^{\rm RD}_{\ell m}$ branch. We therefore keep
 the two maps as separate component IDs. At each join the lower-frequency
@@ -68,6 +80,16 @@ The D-carrier phase variant binds to the corresponding
 QNM frequencies as independent scalar inputs and imports neither frontend.
 The component-to-source-to-code map is `COMPONENT_BINDINGS` in the reference
 module, checked by the maintained test.
+
+For the selection gate, the scalar reference computes the two cutoffs from
+supplied QNM frequencies without importing either frontend. A public `(3,3)`
+mode call on CPU FP64 captures each frontend's map inputs and outputs at both
+cutoffs and at ringdown. The frozen checks require relative map-value error
+at most $2\times10^{-11}$, one-sided derivative error at most
+$2\times10^{-6}$ using a $10^{-6}$ geometric-frequency step, and unchanged
+default complex mode values to $10^{-13}$ relative error. The one-sided
+derivative test excludes the join point itself. These thresholds test the
+selection and map algebra, not the full carrier or physical calibration.
 
 ## Evidence and limitations
 
