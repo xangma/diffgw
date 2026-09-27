@@ -1467,7 +1467,10 @@ class IMRPhenomXHM:
 
             # Positive frequency carries the -m mode (Pratten et al., B6-B7).
             # The shared SWSH helper takes the positive-m azimuth convention.
+            # XHM v2 Eqs. (8)-(9) add (-1)^l for the -m carrier.
             d_plus, d_cross = _swsh_projection_coefficients(l, m, inc_eval, -phi0_eval)
+            if l % 2:
+                d_plus, d_cross = -d_plus, -d_cross
             hp_lm = d_plus * h_mode
             hc_lm = d_cross * h_mode
 

@@ -1578,7 +1578,11 @@ class IMRPhenomXHM(nn.Module):
             # (Pratten et al., Appendix B, Eqs. B6-B7); its observer-angle
             # factor is exp(-i*m*phi0). The shared SWSH helper represents
             # positive-m harmonics, so evaluate it at the opposite azimuth.
+            # XHM v2 Eqs. (8)-(9) then require (-1)^l for the -m carrier:
+            # d_{+,-m}=(-1)^l d_{+,+m}(-phi0), and likewise for d_cross.
             dp_re, dp_im, dc_re, dc_im = _swsh_projection_coefficients_cartesian(l, m, inc_eval, -phi0_eval)
+            if l % 2:
+                dp_re, dp_im, dc_re, dc_im = -dp_re, -dp_im, -dc_re, -dc_im
             hp_lm_re = dp_re * h_rot_re - dp_im * h_rot_im
             hp_lm_im = dp_re * h_rot_im + dp_im * h_rot_re
             hc_lm_re = dc_re * h_rot_re - dc_im * h_rot_im
