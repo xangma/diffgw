@@ -66,6 +66,14 @@ public binary outputs rather than specified by the angular paper. This is a
 compatibility convention; the source-backed spectral projection is a
 distinct calculation.
 
+An [angular cutoff ablation](../../scripts/audit_kerr220_angular_cutoff.py)
+evaluates the same complex oblateness with a converged Frobenius series and
+the independent scalar Galerkin projection. Cook and Zalutskiy's
+[power series, Eq. (15b), and spectral expansion, Eq. (49)](https://arxiv.org/html/1410.7698v2)
+define the regular angular solution through convergent expansions; neither
+defines a first-term-below-`0.01` stop. All ablation values use the same
+unit-sphere norm and an equatorial-real phase gauge.
+
 ## Evidence and limitations
 
 Run on `len` with the matched source snapshot and Torch/JAX CPU FP64, SymPy,
@@ -81,9 +89,24 @@ polarizations and the sample grids above.
 Torch and JAX agree with each other to approximately `1e-16` on these
 comparisons. Their agreement does not resolve the independent angular mismatch.
 The mismatch remains after gauge alignment and exceeds the reference's
-angular truncation change by orders of magnitude. It is localized to the
-public-clean angular evaluator/convention at these points; this check does not
-isolate which inferred numerical rule is responsible. Consequently no
+angular truncation change by orders of magnitude. The ablation isolates the
+inferred angular-series stop and the norm computed from that stopped shape:
+
+| Spin | Full series/full norm vs. scalar spectral, max relative | Stopped series/full norm, max relative | Full series/stopped norm, max relative | Stopped series/stopped norm, max relative |
+| --- | ---: | ---: | ---: | ---: |
+| 0.35 | `2e-15` | `2.51e-4` | `3.79e-4` | `3.70e-4` |
+| 0.7 | `4.4e-15` | `5.14e-4` | `6.93e-4` | `9.13e-4` |
+
+The three angles are `1.1`, `pi-1.1`, and `pi/2` radians. At spin `0.35`, the
+first included term below `0.01` is index 2 at all three angles; at `0.7`
+it is index 3, 2, and 3, respectively. The stopped/full norm ratios minus
+one are `+3.7936e-4` and `-6.9287e-4`. The stopped-series/stopped-norm
+values reproduce the separate inferred public-compatible evaluator to
+`<4e-16` relative, while the full-series/full-norm values agree with the
+independent equation solver near rounding precision. Thus the independent
+spectral solution needs no angular correction to explain this gap. The stop
+and its normalization are numerical compatibility choices, not a published
+angular equation or physical normalization. Consequently no
 versioned public-clean whole-waveform claim or catalog promotion is made.
 
 To clear this gate, select and document a source-backed public angular
@@ -104,3 +127,6 @@ PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src JAX_ENABLE_X64=1 JAX_PLATFORMS=cpu \
 The script freezes the exact cases in source and reports source hashes and
 per-backend errors as JSON. The matched `len` snapshot used
 `/home/xangma/.cache/diffgw-xp-pycbc-venv/bin/python`.
+For the separate angular ablation, run
+`PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src python
+scripts/audit_kerr220_angular_cutoff.py` with Torch, SymPy, and mpmath.

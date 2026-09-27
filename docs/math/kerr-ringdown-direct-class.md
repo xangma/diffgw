@@ -166,8 +166,21 @@ choice, the independent spectral angular values differ from the separately
 inferred table shape at the inclination and mirror by `1.87e-4 / 3.70e-4`
 for spin 0.35 and `3.51e-4 / 9.12e-4` for spin 0.7. The table row is a
 different conditional route and cannot qualify the independent direct class.
+An [angular-only ablation](../../scripts/audit_kerr220_angular_cutoff.py)
+identifies the numerical source of this remaining profile difference: the
+table route stops its Frobenius sum after the first term below absolute
+`0.01`, then normalizes that stopped shape. At the inclination, mirror, and
+equator, the **full** Frobenius series with its full norm agrees with the
+independent scalar spectral solution to at most `4.4e-15` relative for both
+spins. Applying the inferred stop and stopped-shape norm reproduces the
+separate public-compatible evaluator to `4e-16` relative and produces up to
+`9.13e-4` angular difference from the equation-defined solution. The
+ablation separates this angular numerical convention from the class's
+opposite-sign carrier; it supplies no physical or binary qualification for
+the class. No production convention or v1 definition is changed.
+
 This v1 definition remains **sampled implementation verification only**:
-the paper-carrier and angular-profile results explain much of the mismatch,
+the paper-carrier and angular-profile results locate the mismatch,
 but do not establish public-binary compatibility or physical accuracy.
 
 ## Reproduce the checks
@@ -183,3 +196,6 @@ with `PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src:tests python
 scripts/audit_kerr220_direct_class_binary.py` (and `--spin 0.7` for the
 second column). This audit reads public binary waveform output only; it
 does not inspect LAL implementation or fit the independent scalar model.
+The separate angular numerical ablation needs no LALSuite and runs with
+`PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src python
+scripts/audit_kerr220_angular_cutoff.py`.
