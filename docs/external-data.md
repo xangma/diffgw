@@ -60,3 +60,9 @@ The `scripts/prepare_imrphenomhm_sxs_nr_holdout.py` script downloads
 and verifies Lev3/Lev2 N2 strain to a user-selected directory outside the
 repository, then writes a derived fixture beside the raw files. It is not a
 runtime dependency and no SXS waveform array is packaged with diffgw.
+The independent second case uses
+[SXS:BBH:3631v3.0](https://doi.org/10.26138/SXS:BBH:3631v3.0), with its own
+[precommitted protocol](validation/imrphenomhm_sxs_3631_protocol_20260927.md),
+[red receipt](validation/imrphenomhm_sxs_3631_receipt_20260927.md),
+`scripts/prepare_imrphenomhm_sxs_3631_nr_holdout.py`, and strict external-data
+test. Both cases currently fail physical six-mode gates.
