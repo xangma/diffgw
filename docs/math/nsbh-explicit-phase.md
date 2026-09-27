@@ -63,6 +63,8 @@ in phase radians. This samples smooth phase regions; it does not prove
 boundary differentiability, remnant/QNM provenance, amplitude fidelity,
 legacy-gauge behavior, or agreement with NR data. A passing gate remains
 conditional on its supplied inputs.
+The [validation receipt](../validation/nsbh_explicit_phase_20260927.md)
+records the `len` CPU FP64 results.
 
 ## Reproduce the checks
 
