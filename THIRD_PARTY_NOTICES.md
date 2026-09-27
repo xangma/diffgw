@@ -65,6 +65,17 @@ are not distributed with the software. The CaltechDATA v3 record API did not
 state a per-record SPDX licence; this notice does not infer one from older
 SXS deposits.
 
+The separate published-calibration HM comparison uses
+[SXS:BBH:2374v3.0](https://doi.org/10.26138/SXS:BBH:2374v3.0)
+([record r0wpw-4pq24](https://data.caltech.edu/records/r0wpw-4pq24)) and
+[SXS:BBH:2163v3.0](https://doi.org/10.26138/SXS:BBH:2163v3.0)
+([record t670m-yry50](https://data.caltech.edu/records/t670m-yry50)).
+The [prospective protocol](docs/validation/imrphenomhm_published_nr_protocol_20260927.md)
+pins their two resolutions, official file identities, catalog release and
+processing. Raw and conditioned arrays remain external. The dataset terms
+are separate from this package's MIT software license; the same catalog and
+simulation-publication attribution requirements apply.
+
 The native Numerical Relativity higher-harmonic calibrations in `xhm_native_fits.py`
 for modes (2,1), (3,3), (4,4), and (3,2) use public SXS datasets under CC-BY-4.0.
 Versioned dataset links, creator records, and processing changes are listed in

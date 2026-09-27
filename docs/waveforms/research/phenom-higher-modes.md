@@ -60,7 +60,12 @@ derivative checks in both frontends; the catalog records that bounded result.
 Selecting calibration alone leaves `binary_compatible` PN defaults in place.
 Its mathematical implementation checks cannot inherit the default variant's
 binary or NR results. All historical outcomes below, including red gates,
-remain unchanged; no new physical-accuracy claim is made here.
+remain unchanged. The exact published option with `london_2018` mapping now
+has its own [prospectively frozen two-case NR result](../../validation/imrphenomhm_published_nr_receipt_20260927.md).
+SXS:BBH:2374 and 2163 pass their NR resolution screens and first model view,
+but each fails the second view's match and norm gates in both frontends.
+The matches are 0.971608 and 0.972273, and norm ratios 0.750351 and 1.223703.
+This option therefore remains physically unqualified under those gates.
 
 The historical [frozen catalog and holdout](../../provenance_ledger.md#3-reference-evidence-by-model) each contain one passing HM case at declared complex relative L2 ≤ 10^-6 and mismatch ≤ 10^-8. That is case-specific and does not establish a domain bound. XHM has 0/1 passing full-waveform cases in each set at those strict gates. Its separate native phase tests use restricted ringdown windows, reference amplitudes and affine phase alignment, so they cannot be cited as whole-waveform accuracy. The paper's own NR quality control is evidence for the published model, not automatically for either native implementation or the alternate native-fit route.
 

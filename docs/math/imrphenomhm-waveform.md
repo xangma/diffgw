@@ -166,6 +166,14 @@ binary agreement. The inherited calibration, binary PN defaults, XAS/custom
 carriers, untested regions and physical NR accuracy remain outside this claim.
 All earlier red NR results remain in the research ledger without reclassification.
 
+A separate [prospective physical comparison](../validation/imrphenomhm_published_nr_receipt_20260927.md)
+now evaluates this exact published option with `london_2018` mapping against
+SXS:BBH:2374 and 2163. Both NR resolution screens pass. Both frontends pass
+the first view but fail the second view's match and norm gates in each case:
+matches are 0.971608 and 0.972273 versus the 0.980 floor. These results leave
+physical qualification open; they do not invalidate the separate bounded
+mathematical implementation checks.
+
 ## Reproduce the checks
 
 Use the optional reference, Torch and JAX dependencies with FP64 enabled:
