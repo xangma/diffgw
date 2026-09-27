@@ -1028,6 +1028,27 @@ The current PhenomD fundamental Kerr-mode representation uses eigenvalues from t
     pages = "063001",
     year = "1998"
 }
+
+@misc{LIGO:T980044-10,
+    author = {{LIGO Laboratory}},
+    title = {{LIGO Hanford Observatory as-built detector coordinate survey}},
+    howpublished = {LIGO-T980044-10, Section 2.1 and Table 4},
+    url = {https://dcc.ligo.org/public/0002/T980044/000/T980044-10.pdf}
+}
+
+@misc{IERS:BulletinC49,
+    author = {{International Earth Rotation and Reference Systems Service}},
+    title = {{Bulletin C49: Announcement of a leap second in the UTC time scale}},
+    howpublished = {IERS Bulletin C49},
+    url = {https://datacenter.iers.org/data/html/bulletinc-049.html}
+}
+
+@misc{IERS:EOP14C04-2015,
+    author = {{International Earth Rotation and Reference Systems Service}},
+    title = {{EOP 14 C04 (IAU1980), 2015 series}},
+    howpublished = {MJD 57279, UT1-UTC datum},
+    url = {https://datacenter.iers.org/data/html/eopc04_14.15.html}
+}
 ```
 
 ---

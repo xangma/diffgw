@@ -63,7 +63,7 @@ def test_public_catalog_is_versioned_immutable_and_json_safe():
 
     for definition in definitions:
         assert get_waveform(definition.id) is definition
-        assert definition.reference_version.endswith("/v1")
+        assert re.search(r"/v[1-9][0-9]*$", definition.reference_version)
         assert definition.reference_module.startswith("diffgw_reference.")
         assert (Path(__file__).resolve().parents[1] / "docs" / definition.spec_page).is_file()
         assert definition.components
@@ -85,7 +85,7 @@ def test_public_catalog_is_versioned_immutable_and_json_safe():
         assert len({component.id for component in definition.components}) == len(definition.components)
         for component in definition.components:
             assert component.id
-            assert component.spec_version.endswith("/v1")
+            assert re.search(r"/v[1-9][0-9]*$", component.spec_version)
             assert component.scope
             assert component.variant
             assert component.source_refs
@@ -223,7 +223,11 @@ def test_catalog_component_ids_and_versions_match_reference_modules():
             reference = import_module(component.reference_module)
             assert component.id in reference.COMPONENT_IDS.values(), component.id
             version_attribute = special_versions.get((component.reference_module, component.id), "SPEC_VERSION")
-            assert component.spec_version == getattr(reference, version_attribute), component.id
+            component_versions = getattr(reference, "COMPONENT_SPEC_VERSIONS", {})
+            name = next(name for name, component_id in reference.COMPONENT_IDS.items()
+                        if component_id == component.id)
+            expected_version = component_versions.get(name, getattr(reference, version_attribute))
+            assert component.spec_version == expected_version, component.id
 
 
 @pytest.mark.parametrize("backend", ("torch", "jax"))

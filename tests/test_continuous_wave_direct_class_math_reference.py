@@ -9,8 +9,11 @@ import torch
 
 from diffgw_reference import continuous_wave_direct_class as ref
 from jaxwave.approximants.continuous_wave import ContinuousWave as JaxCW
+from jaxwave.detectors.network import Detector as JaxDetector
 from torchwave.approximants.continuous_wave import ContinuousWave as TorchCW
 from torchwave.detectors.network import Detector as TorchDetector
+from torchwave.detectors.network import greenwich_mean_sidereal_time as torch_gmst
+from jaxwave.detectors.network import greenwich_mean_sidereal_time as jax_gmst
 
 jax.config.update("jax_enable_x64", True)
 T0 = 1126259462.0
@@ -67,6 +70,66 @@ def test_scalar_clock_is_bounded_to_fixed_leap_epoch():
     for outside in (1119744016.0, 1167264018.0):
         with pytest.raises(ValueError, match="fixed 17-second"):
             ref.gmst_utc_2015(outside)
+
+
+@pytest.mark.parametrize("backend", ("torch", "jax"))
+def test_h1_site_against_ligo_survey_precision(backend):
+    """LIGO T980044-10 Table 4 supports printed position and angular error."""
+    det = TorchDetector("H1") if backend == "torch" else JaxDetector("H1")
+    survey = ref.SURVEY_H1_SITE
+    vertex = np.asarray(det.vertex)
+    published_vertex = np.asarray(survey["vertex_ecef"], dtype=float)
+    # Table 4 prints ECEF vertex coordinates to 0.1 m, not cm/mm precision.
+    np.testing.assert_array_less(np.abs(vertex - published_vertex), 0.05)
+    with mp.workdps(70):
+        geodetic_vertex = np.asarray([float(x) for x in ref.survey_h1_ecef_from_geodetic()])
+    # A second transcription of the published latitude/longitude/height plus
+    # Section 2.1 WGS-84 constants reproduces the native digits numerically.
+    # The source's rounded geodetic angles still limit physical precision.
+    assert np.max(np.abs(vertex - geodetic_vertex)) < 1e-3
+    for key, native in (("x_arm_ecef", det.x_arm), ("y_arm_ecef", det.y_arm)):
+        published = np.asarray(survey[key], dtype=float)
+        published /= np.linalg.norm(published)
+        # Table 4 quotes 1.93e-6 rad estimated orientation error; its
+        # truncated component digits are not an exact equality oracle.
+        angular_chord = np.linalg.norm(np.asarray(native) - published)
+        assert angular_chord < 1.93e-6
+
+
+@pytest.mark.parametrize("backend", ("torch", "jax"))
+def test_source_site_whole_strain_error_budget(backend):
+    """Keep the exact-site gate; separately bound survey-precision inputs."""
+    ra, dec, f0, ci, psi, phi0 = 1.1, -0.3, 71.0, 0.4, 0.27, 0.13
+    times = [T0, T0 + 1234.0, T0 + 86400.0]
+    h0 = 2e-25
+    with mp.workdps(70):
+        expected = np.asarray([float(ref.survey_h1_sample(
+            t, t0=T0, ra=ra, dec=dec, f0=f0, h0=h0,
+            cos_iota=ci, psi=psi, phi0=phi0)) for t in times])
+    kw = dict(h0=h0, cos_iota=ci, psi=psi, phi0=phi0, t0=T0)
+    if backend == "torch":
+        actual = TorchCW(detector="H1")(
+            torch.tensor(times, dtype=torch.float64), ra, dec, f0, **kw)
+    else:
+        actual = JaxCW(detector="H1")(
+            jnp.asarray(times, dtype=jnp.float64), ra, dec, f0, **kw)
+    # The 5e-6 h0 gate allows for two quoted 1.93 µrad estimated arm errors,
+    # printed-vector truncation, and <0.05 m per-coordinate vertex rounding.
+    assert np.max(np.abs(np.asarray(actual) - expected)) / h0 < 5e-6
+
+
+@pytest.mark.parametrize("backend", ("torch", "jax"))
+def test_utc_clock_convention_and_measured_ut1_gap(backend):
+    """IERS C49 + C04 MJD 57279 distinguish the project clock from UT1."""
+    gps_midnight = 1126224017.0  # 2015-09-14 00:00:00 UTC, GPS-UTC = 17 s
+    with mp.workdps(70):
+        utc = float(ref.gmst_utc_2015(gps_midnight))
+        ut1 = float(ref.gmst_ut1_epoch_diagnostic())
+    gmst = torch_gmst if backend == "torch" else jax_gmst
+    native = float(gmst(gps_midnight))
+    assert abs(native - utc) < 2e-12
+    # C04's +0.2553711 s UT1-UTC is a resolved, nonzero native clock bias.
+    assert 1.86e-5 < ut1 - native < 1.87e-5
 
 
 @pytest.mark.parametrize("backend", ("torch", "jax"))

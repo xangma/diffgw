@@ -613,16 +613,20 @@ KERR_RINGDOWN_220_DIRECT = WaveformDefinition(
     ),),
 )
 
-_CW_DIRECT_VERSION = "cw-monochromatic-h1-direct-class/v1"
+_CW_DIRECT_VERSION = "cw-monochromatic-h1-direct-class/v2"
 _CW_DIRECT_COMPONENTS = tuple(
     ComponentDefinition(
         id=f"cw.direct_h1.{name}.v1", name=name.replace("_", " ").title(),
-        spec_version=_CW_DIRECT_VERSION,
+        spec_version="cw-monochromatic-h1-direct-class/v1",
         scope="Monochromatic principal-axis 2f direct ContinuousWave class at H1",
         variant="jks_2f_with_declared_circular_orbit_and_utc_clock",
         implementation="native_and_reference",
         evidence=("source_transcription", "independent_scalar_whole_waveform_sample"),
-        source_refs=_source(source, location),
+        source_refs=_source(source, location) + (
+            _source("iers_c49", "2015-07 leap offset")
+            + _source("iers_eopc04_2015", "MJD 57279 UT1-UTC diagnostic")
+            if name == "clock" else ()
+        ),
         reference_module="diffgw_reference.continuous_wave_direct_class",
     )
     for name, source, location in (
@@ -632,7 +636,17 @@ _CW_DIRECT_COMPONENTS = tuple(
         ("antenna", "jks1998", "PDF Eqs. 1–6; supplied H1 arms"),
         ("strain", "jks1998", "PDF Eqs. 19–22, 32–36"),
     )
-)
+) + (ComponentDefinition(
+    id="cw.direct_h1.site.v1", name="H1 surveyed site",
+    spec_version="cw-h1-site-survey/v1",
+    scope="H1 Earth-fixed and geodetic vertex plus arm directions at LIGO survey precision",
+    variant="ligo_t980044_10_table_4",
+    implementation="native_and_reference",
+    evidence=("source_transcription", "survey_precision_comparison"),
+    source_refs=_source("ligo_t980044_10", "Section 2.1 and Table 4, WGS-84 conversion, Hanford vertex and arm direction cosines"),
+    reference_module="diffgw_reference.continuous_wave_direct_class",
+    caveats=("Published vertex rounds to 0.1 m; arm direction error is estimated at 1.93 microrad. Full native digits remain unverified.",),
+),)
 
 CONTINUOUS_WAVE_H1_DIRECT = WaveformDefinition(
     id="ContinuousWaveH1Direct", name="ContinuousWave monochromatic H1 direct class",
@@ -646,7 +660,9 @@ CONTINUOUS_WAVE_H1_DIRECT = WaveformDefinition(
         SourceDefinition("anderson2001", "Anderson et al., corrected H1 arm directions", "https://arxiv.org/pdf/gr-qc/0008066v1", "gr-qc/0008066v1"),
         SourceDefinition("aoki1982", "Aoki et al., IAU 1982 GMST definition", "https://ui.adsabs.harvard.edu/abs/1982A%26A...105..359A/abstract", "1982 A&A 105 359"),
         SourceDefinition("iers_c49", "IERS Bulletin C49, 2015-07 leap second", "https://datacenter.iers.org/data/html/bulletinc-049.html", "C49"),
-        SourceDefinition("project_cw", "Declared circular orbit, UTC clock, and conditional site data", "docs/math/continuous-wave-direct-class.md", _CW_DIRECT_VERSION, kind="project_convention"),
+        SourceDefinition("ligo_t980044_10", "LIGO as-built site coordinate survey", "https://dcc.ligo.org/public/0002/T980044/000/T980044-10.pdf", "LIGO-T980044-10"),
+        SourceDefinition("iers_eopc04_2015", "IERS EOP 14 C04 2015, IAU1980", "https://datacenter.iers.org/data/html/eopc04_14.15.html", "MJD 57279"),
+        SourceDefinition("project_cw", "Declared circular orbit and UTC clock", "docs/math/continuous-wave-direct-class.md", _CW_DIRECT_VERSION, kind="project_convention"),
     ),
     parameters=(
         ParameterDefinition("t", "Sample GPS times", "s", "2015-07 to 2016-12; selected offsets"),
@@ -669,7 +685,7 @@ CONTINUOUS_WAVE_H1_DIRECT = WaveformDefinition(
     conventions=(
         ConventionDefinition("orbit", "Circular 1-AU orbit in the ecliptic, zero orbital phase at t0; sidereal year 365.256363004 days."),
         ConventionDefinition("clock", "Aoki IAU 1982 GMST with UTC substituted for UT1 and 17-second GPS-UTC offset in the selected epoch."),
-        ConventionDefinition("site", "Native H1 vertex and normalized arms are conditioning inputs; Anderson verifies arm directions only to printed four-decimal precision."),
+        ConventionDefinition("site", "Native H1 vertex and normalized arms are conditioned inputs for tight scalar checks; LIGO T980044-10 Table 4 separately checks survey precision, not inherited full digits."),
         ConventionDefinition("phase", "JKS first-order Roemer phase at f1=f2=0; phi0 is GW phase and f0 is GW frequency."),
     ),
     options=(
@@ -679,23 +695,30 @@ CONTINUOUS_WAVE_H1_DIRECT = WaveformDefinition(
         OptionDefinition("amplitude_input", ("h0", "ellipticity_distance"), "h0", "Both amplitude input routes are sampled."),
     ),
     carrier_parameters=(), capabilities=("td", "detector_strain", "torch", "jax", "scalar_reference"),
-    evidence=("independent_scalar_whole_waveform_sample", "selected_frequency_and_phase_gradients"),
+    evidence=("independent_scalar_whole_waveform_sample", "selected_frequency_and_phase_gradients", "survey_precision_site_and_clock_diagnostic"),
     caveats=(
-        "The scalar uses supplied H1 full-precision vertex and arm vectors; their inherited digits are not independently sourced beyond published arm precision.",
-        "UTC replaces UT1 without Earth-orientation corrections; the circular orbit is not a Solar System ephemeris.",
+        "The tight scalar comparison conditions on native H1 full-precision digits; the separate LIGO survey gate supports only printed position and estimated angular precision.",
+        "UTC replaces UT1 without Earth-orientation corrections; IERS C04 reports UT1-UTC = +0.2553711 s at 2015-09-14 0h UTC. The circular orbit is not a Solar System ephemeris.",
         "Native nonzero f1/f2 includes higher Roemer-delay powers absent from JKS Eq. 14 and is outside this claim.",
         "No external binary, phase-coherent astrophysical, uniform-domain, or physical-validation claim is made.",
     ),
     claims=(VerificationClaim(
         component_ids=tuple(component.id for component in _CW_DIRECT_COMPONENTS),
-        scope="Two sky/frequency/inclination cases, five GPS samples, both amplitude routes, selected f0 and phi0 gradients",
+        scope="Two sky/frequency/inclination cases, five GPS samples, both amplitude routes, selected f0 and phi0 gradients; separate H1 survey-precision site gate",
         variant="jks_2f_with_declared_circular_orbit_and_utc_clock",
         backends=("torch", "jax", "scalar_reference"),
         options=(("call_route", "direct_class"), ("detector", "H1"), ("spindown", "f1=f2=0")),
         domain="selected 2015 GPS samples", precision="float64", device="cpu",
         category="implementation_verification", status="sampled_pass",
         evidence_path="tests/test_continuous_wave_direct_class_math_reference.py",
-    ),),
+    ), VerificationClaim(
+        component_ids=("cw.direct_h1.site.v1",),
+        scope="H1 vertex at published 0.1 m grid and independently converted geodetic point; arms within 1.93 microrad survey angular error",
+        variant="ligo_t980044_10_table_4", backends=("torch", "jax", "scalar_reference"),
+        options=(("detector", "H1"),), domain="static Earth-fixed site",
+        precision="float64", device="cpu", category="source_fidelity",
+        status="sampled_pass", evidence_path="tests/test_continuous_wave_direct_class_math_reference.py",
+    )),
 )
 
 _MEMORY_22_VERSION = "memory-dominant-22-direct-class/v1"

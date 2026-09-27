@@ -1,17 +1,17 @@
 # ContinuousWave monochromatic H1 direct class
 
-Specification ID: `cw-monochromatic-h1-direct-class/v1`.
+Specification ID: `cw-monochromatic-h1-direct-class/v2`.
 
 <!-- BEGIN GENERATED WAVEFORM DEFINITION -->
 
 | Definition field | Catalog value |
 | --- | --- |
 | Model ID | `ContinuousWaveH1Direct` |
-| Reference composition | `cw-monochromatic-h1-direct-class/v1` |
+| Reference composition | `cw-monochromatic-h1-direct-class/v2` |
 | Scope | Direct Torch/JAX ContinuousWave class: selected float64 CPU monochromatic principal-axis 2f strain at H1, GPS epoch in 2015–2016. |
 | Domain and modes | `time`; `(2, 2)` |
 | Native backends | `torch`, `jax` |
-| Scoped verification claims | 1 |
+| Scoped verification claims | 2 |
 
 | Option | Default | Native choices | Reference-only choices |
 | --- | --- | --- | --- |
@@ -42,6 +42,8 @@ ellipticity, SI distance, and `i_zz` in kg m². The source is principal-axis,
 non-precessing, and monochromatic. The project model uses a circular 1-AU
 orbit, obliquity 0.4090928042223289 rad, and sidereal year 365.256363004
 days. Earth rotation uses IAU 1982 GMST with UTC substituted for UT1.
+The unchanged amplitude, clock, phase, antenna, and strain components retain
+their v1 IDs; v2 adds the independently sourced `cw.direct_h1.site.v1` gate.
 
 ## Mathematics and components
 
@@ -70,6 +72,7 @@ composition and convention signs.
 | `cw.direct_h1.delay_phase.v1` | JKS PDF Eqs. 14, 18; monochromatic circular-orbit adapter |
 | `cw.direct_h1.antenna.v1` | JKS PDF Eqs. 1–6; conditioned on supplied H1 site vectors |
 | `cw.direct_h1.strain.v1` | JKS PDF Eqs. 19–22 and native four-amplitude composition |
+| `cw.direct_h1.site.v1` | [LIGO T980044-10, §2.1 and Table 4](https://dcc.ligo.org/public/0002/T980044/000/T980044-10.pdf), Hanford Earth-fixed/geodetic vertex and arm directions at published precision |
 
 ## Implementation mapping
 
@@ -77,21 +80,39 @@ composition and convention signs.
 uses mpmath and the existing paper-literal quadrupole and phase-response
 references. It does not import native waveform functions or constants. The
 H1 vertex and normalized arm vectors are explicit conditioning inputs from
-the detector object. The two native `ContinuousWave` classes run their own
-amplitude, timing, antenna, basis, and strain code paths.
+the detector object in the tight `2e-8` normalized comparison. A separate
+`survey_h1_sample` supplies the decimal values printed in LIGO Table 4;
+these constants are independent of the native detector definitions. The two
+native `ContinuousWave` classes run their own amplitude, timing, antenna,
+basis, and strain code paths.
 
 ## Evidence and limitations
 
-The maintained test compares 13 checks: both backends at two sky/frequency
-configurations, five GPS sample times per amplitude route, plus selected
-$f_0$ and $\phi_0$ automatic derivatives against scalar differentiation. The
-existing component tests separately check the H1 arm directions to the four
-decimals printed in [Anderson et al., Appendix B Table I](https://arxiv.org/pdf/gr-qc/0008066v1).
-The inherited full-precision H1 survey numbers are **not** independently
-verified by the scalar comparison. [IERS Bulletin C49](https://datacenter.iers.org/data/html/bulletinc-049.html)
-supports the 2015 leap offset; UTC remains an approximation to UT1 and no
-Earth-orientation series is supplied. The circular orbit has no planetary
-ephemeris, Einstein/Shapiro delay, binary orbit, or proper motion. The JKS
+The maintained whole-class test covers both backends at two sky/frequency
+configurations, five GPS sample times per amplitude route, and selected
+$f_0$ and $\phi_0$ derivatives. The separate source-site gate uses
+[LIGO T980044-10 Table 4](https://dcc.ligo.org/public/0002/T980044/000/T980044-10.pdf):
+the native H1 vertex is 0.0432 m from the printed Earth-fixed vertex, inside
+the 0.05 m per-coordinate rounding interval. Independently converting the
+printed geodetic position with §2.1's WGS-84 constants yields a vertex within
+0.3 mm numerically; the printed latitude, longitude, and height limit the
+physical precision to coarser than that arithmetic match. The two arm-direction
+separations are about 0.79 µrad, inside the table's 1.93 µrad estimated angular
+error. The native x/y arm components do **not** all round to Table 4's printed
+digits, so this does not source their inherited full precision. A separate
+whole-strain comparison at the published site uses a `5e-6 h0` gate allowing
+for the two estimated arm errors, printed-vector truncation, and vertex phase
+error at 71 Hz; the tight
+conditioned gate remains `2e-8`.
+
+[IERS Bulletin C49](https://datacenter.iers.org/data/html/bulletinc-049.html)
+supports the 17-second GPS–UTC offset. [IERS EOP 14 C04, MJD 57279](https://datacenter.iers.org/data/html/eopc04_14.15.html)
+reports UT1–UTC = +0.2553711 s at 2015-09-14 0h UTC. The test confirms the
+native clock follows the declared UTC substitution; the measured difference
+from the corresponding UT1 sidereal angle is about 1.86e-5 rad. There is no
+time-varying Earth-orientation input or physical timing claim. The circular
+orbit has no planetary ephemeris, Einstein/Shapiro delay, binary orbit, or
+proper motion. The JKS
 historical H1 arm table was corrected by Anderson; it is not used as an exact
 H1 oracle. Native nonzero spin-down terms contain higher powers of the delay
 than JKS Eq. (14), recorded by a strict expected-failure diagnostic and

@@ -252,6 +252,10 @@ not validation of the retained official ROM or surviving equation components.
 - **Verification Result**:
   The scalar/Torch/JAX component suite passes 46 cases. Full-waveform qualification fails because the components above are missing and the underlying XHM strict reference sets remain 0/1 catalog and 0/1 holdout. The optional [LAL comparison test](https://github.com/xangma/diffgw/blob/main/tests/test_imrphenom_xpnr.py) defines four black-box configurations with a PyCBC time/phase-optimized plus-polarization threshold of $0.99$ over 20–400 Hz. That acceptance threshold is not an observed result, a complex-waveform check, or a domain bound.
 
+### 2.15 ContinuousWave H1 direct-class slice
+
+The [versioned specification](math/continuous-wave-direct-class.md) connects the monochromatic 2f equations of [Jaranowski, Królak and Schutz](https://arxiv.org/pdf/gr-qc/9804014v1) to an independent mpmath scalar and selected Torch/JAX direct-class strain and derivative gates. [LIGO T980044-10 §2.1 and Table 4](https://dcc.ligo.org/public/0002/T980044/000/T980044-10.pdf) independently supplies the H1 Earth-fixed and geodetic vertex and arm directions at survey precision. [IERS Bulletin C49](https://datacenter.iers.org/data/html/bulletinc-049.html) fixes the selected GPS–UTC offset, while [IERS EOP 14 C04](https://datacenter.iers.org/data/html/eopc04_14.15.html) exposes the native UTC-for-UT1 sidereal-time approximation at one epoch. The tight whole-class algebraic gate still conditions on inherited native site digits; the separate source-site gate does not establish those digits, a Solar System ephemeris, or physical timing accuracy.
+
 ---
 
 ## 3. Reference Evidence by Model
