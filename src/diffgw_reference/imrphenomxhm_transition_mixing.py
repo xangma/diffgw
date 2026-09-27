@@ -2,7 +2,7 @@
 """Paper-era XHM (3,2) phase join and spherical/spheroidal mixing.
 
 Only the algebra printed in Garcia-Quiros et al., arXiv:2001.10914v2,
-Eqs. (38), (40), (46)--(47), (49)--(50), Table 7, and (A1)--(A3) is implemented. All
+Eqs. (38), (40), (46)--(50), Table 7, and (A1)--(A3) is implemented. All
 collocation targets, QNM frequencies, amplitudes, and mixing coefficients
 are caller data.  In particular, this is not a release-122022 fit provider.
 """
@@ -18,6 +18,7 @@ COMPONENT_IDS = {
     "spherical_spheroidal_mixing": "xhm.mixing.32.spherical-spheroidal.v1",
     "spheroidal_ringdown_phase_shape": "xhm.phase.32.spheroidal-ringdown-shape.v1",
     "spheroidal_ringdown_alignment": "xhm.phase.32.spheroidal-alignment.v1",
+    "spheroidal_four_target_solve": "xhm.phase.32.spheroidal-four-target-solve.v1",
 }
 
 
@@ -74,6 +75,50 @@ def ringdown_spheroidal_phase_derivative(frequency, f_ring32, f_damp32, coeffici
         raise ValueError("frequencies must be positive")
     a2, a4, alam, dphi = map(mp.mpf, coefficients)
     return a2 / f**2 + a4 / f**4 + alam * damp / (damp**2 + (f - ring)**2) + dphi
+
+
+def ringdown_spheroidal_four_target_system(f_ring22, f_ring32, f_damp32):
+    """Return Table-9 nodes and the dimensionless Eq. (48) matrix.
+
+    Columns multiply ``(alpha2/r32², alpha4/r32⁴, alpha_lambda/r32,
+    dphi_RD)``. All fitted right-hand-side values remain caller data.
+    """
+
+    ring22, ring32, damp32 = map(mp.mpf, (f_ring22, f_ring32, f_damp32))
+    if not all(map(mp.isfinite, (ring22, ring32, damp32))) or min(ring22, ring32, damp32) <= 0:
+        raise ValueError("finite positive QNM frequencies required")
+    nodes = (ring22, ring32 - mp.mpf("1.5") * damp32,
+             ring32 - damp32 / 2, ring32 + damp32 / 2)
+    if min(nodes) <= 0:
+        raise ValueError("all four collocation frequencies must be positive")
+    if len(set(nodes)) != 4:
+        raise ValueError("the four collocation frequencies must be distinct")
+    delta = damp32 / ring32
+    matrix = mp.matrix([
+        [(frequency / ring32)**-2, (frequency / ring32)**-4,
+         delta / (delta**2 + (frequency / ring32 - 1)**2), mp.mpf(1)]
+        for frequency in nodes
+    ])
+    return nodes, matrix
+
+
+def ringdown_spheroidal_four_target_coefficients(
+    f_ring22, f_ring32, f_damp32, derivative_targets,
+):
+    """Solve published Eq. (48) for supplied four derivative targets."""
+
+    if len(derivative_targets) != 4:
+        raise ValueError("four derivative targets are required")
+    targets = tuple(map(mp.mpf, derivative_targets))
+    if not all(map(mp.isfinite, targets)):
+        raise ValueError("finite derivative targets are required")
+    _, matrix = ringdown_spheroidal_four_target_system(f_ring22, f_ring32, f_damp32)
+    if mp.det(matrix) == 0:
+        raise ValueError("the four-target matrix is rank-deficient")
+    scaled = mp.lu_solve(matrix, mp.matrix(targets))
+    ring32 = mp.mpf(f_ring32)
+    return (scaled[0] * ring32**2, scaled[1] * ring32**4,
+            scaled[2] * ring32, scaled[3])
 
 
 def ringdown_spheroidal_alignment(

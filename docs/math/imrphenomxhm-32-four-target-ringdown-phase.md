@@ -30,8 +30,10 @@ integration constant is solved by Eq. (48). The frozen rows are:
 
 These are synthetic supplied targets, not author-fit evaluations. Row-wise
 Jacobians cover all seven inputs; derivatives across rows must vanish. A
-coincident-node case `r22=r32-1.5*d32` must fail explicitly. A nearby
-distinct-node case is diagnostic for conditioning, not a production claim.
+coincident-node case `r22=r32-1.5*d32` must fail explicitly in the scalar
+reference and Torch eager helper; JAX JIT accepts only prevalidated domain
+inputs. A nearby distinct-node case is diagnostic for conditioning, not a
+production claim.
 
 ## Mathematics and components
 
