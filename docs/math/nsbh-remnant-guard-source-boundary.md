@@ -83,10 +83,12 @@ whole-waveform assembly remain unqualified.
 ## Reproduce the checks
 
 From the repository root, run
+`PYTHONPATH=src python3 -m pytest -q tests/test_nsbh_remnant_guard_source_boundary.py`
+for the source-only diagnostic. The test uses `bbh_remnant_interval` and
+`zappa_factor_interval` with the two tuples above and asserts that both
+printed-coefficient factors exceed one while the full remnant values remain
+physical; it makes no native guarded-output comparison. The existing
+**guard-inactive** gate is
 `PYTHONPATH=src python3 -m pytest -q tests/test_nsbh_remnant_rounding_math_reference.py`
-where Torch/JAX are installed, to reproduce the existing **guard-inactive**
-gate. The source-only diagnostic can be reproduced by evaluating
-`bbh_remnant_interval` and `zappa_factor_interval` at the two tuples above
-with `ZAPPA_MASS_TABLE` and `ZAPPA_SPIN_TABLE`; no native guarded output is
-used to choose the tuples or interpret the bounds. Check the six-section
-catalog with `PYTHONPATH=src python3 scripts/generate_waveform_library_table.py --check`.
+where Torch/JAX are installed. Check the six-section catalog with
+`PYTHONPATH=src python3 scripts/generate_waveform_library_table.py --check`.
