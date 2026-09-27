@@ -42,6 +42,12 @@ mpmath 1.3.0, pytest 9.1.1. The strict repository-wide
 `--require-math-reference` switch requires collection of every math-reference
 module and is reserved for the full integration suite.
 
+The integrated branch at `153396e` was archived to
+`/home/xangma/tmp/diffgw-integration-gate-20260927j` and reran the two
+modules with the same CPU FP64 settings: **22 passed in 11.18 s**. The
+integrated files also passed Ruff, generated-catalog `--check`, `git diff
+--check`, and a strict documentation build.
+
 Five physical mass/spin cases include equal masses and spins, unequal spins,
 `q=10`, and negative/positive anti-aligned combinations. Each backend's six
 coefficients agree with the scalar values within `rtol=2e-12, atol=2e-13`;
