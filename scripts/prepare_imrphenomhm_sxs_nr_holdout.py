@@ -52,7 +52,8 @@ def verify_sources(data_dir: Path) -> dict[str, str]:
         path = source_path(data_dir, key)
         if not path.is_file() or path.stat().st_size != size:
             raise RuntimeError(f"missing/wrong-size official SXS file: {path}")
-        digest = hashlib.md5(path.read_bytes()).hexdigest()  # noqa: S324; published identity
+        # MD5 is the published file identity, not a security digest.
+        digest = hashlib.md5(path.read_bytes()).hexdigest()  # noqa: S324
         if digest != md5:
             raise RuntimeError(f"official SXS checksum mismatch: {path}")
         verified[key] = digest
