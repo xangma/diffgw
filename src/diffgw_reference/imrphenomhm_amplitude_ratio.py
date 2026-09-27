@@ -98,8 +98,11 @@ def symbolic_p21(v: sp.Expr) -> sp.Expr:
 
 def symbolic_eq4_beta21() -> sp.Expr:
     """Reduce London's Eq. (4) using full Mishra Eq. (11) SPA envelopes."""
-    h21 = lambda z: -sp.sqrt(2) / 3 * _v(1, z) ** sp.Rational(-7, 2) * symbolic_p21(_v(1, z))
-    h22 = lambda z: -_v(2, z) ** sp.Rational(-7, 2)
+    def h21(z):
+        return -sp.sqrt(2) / 3 * _v(1, z) ** sp.Rational(-7, 2) * symbolic_p21(_v(1, z))
+
+    def h22(z):
+        return -_v(2, z) ** sp.Rational(-7, 2)
     return sp.factor(h21(G) / h22(G) * h21(X) / h21(2 * X))
 
 
