@@ -64,18 +64,19 @@ The independent scalar reference uses mpmath and imports no native
 waveform, QNM, or fit code. The native state provides the QNM, peak, and
 shape inputs. A face-on public waveform exposes the positive mode amplitude
 as `hypot(h_plus,h_cross)/(scale*sqrt(5/(4*pi)))`, where
-`scale=(M*MSUN_SEC)/(distance*MPC_SI/C_SI)`. Its derivative with respect to
-dimensionless `u` follows by differentiating the public carrier with
-respect to seconds and multiplying by `M*MSUN_SEC`. The arbitrary carrier
+`scale=(M*MSUN_SEC)/(distance*MPC_SI/C_SI)`. The gate differentiates this
+public modulus with respect to `u` through `t=u*M*MSUN_SEC` (equivalently,
+its seconds derivative times `M*MSUN_SEC`). The arbitrary carrier
 phase and reference-frequency phase offset cancel in this modulus.
 
 ## Evidence and limitations
 
-The maintained check will enforce high-precision peak/derivative identities
-on independent scalar inputs, then compare the public Torch and JAX FP64
+The maintained check enforces high-precision peak/derivative identities
+on independent scalar inputs, then compares the public Torch and JAX FP64
 CPU amplitudes and derivatives at nonnegative ringdown times. Paper-branch
-cases will separately check `d_2=(alpha_2-alpha_1)/2`; a bounded `d_2`
-case is a carrier-algebra diagnostic only. The QNM/remnant, peak, and shape
+cases separately check `d_2=(alpha_2-alpha_1)/2`; a bounded `d_2`
+case is a carrier-algebra diagnostic only. The [execution receipt](../validation/phenomt_ringdown_amplitude_20260927.md)
+records the `len` CPU result. The QNM/remnant, peak, and shape
 fits, inspiral/merger joins, other modes, physical waveform accuracy, and
 whole IMRPhenomT qualification remain outside this evidence.
 
@@ -83,5 +84,5 @@ whole IMRPhenomT qualification remain outside this evidence.
 
 On `len` CPU, run
 `JAX_ENABLE_X64=1 JAX_PLATFORMS=cpu PYTHONPATH=src:tests python -m pytest -q tests/test_phenomt_ringdown_amplitude_math_reference.py --reference-device=cpu -ra`.
-An execution receipt under `docs/validation/` will record the exact
-environment, command, sample coverage, and results.
+The linked execution receipt records the environment, sample coverage,
+and results.
