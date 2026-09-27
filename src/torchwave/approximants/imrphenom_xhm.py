@@ -191,6 +191,30 @@ def _nonmix_ringdown_phase(frequency, ring, damp, a2, a_lambda, time_shift, phas
     return -a2 * ring**2 / frequency + a_lambda * torch.atan((frequency - ring) / damp) + time_shift * frequency + phase_shift
 
 
+def _spheroidal_32_ringdown_phase_derivative(frequency, ring, damp, a2, a4, a_lambda, time_shift):
+    """XHM Eq. (46) with caller-supplied (3,2) coefficients and QNM pair."""
+    ring, damp, a2, a4, a_lambda, time_shift = (
+        _unsqueeze_to(value, frequency) for value in (ring, damp, a2, a4, a_lambda, time_shift)
+    )
+    lorentzian = damp / (damp**2 + (frequency - ring)**2)
+    return a2 / frequency**2 + a4 / frequency**4 + a_lambda * lorentzian + time_shift
+
+
+def _spheroidal_32_ringdown_phase(frequency, ring, damp, a2, a4, a_lambda, time_shift, phase_shift):
+    """XHM Eq. (47) primitive with caller-supplied phase offset."""
+    ring, damp, a2, a4, a_lambda, time_shift, phase_shift = (
+        _unsqueeze_to(value, frequency)
+        for value in (ring, damp, a2, a4, a_lambda, time_shift, phase_shift)
+    )
+    return (
+        -a2 / frequency
+        - a4 / (3.0 * frequency**3)
+        + a_lambda * torch.atan((frequency - ring) / damp)
+        + time_shift * frequency
+        + phase_shift
+    )
+
+
 def _value_and_derivative(function, frequency: torch.Tensor):
     """Value and pointwise frequency derivative using forward-mode JVP, retaining parameter gradients."""
     is_scalar = frequency.dim() == 0
@@ -1065,45 +1089,24 @@ class IMRPhenomXHM(nn.Module):
                     carrier_p_at_f1, _ = eval_carrier_phi_and_deriv(f1_align)
 
                     def eval_dphi_32_s(f_in: torch.Tensor) -> torch.Tensor:
-                        damp_u = _unsqueeze_to(f_damp["32"], f_in)
-                        ring_u = _unsqueeze_to(f_ring["32"], f_in)
-                        a2_u = _unsqueeze_to(alpha2_32, f_in)
-                        a4_u = _unsqueeze_to(alpha4_32, f_in)
-                        alam_u = _unsqueeze_to(alpha_lam_32, f_in)
-                        dt_u = _unsqueeze_to(dt_rd_32, f_in)
-                        lor = damp_u / ((damp_u**2) + (f_in - ring_u)**2)
-                        return (
-                            a2_u / (f_in**2)
-                            + a4_u / (f_in**4)
-                            + alam_u * lor
-                            + dt_u
+                        return _spheroidal_32_ringdown_phase_derivative(
+                            f_in, f_ring["32"], f_damp["32"],
+                            alpha2_32, alpha4_32, alpha_lam_32, dt_rd_32,
                         )
 
                     time_shift_32 = (carrier_dp_at_f0 + delta_t_32_s) - eval_dphi_32_s(f0_align)
                     dt_rd_32 = dt_rd_32 + time_shift_32
 
-                    phi_32_s_base_at_f1 = (
-                        -alpha2_32 / f1_align
-                        - (1.0 / 3.0) * alpha4_32 / (f1_align**3)
-                        + alpha_lam_32 * torch.atan((f1_align - f_ring["32"]) / f_damp["32"])
-                        + dt_rd_32 * f1_align
+                    phi_32_s_base_at_f1 = _spheroidal_32_ringdown_phase(
+                        f1_align, f_ring["32"], f_damp["32"],
+                        alpha2_32, alpha4_32, alpha_lam_32, dt_rd_32, 0.0,
                     )
                     phi_rd_32_s_shift = (carrier_p_at_f1 + delta_phi_32_s) - phi_32_s_base_at_f1
 
                     def eval_phi_32_s(f_in: torch.Tensor) -> torch.Tensor:
-                        damp_u = _unsqueeze_to(f_damp["32"], f_in)
-                        ring_u = _unsqueeze_to(f_ring["32"], f_in)
-                        a2_u = _unsqueeze_to(alpha2_32, f_in)
-                        a4_u = _unsqueeze_to(alpha4_32, f_in)
-                        alam_u = _unsqueeze_to(alpha_lam_32, f_in)
-                        dt_u = _unsqueeze_to(dt_rd_32, f_in)
-                        shift_u = _unsqueeze_to(phi_rd_32_s_shift, f_in)
-                        return (
-                            -a2_u / f_in
-                            - (1.0 / 3.0) * a4_u / (f_in**3)
-                            + alam_u * torch.atan((f_in - ring_u) / damp_u)
-                            + dt_u * f_in
-                            + shift_u
+                        return _spheroidal_32_ringdown_phase(
+                            f_in, f_ring["32"], f_damp["32"],
+                            alpha2_32, alpha4_32, alpha_lam_32, dt_rd_32, phi_rd_32_s_shift,
                         )
 
                     eval_h_rd_s = eval_h_rd

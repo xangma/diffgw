@@ -16,6 +16,7 @@ SPEC_VERSION = "imrphenomxhm-transition-mixing/v1"
 COMPONENT_IDS = {
     "intermediate_phase_join": "xhm.phase.32.intermediate-ringdown-join.v1",
     "spherical_spheroidal_mixing": "xhm.mixing.32.spherical-spheroidal.v1",
+    "spheroidal_ringdown_phase_shape": "xhm.phase.32.spheroidal-ringdown-shape.v1",
 }
 
 
