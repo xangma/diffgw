@@ -24,7 +24,9 @@ The carrier callbacks and calibrated inputs are arguments to the scalar
 reference. A frontend test may obtain these from its public D and QNM
 interfaces, but that makes the check **conditional**: shared errors in those
 inputs are outside its reach. The 22 component reduces directly to the
-supplied D carrier.
+supplied D carrier. The maintained frontend check covers
+`f_ref=None` and `f_ref=40 Hz`; at finite reference frequency it supplies
+the frontend's D peak slope as the explicit HM-relative gauge input.
 
 ## Mathematics and components
 
@@ -54,7 +56,10 @@ odd-$m$ body-exchange sign, and optional orbital/reference/time gauges.
 Those operations are an explicit public adapter, not part of London's
 Eq. (3). [García-Quirós et al., arXiv:2001.10914v2, Sec. II Eqs. (2),
 (4)–(9)](https://arxiv.org/html/2001.10914v2) fixes the related
-positive-frequency mode-pair convention. Angular projection is separately
+positive-frequency mode-pair convention. The
+[SXS convention bridge](imrphenomhm-sxs-conventions.md) derives that pair,
+the frequency-reversing conjugation, and the finite-reference invariant.
+Angular projection is separately
 specified in the [six-mode projection](imrphenomhm-projection.md).
 
 | Component ID/version | Source | Scalar reference | Public targets | Maintained check |
@@ -78,7 +83,10 @@ records the tested domain, tolerances, dependencies, and untested gauges. London
 literal Eq. (4) ratio has a $0/0$ limit for equal-mass equal-spin odd modes;
 the native zero convention is an adapter and needs a separate check. The
 inherited PhenomD fits, remnant and QNM calibration, and the project's N61
-QNM refit retain their own provenance and domain limits.
+QNM refit retain their own provenance and domain limits. The subsequent
+[convention-bridge receipt](../validation/imrphenomhm_sxs_conventions_20260927.md)
+extends the public complex check to finite `f_ref`; it does not change the
+original run's scope.
 
 ## Reproduce the checks
 

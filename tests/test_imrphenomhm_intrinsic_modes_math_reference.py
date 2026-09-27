@@ -124,7 +124,8 @@ def _decimal_query_lookup(samples, query):
 
 
 @pytest.mark.parametrize("transition", ("london_2018", "phenomd_runtime"))
-def test_public_complex_modes(backend, transition):
+@pytest.mark.parametrize("reference_frequency", (None, 40.0))
+def test_public_complex_modes(backend, transition, reference_frequency):
     name, module, array = backend
     m1, m2, s1, s2 = CASE
     mass_seconds = (m1 + m2) * float(module.MSUN_SEC)
@@ -141,10 +142,14 @@ def test_public_complex_modes(backend, transition):
 
     phic, tc = 0.37, 0.008
     public_args = dict(mass1=m1, mass2=m2, chi1=s1, chi2=s2,
-                       distance=100.0, inclination=0.0, f_ref=None)
+                       distance=100.0, inclination=0.0,
+                       f_ref=reference_frequency)
     carrier_args = dict(public_args, phic=0.0, tc=0.0)
     hm_args = dict(public_args, phic=phic, tc=tc)
     model = module.IMRPhenomHM(modes=MODES)
+    reference_base = (0.0 if reference_frequency is None else
+                      float(module.IMRPhenomD.compute_slope_peak(*masses_spins))
+                      * mass_seconds * reference_frequency)
 
     for ell, m in MODES:
         fr_lm, fd_lm = (
@@ -201,6 +206,7 @@ def test_public_complex_modes(backend, transition):
                 base_fr22=float(base_fr22), base_fd22=float(base_fd22),
                 alpha4=alpha4, alpha5=alpha5, transition=transition,
                 phic=phic, tc=tc, frequency_hz=float(z) / mass_seconds,
+                reference_gauge=(m / 2 - 1) * reference_base,
             )) for z in X])
 
         # Every complex sample is checked relative to its own full strain
