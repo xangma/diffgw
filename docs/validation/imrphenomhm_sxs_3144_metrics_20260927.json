@@ -1,0 +1,860 @@
+{
+  "case": "SXS:BBH:3144v3.0/Lev3+Lev2/Strain_N2",
+  "protocol": "docs/validation/imrphenomhm_sxs_3144_prospective_protocol_20260927.md",
+  "source_revision": "3b3d50d",
+  "source_hashes": {
+    "Lev3:Strain_N2.h5": {
+      "md5": "78a1bed032fa8ae31a167d4fa30203fb",
+      "sha256": "59ce19bbed32e257c0bcb307ada7adf5b75c297ffc8d3ae4cfe6a7762eb4440a"
+    },
+    "Lev3:Strain_N2.json": {
+      "md5": "73edba3df5fbcef49acc0f6a8c5c5bc9",
+      "sha256": "d7a74026b07f0dff57be6f9a437e52f7610847773342fcb5fd8531c4da3da95f"
+    },
+    "Lev3:metadata.json": {
+      "md5": "fbdddb96126b46b4a1881ba84ced2e8d",
+      "sha256": "16360fe120d177b1daefba42387d666a552aa03332e0eebd2a4c9b2140ba303c"
+    },
+    "Lev2:Strain_N2.h5": {
+      "md5": "0324ae1236564a44f4a998364b829d4f",
+      "sha256": "2c1dac19a419aceda36af366516a9807b6f1e2880da77f10ecb227d6359b9787"
+    },
+    "Lev2:Strain_N2.json": {
+      "md5": "e9551b14ff83ecd735dce7524091cc1b",
+      "sha256": "f0e31fcfca7ab124f8792aca295dfa5b50375979d6119d64adc2edee71b99d1d"
+    },
+    "Lev2:metadata.json": {
+      "md5": "21415531730d1b93b5fd7da69f87b584",
+      "sha256": "9aa7fdac4d35f6b52066e8bdc3aa23a267ab36c9014ab57958ba34a660d9106d"
+    }
+  },
+  "metadata_catalog_sha256": "132d38520b3562c8f254b3c9aaf8efd4678428f94dbbabfef4436bc50c1c87c6",
+  "fixture_sha256": "cf127c18a2211f0994ba0a03d406c360b8230ef27609920b5c14d11f49745cf2",
+  "script_sha256": "89856b9b94af8cf546620d2f07928016a35f8ddafa4277e9c479b0638d18b2c0",
+  "preparation_versions": {
+    "python": "3.12.3",
+    "numpy": "2.5.3",
+    "scipy": "1.18.1",
+    "sxs": "2026.0.6",
+    "sympy": "1.14.0"
+  },
+  "evaluation_versions": {
+    "python": "3.12.3",
+    "numpy": "2.3.5",
+    "scipy": "1.16.3",
+    "pycbc": "2.11.0",
+    "torch": "2.14.0",
+    "jax": "0.11.2",
+    "jaxlib": "0.11.2",
+    "sympy": "1.14.0"
+  },
+  "sidecar_modifications": {
+    "Lev3": {
+      "extrapolate": {
+        "CoordRadii": [
+          "0222",
+          "0228",
+          "0236",
+          "0244",
+          "0252",
+          "0261",
+          "0271",
+          "0282",
+          "0293",
+          "0306",
+          "0319",
+          "0334",
+          "0350",
+          "0368",
+          "0387",
+          "0409",
+          "0433",
+          "0461",
+          "0492",
+          "0528",
+          "0569",
+          "0618",
+          "0675",
+          "0745"
+        ]
+      },
+      "transform": {
+        "space_translation": [
+          -0.0032737810602543604,
+          0.03638594638393694,
+          -7.38594748902497e-05
+        ],
+        "boost_velocity": [
+          -1.0561149808603808e-05,
+          -3.938236384249668e-05,
+          3.774405502412876e-07
+        ]
+      },
+      "add_memory": {
+        "integration_start_time": 1580.5
+      },
+      "truncate": {
+        "tol": 1e-10
+      }
+    },
+    "Lev2": {
+      "extrapolate": {
+        "CoordRadii": [
+          "0222",
+          "0228",
+          "0236",
+          "0244",
+          "0252",
+          "0261",
+          "0271",
+          "0282",
+          "0293",
+          "0306",
+          "0319",
+          "0334",
+          "0350",
+          "0368",
+          "0387",
+          "0409",
+          "0433",
+          "0461",
+          "0492",
+          "0528",
+          "0569",
+          "0618",
+          "0675",
+          "0745"
+        ]
+      },
+      "transform": {
+        "space_translation": [
+          -0.0007236511620001046,
+          0.03704000735256073,
+          -0.00013485759252196457
+        ],
+        "boost_velocity": [
+          -1.1104930888617188e-05,
+          -3.9873866950224625e-05,
+          4.003738329035898e-07
+        ]
+      },
+      "add_memory": {
+        "integration_start_time": 692.0
+      },
+      "truncate": {
+        "tol": 1e-10
+      }
+    }
+  },
+  "conditioning": {
+    "time_shift_origin_m": 9933.490303373206,
+    "common_start_m": 1580.5,
+    "common_end_m": 10092.011834583338,
+    "uniform_samples": 34344.0,
+    "m_seconds": 0.0004925490947641267,
+    "amplitude_scale": 9.570831683175683e-21
+  },
+  "basis_relative_discrepancies": [
+    3.503837107345209e-13,
+    5.448741794991546e-13,
+    3.5097025871859333e-13,
+    5.541057525844699e-13,
+    3.6200594482497166e-13,
+    4.655116419501948e-13,
+    3.457560965454474e-13,
+    4.4293369136670335e-13
+  ],
+  "psd_sha256": "0d20d2092bfaeb6073b0d656f4a3eb495bc3adbeb350ef279420cb4ffd0d67ea",
+  "psd_bins": {
+    "start_hz": 30,
+    "end_hz": 1024,
+    "count": 995
+  },
+  "synthetic_fft_check": {
+    "match": 1.0,
+    "norm_ratio": 1.0,
+    "reference_norm": 22.856238378883205,
+    "candidate_norm": 22.856238378883205,
+    "shift_seconds": 0.01220703125,
+    "direct_recheck_error": 2.220446049250313e-16
+  },
+  "nr_modes": [
+    [
+      2,
+      -2
+    ],
+    [
+      2,
+      -1
+    ],
+    [
+      2,
+      0
+    ],
+    [
+      2,
+      1
+    ],
+    [
+      2,
+      2
+    ],
+    [
+      3,
+      -3
+    ],
+    [
+      3,
+      -2
+    ],
+    [
+      3,
+      -1
+    ],
+    [
+      3,
+      0
+    ],
+    [
+      3,
+      1
+    ],
+    [
+      3,
+      2
+    ],
+    [
+      3,
+      3
+    ],
+    [
+      4,
+      -4
+    ],
+    [
+      4,
+      -3
+    ],
+    [
+      4,
+      -2
+    ],
+    [
+      4,
+      -1
+    ],
+    [
+      4,
+      0
+    ],
+    [
+      4,
+      1
+    ],
+    [
+      4,
+      2
+    ],
+    [
+      4,
+      3
+    ],
+    [
+      4,
+      4
+    ],
+    [
+      5,
+      -5
+    ],
+    [
+      5,
+      -4
+    ],
+    [
+      5,
+      -3
+    ],
+    [
+      5,
+      -2
+    ],
+    [
+      5,
+      -1
+    ],
+    [
+      5,
+      0
+    ],
+    [
+      5,
+      1
+    ],
+    [
+      5,
+      2
+    ],
+    [
+      5,
+      3
+    ],
+    [
+      5,
+      4
+    ],
+    [
+      5,
+      5
+    ]
+  ],
+  "native_modes": [
+    [
+      2,
+      2
+    ],
+    [
+      2,
+      1
+    ],
+    [
+      3,
+      3
+    ],
+    [
+      3,
+      2
+    ],
+    [
+      4,
+      4
+    ],
+    [
+      4,
+      3
+    ]
+  ],
+  "resolution": {
+    "orbital_phase_rad": 5.743179471018169,
+    "shift_seconds": -0.014892578125,
+    "combined": {
+      "match": 0.9999396293395769,
+      "norm_ratio": 0.9996017454045472,
+      "reference_norm": 83.15892315304525,
+      "candidate_norm": 83.12580472974663,
+      "shift_seconds": -0.014892578125,
+      "direct_recheck_error": 2.220446049250313e-16
+    },
+    "views": [
+      {
+        "inclination_rad": 0.7,
+        "source_psi_rad": 0.0,
+        "match": 0.999944177938352,
+        "norm_ratio": 0.9997081459572553,
+        "reference_norm": 71.39542357455232,
+        "candidate_norm": 71.37458653154863,
+        "passed": true
+      },
+      {
+        "inclination_rad": 1.2,
+        "source_psi_rad": 0.4,
+        "match": 0.9999269319639014,
+        "norm_ratio": 0.9993033756466162,
+        "reference_norm": 42.6391837701467,
+        "candidate_norm": 42.609480276324014,
+        "passed": true
+      }
+    ],
+    "periodic_local_maxima": 14,
+    "candidates": [
+      {
+        "source": "grid",
+        "phase_rad": 5.743224069843841,
+        "match": 0.9999396246092801
+      },
+      {
+        "source": "local_1872",
+        "phase_rad": 5.743179471018169,
+        "match": 0.9999396293395769,
+        "scipy_success": true
+      },
+      {
+        "source": "local_1881",
+        "phase_rad": 5.769754355202423,
+        "match": 0.9998555128214648,
+        "scipy_success": true
+      },
+      {
+        "source": "local_1863",
+        "phase_rad": 5.7165840848413945,
+        "match": 0.9992911843279694,
+        "scipy_success": true
+      },
+      {
+        "source": "local_1889",
+        "phase_rad": 5.796301740725712,
+        "match": 0.9990358788778702,
+        "scipy_success": true
+      },
+      {
+        "source": "local_786",
+        "phase_rad": 2.4107232232768214,
+        "match": 0.808773295722696,
+        "scipy_success": true
+      },
+      {
+        "source": "local_795",
+        "phase_rad": 2.4394495104822425,
+        "match": 0.8087237386924438,
+        "scipy_success": true
+      },
+      {
+        "source": "local_776",
+        "phase_rad": 2.381972117490751,
+        "match": 0.8083007700615903,
+        "scipy_success": true
+      },
+      {
+        "source": "local_804",
+        "phase_rad": 2.4681461191396346,
+        "match": 0.808160921949921,
+        "scipy_success": true
+      }
+    ]
+  },
+  "omitted_mode_diagnostics": {
+    "omitted_modes": [
+      [
+        2,
+        0
+      ],
+      [
+        3,
+        -1
+      ],
+      [
+        3,
+        0
+      ],
+      [
+        3,
+        1
+      ],
+      [
+        4,
+        -2
+      ],
+      [
+        4,
+        -1
+      ],
+      [
+        4,
+        0
+      ],
+      [
+        4,
+        1
+      ],
+      [
+        4,
+        2
+      ],
+      [
+        5,
+        -5
+      ],
+      [
+        5,
+        -4
+      ],
+      [
+        5,
+        -3
+      ],
+      [
+        5,
+        -2
+      ],
+      [
+        5,
+        -1
+      ],
+      [
+        5,
+        0
+      ],
+      [
+        5,
+        1
+      ],
+      [
+        5,
+        2
+      ],
+      [
+        5,
+        3
+      ],
+      [
+        5,
+        4
+      ],
+      [
+        5,
+        5
+      ]
+    ],
+    "views": [
+      {
+        "retained_mode_match_no_alignment": 0.9996459565587804,
+        "retained_mode_norm_ratio": 1.0002182199634158,
+        "omitted_residual_norm_fraction": 0.026613699875877066
+      },
+      {
+        "retained_mode_match_no_alignment": 0.9972310621203524,
+        "retained_mode_norm_ratio": 1.0016413762703833,
+        "omitted_residual_norm_fraction": 0.0744960375672105
+      }
+    ],
+    "individual_mode_network_norm_fraction": {
+      "2,-2": 0.10937420989410453,
+      "2,-1": 0.039882277829465795,
+      "2,0": 0.014580967554961527,
+      "2,1": 0.11082790299733944,
+      "2,2": 0.96645409096472,
+      "3,-3": 0.042355339014325054,
+      "3,-2": 0.01618790878626484,
+      "3,-1": 0.0042871833361663985,
+      "3,0": 0.0007767283063384847,
+      "3,1": 0.004733136871227463,
+      "3,2": 0.024416993451497036,
+      "3,3": 0.2948070209687066,
+      "4,-4": 0.01835317386092841,
+      "4,-3": 0.007424994181515337,
+      "4,-2": 0.0026274530969692153,
+      "4,-1": 0.00030628314271135756,
+      "4,0": 8.828886740009414e-05,
+      "4,1": 0.00033265863711245134,
+      "4,2": 0.00193653063446073,
+      "4,3": 0.013106460226578071,
+      "4,4": 0.10715556815032228,
+      "5,-5": 0.007652037870449945,
+      "5,-4": 0.003177848493210693,
+      "5,-3": 0.001396432404238369,
+      "5,-2": 0.00015591142608072827,
+      "5,-1": 2.982797934842705e-05,
+      "5,0": 1.3397107056203543e-05,
+      "5,1": 1.6401142271333262e-05,
+      "5,2": 0.0001727261317865047,
+      "5,3": 0.0013058073443444416,
+      "5,4": 0.005584294463326761,
+      "5,5": 0.03989510217183564
+    }
+  },
+  "model": {
+    "torch": [
+      {
+        "inclination_rad": 0.7,
+        "source_psi_rad": 0.0,
+        "optimization": {
+          "best": {
+            "seed": 17,
+            "orbital_phase_rad": 5.296249409445453,
+            "polarization_rad": 1.022772935771423,
+            "match": 0.9921683745569003,
+            "norm_ratio": 0.9951664872441603,
+            "reference_norm": 51.11112811112577,
+            "candidate_norm": 50.86408182143529,
+            "shift_seconds": 0.0062255859375,
+            "direct_recheck_error": 0.0,
+            "scipy_success": true
+          },
+          "seeds": [
+            {
+              "seed": 17,
+              "orbital_phase_rad": 5.296249409445453,
+              "polarization_rad": 1.022772935771423,
+              "match": 0.9921683745569003,
+              "norm_ratio": 0.9951664872441603,
+              "reference_norm": 51.11112811112577,
+              "candidate_norm": 50.86408182143529,
+              "shift_seconds": 0.0062255859375,
+              "direct_recheck_error": 0.0,
+              "scipy_success": true
+            },
+            {
+              "seed": 23,
+              "orbital_phase_rad": 5.2962325099167815,
+              "polarization_rad": 1.0227905501126167,
+              "match": 0.9921683745555724,
+              "norm_ratio": 0.9951670314675454,
+              "reference_norm": 51.11112811112577,
+              "candidate_norm": 50.86410963730645,
+              "shift_seconds": 0.0062255859375,
+              "direct_recheck_error": 3.3306690738754696e-16,
+              "scipy_success": true
+            },
+            {
+              "seed": 41,
+              "orbital_phase_rad": 5.296226792249835,
+              "polarization_rad": 1.022796374333625,
+              "match": 0.9921683745489849,
+              "norm_ratio": 0.9951672099301566,
+              "reference_norm": 51.11112811112577,
+              "candidate_norm": 50.864118758731834,
+              "shift_seconds": 0.0062255859375,
+              "direct_recheck_error": 0.0,
+              "scipy_success": true
+            },
+            {
+              "seed": 67,
+              "orbital_phase_rad": 5.296237312725239,
+              "polarization_rad": 1.022787172113619,
+              "match": 0.9921683745529313,
+              "norm_ratio": 0.9951669451192585,
+              "reference_norm": 51.11112811112577,
+              "candidate_norm": 50.864105223948094,
+              "shift_seconds": 0.0062255859375,
+              "direct_recheck_error": 0.0,
+              "scipy_success": true
+            }
+          ],
+          "match_spread": 7.915446076367516e-12,
+          "feasible": true
+        },
+        "passed": true
+      },
+      {
+        "inclination_rad": 1.2,
+        "source_psi_rad": 0.4,
+        "optimization": {
+          "best": {
+            "seed": 17,
+            "orbital_phase_rad": 5.253069413263881,
+            "polarization_rad": 1.2871888735488566,
+            "match": 0.9826892464465496,
+            "norm_ratio": 1.1285894807083066,
+            "reference_norm": 29.980516545193762,
+            "candidate_norm": 33.83569559910701,
+            "shift_seconds": 0.0062255859375,
+            "direct_recheck_error": 0.0,
+            "scipy_success": true
+          },
+          "seeds": [
+            {
+              "seed": 17,
+              "orbital_phase_rad": 5.253069413263881,
+              "polarization_rad": 1.2871888735488566,
+              "match": 0.9826892464465496,
+              "norm_ratio": 1.1285894807083066,
+              "reference_norm": 29.980516545193762,
+              "candidate_norm": 33.83569559910701,
+              "shift_seconds": 0.0062255859375,
+              "direct_recheck_error": 0.0,
+              "scipy_success": true
+            },
+            {
+              "seed": 23,
+              "orbital_phase_rad": 5.253075776362785,
+              "polarization_rad": 1.2871807409385225,
+              "match": 0.9826892464463265,
+              "norm_ratio": 1.1285838580163752,
+              "reference_norm": 29.980516545193762,
+              "candidate_norm": 33.83552702789854,
+              "shift_seconds": 0.0062255859375,
+              "direct_recheck_error": 1.1102230246251565e-16,
+              "scipy_success": true
+            },
+            {
+              "seed": 41,
+              "orbital_phase_rad": 5.25308451340417,
+              "polarization_rad": 1.2871665419091554,
+              "match": 0.9826892464195289,
+              "norm_ratio": 1.1285739823572294,
+              "reference_norm": 29.980516545193762,
+              "candidate_norm": 33.83523095053613,
+              "shift_seconds": 0.0062255859375,
+              "direct_recheck_error": 1.1102230246251565e-16,
+              "scipy_success": true
+            },
+            {
+              "seed": 67,
+              "orbital_phase_rad": 5.253068590118668,
+              "polarization_rad": 1.287189772168181,
+              "match": 0.9826892464452529,
+              "norm_ratio": 1.1285900990238058,
+              "reference_norm": 29.980516545193762,
+              "candidate_norm": 33.83571413652508,
+              "shift_seconds": 0.0062255859375,
+              "direct_recheck_error": 1.1102230246251565e-16,
+              "scipy_success": true
+            }
+          ],
+          "match_spread": 2.7020718995629522e-11,
+          "feasible": true
+        },
+        "passed": true
+      }
+    ],
+    "jax": [
+      {
+        "inclination_rad": 0.7,
+        "source_psi_rad": 0.0,
+        "optimization": {
+          "best": {
+            "seed": 17,
+            "orbital_phase_rad": 5.296249407959653,
+            "polarization_rad": 1.0227729354660309,
+            "match": 0.9921683745568955,
+            "norm_ratio": 0.9951664872141913,
+            "reference_norm": 51.11112811112577,
+            "candidate_norm": 50.86408181990354,
+            "shift_seconds": 0.0062255859375,
+            "direct_recheck_error": 1.1102230246251565e-16,
+            "scipy_success": true
+          },
+          "seeds": [
+            {
+              "seed": 17,
+              "orbital_phase_rad": 5.296249407959653,
+              "polarization_rad": 1.0227729354660309,
+              "match": 0.9921683745568955,
+              "norm_ratio": 0.9951664872141913,
+              "reference_norm": 51.11112811112577,
+              "candidate_norm": 50.86408181990354,
+              "shift_seconds": 0.0062255859375,
+              "direct_recheck_error": 1.1102230246251565e-16,
+              "scipy_success": true
+            },
+            {
+              "seed": 23,
+              "orbital_phase_rad": 5.296232506758016,
+              "polarization_rad": 1.0227905469688783,
+              "match": 0.9921683745555673,
+              "norm_ratio": 0.9951670312991439,
+              "reference_norm": 51.11112811112577,
+              "candidate_norm": 50.864109628699254,
+              "shift_seconds": 0.0062255859375,
+              "direct_recheck_error": 3.3306690738754696e-16,
+              "scipy_success": true
+            },
+            {
+              "seed": 41,
+              "orbital_phase_rad": 5.296226792249835,
+              "polarization_rad": 1.022796374333625,
+              "match": 0.9921683745489795,
+              "norm_ratio": 0.9951672099301506,
+              "reference_norm": 51.11112811112577,
+              "candidate_norm": 50.86411875873153,
+              "shift_seconds": 0.0062255859375,
+              "direct_recheck_error": 0.0,
+              "scipy_success": true
+            },
+            {
+              "seed": 67,
+              "orbital_phase_rad": 5.296237312725239,
+              "polarization_rad": 1.022787172113619,
+              "match": 0.9921683745529261,
+              "norm_ratio": 0.9951669451192526,
+              "reference_norm": 51.11112811112577,
+              "candidate_norm": 50.86410522394779,
+              "shift_seconds": 0.0062255859375,
+              "direct_recheck_error": 0.0,
+              "scipy_success": true
+            }
+          ],
+          "match_spread": 7.916001187879829e-12,
+          "feasible": true
+        },
+        "passed": true
+      },
+      {
+        "inclination_rad": 1.2,
+        "source_psi_rad": 0.4,
+        "optimization": {
+          "best": {
+            "seed": 17,
+            "orbital_phase_rad": 5.253069413263881,
+            "polarization_rad": 1.2871888735488566,
+            "match": 0.9826892464465542,
+            "norm_ratio": 1.1285894807082977,
+            "reference_norm": 29.980516545193762,
+            "candidate_norm": 33.83569559910675,
+            "shift_seconds": 0.0062255859375,
+            "direct_recheck_error": 1.1102230246251565e-16,
+            "scipy_success": true
+          },
+          "seeds": [
+            {
+              "seed": 17,
+              "orbital_phase_rad": 5.253069413263881,
+              "polarization_rad": 1.2871888735488566,
+              "match": 0.9826892464465542,
+              "norm_ratio": 1.1285894807082977,
+              "reference_norm": 29.980516545193762,
+              "candidate_norm": 33.83569559910675,
+              "shift_seconds": 0.0062255859375,
+              "direct_recheck_error": 1.1102230246251565e-16,
+              "scipy_success": true
+            },
+            {
+              "seed": 23,
+              "orbital_phase_rad": 5.253075776362785,
+              "polarization_rad": 1.2871807409385225,
+              "match": 0.982689246446331,
+              "norm_ratio": 1.1285838580163665,
+              "reference_norm": 29.980516545193762,
+              "candidate_norm": 33.83552702789828,
+              "shift_seconds": 0.0062255859375,
+              "direct_recheck_error": 1.1102230246251565e-16,
+              "scipy_success": true
+            },
+            {
+              "seed": 41,
+              "orbital_phase_rad": 5.25308451340417,
+              "polarization_rad": 1.2871665419091554,
+              "match": 0.9826892464195333,
+              "norm_ratio": 1.1285739823572207,
+              "reference_norm": 29.980516545193762,
+              "candidate_norm": 33.835230950535866,
+              "shift_seconds": 0.0062255859375,
+              "direct_recheck_error": 0.0,
+              "scipy_success": true
+            },
+            {
+              "seed": 67,
+              "orbital_phase_rad": 5.253068590118668,
+              "polarization_rad": 1.287189772168181,
+              "match": 0.9826892464452572,
+              "norm_ratio": 1.1285900990237974,
+              "reference_norm": 29.980516545193762,
+              "candidate_norm": 33.83571413652482,
+              "shift_seconds": 0.0062255859375,
+              "direct_recheck_error": 1.1102230246251565e-16,
+              "scipy_success": true
+            }
+          ],
+          "match_spread": 2.7020941040234447e-11,
+          "feasible": true
+        },
+        "passed": true
+      }
+    ]
+  },
+  "gates": {
+    "resolution_match_floor": 0.995,
+    "resolution_norm_bounds": [
+      0.95,
+      1.05
+    ],
+    "model_match_floor": 0.98,
+    "model_norm_bounds": [
+      0.85,
+      1.15
+    ]
+  },
+  "resolution_pass": true,
+  "model_pass": true,
+  "qualified": true
+}
