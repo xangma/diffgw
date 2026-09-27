@@ -31,7 +31,9 @@ def _native(backend, h):
         from torchwave.approximants.precession_twisting_clean import (
             project_twisted_positive_modes,
         )
-        real = lambda x: torch.as_tensor(x, dtype=torch.float64)
+        def real(x):
+            return torch.as_tensor(x, dtype=torch.float64)
+
         mode = torch.as_tensor(h, dtype=torch.complex128)
         result = project_twisted_positive_modes(
             {(2, 2): mode}, *map(real, (ALPHA, GAMMA, BETA, THETA, ZETA)))

@@ -53,5 +53,8 @@ tests/test_clean_room_nsbh.py tests/parity/test_nsbh_parity.py`
 passed **104/104** in 79.39 s with no skips or expected failures. The log
 is `pytest.log` in that scratch directory. Environment: Python 3.12.3,
 Torch 2.14.0+cpu, JAX 0.11.2, NumPy 2.5.3, mpmath 1.3.0,
-pytest 9.1.1. Remnant/QNM, Eq. (26)/(29) variants, amplitude assembly,
+pytest 9.1.1. The joining test was subsequently renamed to
+`tests/test_nsbh_joining_frequencies_math_reference.py` for the strict CI
+gate; the command above records the name used for this run. Remnant/QNM,
+Eq. (26)/(29) variants, amplitude assembly,
 phase, and the whole waveform remain provisional.

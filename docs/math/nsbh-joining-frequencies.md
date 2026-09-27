@@ -1,6 +1,6 @@
 # IMRPhenomNSBH joining frequencies
 
-## Scope and frozen decision
+## Scope and status
 
 Specification **nsbh-joining-frequencies/v1** transcribes the joining
 frequencies in [Thompson et al. (2020), Table I](https://arxiv.org/pdf/2002.08383v1).
@@ -10,9 +10,15 @@ $\widetilde f_{\rm RD}>0$, $q\ge1$, torus ratio $T\ge0$, and the
 already qualified Table I $\epsilon_{\rm ins}$. No remnant or QNM provider
 is certified by supplying these values.
 
+## Inputs, conventions, and options
+
 The merger classification uses the **unadjusted** $f_{\rm RD}$ and the
 closed high-frequency boundary $f_{\rm tide}\ge f_{\rm RD}$; $T>0$ means
-torus. The paper prints:
+torus.
+
+## Mathematics and components
+
+The paper prints:
 
 | Class | $\widetilde f_0$ | $\widetilde f_1$ | $\widetilde f_2$ |
 | --- | --- | --- | --- |
@@ -27,7 +33,7 @@ qualified numerically. The native carrier's disabled ringdown still assigns
 $\widetilde f_2=\widetilde f_{\rm RD}$ in low classes; that inert value is
 outside this source gate.
 
-## Frozen verification protocol
+## Implementation mapping
 
 An independent mpmath scalar evaluator implements the four printed rows.
 The 30 controlled inputs and 180 composition inputs are exactly the grid in
@@ -38,6 +44,8 @@ native branch factors. For each paper-defined frequency, 70- and 90-digit
 scalar evaluations must differ by at most $10^{-30}$ absolutely. Maximum
 native relative error must be at most $2\times10^{-13}$ for a row to pass.
 No limit may be enlarged after comparing native output.
+
+## Evidence and limitations
 
 The existing native low/no-torus $\widetilde f_0$ applies an additional
 outer $\epsilon_{\rm ins}$ to the **whole** mixed expression. Table I does
@@ -55,9 +63,9 @@ published-source variant is established; this gate cannot infer a correction
 from binary output. Windows, amplitude assembly, and the whole waveform
 remain provisional.
 
-## Reproduce
+## Reproduce the checks
 
 Run `JAX_ENABLE_X64=1 PYTHONPATH=src pytest -q
-tests/test_nsbh_joining_frequencies.py` with reference, Torch and JAX extras
+tests/test_nsbh_joining_frequencies_math_reference.py` with reference, Torch and JAX extras
 on CPU. The [validation receipt](../validation/nsbh_joining_frequencies_20260927.md)
 records measured errors, diagnostic, and environment.
