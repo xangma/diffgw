@@ -59,7 +59,7 @@ fills the cataloged model pages' identity and option tables.
 | [Dominant-pair nonlinear memory, `memory.dominant_22/v1`](memory-dominant-22.md) | Favata's symmetric ±22 full plus pattern, its $h_{20}$ projection, and selected Torch/JAX values and derivatives with explicit SI distance | General mode-pair coupling, waveform generation, legacy polarization-only carrier, prior-history offset and physical validation |
 | [MemoryWaveform22Direct, `memory-dominant-22-direct-class/v1`](memory-dominant-22-direct-class.md) | Scoped direct-class `evaluate_22` route with independent sampled-grid scalar comparison | Legacy class call, arbitrary-mode coupling, external same-model comparison, and physical validation |
 | [EMRI prototype leading Peters flux, `emri.flux.peters_leading.v1`](emri-kludge.md) | Source-derived `p,e` secular rates and CPU float64 Torch/JAX checks; research-only component | Generic Kerr orbit, harmonic and LISA TDI response; full EMRI waveform qualification |
-| [ppE inspiral amplitude, phase and dispersion](ppe-phase-dispersion.md) | Separate amplitude `v1` and phase/dispersion `v1` scalar checks against Torch/JAX, with a conditional carrier adapter | Merger/ringdown branches, carrier fidelity, and wider cosmologies |
+| [ppE inspiral amplitude, phase and dispersion](ppe-phase-dispersion.md) | Separate amplitude `v1` and phase/dispersion `v1` scalar checks against Torch/JAX; a scoped real-TaylorF2 inspiral ratio and derivative gate on len | Merger/ringdown branches, absolute carrier fidelity, and wider cosmologies |
 | Other waveform families | No executable specification yet | Further family-by-family slices |
 
 The Kerr carrier has separate, bounded input evidence for
