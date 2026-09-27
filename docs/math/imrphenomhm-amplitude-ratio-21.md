@@ -8,9 +8,10 @@ Eq. (4)](https://arxiv.org/pdf/1708.00404v4). London retains terms through
 relative 1.5PN for $|m|=\ell-1$ modes. [Mishra et al.,
 arXiv:1601.05588v1, Eqs. (11), (12a), (12b)](https://arxiv.org/pdf/1601.05588v1)
 print the corresponding complete SPA polynomial through $V_1^4$.
-This source-first version freezes the equation and gate before the scalar,
-production correction, and public checks. Status is pending until a recorded
-CPU FP64 gate passes on `len`. It is not a whole-HM qualification.
+This source-first version froze the equation and gate before the scalar,
+production correction, and public checks. The sampled CPU FP64 gate passed
+on `len`; see the [validation receipt](../validation/imrphenomhm_amplitude_ratio_21_20260927.md).
+It is not a whole-HM qualification.
 
 ## Inputs, conventions, and options
 
@@ -62,6 +63,9 @@ $(\sqrt2/3)\delta[\pi g(x)]^{1/3}$, but it is **not** the prescribed
 $g'=(f_{22}^{\rm RD}-2f_0^A)/(f_{21}^{\rm RD}-f_0^A)$ between joins,
 and $g'=1$ above ringdown. For $B\ne0$, its one-sided slope is
 $\operatorname{Re}(\overline B\,B')/|B|$, using the corresponding $g'$.
+At $\delta=\chi_a=0$, the public mode takes the finite zero-mode branch;
+the literal scalar Eq. (4) quotient is undefined there. No limiting
+amplitude ratio independent of the path toward this point is claimed.
 
 | Component | Source | Scalar | Native production | Gate |
 | --- | --- | --- | --- | --- |
@@ -92,6 +96,9 @@ $5\times10^{-8}$. Check exact SymPy Eq. (4) reduction, the printed $v^4$
 spin coefficients, a hand-reduced nonspinning scalar, equal-mass unequal-spin
 nonzero behavior, and rejection of the $0/0$ equal-mass equal-spin point.
 Capture the pre-correction public failure before changing production.
+The [receipt](../validation/imrphenomhm_amplitude_ratio_21_20260927.md)
+records that failure, the two-line production correction, and the passing
+source/public and neighboring HM checks.
 
 Passing this gate establishes only the sampled (2,1) 1.5PN magnitude
 factor. Higher PN orders, independent QNM and D-amplitude correctness,
@@ -104,7 +111,7 @@ or binary output enters this gate.
 On `len`, with the repository's reference, Torch, JAX, and test
 dependencies, run `JAX_ENABLE_X64=1 JAX_PLATFORMS=cpu OMP_NUM_THREADS=1
 python -m pytest -q tests/test_imrphenomhm_amplitude_ratio_math_reference.py
---reference-device=cpu -ra`. Record the exact checkout, environment,
-command, pre-correction failure, final result, and skips before changing
-the status above. A changed source equation, truncation, map convention,
+--reference-device=cpu -ra`. The linked receipt records the exact checkout,
+environment, command, pre-correction failure, final result, and skips.
+A changed source equation, truncation, map convention,
 or tolerance requires a new component version and reviewed evidence.
