@@ -102,3 +102,26 @@ active, so there is no next check or stop command; during a rerun, stop its
 active PID with `kill <PID>` on `len`. Raw SXS files and derived arrays stay
 outside Git. The source-only run passed its two synthetic checks and skipped
 the two physical gates without the strict flag. Ruff and syntax checks passed.
+
+## Post-result mode diagnostic (non-gating)
+
+After committing the red receipt, a read-only Torch diagnostic at
+`(iota,psi_s)=(1.2,0.4)` decomposed the six *model* components at the
+already-selected template orbital phase and polarization. Removing one mode
+at a time held those angles fixed and remaximized only the discrete arrival
+shift. The `(2,1)` component has norm `0.05286` relative to full NR and
+incoherent power `0.00396` relative to the full model. Removing it raises the
+model/NR norm ratio from `0.840432` to `0.849778`, still below the frozen
+`0.85` floor, while reducing the match from `0.980782` to `0.972037`.
+Removing `(3,3)` gives ratio `0.752416` and match `0.892565`; removing
+`(4,4)` gives `0.824919` and `0.966130`. The `(4,3)` ablation slightly
+raises match to `0.981162` but lowers ratio to `0.838589`. These are
+coherent-waveform ablations: individual mode powers do not sum to total
+power, and this fixed-optimum probe does not assign physical error to a
+specific mode or alter acceptance.
+
+The external script and complete output are
+`/tmp/diffgw-hm-sxs-3630-20260927/ablation.py` and `ablation.log` on `len`.
+It ran from the same remote cwd with
+`PYTHONPATH=.:src:tests /tmp/diffgw-waveform-library-1315f6e/venv-latest/bin/python
+/tmp/diffgw-hm-sxs-3630-20260927/ablation.py`; it completed in 6.6 s.
