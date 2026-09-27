@@ -1,6 +1,6 @@
 # NRTidalv2 spinning paper-D composition through the merger taper
 
-## Scope
+## Scope and status
 
 Specification **`nrtidalv2-spinning-paper-d-composition/v1`** checks the
 dominant-mode, aligned-spin `amplitude_variant="paper_2019"` option relative
@@ -12,15 +12,18 @@ crosses both printed taper boundaries with positive deformabilities and
 nonzero spins, for Torch and JAX CPU FP64. It is a conditional
 printed-equation qualification, not a full waveform or physical validation.
 
-## Paper contract and equation mapping
+## Inputs, conventions, and options
 
 [Dietrich et al. (2019), Eqs. (17)–(21), (25)–(29), Table II](https://arxiv.org/html/1905.06011)
 give the tidal phase, self-spin phase, Planck window, and D/Pv2 model
 distinction. [Dietrich et al. (2018), Eq. (11)](https://arxiv.org/pdf/1804.02235)
 gives the printed merger-frequency fit, with the paper's stated
 `kappa_eff^T` substitution. [Wade et al. (2014), Eq. (5)](https://arxiv.org/pdf/1402.5156v1)
-gives the mass-weighted deformability. With
-`x=(pi M_sec f)^(2/3)`, the tested quotient is
+gives the mass-weighted deformability.
+
+## Mathematics and components
+
+With `x=(pi M_sec f)^(2/3)`, the tested quotient is
 
 \[
 \frac{h^{\rm BNS}_{+,\times}(f)}{h^{\rm BBH}_{+,\times}(f)}
@@ -36,6 +39,8 @@ rescaling, or parameter fit is permitted. The gate uses
 `phasing_convention="coalescence"`, so the separate native
 reference-frequency subtraction is outside this slice.
 
+## Implementation mapping
+
 The independent mpmath/SymPy modules
 `diffgw_reference.nrtidalv2_phase`,
 `diffgw_reference.nrtidalv2_self_spin`, and
@@ -44,7 +49,9 @@ The [maintained test](../validation/nrtidalv2_paper_d_composition_20260927.md)
 compares it against Torch/JAX `IMRPhenomD_NRTidalv2` divided by each
 frontend's `IMRPhenomD`. Neither frontend imports these references.
 
-## Frozen systems and limit
+## Evidence and limitations
+
+### Frozen systems and limit
 
 The three systems `(m1,m2;chi1,chi2;Lambda1,Lambda2)`, in solar masses,
 are `(1.35,1.35;0.20,-0.12;350,350)`,
@@ -59,7 +66,7 @@ that limit. The strictly post-endpoint quotient must be exactly zero.
 An ulp-sized mismatch between independently rounded merger frequencies is
 allowed at the nominal `1.2 f_mrg` endpoint under the same limit.
 
-## Interpretation and open conflicts
+### Interpretation and open conflicts
 
 The [execution receipt](../validation/nrtidalv2_paper_d_composition_20260927.md)
 records the strict result. This extends the earlier component gates across
@@ -74,3 +81,8 @@ example for `Lambda=350` conflicts with its printed Eqs. (28)–(29);
 this gate follows the numbered equations and cannot resolve which
 quadrupole relation was intended. The historical
 `binary_compatible` default and its existing gates are unchanged.
+
+## Reproduce the checks
+
+With the reference, Torch, JAX, and pytest dependencies installed, run
+`PYTHONPATH=src:tests JAX_ENABLE_X64=1 python -m pytest -q tests/test_nrtidalv2_paper_d_composition_math_reference.py`.
