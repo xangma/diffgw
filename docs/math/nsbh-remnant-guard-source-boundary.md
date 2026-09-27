@@ -33,7 +33,7 @@ setting the *tidal factor* to one differ whenever $X_{\rm BBH}<1$. The text
 does not state a numerical switch at $\nu=0.188$, a factor-above-one clip,
 or equality/tie conventions.
 
-The independent exact-rational [scalar reference](../../src/diffgw_reference/nsbh_remnant_rounding.py)
+The independent exact-rational [scalar reference](https://github.com/xangma/diffgw/blob/main/src/diffgw_reference/nsbh_remnant_rounding.py)
 propagates half-last-printed-digit coefficient intervals through the published
 equations. The following bounds are rounded **outward** for display; the
 underlying interval evaluation uses exact fractions:
