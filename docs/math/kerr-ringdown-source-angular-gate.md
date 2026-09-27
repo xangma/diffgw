@@ -62,6 +62,14 @@ derivative through spin; no intrinsic-gradient claim is made. A separate
 fresh pinned binary holdout and applicable gradients would be needed to
 qualify a public waveform route.
 
+The isolated `len` CPU FP64 run at commit `da4c687` passed the focused
+reference test. For spins `0.35` and `0.7`, respectively, scalar angular
+`ell_max=10` versus `12` changed by `3.47e-18` and `3.02e-14`. Across both
+backends and both factors, the maximum absolute angular error was
+`3.04e-14`; the maximum TD and FD polarization relative L2 errors were
+`7.93e-14` and `5.23e-14`. The environment used Python 3.12.3, Torch
+2.14.0+cpu, JAX 0.11.2, NumPy 2.5.3, mpmath 1.3.0 and pytest 9.1.1.
+
 ## Reproduce the gate
 
 On `len` with Torch/JAX CPU FP64, SymPy, mpmath and pytest:
@@ -74,3 +82,6 @@ JAX_PLATFORMS=cpu JAX_ENABLE_X64=1 OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 \
 
 This focused selection omits `--require-math-reference`, whose full-suite
 contract requires all reference files.
+The diagnostic script prints per-case errors and source hashes with
+`python scripts/audit_kerr220_public_angular_gate.py
+--angular-convention source_spectral` under the same environment.

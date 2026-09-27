@@ -1,8 +1,8 @@
-"""Reproduce the source-backed Kerr 220 opt-in public-clean qualification blocker.
+"""Audit Kerr 220 public-compatible or source-spectral angular composition.
 
 This is a diagnostic, not a tolerance-adjusting parity test. It uses the
 independent Cook--Zalutskiy scalar QNM and Galerkin angular references, then
-compares both opt-in public-clean frontends after aligning their equator phase gauge.
+compares both direct-call frontends in the same equatorial phase gauge.
 """
 
 import argparse

@@ -2,8 +2,9 @@
 
 Port of torchwave.approximants.kerr_ringdown_public_clean.
 Analytic Fourier transform of a damped complex mode and its mirror.
-The angular shape uses the separately documented public-compatible
-inferred convention; no public implementation or calibration values are used.
+The default angular shape uses the separately documented inferred
+public-compatible convention; ``source_spectral`` selects the angular
+Teukolsky eigensolution. No public implementation or calibration values are used.
 """
 
 import math

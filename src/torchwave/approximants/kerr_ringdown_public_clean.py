@@ -1,8 +1,9 @@
 """Clean Kerr (2,2) ringdown TD/FD pair, diagnostic-only and opt in.
 
 Equations are the analytic Fourier transform of a damped complex mode and its
-mirror.  The angular shape uses the separately documented public-compatible
-inferred convention; no public implementation or calibration values are used.
+mirror. The default angular shape uses the separately documented inferred
+public-compatible convention; ``source_spectral`` selects the angular
+Teukolsky eigensolution. No public implementation or calibration values are used.
 """
 import math
 import torch
