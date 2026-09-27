@@ -14,7 +14,7 @@ frequencies below. Relative value tolerance is `5e-13` with absolute floor
 with absolute floor `2e-10`. Scalar analytical derivatives must agree with
 70-digit numerical differentiation to `1e-55` absolute.
 
-## Inputs and conventions
+## Inputs, conventions, and options
 
 Use dimensionless positive Fourier frequency `f=M f_GW`, positive ring
 frequency `r`, damping frequency `d`, and `sigma>0`. The supplied real
@@ -71,6 +71,9 @@ supplied parameters. It does not establish the provenance or quality of
 normalization, or the full XHM ringdown and attachment.
 
 ## Reproduce the checks
+
+The [component receipt](../validation/xhm_ringdown_amplitude_component_20260927.json)
+records the frozen cases and measured results.
 
 ```bash
 JAX_ENABLE_X64=1 PYTHONPATH=src:tests python -m pytest -q \

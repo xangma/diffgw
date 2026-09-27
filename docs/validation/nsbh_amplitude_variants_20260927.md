@@ -43,6 +43,11 @@ passed **3/3**. The neighboring run with that file plus
 `nsbh-neighbor.log` in the scratch cwd. Local Ruff, `git diff --check`, and
 strict MkDocs build passed.
 
+On integration, the same diagnostic was renamed to
+`tests/test_nsbh_amplitude_variant_provenance_math_reference.py` so the
+strict mathematical-reference CI job collects it. The historical len
+commands above retain the original filename used for that run.
+
 The native defaults are unchanged. The low/no-torus PN center and Eq. (26)/(29)
 paper variants remain unqualified; consequently the next amplitude assembly
 gate cannot be declared source-supported. The remnant/QNM provider, amplitude
