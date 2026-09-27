@@ -14,7 +14,8 @@ import pytest
 
 
 MODEL_IDS = {"TaylorF2", "TaylorF2_HM", "TaylorF2_Eccentric", "IMRPhenomD",
-             "IMRPhenomXAS", "KerrRingdown220Direct", "ContinuousWaveH1Direct"}
+             "IMRPhenomXAS", "KerrRingdown220Direct", "ContinuousWaveH1Direct",
+             "MemoryWaveform22Direct"}
 
 
 def test_catalog_import_needs_no_optional_math_or_tensor_packages():
@@ -37,7 +38,8 @@ import diffgw.reference as reference
 
 assert {definition.id for definition in waveforms.list_waveforms()} == {
     "TaylorF2", "TaylorF2_HM", "TaylorF2_Eccentric", "IMRPhenomD",
-    "IMRPhenomXAS", "KerrRingdown220Direct", "ContinuousWaveH1Direct"
+    "IMRPhenomXAS", "KerrRingdown220Direct", "ContinuousWaveH1Direct",
+    "MemoryWaveform22Direct"
 }
 assert waveforms.get_waveform("TaylorF2").id == "TaylorF2"
 assert callable(reference.get_reference_module)
@@ -66,7 +68,10 @@ def test_public_catalog_is_versioned_immutable_and_json_safe():
         assert (Path(__file__).resolve().parents[1] / "docs" / definition.spec_page).is_file()
         assert definition.components
         assert definition.sources
-        if definition.id == "KerrRingdown220Direct":
+        if definition.id == "MemoryWaveform22Direct":
+            assert {"times", "h22", "distance_m"}.issubset(
+                {parameter.name for parameter in definition.parameters})
+        elif definition.id == "KerrRingdown220Direct":
             assert {"final_mass", "final_spin", "distance", "energy_fraction"}.issubset(
                 {parameter.name for parameter in definition.parameters})
         elif definition.id == "ContinuousWaveH1Direct":

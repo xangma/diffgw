@@ -51,6 +51,7 @@ class routes, as the [Pv2 ledger](research/phenom-precessing.md) explains.
 | [ContinuousWave](../math/standalone-family-research-ledger.md) | direct waveform class | provisional | direct class only |
 | [ContinuousWaveH1Direct](../math/continuous-wave-direct-class.md) | direct class H1 variant | [versioned slice](index.md) | direct class only |
 | [MemoryWaveform](../math/standalone-family-research-ledger.md) | direct waveform class | provisional | direct class only |
+| [MemoryWaveform22Direct](../math/memory-dominant-22-direct-class.md) | direct class dominant-pair route | [versioned slice](index.md) | direct class only |
 | [EMRIKludge](../math/standalone-family-research-ledger.md) | direct waveform class | provisional | direct class only |
 | [ParameterizedPostEinstein](../math/standalone-family-research-ledger.md) | direct waveform class | provisional | direct class only |
 

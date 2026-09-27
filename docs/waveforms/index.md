@@ -24,6 +24,7 @@ in the current public dispatch inventory.
 | [IMRPhenomXAS](../math/imrphenomxas.md) | `imrphenomxas-composed-polarizations-carrier/v1` | Aligned-spin (2,2) carrier composition with supplied fit and QNM outputs. | `torch`, `jax` |
 | [KerrRingdown220Direct](../math/kerr-ringdown-direct-class.md) | `kerr-ringdown-220-energy-direct-class/v1` | Direct Torch/JAX KerrRingdown class only: one physical-energy spheroidal (2,2,0) mode with independent QNM; selected FP64 inputs. | `torch`, `jax` |
 | [ContinuousWaveH1Direct](../math/continuous-wave-direct-class.md) | `cw-monochromatic-h1-direct-class/v1` | Direct Torch/JAX ContinuousWave class: selected float64 CPU monochromatic principal-axis 2f strain at H1, GPS epoch in 2015–2016. | `torch`, `jax` |
+| [MemoryWaveform22Direct](../math/memory-dominant-22-direct-class.md) | `memory-dominant-22-direct-class/v1` | Only Torch/JAX MemoryWaveform.evaluate_22 with supplied physical-strain h22, symmetric mirror, and relative memory offset on selected CPU float64 grids. | `torch`, `jax` |
 
 <!-- END GENERATED WAVEFORM TABLE -->
 

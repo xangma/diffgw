@@ -1,4 +1,4 @@
-# Dominant-mode nonlinear memory: provisional component specification
+# Dominant-mode nonlinear memory: component derivation
 
 ## Scope and status
 
@@ -9,7 +9,9 @@ and the full dominant-pair plus/cross polarizations. It does not synthesize
 $h_{22}$, estimate the unobserved earlier memory, or implement general mode-pair
 coupling. The direct `MemoryWaveform(times, hp, hc, ...)` carrier remains a
 diagnostic proxy; only its explicit `evaluate_22` method has this scope.
-This component stays outside the public `WaveformDefinition` catalog.
+The scoped `evaluate_22` route is cataloged as
+[`MemoryWaveform22Direct`](memory-dominant-22-direct-class.md); the legacy
+carrier and arbitrary-mode memory remain outside that definition.
 
 | Component | State | Qualification boundary |
 | --- | --- | --- |

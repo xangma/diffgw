@@ -38,7 +38,10 @@ def compute_memory_h20_22(
         raise ValueError("times must be 1D with at least two samples and match h22")
     if isinstance(distance_m, (float, int)) and distance_m <= 0:
         raise ValueError("distance_m must be positive")
-    slope = jnp.gradient(h22, times, axis=-1)
+    dt = jnp.diff(times)
+    secants = jnp.diff(h22, axis=-1) / dt
+    interior = (dt[1:] * secants[..., :-1] + dt[:-1] * secants[..., 1:]) / (dt[:-1] + dt[1:])
+    slope = jnp.concatenate((secants[..., :1], interior, secants[..., -1:]), axis=-1)
     flux = jnp.abs(slope) ** 2
     increments = (flux[..., :-1] + flux[..., 1:]) * jnp.diff(times) / 2
     integral = jnp.concatenate((jnp.zeros_like(increments[..., :1]), jnp.cumsum(increments, axis=-1)), axis=-1)

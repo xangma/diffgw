@@ -698,7 +698,84 @@ CONTINUOUS_WAVE_H1_DIRECT = WaveformDefinition(
     ),),
 )
 
+_MEMORY_22_VERSION = "memory-dominant-22-direct-class/v1"
+_MEMORY_22_COMPONENTS = (
+    ComponentDefinition(
+        id="memory.dominant_22.v1", name="Dominant symmetric pair and full angular pattern",
+        spec_version=_MEMORY_22_VERSION,
+        scope="Supplied physical-strain h22 and equatorial-symmetry mirror, relative memory offset",
+        variant="published_dominant_pair", implementation="native_and_reference",
+        evidence=("source_transcription", "independent_scalar_sampled_comparison"),
+        source_refs=(SourceRef("favata2010", "Sec. 6.2, Eq. 21"),
+                     SourceRef("talbot2018", "Eqs. 1–9")),
+        reference_module="diffgw_reference.memory_dominant_22",
+        caveats=("Only the symmetric (2,±2) source pair; h20 is returned but the full plus pattern also contains l=4,m=0.",),
+    ),
+    ComponentDefinition(
+        id="memory.sampled_flux.v1", name="Nonuniform sampled flux integral",
+        spec_version=_MEMORY_22_VERSION,
+        scope="First-order unequal-grid derivative and adjacent trapezoids, zero offset at first sample",
+        variant="project_sampled_adapter", implementation="native_and_reference",
+        evidence=("declared_numerical_rule", "independent_scalar_sampled_comparison"),
+        source_refs=_source("project_memory", "Sampling rule in direct-class specification"),
+        reference_module="diffgw_reference.memory_dominant_22",
+    ),
+)
+
+MEMORY_22_DIRECT = WaveformDefinition(
+    id="MemoryWaveform22Direct", name="MemoryWaveform direct-class dominant-pair memory",
+    aliases=(), domain="time", modes=((2, 0), (4, 0)),
+    scope="Only Torch/JAX MemoryWaveform.evaluate_22 with supplied physical-strain h22, symmetric mirror, and relative memory offset on selected CPU float64 grids.",
+    reference_version=_MEMORY_22_VERSION,
+    reference_module="diffgw_reference.memory_dominant_22",
+    spec_page="math/memory-dominant-22-direct-class.md", components=_MEMORY_22_COMPONENTS,
+    sources=(
+        SourceDefinition("favata2010", "Favata, nonlinear gravitational-wave memory", "https://arxiv.org/pdf/1003.3486v1", "1003.3486v1"),
+        SourceDefinition("talbot2018", "Talbot et al., gravitational-wave memory from compact binaries", "https://arxiv.org/pdf/1807.00990v2", "1807.00990v2"),
+        SourceDefinition("project_memory", "DiffGW direct-class sampling convention", "docs/math/memory-dominant-22-direct-class.md", _MEMORY_22_VERSION, kind="project_convention"),
+    ),
+    parameters=(
+        ParameterDefinition("times", "Strictly increasing time samples", "s", "one-dimensional, at least two"),
+        ParameterDefinition("h22", "Complex physical-strain oscillatory mode at distance_m", "strain", "complex samples matching times"),
+        ParameterDefinition("distance_m", "Distance of supplied mode", "m", "> 0"),
+        ParameterDefinition("inclination", "Orbital inclination", "rad", "selected 0, 0.4, pi/2, 2.1, 0.73"),
+    ),
+    units=(
+        UnitDefinition("time", "s", "SI seconds"),
+        UnitDefinition("mode", "strain", "physical h22 at distance_m, not a distance-scaled mode"),
+        UnitDefinition("distance", "m", "R/c restores SI seconds in the Favata integral"),
+    ),
+    conventions=(
+        ConventionDefinition("mode", "h=h_plus-i*h_cross=sum h_lm * spin-minus-two Y_lm; h2,-2=conj(h22)."),
+        ConventionDefinition("offset", "Memory equals zero at the first supplied sample; no prior-history estimate."),
+        ConventionDefinition("polarization", "Full symmetric dominant-pair plus pattern includes l=4,m=0; cross is zero."),
+    ),
+    options=(
+        OptionDefinition("call_route", ("evaluate_22",), "evaluate_22", "Only the explicit direct-class method is covered."),
+        OptionDefinition("mirror", ("equatorial_symmetry",), "equatorial_symmetry", "The negative-m mode is the conjugate mirror."),
+        OptionDefinition("grid_rule", ("gradient_trapezoid",), "gradient_trapezoid", "Endpoint secants, quadratic-interpolant interior derivative, adjacent trapezoids."),
+    ),
+    carrier_parameters=(), capabilities=("td", "plus_cross", "torch", "jax", "scalar_reference"),
+    evidence=("published_pattern_projection", "independent_scalar_sampled_comparison", "selected_parameter_gradients"),
+    caveats=(
+        "The legacy MemoryWaveform.forward/__call__ polarization-only diagnostic carrier is excluded.",
+        "Supplied h22 physical accuracy, missing earlier offset, arbitrary-mode coupling, precession, and nonlinear iteration are unqualified.",
+        "No LAL same-model or numerical-relativity comparison, continuous-domain error bound, or physical validation is claimed.",
+    ),
+    claims=(VerificationClaim(
+        component_ids=tuple(component.id for component in _MEMORY_22_COMPONENTS),
+        scope="Two- and four-sample linear inputs, four inclinations, and one nonlinear complex polynomial sample; selected slope, quadratic-coefficient, and inclination derivatives",
+        variant="published_dominant_pair_with_project_sampled_adapter",
+        backends=("torch", "jax", "scalar_reference"),
+        options=(("call_route", "evaluate_22"), ("mirror", "equatorial_symmetry"),
+                 ("grid_rule", "gradient_trapezoid")),
+        domain="sampled time", precision="float64", device="cpu",
+        category="implementation_verification", status="sampled_pass",
+        evidence_path="tests/test_memory_dominant_22_math_reference.py",
+    ),),
+)
+
 WAVEFORMS = (TAYLORF2, TAYLORF2_ECCENTRIC, TAYLORF2_HM,
              IMRPHENOMD, IMRPHENOMXAS, KERR_RINGDOWN_220_DIRECT,
-             CONTINUOUS_WAVE_H1_DIRECT)
+             CONTINUOUS_WAVE_H1_DIRECT, MEMORY_22_DIRECT)
 validate_catalog(WAVEFORMS)
