@@ -205,6 +205,33 @@ are still needed; [XHM's distinct low-frequency phase
 limit](https://arxiv.org/html/2001.10914v2) is not an HM acceptance
 criterion.
 
+The [published PhenomHM NR comparison](https://arxiv.org/html/1708.00404v4)
+uses aLIGO design-noise weighting and optimizes arrival time, template
+polarization, and initial orbital phase. Those freedoms differ materially from
+this frozen single-22, flat-weighted, phase-sensitive gate. In another
+**post-hoc Torch-only diagnostic**, the same 30–350 Hz six-mode NR and native
+polarizations were projected at the two frozen angles. For each angle,
+orbital phase `[0,2π)` and polarization `[0,π)` were optimized with SciPy
+differential evolution; the normalized real overlap was maximized over
+arrival time in `[-0.1,0.1] s` on a `1/8192 s` FFT grid. The target
+polarization was held fixed. PyCBC `2.11.0`
+`aLIGOZeroDetHighPower(352, 1 Hz, 30 Hz)` supplied positive PSD samples
+through 350 Hz; no PSD curve or LAL implementation was copied into the
+repository. A joint two-channel comparison rotates both model plus and cross
+and sums their weighted inner products and norms:
+
+| Angle | optimized flat plus | optimized aLIGO plus | optimized aLIGO plus/cross pair |
+| --- | ---: | ---: | ---: |
+| `(0.7,0.3)` | 0.998301 | 0.998004 | 0.997503 |
+| `(1.2,-0.2)` | 0.994943 | 0.993517 | 0.978690 |
+
+Four optimizer seeds for the weaker second aLIGO plus/cross pair converged
+within `9.8e-10` in match. This is a paper-*like* metric diagnostic, not a
+reproduction of its source ensemble, full NR mode set, or averaging protocol.
+It explains how a high optimized detector projection can coexist with failed
+fixed-gauge individual modes. In particular, the second joint pair is still
+below 0.98 and no physical six-mode qualification follows.
+
 The next investigation should derive the native-versus-SXS **relative mode
 phase convention** from published equations, then test any justified change on
 a separate case without fitting this holdout or revising its gate. A correction
