@@ -49,6 +49,7 @@ class routes, as the [Pv2 ledger](research/phenom-precessing.md) explains.
 | [KerrRingdown220Direct](../math/kerr-ringdown-direct-class.md) | direct class 220 variant | [versioned slice](index.md) | direct class only |
 | [OfficialSEOBNRv4ROM](../external-data.md) | external-data wrapper | separate SEOBNR track | `seobnrrom`, `seobnrv4rom`, `officialseobnrv4rom` |
 | [ContinuousWave](../math/standalone-family-research-ledger.md) | direct waveform class | provisional | direct class only |
+| [ContinuousWaveH1Direct](../math/continuous-wave-direct-class.md) | direct class H1 variant | [versioned slice](index.md) | direct class only |
 | [MemoryWaveform](../math/standalone-family-research-ledger.md) | direct waveform class | provisional | direct class only |
 | [EMRIKludge](../math/standalone-family-research-ledger.md) | direct waveform class | provisional | direct class only |
 | [ParameterizedPostEinstein](../math/standalone-family-research-ledger.md) | direct waveform class | provisional | direct class only |

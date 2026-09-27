@@ -613,6 +613,92 @@ KERR_RINGDOWN_220_DIRECT = WaveformDefinition(
     ),),
 )
 
+_CW_DIRECT_VERSION = "cw-monochromatic-h1-direct-class/v1"
+_CW_DIRECT_COMPONENTS = tuple(
+    ComponentDefinition(
+        id=f"cw.direct_h1.{name}.v1", name=name.replace("_", " ").title(),
+        spec_version=_CW_DIRECT_VERSION,
+        scope="Monochromatic principal-axis 2f direct ContinuousWave class at H1",
+        variant="jks_2f_with_declared_circular_orbit_and_utc_clock",
+        implementation="native_and_reference",
+        evidence=("source_transcription", "independent_scalar_whole_waveform_sample"),
+        source_refs=_source(source, location),
+        reference_module="diffgw_reference.continuous_wave_direct_class",
+    )
+    for name, source, location in (
+        ("amplitude", "jks1998", "PDF Eqs. 23–24"),
+        ("clock", "aoki1982", "Eqs. 13, 19; UTC project approximation"),
+        ("delay_phase", "jks1998", "PDF Eqs. 14, 18; circular-orbit project epoch"),
+        ("antenna", "jks1998", "PDF Eqs. 1–6; supplied H1 arms"),
+        ("strain", "jks1998", "PDF Eqs. 19–22, 32–36"),
+    )
+)
+
+CONTINUOUS_WAVE_H1_DIRECT = WaveformDefinition(
+    id="ContinuousWaveH1Direct", name="ContinuousWave monochromatic H1 direct class",
+    aliases=(), domain="time", modes=((2, 2),),
+    scope="Direct Torch/JAX ContinuousWave class: selected float64 CPU monochromatic principal-axis 2f strain at H1, GPS epoch in 2015–2016.",
+    reference_version=_CW_DIRECT_VERSION,
+    reference_module="diffgw_reference.continuous_wave_direct_class",
+    spec_page="math/continuous-wave-direct-class.md", components=_CW_DIRECT_COMPONENTS,
+    sources=(
+        SourceDefinition("jks1998", "Jaranowski, Królak and Schutz, spinning-neutron-star signal", "https://arxiv.org/pdf/gr-qc/9804014v1", "gr-qc/9804014v1"),
+        SourceDefinition("anderson2001", "Anderson et al., corrected H1 arm directions", "https://arxiv.org/pdf/gr-qc/0008066v1", "gr-qc/0008066v1"),
+        SourceDefinition("aoki1982", "Aoki et al., IAU 1982 GMST definition", "https://ui.adsabs.harvard.edu/abs/1982A%26A...105..359A/abstract", "1982 A&A 105 359"),
+        SourceDefinition("iers_c49", "IERS Bulletin C49, 2015-07 leap second", "https://datacenter.iers.org/data/html/bulletinc-049.html", "C49"),
+        SourceDefinition("project_cw", "Declared circular orbit, UTC clock, and conditional site data", "docs/math/continuous-wave-direct-class.md", _CW_DIRECT_VERSION, kind="project_convention"),
+    ),
+    parameters=(
+        ParameterDefinition("t", "Sample GPS times", "s", "2015-07 to 2016-12; selected offsets"),
+        ParameterDefinition("t0", "Frequency and circular-orbit reference GPS epoch", "s", "1126259462 in sampled gate"),
+        ParameterDefinition("ra", "Right ascension", "rad", "selected sky points"),
+        ParameterDefinition("dec", "Declination", "rad", "selected sky points"),
+        ParameterDefinition("f0", "Gravitational-wave frequency, twice rotation frequency", "Hz", "positive; selected 30 and 71"),
+        ParameterDefinition("h0", "Characteristic strain, alternative to ellipticity and distance", "1", "positive"),
+        ParameterDefinition("ellipticity", "Principal-axis equatorial ellipticity", "1", "selected 1e-5"),
+        ParameterDefinition("distance", "Source distance when ellipticity is supplied", "m", "positive"),
+        ParameterDefinition("cos_iota", "Cosine of source inclination", "1", "selected interior values"),
+        ParameterDefinition("psi", "Polarization angle", "rad", "selected angles"),
+        ParameterDefinition("phi0", "Initial GW phase", "rad", "selected angles"),
+    ),
+    units=(
+        UnitDefinition("time", "GPS s", "t and t0 are GPS seconds"),
+        UnitDefinition("distance", "m", "ellipticity amplitude uses SI distance and Izz in kg m²"),
+        UnitDefinition("strain", "1", "detector projection of dimensionless 2f polarizations"),
+    ),
+    conventions=(
+        ConventionDefinition("orbit", "Circular 1-AU orbit in the ecliptic, zero orbital phase at t0; sidereal year 365.256363004 days."),
+        ConventionDefinition("clock", "Aoki IAU 1982 GMST with UTC substituted for UT1 and 17-second GPS-UTC offset in the selected epoch."),
+        ConventionDefinition("site", "Native H1 vertex and normalized arms are conditioning inputs; Anderson verifies arm directions only to printed four-decimal precision."),
+        ConventionDefinition("phase", "JKS first-order Roemer phase at f1=f2=0; phi0 is GW phase and f0 is GW frequency."),
+    ),
+    options=(
+        OptionDefinition("call_route", ("direct_class",), "direct_class", "Only ContinuousWave class calls are covered."),
+        OptionDefinition("detector", ("H1",), "H1", "Only the H1 site is covered."),
+        OptionDefinition("spindown", ("f1=f2=0",), "f1=f2=0", "Only monochromatic input is covered."),
+        OptionDefinition("amplitude_input", ("h0", "ellipticity_distance"), "h0", "Both amplitude input routes are sampled."),
+    ),
+    carrier_parameters=(), capabilities=("td", "detector_strain", "torch", "jax", "scalar_reference"),
+    evidence=("independent_scalar_whole_waveform_sample", "selected_frequency_and_phase_gradients"),
+    caveats=(
+        "The scalar uses supplied H1 full-precision vertex and arm vectors; their inherited digits are not independently sourced beyond published arm precision.",
+        "UTC replaces UT1 without Earth-orientation corrections; the circular orbit is not a Solar System ephemeris.",
+        "Native nonzero f1/f2 includes higher Roemer-delay powers absent from JKS Eq. 14 and is outside this claim.",
+        "No external binary, phase-coherent astrophysical, uniform-domain, or physical-validation claim is made.",
+    ),
+    claims=(VerificationClaim(
+        component_ids=tuple(component.id for component in _CW_DIRECT_COMPONENTS),
+        scope="Two sky/frequency/inclination cases, five GPS samples, both amplitude routes, selected f0 and phi0 gradients",
+        variant="jks_2f_with_declared_circular_orbit_and_utc_clock",
+        backends=("torch", "jax", "scalar_reference"),
+        options=(("call_route", "direct_class"), ("detector", "H1"), ("spindown", "f1=f2=0")),
+        domain="selected 2015 GPS samples", precision="float64", device="cpu",
+        category="implementation_verification", status="sampled_pass",
+        evidence_path="tests/test_continuous_wave_direct_class_math_reference.py",
+    ),),
+)
+
 WAVEFORMS = (TAYLORF2, TAYLORF2_ECCENTRIC, TAYLORF2_HM,
-             IMRPHENOMD, IMRPHENOMXAS, KERR_RINGDOWN_220_DIRECT)
+             IMRPHENOMD, IMRPHENOMXAS, KERR_RINGDOWN_220_DIRECT,
+             CONTINUOUS_WAVE_H1_DIRECT)
 validate_catalog(WAVEFORMS)

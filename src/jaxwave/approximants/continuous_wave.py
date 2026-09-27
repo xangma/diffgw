@@ -329,6 +329,8 @@ def continuous_wave_strain(
 class ContinuousWave:
     """Continuous Gravitational Wave signal generator in JAX."""
 
+    definition_id = "ContinuousWaveH1Direct"
+
     def __init__(
         self,
         detector: Optional[Union[str, Detector]] = None,

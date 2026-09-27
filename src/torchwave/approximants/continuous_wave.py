@@ -340,6 +340,8 @@ def continuous_wave_strain(
 class ContinuousWave(nn.Module):
     """PyTorch Module wrapper for Continuous Gravitational Wave signals."""
 
+    definition_id = "ContinuousWaveH1Direct"
+
     def __init__(
         self,
         detector: Optional[Union[str, Detector]] = None,

@@ -27,7 +27,11 @@ The frozen legacy ledger reports **KerrRingdown 1/1 only for the canonical physi
 
 ### ContinuousWave
 
-`t` and `t0` are GPS seconds; `f0` is **GW** Hz (twice rotation frequency), `f1` Hz/s, `f2` Hz/s², right ascension/declination and polarization/initial phase radians, `cos_iota` dimensionless. `h0` is dimensionless strain; otherwise `ellipticity`, distance in **meters**, and default `Izz=10^38 kg m²` construct it. Output is detector strain, not a polarization pair. The orbit is a circular 1-AU approximation plus diurnal position, with no ephemeris, Einstein/Shapiro or binary timing correction. Both class wrappers now pass a nondefault `i_zz` to the ellipticity amplitude path. Time/phase origin and antenna conventions need direct detector-level verification.
+The selected monochromatic H1 whole-class composition now has a separate
+[versioned specification](continuous-wave-direct-class.md). This ledger
+continues to track the wider class and unresolved alternatives.
+
+`t` and `t0` are GPS seconds; `f0` is **GW** Hz (twice rotation frequency), `f1` Hz/s, `f2` Hz/s², right ascension/declination and polarization/initial phase radians, `cos_iota` dimensionless. `h0` is dimensionless strain; otherwise `ellipticity`, distance in **meters**, and default `Izz=10^38 kg m²` construct it. Output is detector strain, not a polarization pair. The orbit is a circular 1-AU approximation plus diurnal position, with no ephemeris, Einstein/Shapiro or binary timing correction. Both class wrappers now pass a nondefault `i_zz` to the ellipticity amplitude path. Time/phase origin and antenna conventions have direct detector-level verification only for the linked H1 monochromatic slice.
 
 ### MemoryWaveform
 
