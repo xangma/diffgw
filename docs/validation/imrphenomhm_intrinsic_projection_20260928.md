@@ -199,6 +199,9 @@ phase residuals need a separate source-backed mixing/phase investigation.
 Neither adjustment can be claimed as qualified using these already seen cases.
 All historical gates, options and qualification statuses are preserved.
 
+Follow-up: the [amplitude and conditioning audit](imrphenomhm_amplitude_audit_20260928.md)
+has now completed this bounded amplitude investigation and records its outcome.
+
 ## Execution and reproducibility
 
 The final run used source revision `8521a9b085c34228d66d4754d9db3ea6214a28e5`,

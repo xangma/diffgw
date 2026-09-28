@@ -179,7 +179,14 @@ in mode pairs and frequency bands, without identifying a unique intrinsic cause.
 The completed [intrinsic/projection diagnostic](../../validation/imrphenomhm_intrinsic_projection_20260928.md)
 finds both intrinsic amplitude/phase errors and polarization-dependent norm
 excess. The 22 intrinsic norms are within about 1% of NR, while higher-mode
-errors survive phase changes. The next source-model audit should isolate
-published amplitude factors and conditioning sensitivity, with 32/43 phase and
-mixing investigated separately. A later physical qualification requires a frozen
-variant/domain and untouched data; historical failures remain intact.
+errors survive phase changes. The completed
+[amplitude/conditioning audit](../../validation/imrphenomhm_amplitude_audit_20260928.md)
+finds no sampled amplitude-factor transcription discrepancy. The published
+alternative does not fix the targeted 2374 21 deficit or 2163 44 excess and
+worsens 2163 21 amplitude shape despite improving its norm. Those targeted
+errors survive the five conditioning variations that preserve merger; the
+200M end-taper stress test and its substantial effect are recorded separately.
+No production option is changed. The next amplitude check should isolate the
+mapped 22 carrier using NR on common support, without a fitted gain; 32/43
+phase and spherical/spheroidal mixing remain separate. A later physical qualification requires
+a frozen variant/domain and untouched data; historical failures remain intact.

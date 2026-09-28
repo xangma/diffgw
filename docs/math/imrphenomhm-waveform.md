@@ -326,6 +326,12 @@ all historical failures. Physical match/norm discrepancies remain. The
 [intrinsic/projection diagnostic](../validation/imrphenomhm_intrinsic_projection_20260928.md)
 separates substantial higher-mode amplitude and phase errors from polarization
 effects on the optimized detector norm. It changes no qualification claim.
+The subsequent [amplitude and conditioning audit](../validation/imrphenomhm_amplitude_audit_20260928.md)
+finds agreement with the independently evaluated amplitude factors, but the
+paper's alternative factor leaves the targeted NR discrepancies unresolved.
+Five conditioning variations change integrated amplitude spectra by less than
+0.09%; a separate 200M end-taper stress test attenuates merger and is reported
+explicitly. Production options and physical qualification remain unchanged.
 
 ## Reproduce the checks
 
