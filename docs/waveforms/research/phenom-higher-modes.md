@@ -142,3 +142,12 @@ evolution on those same fixtures, well above their measured resolution
 differences in the transition bands. The 22 carrier remains a strong control.
 A source-derived convention check is needed before interpreting a constant
 offset as a production defect; changing the mapping does not remove it.
+
+The [SPA convention reference and raw-TD check](../../validation/imrphenomhm_spa_conventions_20260928.md)
+now derives that branch conversion from published coefficients, the strain
+basis and the Gaussian stationary-phase limit. Applying its fixed factor in
+a scratch comparison reduces the transition-band offsets substantially, but
+leaves later phase drift and magnitude errors. Because the factor decomposes
+into a common carrier phase and orbital rotation, signed-mode projection and
+gauge transport must be established before production use. This reference-only
+slice leaves the catalog and physical qualification gates unchanged.

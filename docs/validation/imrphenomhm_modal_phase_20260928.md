@@ -86,6 +86,11 @@ modal offsets, including primitive 33/44 low-frequency limits. Derive a conventi
 correction; separate its constant contribution from mapping/carrier drift. Do not fit a constant or select a
 production mapping using these seen NR scores.
 
+**Follow-up:** the [SPA and raw-TD convention diagnostic](imrphenomhm_spa_conventions_20260928.md)
+derives a fixed branch conversion and checks it on these same cases. It accounts for most of the
+transition-band constant but leaves later drift. Signed-mode projection and gauge transport remain
+necessary before interpreting the factor as a production correction.
+
 ## Coverage and limitations
 
 Exact mapped bins restrict 33 to multiples of 3 Hz starting at 45 Hz, and 44 to even bins starting at 60 Hz.
