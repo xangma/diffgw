@@ -26,10 +26,18 @@ from . import imrphenomd_waveform as carrier
 from . import imrphenomhm_projection as projection
 from .imrphenomhm_intrinsic_modes import SUPPORTED_MODES, public_intrinsic_mode
 
-SPEC_VERSION = "imrphenomhm-independent-waveform/v1"
+SPEC_VERSION = "imrphenomhm-independent-waveform/v2"
+REFERENCE_PHASE_VERSION = "imrphenomhm-orbital-reference-phase/v1"
 COMPONENT_IDS = {
     "polarizations": "hm.waveform.independent_published.v1",
     "derivatives": "hm.waveform.independent_published_derivatives.v1",
+    "orbital_polarizations": "hm.waveform.orbital_reference.polarizations.v1",
+    "orbital_derivatives": "hm.waveform.orbital_reference.derivatives.v1",
+    "orbital_covariance": "hm.waveform.orbital_reference.covariance.v1",
+}
+COMPONENT_SPEC_VERSIONS = {
+    key: (REFERENCE_PHASE_VERSION if key.startswith("orbital_")
+          else "imrphenomhm-independent-waveform/v1") for key in COMPONENT_IDS
 }
 COMPONENT_SOURCES = {
     component: (
@@ -51,6 +59,17 @@ COMPONENT_BINDINGS = {
                         "test_published_symmetry_zeros")),
     } for key, component in COMPONENT_IDS.items()
 }
+for _key in (key for key in COMPONENT_IDS if key.startswith("orbital_")):
+    _component = COMPONENT_IDS[_key]
+    COMPONENT_SOURCES[_component] += (
+        ("https://arxiv.org/html/2001.10914v2", "Eq. (14): orbital rotation law"),
+        ("project-adapter", "HM orbital reference phase: C=pi/4-phi(r)+s*r; no extra mode gauge"),
+    )
+    COMPONENT_BINDINGS[_component]["tests"] = {
+        "orbital_polarizations": ("test_orbital_complete_modes_and_projection",),
+        "orbital_derivatives": ("test_orbital_reference_derivatives",),
+        "orbital_covariance": ("test_orbital_reference_covariance", "test_reference_phase_reductions"),
+    }[_key]
 SOURCE_PN_VARIANTS = {
     "hm_21_pn_variant": "mishra_eq12b",
     "hm_32_pn_variant": "mishra_eq12d",
@@ -126,21 +145,41 @@ class WaveformSpec:
             raise ValueError("f_ref_hz must be positive")
         return self.raw_phase(u) - self.raw_phase(reference) - self.slope * (u - reference)
 
+    def reference_phase_offset(self, f_ref_hz):
+        """Independent carrier constant C(r); orbital modes transform by exp(-imC/2).
+
+        This identity is restricted to mapped carrier phase evaluations below
+        the D hard cutoff. It does not assert NR accuracy of the HM model.
+        """
+        if f_ref_hz is None:
+            return mp.mpf(0)
+        with mp.workdps(max(50, mp.mp.dps)):
+            r = self.m_sec * _number(f_ref_hz)
+            if r <= 0:
+                raise ValueError("f_ref_hz must be positive")
+            return mp.pi / 4 - self.raw_phase(r) + self.slope * r
+
     def evaluate(self, frequency_hz, *, transition="phenomd_runtime", f_ref_hz=None,
+                 hm_reference_phase="legacy",
                  inclination=0, phi0=0, phic=0, tc=0, modes=SUPPORTED_MODES):
         """Return (h_plus, h_cross, intrinsic modes) without frontend inputs.
 
         Frequencies are positive Hz; masses solar masses and distance Mpc.
-        A finite reference selects the reference-frequency phase convention.
+        ``legacy`` preserves the v1 adapter. ``orbital`` changes the phase
+        origin by m*C(r)/2 only, preserving the m=2 carrier. Neither choice
+        changes the independent printed fits or mode maps.
         Precision follows an enclosing mpmath context, with a 50-digit floor.
         """
+        if hm_reference_phase not in ("legacy", "orbital"):
+            raise ValueError("hm_reference_phase must be 'legacy' or 'orbital'")
         with mp.workdps(max(50, mp.mp.dps)):
             f = _number(frequency_hz)
             if f <= 0:
                 raise ValueError("frequency_hz must be positive")
             x = self.m_sec * f
             m1, m2, s1, s2, _ = map(_number, self.parameters)
-            gauge = 0 if f_ref_hz is None else self.slope * self.m_sec * _number(f_ref_hz)
+            gauge = (self.slope * self.m_sec * _number(f_ref_hz)
+                     if f_ref_hz is not None and hm_reference_phase == "legacy" else 0)
             hp = hc = mp.mpc(0)
             result = {}
             for ell, m in modes:

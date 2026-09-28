@@ -5,16 +5,17 @@
 | Definition field | Catalog value |
 | --- | --- |
 | Model ID | `IMRPhenomHM` |
-| Reference composition | `imrphenomhm-independent-waveform/v1` |
+| Reference composition | `imrphenomhm-independent-waveform/v2` |
 | Scope | Bounded independent mathematical composition for published D calibration and named source PN variants; inherited defaults remain separate. |
 | Domain and modes | `frequency`; `(2, 2)`, `(2, 1)`, `(3, 3)`, `(3, 2)`, `(4, 4)`, `(4, 3)` |
 | Native backends | `torch`, `jax` |
-| Scoped verification claims | 6 |
+| Scoped verification claims | 11 |
 
 | Option | Default | Native choices | Reference-only choices |
 | --- | --- | --- | --- |
 | `calibration` | `inherited` | `inherited`, `published` | None |
 | `hm_mapping_transitions` | `phenomd_runtime` | `phenomd_runtime`, `london_2018` | None |
+| `hm_reference_phase` | `legacy` | `legacy`, `orbital` | None |
 | `hm_21_pn_variant` | `binary_compatible` | `binary_compatible`, `mishra_eq12b` | None |
 | `hm_32_pn_variant` | `binary_compatible` | `binary_compatible`, `mishra_eq12d` | None |
 | `hm_43_pn_variant` | `binary_compatible` | `binary_compatible`, `mishra_eq12g` | None |
@@ -24,7 +25,7 @@
 
 ## Scope and status
 
-`imrphenomhm-independent-waveform/v1` independently composes the six
+`imrphenomhm-independent-waveform/v2` independently composes the six
 positive-frequency modes $(2,2)$, $(2,1)$, $(3,3)$, $(3,2)$, $(4,4)$ and
 $(4,3)$ and their complex plus/cross polarizations. Its native option tuple is
 `calibration="published"`, `hm_21_pn_variant="mishra_eq12b"`,
@@ -32,6 +33,11 @@ $(4,3)$ and their complex plus/cross polarizations. Its native option tuple is
 with the exact native D carrier. Both mapping-transition settings have
 independent expressions. These options are available through the
 [frequency-domain API](../guides/waveform-generation.md) in Torch and JAX.
+
+Version 2 adds `hm_reference_phase="orbital"`, a separately versioned project
+phase-origin convention. The original v1 components and default `"legacy"`
+behavior are retained. The extension changes no fitted coefficient or
+amplitude prescription and does not qualify physical NR accuracy.
 
 The executable reference takes physical binary parameters, not native carrier
 amplitudes, phases, fitted coefficients or QNM evaluations. It extends the
@@ -70,11 +76,36 @@ the D prescription in either case.
 
 `f_ref_hz=None` uses the coalescence convention. Positive `f_ref_hz` corresponds
 to native `f_ref` and `phasing_convention="reference_frequency"`; the D peak
-slope and the HM-relative gauge are independently derived. The mode adapter
+slope is independently derived. Set `hm_reference_phase="orbital"` in both
+the reference and native evaluators to make the phase-origin change a common
+orbital rotation. The default `"legacy"` retains the extra HM-relative factor
+and reproduces earlier evidence. The mode adapter
 uses $\exp(-i\varphi_{\ell m})$, orbital factor $\exp(im\,\mathrm{phic})$
 and time factor $\exp(-2\pi if\,\mathrm{tc})$. Projection follows the
 [positive-frequency mode-pair convention](imrphenomhm-projection.md), with
 $h=h_+-ih_\times$. Other reference-frame overrides are outside this reference.
+
+The native orbital option requires the exact native D carrier. Explicit
+`reference_frequency`, `reffreq`, or `ref` aliases require an explicit `f_ref`;
+an implicit first-bin anchor would differ between mapped carrier calls.
+Explicit coalescence phasing keeps D's coalescence convention. Unknown options
+and unsupported carriers raise `ValueError`. These restrictions apply equally
+to Torch and JAX. For example:
+
+```python
+import diffgw
+
+hp, hc = diffgw.get_fd_waveform(
+    backend="torch", approximant="IMRPhenomHM",
+    mass1=35., mass2=20., chi1=.2, chi2=-.1, distance=100.,
+    f_lower=20., f_final=512., delta_f=1., f_ref=40.,
+    hm_reference_phase="orbital",
+)
+```
+
+Other options in this example retain their defaults; select the printed
+calibration and three source PN variants explicitly for the independent
+published composition.
 
 Numerical inputs are the repository's rounded D natural-spline knots,
 generated signed high-spin Kerr spline coefficients, and independent HM N61
@@ -113,12 +144,40 @@ cutoff for every physical mode frequency. Odd-mode zeros and the retained
 leading 33 mass-difference zero are evaluated explicitly. Mathematical support
 for a branch does not imply that every branch has a sampled qualification.
 
+### Orbital reference-phase extension
+
+Let $r=M_\mathrm{sec}f_\mathrm{ref}$, $s$ be the D peak phase slope, and
+$\phi(u)$ the joined intrinsic D phase. Changing from coalescence to a finite
+reference adds the constant $C(r)=\pi/4-\phi(r)+sr$ to D's positive phase.
+London's continuous phase map sends this constant to $mC/2$ on each branch;
+the continuity offsets cancel at the joins. With the orbital option,
+
+$$
+P_{\ell m}(r)/P_{\ell m}(\mathrm{None})=e^{-imC(r)/2}.
+$$
+
+Adding $C(r)/2$ to `phic` therefore restores every mode and both projected
+polarizations at fixed inclination, polarization and time. Between two finite
+references use $[C(r_2)-C(r_1)]/2$. This is a project API convention derived
+from the orbital rotation law and London composition, not a newly recovered
+historical implementation setting. The identity requires nonzero mode support
+and mapped carrier phase evaluations below the D hard cutoff.
+
+The legacy option additionally multiplies by $e^{i(m/2-1)sr}$. The orbital
+option omits that factor, leaving $(2,2)$ and all no-reference evaluations
+unchanged. The derivation and the distinction between a Fourier phase and
+physical polarization rotation are recorded in the
+[diagnostic receipt](../validation/imrphenomhm_published_options_20260927.md).
+
 ## Implementation mapping
 
 | Component ID | Independent reference | Native mapping and maintained test |
 | --- | --- | --- |
 | `hm.waveform.independent_published.v1` | `diffgw_reference.imrphenomhm_waveform.compose(...).evaluate(...)` | Torch/JAX `IMRPhenomHM` with published calibration and source PN options; `test_published_complete_modes_and_projection` and `test_published_symmetry_zeros` |
 | `hm.waveform.independent_published_derivatives.v1` | Converged scalar finite differences of that composition | Native autodiff; `test_published_smooth_derivatives` |
+| `hm.waveform.orbital_reference.polarizations.v1` | Scalar composition with `hm_reference_phase="orbital"` | Torch/JAX native D modes and complex projections |
+| `hm.waveform.orbital_reference.derivatives.v1` | Independent scalar derivatives of the orbital composition | Torch/JAX autodiff at smooth sample points |
+| `hm.waveform.orbital_reference.covariance.v1` | Independently derived $C(r)$ and orbital rotation | Compensated modes and polarizations, unchanged legacy/(2,2), batching and JIT |
 
 Native D uses `diffgw_core.phenomd_published_fits`; the scalar reference retains
 its separate printed transcription. Neither runtime imports SymPy or the
@@ -129,7 +188,7 @@ QNM data, not their evaluation algorithms.
 ## Evidence and limitations
 
 The maintained complete-composition test is
-`tests/test_imrphenomhm_waveform_math_reference.py`. Its declared sample is
+`tests/test_imrphenomhm_waveform_math_reference.py`. Its original legacy sample is
 $(m_1,m_2,\chi_1,\chi_2)=(35,20,0.2,-0.1)$ and
 $(30,30,0.35,-0.2)$, plus symmetric $(30,30,0.2,0.2)$ zeros, at 100 Mpc.
 It uses inclination $0.93$, azimuth $0.27$, orbital phase $0.37$ and time
@@ -147,7 +206,7 @@ inclination, azimuth, orbital phase, time and distance. Reference slopes are
 fourth-order central differences at at least 50 digits, checked against a
 halved step, then compared to FP64 CPU autodiff with relative tolerance
 $3\times10^{-6}$ and absolute tolerance $2\times10^{-10}$ times the column
-scale. This does not qualify intrinsic mass/spin derivatives, join derivatives,
+scale. The original legacy gate does not qualify intrinsic mass/spin derivatives, join derivatives,
 high-spin branches, arbitrary batches or full-domain errors.
 
 The separate `tests/test_phenomd_published_calibration_math_reference.py`
@@ -157,8 +216,11 @@ for the independent full-composition gate. Test definitions and thresholds
 are not evidence of a pass until a run is reviewed and recorded. The
 [reviewed len run](../validation/imrphenomhm_published_composition_20260927.md)
 records 98 passing composition/QNM checks and 17 passing calibration/API checks.
-The catalog records six scoped implementation claims for the tested mapping
-and phase-gauge combinations.
+The catalog retains six legacy implementation claims for the tested mapping
+and phase-gauge combinations. The orbital extension adds five separately
+scoped claims: values and covariance under each mapping choice, and selected
+primary-mass/reference-frequency derivatives under the London mapping. See its
+[receipt](../validation/imrphenomhm_orbital_reference_20260928.md) for the exact sample.
 
 Shared QNM data can share a data error; separate QNM checks remain necessary.
 Printed precision defines a distinct calibration and cannot inherit historical
@@ -180,6 +242,11 @@ The independent reference reproduces this adapter, so its passing implementation
 checks do not establish that changing `f_ref` preserves the physical template
 family. Mapping choices also affect the NR scores; neither observation closes
 the physical gates.
+
+The orbital extension addresses that adapter problem explicitly. Its
+[implementation receipt](../validation/imrphenomhm_orbital_reference_20260928.md)
+records the new checks and the remaining physical discrepancy. Earlier
+receipts use the retained legacy option unless they explicitly state otherwise.
 
 ## Reproduce the checks
 

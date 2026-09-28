@@ -128,3 +128,10 @@ category follows from a passing math reference. XHM's unresolved fit surfaces,
 vetoes and 32 mixing, and all red NR gates above, remain open. Pin HM/D and
 XHM/XAS dependencies and record commands, versions, fixture hashes and observed
 outcomes before extending any claim.
+
+The [orbital reference-phase extension](../../validation/imrphenomhm_orbital_reference_20260928.md)
+adds an explicit project convention and independent covariance checks while
+preserving legacy behavior. The [mapping diagnostic](../../validation/imrphenomhm_orbital_mapping_20260928.md)
+separates phase and amplitude effects on the already examined 2374/2163 data.
+Improved scores after phase-map changes do not establish a source correction
+or prospective physical qualification; the original gates remain unchanged.

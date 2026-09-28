@@ -68,6 +68,13 @@ consistency, external-reference agreement and independent physical evidence.
 ## Frequency-domain waveforms (`get_fd_waveform`)
 
 ### Basic Evaluation & Frequency Grids
+
+For native-D `IMRPhenomHM`, pass `hm_reference_phase="orbital"` with an explicit
+positive `f_ref` to use an orbital phase origin consistently across modes.
+The default `"legacy"` preserves earlier results. Both Torch and JAX support
+the option; see the [HM mathematical specification](../math/imrphenomhm-waveform.md)
+for conventions, calibration choices and validation limits.
+
 Specify frequency bounds uniformly via `(f_lower, f_final, delta_f)` or provide arbitrary non-uniform evaluation points with `sample_frequencies`:
 
 ```python

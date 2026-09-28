@@ -11,6 +11,11 @@ adapter is checked conditionally against both frontends. This is a
 convention and implementation gate, **not** a fit to NR or a physical
 qualification of the six-mode waveform.
 
+This v1 bridge retains the historical `hm_reference_phase="legacy"` adapter.
+The separately versioned [orbital reference-phase extension](imrphenomhm-waveform.md#orbital-reference-phase-extension)
+omits its additional finite-reference factor. Existing bridge evidence is not
+silently reassigned to that new option.
+
 ## Inputs, conventions, and options
 
 Use positive $f$ in Hz and $m>0$. SXS defines

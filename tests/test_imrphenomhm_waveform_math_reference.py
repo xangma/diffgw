@@ -1,6 +1,7 @@
 """Full HM qualification with no frontend-derived reference inputs."""
 
 import ast
+from functools import lru_cache
 from pathlib import Path
 
 import numpy as np
@@ -10,7 +11,7 @@ mp = pytest.importorskip("mpmath")
 pytest.importorskip("sympy")
 
 from diffgw_reference import imrphenomhm_waveform as ref
-from diffgw_reference.imrphenomhm_frequency_map import outer_map_cutoffs
+from diffgw_reference.imrphenomhm_frequency_map import eq8_phase_frequency_map, outer_map_cutoffs
 
 MODES = ref.SUPPORTED_MODES
 CASES = ((35., 20., .2, -.1), (30., 30., .35, -.2))
@@ -102,10 +103,15 @@ def test_independent_reference_import_boundary():
 @pytest.mark.parametrize("transition", ("london_2018", "phenomd_runtime"))
 @pytest.mark.parametrize("reference_frequency", (None, 40.))
 def test_published_complete_modes_and_projection(backend, case, transition, reference_frequency):
+    _complete_modes_and_projection(backend, case, transition, reference_frequency, "legacy")
+
+
+def _complete_modes_and_projection(backend, case, transition, reference_frequency, phase):
     _, native, array = backend
     spec = ref.compose(*case)
-    arguments = _arguments(case, transition, reference_frequency)
-    options = dict(transition=transition, f_ref_hz=reference_frequency, **EXTRINSIC)
+    arguments = _arguments(case, transition, reference_frequency) | dict(hm_reference_phase=phase)
+    options = dict(transition=transition, f_ref_hz=reference_frequency,
+                   hm_reference_phase=phase, **EXTRINSIC)
     for mode in MODES:
         with mp.workdps(50):
             frequencies = _branch_samples(spec, mode, transition) / float(spec.m_sec)
@@ -209,3 +215,244 @@ def test_published_smooth_derivatives(backend, geometric_frequency, transition):
     # must not inherit the much larger time-derivative absolute tolerance.
     for index in range(len(point)):
         _assert_close(actual[:, index], expected[:, index], rtol=3e-6)
+
+
+@pytest.mark.parametrize("transition", ("london_2018", "phenomd_runtime"))
+def test_orbital_complete_modes_and_projection(backend, transition):
+    """The new composition reuses every independently sampled branch/join."""
+    _complete_modes_and_projection(backend, CASES[0], transition, 40., "orbital")
+
+
+@pytest.mark.parametrize("transition", ("london_2018", "phenomd_runtime"))
+def test_orbital_reference_covariance(backend, transition):
+    """Predict phase shifts from scalar D math, never by fitting native modes."""
+    _, native, array = backend
+    for case in CASES:
+        spec = ref.compose(*case)
+        # All mapped carrier evaluations are below Mf=.2, away from zeros.
+        geometric_frequencies = (.005, .025, .06)
+        for ell, m in MODES:
+            fr, fr22 = spec.hm_qnm[(ell, m)][0], spec.hm_qnm[(2, 2)][0]
+            _, f0 = outer_map_cutoffs(transition, fr, fr22)
+            assert max(2 * f0 / m, fr22) < mp.mpf(".2")
+            assert all(eq8_phase_frequency_map(x, f0, fr, fr22, m) < mp.mpf(".2")
+                       for x in geometric_frequencies)
+        frequencies = np.array(geometric_frequencies) / float(spec.m_sec)
+        arguments = _arguments(case, transition, None) | dict(hm_reference_phase="orbital")
+        outputs = {}
+        for frequency in (None, 30., 40.):
+            arguments["f_ref"] = frequency
+            outputs[frequency] = native(f=array(frequencies), modes=MODES, **arguments)
+        for before, after in ((None, 30.), (None, 40.), (30., 40.)):
+            with mp.workdps(50):
+                delta = spec.reference_phase_offset(after) - spec.reference_phase_offset(before)
+                factors = {lm: complex(mp.exp(-mp.j * lm[1] * delta / 2)) for lm in MODES}
+            for mode in MODES:
+                _assert_close(outputs[after][2][mode],
+                              np.asarray(outputs[before][2][mode]) * factors[mode], rtol=2e-10)
+            # phic enters as +m*phic: the predicted +C/2 shift compensates
+            # the carrier constant for every mode and both polarizations.
+            arguments.update(f_ref=after, phic=EXTRINSIC["phic"] + float(delta / 2))
+            compensated = native(f=array(frequencies), modes=MODES, **arguments)
+            for index in (0, 1):
+                _assert_close(compensated[index], outputs[before][index], rtol=2e-10)
+            for mode in MODES:
+                _assert_close(compensated[2][mode], outputs[before][2][mode], rtol=2e-10)
+
+
+@pytest.mark.parametrize("calibration", ("published", "inherited"))
+def test_reference_phase_reductions(backend, calibration):
+    """Default output stays bitwise legacy; orbital preserves m=2 and None."""
+    _, native, array = backend
+    spec = ref.compose(*CASES[0])
+    frequencies = array((20., 90., 210.))
+    for frequency in (None, 40.):
+        arguments = _arguments(CASES[0], "london_2018", frequency) | dict(calibration=calibration)
+        default = native(f=frequencies, modes=MODES, **arguments)
+        legacy = native(f=frequencies, modes=MODES, hm_reference_phase="legacy", **arguments)
+        orbital = native(f=frequencies, modes=MODES, hm_reference_phase="orbital", **arguments)
+        for index in (0, 1):
+            np.testing.assert_array_equal(default[index], legacy[index])
+        for mode in MODES:
+            np.testing.assert_array_equal(default[2][mode], legacy[2][mode])
+            if frequency is None or mode[1] == 2:
+                np.testing.assert_array_equal(orbital[2][mode], legacy[2][mode])
+        if frequency is None:
+            for index in (0, 1):
+                np.testing.assert_array_equal(orbital[index], legacy[index])
+        scalar_default = spec.evaluate(90., f_ref_hz=frequency)
+        assert scalar_default == spec.evaluate(90., f_ref_hz=frequency, hm_reference_phase="legacy")
+        scalar_orbital = spec.evaluate(90., f_ref_hz=frequency, hm_reference_phase="orbital")
+        for mode in ((2, 2), (3, 2)):
+            assert scalar_default[2][mode] == scalar_orbital[2][mode]
+    with pytest.raises(ValueError, match="reference phase"):
+        native(f=frequencies, hm_reference_phase="unknown",
+               **_arguments(CASES[0], "london_2018", 40.))
+    with pytest.raises(ValueError, match="hm_reference_phase"):
+        spec.evaluate(90., hm_reference_phase="unknown")
+
+
+def _real_reference_values(spec, frequency, fref):
+    hp, hc, modes = spec.evaluate(frequency, transition="london_2018", f_ref_hz=fref,
+                                 hm_reference_phase="orbital", **EXTRINSIC)
+    return tuple(part for value in (hp, hc, *(modes[lm] for lm in MODES))
+                 for part in (value.real, value.imag))
+
+
+@lru_cache(maxsize=1)
+def _orbital_derivative_reference():
+    """Scalar fourth-order derivatives in f_ref and primary mass, converged twice."""
+    case = CASES[0]
+    frequency = 130.
+    columns = []
+    with mp.workdps(50):
+        for key, center in (("fref", mp.mpf(40)), ("mass1", mp.mpf(str(case[0])))):
+            def estimate(step):
+                rows = []
+                for offset in (-2, -1, 1, 2):
+                    value = center + offset * step
+                    spec = (ref.compose(value, *case[1:]) if key == "mass1"
+                            else ref.compose(*case))
+                    rows.append(_real_reference_values(spec, frequency,
+                                                        value if key == "fref" else 40))
+                return tuple((rows[0][i] - 8 * rows[1][i] + 8 * rows[2][i] - rows[3][i])
+                             / (12 * step) for i in range(len(rows[0])))
+            step = center * mp.mpf("1e-5")
+            coarse, fine = estimate(step), estimate(step / 2)
+            scale = max(abs(value) for value in fine)
+            assert max(abs(a - b) for a, b in zip(coarse, fine)) < scale * mp.mpf("1e-7")
+            columns.append(tuple(float(value) for value in fine))
+    return np.asarray(columns).T
+
+
+def test_orbital_reference_derivatives(backend):
+    """Independent intrinsic and reference-frequency derivatives of all outputs."""
+    name, native, array = backend
+    arguments = _arguments(CASES[0], "london_2018", 40.) | dict(hm_reference_phase="orbital")
+    arguments.pop("mass1")
+    arguments.pop("f_ref")
+    if name == "torch":
+        import torch
+        def function(x):
+            hp, hc, modes = native(f=array((130.,)), f_ref=x[0], mass1=x[1],
+                                  modes=MODES, **arguments)
+            values = torch.cat((hp.reshape(-1), hc.reshape(-1),
+                                *(modes[lm].reshape(-1) for lm in MODES)))
+            return torch.view_as_real(values).reshape(-1)
+        actual = torch.autograd.functional.jacobian(function, array((40., CASES[0][0]))).detach().numpy()
+    else:
+        import jax
+        import jax.numpy as jnp
+        def function(x):
+            hp, hc, modes = native(f=array((130.,)), f_ref=x[0], mass1=x[1],
+                                  modes=MODES, **arguments)
+            values = jnp.concatenate((hp.reshape(-1), hc.reshape(-1),
+                                      *(modes[lm].reshape(-1) for lm in MODES)))
+            return jnp.stack((values.real, values.imag), axis=-1).reshape(-1)
+        actual = np.asarray(jax.jacfwd(function)(array((40., CASES[0][0]))))
+    expected = _orbital_derivative_reference()
+    for index in range(2):
+        _assert_close(actual[:, index], expected[:, index], rtol=3e-6)
+
+
+def test_orbital_batched_reference_and_dispatch(backend):
+    """Batched f_ref/intrinsics and JAX jit agree with independent scalar output."""
+    import diffgw
+    name, native, array = backend
+    frequencies = array((20., 90., 210.))
+    arguments = _arguments(CASES[0], "london_2018", None) | dict(hm_reference_phase="orbital")
+    arguments.pop("f_ref")
+    for index, key in enumerate(("mass1", "mass2", "chi1", "chi2")):
+        arguments[key] = array([case[index] for case in CASES])
+    def function(fref):
+        return native(f=frequencies, f_ref=fref, modes=MODES, **arguments)
+    if name == "jax":
+        import jax
+        function = jax.jit(function)
+    actual = function(array((30., 40.)))
+    dispatched = diffgw.get_fd_waveform(
+        approximant="IMRPhenomHM", backend=name, sample_frequencies=frequencies,
+        f_ref=array((30., 40.)), modes=MODES, **arguments)
+    for index in (0, 1):
+        _assert_close(dispatched[index], actual[index], rtol=2e-10)
+    for mode in MODES:
+        _assert_close(dispatched[2][mode], actual[2][mode], rtol=2e-10)
+    for batch, (case, fref) in enumerate(zip(CASES, (30., 40.))):
+        expected = [ref.compose(*case).evaluate(
+            f, transition="london_2018", f_ref_hz=fref,
+            hm_reference_phase="orbital", **EXTRINSIC) for f in (20., 90., 210.)]
+        for index in (0, 1):
+            _assert_close(actual[index][batch], [complex(row[index]) for row in expected])
+        for mode in MODES:
+            _assert_close(actual[2][mode][batch], [complex(row[2][mode]) for row in expected])
+
+
+def test_orbital_carrier_phase_alias_policy(backend):
+    """Explicit D phase aliases must preserve a single HM orbital origin."""
+    _, native, array = backend
+    arguments = _arguments(CASES[0], "london_2018", None) | dict(hm_reference_phase="orbital")
+    frequencies = array((20., 90., 210.))
+    for key in ("phasing_convention", "reference_frame"):
+        for alias in ("reference_frequency", "reffreq", "ref"):
+            with pytest.raises(ValueError, match="explicit f_ref"):
+                native(f=frequencies, **arguments, **{key: alias})
+    arguments["f_ref"] = 40.
+    implicit = native(f=frequencies, **arguments)
+    explicit = native(f=frequencies, **arguments, reference_frame="ref")
+    # Amplitude extraction takes abs(complex carrier); explicit aliases can
+    # change its otherwise irrelevant phase and hence its last FP64 bit.
+    # This is an alias-equivalence check, not the bitwise legacy reduction.
+    for index in (0, 1):
+        np.testing.assert_allclose(implicit[index], explicit[index],
+                                   rtol=8 * np.finfo(float).eps, atol=0)
+    for mode in MODES:
+        np.testing.assert_allclose(implicit[2][mode], explicit[2][mode],
+                                   rtol=8 * np.finfo(float).eps, atol=0)
+    # reference_frame takes precedence. Coalescence phase ignores even a
+    # provided f_ref, and can override an implicit reference-frequency alias.
+    arguments["f_ref"] = None
+    baseline = native(f=frequencies, **arguments)
+    for fref in (None, 40.):
+        arguments["f_ref"] = fref
+        coalescence = native(f=frequencies, **arguments,
+                             reference_frame="coalescence", phasing_convention="ref")
+        for index in (0, 1):
+            np.testing.assert_array_equal(baseline[index], coalescence[index])
+        for mode in MODES:
+            np.testing.assert_array_equal(baseline[2][mode], coalescence[2][mode])
+
+
+def test_orbital_rejects_unsupported_carriers(backend):
+    """The orbital contract is restricted to exact native D, even for subclasses."""
+    from importlib import import_module
+    name, native, array = backend
+    d_class = import_module(f"{name}wave.approximants.imrphenomd").IMRPhenomD
+    xas_class = import_module(f"{name}wave.approximants.imrphenom_xas").IMRPhenomXAS
+
+    class DerivedD(d_class):
+        pass
+
+    # inherited calibration ensures rejection is caused by the orbital
+    # carrier contract, not the separate published-calibration restriction.
+    arguments = _arguments(CASES[0], "london_2018", 40.) | dict(
+        hm_reference_phase="orbital", calibration="inherited")
+    frequencies = array((90.,))
+    if name == "torch":
+        import torch
+
+        class CustomCarrier(torch.nn.Module):
+            def forward(self, *args, **kwargs):
+                pytest.fail("unsupported carrier must not be evaluated")
+
+        for carrier in (DerivedD(), xas_class(), CustomCarrier()):
+            with pytest.raises(ValueError, match="orbital HM reference phase requires the native D carrier"):
+                type(native)(base_22=carrier)(f=frequencies, **arguments)
+    else:
+        class CustomCarrier:
+            @staticmethod
+            def evaluate(*args, **kwargs):
+                pytest.fail("unsupported carrier must not be evaluated")
+
+        for carrier in (DerivedD, xas_class, CustomCarrier):
+            with pytest.raises(ValueError, match="orbital HM reference phase requires the native D carrier"):
+                native(f=frequencies, base_22=carrier, **arguments)

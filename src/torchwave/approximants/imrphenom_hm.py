@@ -924,6 +924,7 @@ class IMRPhenomHM(nn.Module):
         hm_43_pn_variant: str = "binary_compatible",
         *,
         calibration: str = "inherited",
+        hm_reference_phase: str = "legacy",
     ) -> Union[
         Tuple[torch.Tensor, torch.Tensor],
         Tuple[torch.Tensor, torch.Tensor, Dict[Tuple[int, int], Union[Tuple[torch.Tensor, torch.Tensor], torch.Tensor]]],
@@ -937,7 +938,26 @@ class IMRPhenomHM(nn.Module):
         retained in scalar and batched calls. ``calibration="published"``
         selects the paper-precision D fits throughout the carrier and HM
         remnant/QNM chain; the mapping and PN options remain separate.
+        ``hm_reference_phase="orbital"`` omits the legacy HM phase factor,
+        so a change of D reference phase maps to an orbital rotation. It
+        requires the native D carrier and leaves its phase convention and
+        the (2,2) mode unchanged. The default ``"legacy"`` preserves earlier
+        results, including with explicit carrier phase-convention aliases.
+        The orbital option requires an explicit ``f_ref`` when a reference-
+        frequency carrier convention is selected explicitly.
         """
+        if hm_reference_phase not in ("legacy", "orbital"):
+            raise ValueError(f"Unknown HM reference phase: {hm_reference_phase}")
+        if hm_reference_phase == "orbital" and type(self.base_22) is not IMRPhenomD:
+            raise ValueError("orbital HM reference phase requires the native D carrier")
+        carrier_phase_convention = reference_frame if reference_frame is not None else phasing_convention
+        if (
+            hm_reference_phase == "orbital"
+            and f_ref is None
+            and carrier_phase_convention is not None
+            and carrier_phase_convention.lower() in ("reference_frequency", "reffreq", "ref")
+        ):
+            raise ValueError("orbital HM reference-frequency phasing requires an explicit f_ref")
         validate_calibration(calibration)
         if calibration == "published" and type(self.base_22) is not IMRPhenomD:
             raise ValueError("published calibration requires the native D carrier")
@@ -1188,7 +1208,7 @@ class IMRPhenomHM(nn.Module):
         alpha4 = expand_param(IMRPhenomD.eval_table_v("alpha4", eta, chi_pn, calibration=calibration))
         alpha5 = expand_param(IMRPhenomD.eval_table_v("alpha5", eta, chi_pn, calibration=calibration))
 
-        if f_ref is None:
+        if hm_reference_phase == "orbital" or f_ref is None:
             reference_gauge_base = torch.zeros_like(f_eval)
         else:
             slope_peak = expand_param(IMRPhenomD.compute_slope_peak(m1, m2, s1, s2, calibration=calibration))
@@ -1299,9 +1319,9 @@ class IMRPhenomHM(nn.Module):
                 l,
                 carrier_lm,
             )
-            # The D reference-frequency gauge is defined for the (2,2)
-            # carrier.  Harmonic m carries the relative factor m/2 - 1 in
-            # the mapped HM phase contract.
+            # Retain the historical extra factor only for the legacy option.
+            # The orbital option relies on the London map's m/2 scaling of
+            # a constant carrier-phase shift, for either D phase convention.
             reference_gauge = (float(m) / 2.0 - 1.0) * reference_gauge_base
             physical_phase = -mapped_phase + reference_gauge + float(m) * phic_eval
             phase_factor = torch.complex(torch.cos(physical_phase), torch.sin(physical_phase))
