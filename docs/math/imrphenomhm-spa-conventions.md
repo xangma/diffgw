@@ -126,6 +126,9 @@ native defect or a physical polarization-gauge equivalence. Real polarizations
 require conjugate factors at negative frequency; multiplication of all positive
 frequency carriers by a phase is not automatically a real polarization rotation.
 Signed-mode projection and the intended gauge must be checked before production use.
+The [signed-pair extension](imrphenomhm-signed-projection.md) derives the
+conjugate transport of both Fourier contributions and distinguishes it from
+a polarization-basis rotation. Its execution status is recorded separately.
 
 ## Implementation mapping
 

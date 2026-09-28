@@ -80,6 +80,11 @@ carrier amplitude, phase, fit inputs, negative-frequency reconstruction,
 detector response, or a complete waveform. No whole-model verification claim
 is implied by passing this gate.
 
+The separate [signed-pair reference](imrphenomhm-signed-projection.md) retains
+the opposite-frequency contribution and derives real-polarization reconstruction
+and conjugate phase transport. It extends this conditional projection contract
+without changing its version or promoting its intrinsic-carrier claims.
+
 An independent [public-binary polarization holdout](../validation/imrphenomhm_lal_polarizations_20260927.md)
 compares complete plus/cross from both frontends with pinned LALSuite at three
 unseen generic orientations and phase/time settings. That sampled binary gate

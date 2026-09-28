@@ -151,3 +151,12 @@ leaves later phase drift and magnitude errors. Because the factor decomposes
 into a common carrier phase and orbital rotation, signed-mode projection and
 gauge transport must be established before production use. This reference-only
 slice leaves the catalog and physical qualification gates unchanged.
+
+The [signed-pair extension](../../math/imrphenomhm-signed-projection.md)
+now derives conjugate phase transport and retains the opposite-frequency
+term when reconstructing real polarizations. It distinguishes an analytic
+carrier phase from a physical polarization rotation. Its
+[execution receipt](../../validation/imrphenomhm_signed_projection_20260928.md)
+records 85 passing checks on len, including 36 new signed-projection cases
+and the existing SPA and Torch/JAX projection gates. Production conventions
+and qualification are unchanged.
