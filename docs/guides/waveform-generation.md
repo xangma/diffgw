@@ -75,6 +75,13 @@ The default `"legacy"` preserves earlier results. Both Torch and JAX support
 the option; see the [HM mathematical specification](../math/imrphenomhm-waveform.md)
 for conventions, calibration choices and validation limits.
 
+The separate option `hm_phase_convention="spa_sxs_v1"` applies the derived
+leading-SPA SXS-basis phase factor to each native-D mode before projection.
+Both frontends support it; `hm_phase_convention="legacy"` remains the default.
+It leaves the two $m=2$ modes and all intrinsic mode magnitudes unchanged.
+Using this factor throughout the IMR signal is an explicit model convention,
+not a physical polarization rotation or a claim of NR accuracy.
+
 Specify frequency bounds uniformly via `(f_lower, f_final, delta_f)` or provide arbitrary non-uniform evaluation points with `sample_frequencies`:
 
 ```python

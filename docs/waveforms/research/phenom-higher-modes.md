@@ -158,5 +158,21 @@ term when reconstructing real polarizations. It distinguishes an analytic
 carrier phase from a physical polarization rotation. Its
 [execution receipt](../../validation/imrphenomhm_signed_projection_20260928.md)
 records 85 passing checks on len, including 36 new signed-projection cases
-and the existing SPA and Torch/JAX projection gates. Production conventions
-and qualification are unchanged.
+and the existing SPA and Torch/JAX projection gates. That reference-only
+slice leaves production conventions and qualification unchanged.
+
+
+The [native SPA/SXS extension](../../validation/imrphenomhm_spa_native_20260928.md)
+now adds `hm_phase_convention="spa_sxs_v1"` with an independently versioned
+complete-waveform reference. Defaults remain unchanged. The two seen NR cases
+were rescored with both frontends and both mappings, retaining the frozen
+numerical gates. The new option does not uniformly improve physical agreement:
+London still fails second-view matches, runtime still fails the 2163
+second-view norm, and three comparisons have unresolved optimizer seed spread.
+These diagnostic results preserve all original qualification failures.
+
+The next discriminating check is an independent periodic angular/time objective
+audit on the optimizer failures, holding waveforms, data and gates fixed.
+Then inspect mode- and frequency-resolved complex residuals under one common
+alignment before proposing further source-backed waveform changes. A later
+physical qualification requires a frozen variant/domain and untouched data.

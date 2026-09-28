@@ -484,8 +484,9 @@ IMRPHENOMD = WaveformDefinition(
 )
 
 _HM_WAVEFORM = "imrphenomhm-independent-waveform/v1"
-_HM_COMPOSITION = "imrphenomhm-independent-waveform/v2"
+_HM_COMPOSITION = "imrphenomhm-independent-waveform/v3"
 _HM_ORBITAL = "imrphenomhm-orbital-reference-phase/v1"
+_HM_SPA = "imrphenomhm-spa-sxs-carrier/v1"
 _HM_COMPONENTS = tuple(
     ComponentDefinition(
         id=component_id, name=name, spec_version=_HM_WAVEFORM,
@@ -527,16 +528,38 @@ _HM_ORBITAL_COMPONENTS = tuple(
     )
 )
 
+_HM_SPA_COMPONENTS = tuple(
+    ComponentDefinition(
+        id=f"hm.waveform.spa_sxs.{suffix}.v1", name=name,
+        spec_version=_HM_SPA,
+        scope="Published-calibration six-mode composition with the explicit SXS-basis leading-SPA carrier convention",
+        variant="published_calibration_source_pn_spa_sxs",
+        implementation="native_and_reference",
+        evidence=("independent_scalar_composition", "signed_pair_phase_transport"),
+        source_refs=(SourceRef("blanchet2008", "Eqs. 8.2–8.3, 9.3, 9.4a,b,d,e,h,i; leading TD coefficient phases"),
+                     SourceRef("boyle2019", "Appendix C Eqs. C.21–C.24 and Appendix A.3.1; strain basis and version sign"),
+                     SourceRef("garciaquiros2020", "Sec. II.1 Eqs. 2, 4–9; signed-mode projection"),
+                     SourceRef("project_hm", "Derived 22-preserving phase transport; explicit project carrier convention")),
+        reference_module="diffgw_reference.imrphenomhm_waveform",
+        caveats=("A source-derived convention option, not a physical polarization rotation or an NR-accuracy qualification. Frequency-dependent phase and amplitude errors are separate.",),
+    ) for suffix, name in (
+        ("polarizations", "SPA-convention six-mode polarizations"),
+        ("derivatives", "SPA-convention smooth derivatives"),
+    )
+)
+
 IMRPHENOMHM = WaveformDefinition(
     id="IMRPhenomHM", name="IMRPhenomHM published-calibration D-carrier composition", aliases=(),
     domain="frequency", modes=((2, 2), (2, 1), (3, 3), (3, 2), (4, 4), (4, 3)),
     scope="Bounded independent mathematical composition for published D calibration and named source PN variants; inherited defaults remain separate.",
     reference_version=_HM_COMPOSITION, reference_module="diffgw_reference.imrphenomhm_waveform",
-    spec_page="math/imrphenomhm-waveform.md", components=(*_HM_COMPONENTS, *_HM_ORBITAL_COMPONENTS),
+    spec_page="math/imrphenomhm-waveform.md", components=(*_HM_COMPONENTS, *_HM_ORBITAL_COMPONENTS, *_HM_SPA_COMPONENTS),
     sources=(
         *IMRPHENOMD.sources,
         SourceDefinition("london2018", "London et al., IMRPhenomHM", "https://arxiv.org/pdf/1708.00404v4", "1708.00404v4"),
         SourceDefinition("garciaquiros2020", "García-Quirós et al., higher-mode conventions", "https://arxiv.org/html/2001.10914v2", "2001.10914v2"),
+        SourceDefinition("blanchet2008", "Blanchet et al., post-Newtonian waveform modes", "https://arxiv.org/pdf/0802.1249v3", "0802.1249v3"),
+        SourceDefinition("boyle2019", "Boyle et al., SXS waveform conventions", "https://arxiv.org/pdf/1904.04831v2", "1904.04831v2"),
         SourceDefinition("mishra2016", "Mishra et al., spinning post-Newtonian modes", "https://arxiv.org/html/1601.05588v1", "1601.05588v1"),
         SourceDefinition("london2018qnm", "London and Fauchon-Jones, Kerr QNM representations", "https://arxiv.org/pdf/1810.03550v2", "1810.03550v2"),
         SourceDefinition("generated_qnm", "Independent Kerr and HM N61 numerical assets", "docs/provenance_ledger.md", "repository-versioned", kind="generated_asset",
@@ -559,6 +582,8 @@ IMRPHENOMHM = WaveformDefinition(
                          "Runtime uses amplitude/phase constants 0.014/0.018; London uses printed 0.018/0.014, each scaled by the HM-to-22 ringdown-frequency ratio."),
         OptionDefinition("hm_reference_phase", ("legacy", "orbital"), "legacy",
                          "Legacy preserves the historical extra HM reference factor. Orbital omits it, preserving the native D carrier and (2,2) mode; only the exact native D carrier is supported."),
+        OptionDefinition("hm_phase_convention", ("legacy", "spa_sxs_v1"), "legacy",
+                         "spa_sxs_v1 multiplies positive-frequency modes by exp[i(m/2-1)3*pi/4] before projection, preserving both m=2 modes. Requires the exact native D carrier; independent of the reference-phase option. No physical-accuracy claim."),
         OptionDefinition("hm_21_pn_variant", ("binary_compatible", "mishra_eq12b"), "binary_compatible",
                          "Only the named Mishra source expression is included in the independent composition."),
         OptionDefinition("hm_32_pn_variant", ("binary_compatible", "mishra_eq12d"), "binary_compatible",
@@ -586,6 +611,7 @@ IMRPHENOMHM = WaveformDefinition(
                  ("hm_43_pn_variant", "mishra_eq12g"),
                  ("hm_mapping_transitions", transition),
                  ("hm_reference_phase", "legacy"),
+                 ("hm_phase_convention", "legacy"),
                  ("phasing_convention", gauge)),
         domain=domain, precision="float64", device="cpu",
         category="implementation_verification", status="sampled_pass",
@@ -613,7 +639,8 @@ IMRPHENOMHM = WaveformDefinition(
                  ("hm_32_pn_variant", "mishra_eq12d"),
                  ("hm_43_pn_variant", "mishra_eq12g"),
                  ("hm_mapping_transitions", transition),
-                 ("hm_reference_phase", "orbital")) + (
+                 ("hm_reference_phase", "orbital"),
+                 ("hm_phase_convention", "legacy")) + (
                      () if suffix == "covariance" else
                      (("phasing_convention", "reference_frequency"),)),
         domain=domain, precision="float64", device="cpu",
@@ -629,6 +656,41 @@ IMRPHENOMHM = WaveformDefinition(
         ("derivatives", "Smooth primary-mass and reference-frequency derivatives of six modes and summed polarizations",
          "(35,20,0.2,-0.1); d=100 Mpc; declared angles/time; f=130 Hz; f_ref=40 Hz",
          ("london_2018",)),
+    ) for transition in transitions) + tuple(VerificationClaim(
+        component_ids=(f"hm.waveform.spa_sxs.{suffix}.v1",),
+        scope=scope, variant="published_calibration_source_pn_spa_sxs",
+        backends=("torch", "jax", "scalar_reference"),
+        options=(("calibration", "published"),
+                 ("hm_21_pn_variant", "mishra_eq12b"),
+                 ("hm_32_pn_variant", "mishra_eq12d"),
+                 ("hm_43_pn_variant", "mishra_eq12g"),
+                 ("hm_mapping_transitions", transition),
+                 ("hm_reference_phase", reference_phase),
+                 ("hm_phase_convention", "spa_sxs_v1"),
+                 ("phasing_convention", gauge)),
+        domain="(35,20,0.2,-0.1); d=100 Mpc; phi0=.27; phic=.37; tc=.008 s; " + domain,
+        precision="float64", device="cpu",
+        category="implementation_verification", status="sampled_pass",
+        evidence_path="docs/validation/imrphenomhm_spa_native_20260928.md",
+    ) for suffix, scope, domain, reference_phase, gauge, transitions in (
+        ("polarizations", "Six individual complex modes, per-mode projection and summed polarizations at branch/join samples",
+         "iota=.93; no f_ref; mapped joins at their centers and factors 1±1e-6; Mf=.005,.035,.12",
+         "legacy", "coalescence", ("london_2018", "phenomd_runtime")),
+        ("polarizations", "Six individual complex modes, per-mode projection and summed polarizations at branch/join samples",
+         "iota=2.2; f_ref=40 Hz; mapped joins at their centers and factors 1±1e-6; Mf=.005,.035,.12",
+         "legacy", "reference_frequency", ("london_2018", "phenomd_runtime")),
+        ("polarizations", "Six individual complex modes, per-mode projection and summed polarizations at branch/join samples",
+         "iota=2.2; no f_ref; mapped joins at their centers and factors 1±1e-6; Mf=.005,.035,.12",
+         "orbital", "coalescence", ("london_2018", "phenomd_runtime")),
+        ("polarizations", "Six individual complex modes, per-mode projection and summed polarizations at branch/join samples",
+         "iota=.93; f_ref=40 Hz; mapped joins at their centers and factors 1±1e-6; Mf=.005,.035,.12",
+         "orbital", "reference_frequency", ("london_2018", "phenomd_runtime")),
+        ("derivatives", "Smooth frequency, inclination, azimuth, orbital phase, time and distance derivatives of six modes and summed polarizations",
+         "iota=.93; f_ref=40 Hz; Mf=.005,.035,.12; no derivative claim at joins",
+         "legacy", "reference_frequency", ("london_2018", "phenomd_runtime")),
+        ("derivatives", "Smooth primary-mass and reference-frequency derivatives of six modes and summed polarizations",
+         "iota=.93; f=130 Hz; f_ref=40 Hz; no derivative claim at joins",
+         "orbital", "reference_frequency", ("london_2018",)),
     ) for transition in transitions),
 )
 

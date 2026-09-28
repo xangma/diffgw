@@ -108,8 +108,10 @@ sequence tests suppression of the omitted term. This is evidence about the
 specified analytic chirps and projection algebra; it does not establish a
 bound on NR leakage or waveform accuracy.
 
-No production correction or full-family qualification follows from this
-component. The remaining frequency-dependent phase and amplitude errors in
+This component alone does not qualify a production waveform. The subsequent
+[native convention extension](../validation/imrphenomhm_spa_native_20260928.md)
+applies its phase factor under an explicit option and separately checks the
+complete composition; full-family qualification remains open. The remaining frequency-dependent phase and amplitude errors in
 the [seen-NR diagnostic](../validation/imrphenomhm_spa_conventions_20260928.md)
 remain separate from this convention question.
 

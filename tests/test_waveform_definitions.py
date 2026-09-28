@@ -256,6 +256,8 @@ def test_hm_published_reference_scope_keeps_native_defaults_explicit():
     options = {option.name: option for option in model.options}
     assert options["calibration"].default == "inherited"
     assert options["calibration"].choices == ("inherited", "published")
+    assert options["hm_phase_convention"].default == "legacy"
+    assert options["hm_phase_convention"].choices == ("legacy", "spa_sxs_v1")
     for mode, source in (("21", "mishra_eq12b"), ("32", "mishra_eq12d"), ("43", "mishra_eq12g")):
         option = options[f"hm_{mode}_pn_variant"]
         assert option.default == "binary_compatible"

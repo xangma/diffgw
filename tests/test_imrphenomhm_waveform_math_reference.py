@@ -106,12 +106,16 @@ def test_published_complete_modes_and_projection(backend, case, transition, refe
     _complete_modes_and_projection(backend, case, transition, reference_frequency, "legacy")
 
 
-def _complete_modes_and_projection(backend, case, transition, reference_frequency, phase):
+def _complete_modes_and_projection(backend, case, transition, reference_frequency, phase,
+                                   convention="legacy", inclination=None):
     _, native, array = backend
     spec = ref.compose(*case)
-    arguments = _arguments(case, transition, reference_frequency) | dict(hm_reference_phase=phase)
+    arguments = _arguments(case, transition, reference_frequency) | dict(
+        hm_reference_phase=phase, hm_phase_convention=convention)
+    extrinsic = EXTRINSIC | ({} if inclination is None else dict(inclination=inclination))
+    arguments.update(extrinsic)
     options = dict(transition=transition, f_ref_hz=reference_frequency,
-                   hm_reference_phase=phase, **EXTRINSIC)
+                   hm_reference_phase=phase, hm_phase_convention=convention, **extrinsic)
     for mode in MODES:
         with mp.workdps(50):
             frequencies = _branch_samples(spec, mode, transition) / float(spec.m_sec)
@@ -145,18 +149,18 @@ def test_published_symmetry_zeros(backend):
     _assert_close(hc, [complex(row[1]) for row in expected])
 
 
-def _reference_vector(spec, values, transition):
+def _reference_vector(spec, values, transition, convention="legacy"):
     frequency, inclination, phi0, phic, tc, distance = values
     hp, hc, modes = spec.evaluate(
         frequency, transition=transition, f_ref_hz=40., inclination=inclination,
-        phi0=phi0, phic=phic, tc=tc)
+        phi0=phi0, phic=phic, tc=tc, hm_phase_convention=convention)
     # Exact distance scaling avoids rebuilding unchanged symbolic fits.
     scale = 100 / distance
     values = (hp, hc, *(modes[lm] for lm in MODES))
     return tuple(scale * part for value in values for part in (value.real, value.imag))
 
 
-def _reference_jacobian(spec, values, transition):
+def _reference_jacobian(spec, values, transition, convention="legacy"):
     """Converged fourth-order differences, retaining 50-digit arithmetic."""
     with mp.workdps(50):
         values = tuple(mp.mpf(str(value)) for value in values)
@@ -168,7 +172,7 @@ def _reference_jacobian(spec, values, transition):
                 for offset in (-2, -1, 1, 2):
                     point = list(values)
                     point[index] += offset * h
-                    rows.append(_reference_vector(spec, point, transition))
+                    rows.append(_reference_vector(spec, point, transition, convention))
                 return tuple((rows[0][i] - 8 * rows[1][i] + 8 * rows[2][i] - rows[3][i])
                              / (12 * h) for i in range(len(rows[0])))
             coarse, fine = estimate(step), estimate(step / 2)
@@ -181,12 +185,16 @@ def _reference_jacobian(spec, values, transition):
 @pytest.mark.parametrize("geometric_frequency", (.005, .035, .12))
 @pytest.mark.parametrize("transition", ("london_2018", "phenomd_runtime"))
 def test_published_smooth_derivatives(backend, geometric_frequency, transition):
+    _smooth_derivatives(backend, geometric_frequency, transition)
+
+
+def _smooth_derivatives(backend, geometric_frequency, transition, convention="legacy"):
     name, native, array = backend
     case = CASES[0]
     spec = ref.compose(*case)
     point = [geometric_frequency / float(spec.m_sec), EXTRINSIC["inclination"],
              EXTRINSIC["phi0"], EXTRINSIC["phic"], EXTRINSIC["tc"], 100.]
-    arguments = _arguments(case, transition, 40.)
+    arguments = _arguments(case, transition, 40.) | dict(hm_phase_convention=convention)
     for key in ("inclination", "phi0", "phic", "tc", "distance"):
         arguments.pop(key)
     if name == "torch":
@@ -210,7 +218,7 @@ def test_published_smooth_derivatives(backend, geometric_frequency, transition):
                                       *(modes[lm].reshape(-1) for lm in MODES)))
             return jnp.stack((values.real, values.imag), axis=-1).reshape(-1)
         actual = np.asarray(jax.jacfwd(function)(array(point)))
-    expected = _reference_jacobian(spec, point, transition)
+    expected = _reference_jacobian(spec, point, transition, convention)
     # Scale each physical derivative separately; tiny components near zero
     # must not inherit the much larger time-derivative absolute tolerance.
     for index in range(len(point)):
@@ -292,15 +300,16 @@ def test_reference_phase_reductions(backend, calibration):
         spec.evaluate(90., hm_reference_phase="unknown")
 
 
-def _real_reference_values(spec, frequency, fref):
+def _real_reference_values(spec, frequency, fref, convention="legacy"):
     hp, hc, modes = spec.evaluate(frequency, transition="london_2018", f_ref_hz=fref,
-                                 hm_reference_phase="orbital", **EXTRINSIC)
+                                 hm_reference_phase="orbital",
+                                 hm_phase_convention=convention, **EXTRINSIC)
     return tuple(part for value in (hp, hc, *(modes[lm] for lm in MODES))
                  for part in (value.real, value.imag))
 
 
-@lru_cache(maxsize=1)
-def _orbital_derivative_reference():
+@lru_cache(maxsize=2)
+def _orbital_derivative_reference(convention="legacy"):
     """Scalar fourth-order derivatives in f_ref and primary mass, converged twice."""
     case = CASES[0]
     frequency = 130.
@@ -314,7 +323,8 @@ def _orbital_derivative_reference():
                     spec = (ref.compose(value, *case[1:]) if key == "mass1"
                             else ref.compose(*case))
                     rows.append(_real_reference_values(spec, frequency,
-                                                        value if key == "fref" else 40))
+                                                        value if key == "fref" else 40,
+                                                        convention))
                 return tuple((rows[0][i] - 8 * rows[1][i] + 8 * rows[2][i] - rows[3][i])
                              / (12 * step) for i in range(len(rows[0])))
             step = center * mp.mpf("1e-5")
@@ -327,8 +337,13 @@ def _orbital_derivative_reference():
 
 def test_orbital_reference_derivatives(backend):
     """Independent intrinsic and reference-frequency derivatives of all outputs."""
+    _orbital_reference_derivatives(backend)
+
+
+def _orbital_reference_derivatives(backend, convention="legacy"):
     name, native, array = backend
-    arguments = _arguments(CASES[0], "london_2018", 40.) | dict(hm_reference_phase="orbital")
+    arguments = _arguments(CASES[0], "london_2018", 40.) | dict(
+        hm_reference_phase="orbital", hm_phase_convention=convention)
     arguments.pop("mass1")
     arguments.pop("f_ref")
     if name == "torch":
@@ -350,17 +365,19 @@ def test_orbital_reference_derivatives(backend):
                                       *(modes[lm].reshape(-1) for lm in MODES)))
             return jnp.stack((values.real, values.imag), axis=-1).reshape(-1)
         actual = np.asarray(jax.jacfwd(function)(array((40., CASES[0][0]))))
-    expected = _orbital_derivative_reference()
+    expected = _orbital_derivative_reference(convention)
     for index in range(2):
         _assert_close(actual[:, index], expected[:, index], rtol=3e-6)
 
 
-def test_orbital_batched_reference_and_dispatch(backend):
+@pytest.mark.parametrize("convention", ("legacy", "spa_sxs_v1"))
+def test_orbital_batched_reference_and_dispatch(backend, convention):
     """Batched f_ref/intrinsics and JAX jit agree with independent scalar output."""
     import diffgw
     name, native, array = backend
     frequencies = array((20., 90., 210.))
-    arguments = _arguments(CASES[0], "london_2018", None) | dict(hm_reference_phase="orbital")
+    arguments = _arguments(CASES[0], "london_2018", None) | dict(
+        hm_reference_phase="orbital", hm_phase_convention=convention)
     arguments.pop("f_ref")
     for index, key in enumerate(("mass1", "mass2", "chi1", "chi2")):
         arguments[key] = array([case[index] for case in CASES])
@@ -380,7 +397,7 @@ def test_orbital_batched_reference_and_dispatch(backend):
     for batch, (case, fref) in enumerate(zip(CASES, (30., 40.))):
         expected = [ref.compose(*case).evaluate(
             f, transition="london_2018", f_ref_hz=fref,
-            hm_reference_phase="orbital", **EXTRINSIC) for f in (20., 90., 210.)]
+            hm_reference_phase="orbital", hm_phase_convention=convention, **EXTRINSIC) for f in (20., 90., 210.)]
         for index in (0, 1):
             _assert_close(actual[index][batch], [complex(row[index]) for row in expected])
         for mode in MODES:
@@ -456,3 +473,103 @@ def test_orbital_rejects_unsupported_carriers(backend):
         for carrier in (DerivedD, xas_class, CustomCarrier):
             with pytest.raises(ValueError, match="orbital HM reference phase requires the native D carrier"):
                 native(f=frequencies, base_22=carrier, **arguments)
+
+
+@pytest.mark.parametrize("transition", ("london_2018", "phenomd_runtime"))
+@pytest.mark.parametrize("phase,reference_frequency,inclination", (
+    ("legacy", None, .93), ("legacy", 40., 2.2),
+    ("orbital", None, 2.2), ("orbital", 40., .93),
+))
+def test_spa_complete_modes_and_projection(backend, transition, phase,
+                                           reference_frequency, inclination):
+    """Independent full complex comparisons across joins and both hemispheres."""
+    _complete_modes_and_projection(backend, CASES[0], transition, reference_frequency,
+                                   phase, "spa_sxs_v1", inclination)
+
+
+@pytest.mark.parametrize("geometric_frequency", (.005, .035, .12))
+@pytest.mark.parametrize("transition", ("london_2018", "phenomd_runtime"))
+def test_spa_smooth_derivatives(backend, geometric_frequency, transition):
+    _smooth_derivatives(backend, geometric_frequency, transition, "spa_sxs_v1")
+
+
+def test_spa_reference_derivatives(backend):
+    _orbital_reference_derivatives(backend, "spa_sxs_v1")
+
+
+@pytest.mark.parametrize("phase", ("legacy", "orbital"))
+@pytest.mark.parametrize("calibration", ("inherited", "published"))
+def test_spa_reductions_projection_and_masks(backend, phase, calibration):
+    """An exact opt-in default, a once-only factor, and the public mode returns."""
+    _, native, array = backend
+    frequencies = array((-10., 0., 20., 90., 210.))
+    arguments = _arguments(CASES[0], "london_2018", 40.) | dict(
+        calibration=calibration, hm_reference_phase=phase)
+    default = native(f=frequencies, **arguments)
+    legacy = native(f=frequencies, hm_phase_convention="legacy", **arguments)
+    actual = native(f=frequencies, hm_phase_convention="spa_sxs_v1", **arguments)
+    for index in (0, 1):
+        np.testing.assert_array_equal(default[index], legacy[index])
+        np.testing.assert_array_equal(np.asarray(actual[index])[:2], np.zeros(2))
+    # Exact radicals are obtained from the unchanged independently derived
+    # signed-pair expression. No native output supplies the phase factor.
+    import sympy as sp
+    from diffgw_reference.imrphenomhm_signed_projection import symbolic_phase_factor
+    for mode in MODES:
+        np.testing.assert_array_equal(default[2][mode], legacy[2][mode])
+        if mode[1] == 2:
+            np.testing.assert_array_equal(actual[2][mode], legacy[2][mode])
+        factor = complex(sp.N(symbolic_phase_factor(mode[1], 3 * sp.pi / 4), 50))
+        _assert_close(actual[2][mode], factor * np.asarray(legacy[2][mode]), rtol=2e-14)
+        np.testing.assert_array_equal(np.asarray(actual[2][mode])[:2], np.zeros(2))
+    arguments.pop("return_unprojected_modes")
+    projected = native(f=frequencies, return_modes=True,
+                       hm_phase_convention="spa_sxs_v1", **arguments)
+    for index in (0, 1):
+        np.testing.assert_array_equal(projected[index], actual[index])
+        _assert_close(sum(np.asarray(value[index]) for value in projected[2].values()),
+                      actual[index], rtol=2e-14)
+    # Check each returned projection against independent Wigner coefficients.
+    spec = ref.compose(*CASES[0])
+    if calibration == "published":
+        for mode in MODES:
+            expected = [spec.evaluate(f, transition="london_2018", f_ref_hz=40.,
+                                     hm_reference_phase=phase, hm_phase_convention="spa_sxs_v1",
+                                     modes=(mode,), **EXTRINSIC) for f in (20., 90., 210.)]
+            for index in (0, 1):
+                _assert_close(np.asarray(projected[2][mode][index])[2:],
+                              [complex(row[index]) for row in expected])
+    with pytest.raises(ValueError, match="HM phase convention"):
+        native(f=frequencies, hm_phase_convention="unknown", **arguments)
+    with pytest.raises(ValueError, match="hm_phase_convention"):
+        spec.evaluate(90., hm_phase_convention="unknown")
+    assert spec.evaluate(90.) == spec.evaluate(90., hm_phase_convention="legacy")
+
+
+def test_spa_symmetry_and_carrier_rejection(backend):
+    """All odd-mode signs reverse on body exchange; symmetric zeros survive."""
+    from importlib import import_module
+    name, native, array = backend
+    frequencies = array((20., 90., 210.))
+    arguments = _arguments(CASES[0], "london_2018", 40.) | dict(
+        hm_reference_phase="orbital", hm_phase_convention="spa_sxs_v1")
+    original = native(f=frequencies, **arguments)
+    swapped = arguments | dict(mass1=CASES[0][1], mass2=CASES[0][0],
+                               chi1=CASES[0][3], chi2=CASES[0][2])
+    exchanged = native(f=frequencies, **swapped)
+    for mode in MODES:
+        _assert_close(exchanged[2][mode], (-1)**mode[1] * np.asarray(original[2][mode]),
+                      rtol=2e-10)
+    symmetric = native(f=frequencies, **(arguments | dict(mass1=30., mass2=30.,
+                                                         chi1=.2, chi2=.2)))
+    for mode in ((2, 1), (3, 3), (4, 3)):
+        np.testing.assert_array_equal(symmetric[2][mode], np.zeros(3))
+    d_class = import_module(f"{name}wave.approximants.imrphenomd").IMRPhenomD
+    class DerivedD(d_class):
+        pass
+    arguments.update(calibration="inherited", hm_reference_phase="legacy")
+    with pytest.raises(ValueError, match="SPA/SXS HM phase convention requires the native D carrier"):
+        if name == "torch":
+            type(native)(base_22=DerivedD())(f=frequencies, **arguments)
+        else:
+            native(f=frequencies, base_22=DerivedD, **arguments)

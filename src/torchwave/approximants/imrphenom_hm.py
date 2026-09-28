@@ -925,6 +925,7 @@ class IMRPhenomHM(nn.Module):
         *,
         calibration: str = "inherited",
         hm_reference_phase: str = "legacy",
+        hm_phase_convention: str = "legacy",
     ) -> Union[
         Tuple[torch.Tensor, torch.Tensor],
         Tuple[torch.Tensor, torch.Tensor, Dict[Tuple[int, int], Union[Tuple[torch.Tensor, torch.Tensor], torch.Tensor]]],
@@ -945,7 +946,17 @@ class IMRPhenomHM(nn.Module):
         results, including with explicit carrier phase-convention aliases.
         The orbital option requires an explicit ``f_ref`` when a reference-
         frequency carrier convention is selected explicitly.
+        ``hm_phase_convention="spa_sxs_v1"`` independently multiplies each
+        positive-frequency intrinsic mode by exp[i(m/2-1)3*pi/4] before
+        projection. It requires native D, preserves m=2, and may be combined
+        with either reference-phase option. This source-derived leading-SPA
+        convention is not a physical-accuracy qualification. Its default
+        ``"legacy"`` leaves the existing waveform unchanged.
         """
+        if hm_phase_convention not in ("legacy", "spa_sxs_v1"):
+            raise ValueError(f"Unknown HM phase convention: {hm_phase_convention}")
+        if hm_phase_convention == "spa_sxs_v1" and type(self.base_22) is not IMRPhenomD:
+            raise ValueError("SPA/SXS HM phase convention requires the native D carrier")
         if hm_reference_phase not in ("legacy", "orbital"):
             raise ValueError(f"Unknown HM reference phase: {hm_reference_phase}")
         if hm_reference_phase == "orbital" and type(self.base_22) is not IMRPhenomD:
@@ -1328,6 +1339,11 @@ class IMRPhenomHM(nn.Module):
             if (l, m) == (2, 2):
                 mode_factor = torch.ones_like(ratio)
             h_mode = amp_22_mapped * ratio * mode_factor * phase_factor
+            if hm_phase_convention == "spa_sxs_v1" and m != 2:
+                # Source-derived leading-SPA convention; multiply once before
+                # projection, preserving the unmodified D-anchored m=2 modes.
+                angle = physical_phase.new_tensor((float(m) / 2.0 - 1.0) * 3.0 * PI / 4.0)
+                h_mode = h_mode * torch.complex(torch.cos(angle), torch.sin(angle))
             h_mode = torch.where(f_eval > 0.0, h_mode, torch.zeros_like(h_mode))
 
             d_plus, d_cross = _swsh_projection_coefficients(l, m, inc_eval, phi0_eval)

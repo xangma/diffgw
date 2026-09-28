@@ -5,17 +5,18 @@
 | Definition field | Catalog value |
 | --- | --- |
 | Model ID | `IMRPhenomHM` |
-| Reference composition | `imrphenomhm-independent-waveform/v2` |
+| Reference composition | `imrphenomhm-independent-waveform/v3` |
 | Scope | Bounded independent mathematical composition for published D calibration and named source PN variants; inherited defaults remain separate. |
 | Domain and modes | `frequency`; `(2, 2)`, `(2, 1)`, `(3, 3)`, `(3, 2)`, `(4, 4)`, `(4, 3)` |
 | Native backends | `torch`, `jax` |
-| Scoped verification claims | 11 |
+| Scoped verification claims | 22 |
 
 | Option | Default | Native choices | Reference-only choices |
 | --- | --- | --- | --- |
 | `calibration` | `inherited` | `inherited`, `published` | None |
 | `hm_mapping_transitions` | `phenomd_runtime` | `phenomd_runtime`, `london_2018` | None |
 | `hm_reference_phase` | `legacy` | `legacy`, `orbital` | None |
+| `hm_phase_convention` | `legacy` | `legacy`, `spa_sxs_v1` | None |
 | `hm_21_pn_variant` | `binary_compatible` | `binary_compatible`, `mishra_eq12b` | None |
 | `hm_32_pn_variant` | `binary_compatible` | `binary_compatible`, `mishra_eq12d` | None |
 | `hm_43_pn_variant` | `binary_compatible` | `binary_compatible`, `mishra_eq12g` | None |
@@ -25,7 +26,7 @@
 
 ## Scope and status
 
-`imrphenomhm-independent-waveform/v2` independently composes the six
+`imrphenomhm-independent-waveform/v3` independently composes the six
 positive-frequency modes $(2,2)$, $(2,1)$, $(3,3)$, $(3,2)$, $(4,4)$ and
 $(4,3)$ and their complex plus/cross polarizations. Its native option tuple is
 `calibration="published"`, `hm_21_pn_variant="mishra_eq12b"`,
@@ -38,6 +39,10 @@ Version 2 adds `hm_reference_phase="orbital"`, a separately versioned project
 phase-origin convention. The original v1 components and default `"legacy"`
 behavior are retained. The extension changes no fitted coefficient or
 amplitude prescription and does not qualify physical NR accuracy.
+Version 3 adds the independently versioned opt-in `hm_phase_convention="spa_sxs_v1"`,
+composing the existing [SPA derivation](imrphenomhm-spa-conventions.md) and
+[signed-pair transport](imrphenomhm-signed-projection.md). Both earlier
+conventions and their component versions remain available unchanged.
 
 The executable reference takes physical binary parameters, not native carrier
 amplitudes, phases, fitted coefficients or QNM evaluations. It extends the
@@ -107,6 +112,15 @@ Other options in this example retain their defaults; select the printed
 calibration and three source PN variants explicitly for the independent
 published composition.
 
+`hm_phase_convention="spa_sxs_v1"` selects the source-derived, 22-preserving
+positive-frequency carrier convention below. Its default `"legacy"` preserves
+all previous outputs. This option is independent of `hm_reference_phase`,
+calibration, PN amplitude variants and mapping transitions; it requires the
+exact native D carrier and rejects unknown values or custom carriers. Applying
+it with inherited fits or binary PN variants is supported algebraically, but
+those combinations remain outside the independent published-source reference.
+The `v1` suffix freezes the common TD sign and odd-mode branch choice.
+
 Numerical inputs are the repository's rounded D natural-spline knots,
 generated signed high-spin Kerr spline coefficients, and independent HM N61
 polynomial coefficients. They are shared **data**, evaluated independently;
@@ -169,6 +183,48 @@ unchanged. The derivation and the distinction between a Fourier phase and
 physical polarization rotation are recorded in the
 [diagnostic receipt](../validation/imrphenomhm_published_options_20260927.md).
 
+### SPA/SXS carrier-convention extension
+
+The separately versioned `imrphenomhm-spa-sxs-carrier/v1` composes the unchanged
+intrinsic waveform and projection with
+
+$$P^{\mathrm{spa}}_{\ell m}(f)=q_m P^{\mathrm{legacy}}_{\ell m}(f),
+\qquad q_m=\exp\left[i\left(\frac m2-1\right)\frac{3\pi}{4}\right].$$
+
+The common TD sign is $-1$ in the declared SXS spherical basis. The
+[SPA derivation](imrphenomhm-spa-conventions.md) obtains this factor from the
+leading coefficients of Blanchet et al., arXiv:0802.1249v3 Eqs. (9.3)–(9.4),
+the $+\pi/4$ stationary-phase contribution, and an orbital normalization that
+preserves the D-anchored 22 carrier. Boyle et al., arXiv:1904.04831v2
+Appendix C Eqs. (C21)–(C24), supplies the stated SXS basis convention. The
+principal phase branch fixes one common odd-$m$ sign; changing it by $\pi$
+in orbital phase flips every odd-$m$ mode. No factor is inferred or fitted
+from NR or LAL residuals.
+
+| $m$ | Multiplier $q_m$ |
+| --- | --- |
+| 1 | $e^{-3\pi i/8}$ |
+| 2 | $1$ |
+| 3 | $e^{3\pi i/8}$ |
+| 4 | $e^{3\pi i/4}$ |
+
+The factor is applied once to each intrinsic positive-frequency carrier before
+forming either per-mode or summed polarizations. It commutes with orbital and
+time shifts, preserves magnitudes and frequency-phase slopes, and leaves both
+22 and 32 exactly unchanged. The two phase options remain independent: the
+orbital reference-frequency covariance is preserved because $q_m$ does not
+depend on reference frequency.
+
+For the exact two-sided pair the signed-projection reference instead transports
+$(P,Q)\mapsto(q_mP,\overline{q_m}Q)$. Native HM retains its existing one-sided
+$D_A P$ approximation and does not add an opposite-support contribution.
+This is not a real polarization-basis rotation, and it is not guaranteed to
+leave projected detector observables unchanged. Applying the leading-inspiral
+factor unchanged through intermediate and merger/ringdown branches is an
+explicit project model-convention assumption; the SPA derivation does **not**
+establish the correct late-time phases or improve amplitudes. Physical
+qualification requires separate evidence for this named variant.
+
 ## Implementation mapping
 
 | Component ID | Independent reference | Native mapping and maintained test |
@@ -178,6 +234,8 @@ physical polarization rotation are recorded in the
 | `hm.waveform.orbital_reference.polarizations.v1` | Scalar composition with `hm_reference_phase="orbital"` | Torch/JAX native D modes and complex projections |
 | `hm.waveform.orbital_reference.derivatives.v1` | Independent scalar derivatives of the orbital composition | Torch/JAX autodiff at smooth sample points |
 | `hm.waveform.orbital_reference.covariance.v1` | Independently derived $C(r)$ and orbital rotation | Compensated modes and polarizations, unchanged legacy/(2,2), batching and JIT |
+| `hm.waveform.spa_sxs.polarizations.v1` | Existing scalar composition times the independent signed-pair phase factor | Torch/JAX intrinsic and projected modes and totals; `test_spa_complete_modes_and_projection` |
+| `hm.waveform.spa_sxs.derivatives.v1` | Converged scalar derivatives of the SPA/SXS composition | Native autodiff; `test_spa_smooth_derivatives` and `test_spa_reference_derivatives` |
 
 Native D uses `diffgw_core.phenomd_published_fits`; the scalar reference retains
 its separate printed transcription. Neither runtime imports SymPy or the
@@ -247,6 +305,21 @@ The orbital extension addresses that adapter problem explicitly. Its
 [implementation receipt](../validation/imrphenomhm_orbital_reference_20260928.md)
 records the new checks and the remaining physical discrepancy. Earlier
 receipts use the retained legacy option unless they explicitly state otherwise.
+
+The SPA/SXS checks reuse the same independent complete-waveform samples,
+including both sides of all mapped joins, both transition settings, both
+reference-phase options and both observer hemispheres with nonzero azimuth.
+Selected smooth derivatives cover frequency, inclination, azimuth, orbital
+phase, time and distance; the orbital/London case also checks primary mass and
+reference frequency. Batched Torch and batched/JIT JAX calls are compared with
+independent scalar results. Separate regressions enforce bitwise default
+preservation, unchanged $m=2$, a single phase multiplication, projected mode
+returns, frequency masks, odd-mode exchange signs, symmetric zeros, and carrier
+rejection. These checks establish only their recorded mathematical and API
+scope when executed; they do not promote an NR diagnostic into qualification.
+The [native extension receipt](../validation/imrphenomhm_spa_native_20260928.md)
+records the run and the separate seen-NR before/after comparison, including
+remaining overlap, norm and optimizer failures.
 
 ## Reproduce the checks
 

@@ -25,8 +25,10 @@ from . import imrphenomd_phase as dphase
 from . import imrphenomd_waveform as carrier
 from . import imrphenomhm_projection as projection
 from .imrphenomhm_intrinsic_modes import SUPPORTED_MODES, public_intrinsic_mode
+from .imrphenomhm_signed_projection import symbolic_phase_factor
 
-SPEC_VERSION = "imrphenomhm-independent-waveform/v2"
+SPEC_VERSION = "imrphenomhm-independent-waveform/v3"
+SPA_CONVENTION_VERSION = "imrphenomhm-spa-sxs-carrier/v1"
 REFERENCE_PHASE_VERSION = "imrphenomhm-orbital-reference-phase/v1"
 COMPONENT_IDS = {
     "polarizations": "hm.waveform.independent_published.v1",
@@ -70,6 +72,36 @@ for _key in (key for key in COMPONENT_IDS if key.startswith("orbital_")):
         "orbital_derivatives": ("test_orbital_reference_derivatives",),
         "orbital_covariance": ("test_orbital_reference_covariance", "test_reference_phase_reductions"),
     }[_key]
+# Compose the previously derived signed-pair/SPA convention without changing
+# either its equations or the existing published/orbital component versions.
+for _key, _suffix, _tests in (
+    ("spa_polarizations", "polarizations", ("test_spa_complete_modes_and_projection",)),
+    ("spa_derivatives", "derivatives", ("test_spa_smooth_derivatives",
+                                       "test_spa_reference_derivatives")),
+):
+    _component = f"hm.waveform.spa_sxs.{_suffix}.v1"
+    COMPONENT_IDS[_key] = _component
+    COMPONENT_SPEC_VERSIONS[_key] = SPA_CONVENTION_VERSION
+    COMPONENT_SOURCES[_component] = COMPONENT_SOURCES[COMPONENT_IDS["polarizations"]] + (
+        ("https://arxiv.org/pdf/0802.1249v3", "Eqs. (8.2)--(8.3), (9.3)--(9.4): leading mode phases"),
+        ("https://arxiv.org/pdf/1904.04831v2", "Appendix C, Eqs. (C21)--(C24): SXS basis"),
+        ("https://arxiv.org/html/2001.10914v2", "Eqs. (2), (4)--(9): signed-mode projection"),
+        ("project-adapter", "22-preserving source-derived SPA/SXS phase, K=3*pi/4"),
+    )
+    COMPONENT_BINDINGS[_component] = {
+        "reference": "compose",
+        "torch": ("torchwave.approximants.imrphenom_hm", "IMRPhenomHM"),
+        "jax": ("jaxwave.approximants.imrphenom_hm", "IMRPhenomHM"),
+        "tests": _tests,
+    }
+
+
+@lru_cache(maxsize=None)
+def _spa_phase_function(m):
+    return sp.lambdify((), symbolic_phase_factor(m, 3 * sp.pi / 4),
+                       modules="mpmath", docstring_limit=0)
+
+
 SOURCE_PN_VARIANTS = {
     "hm_21_pn_variant": "mishra_eq12b",
     "hm_32_pn_variant": "mishra_eq12d",
@@ -160,7 +192,7 @@ class WaveformSpec:
             return mp.pi / 4 - self.raw_phase(r) + self.slope * r
 
     def evaluate(self, frequency_hz, *, transition="phenomd_runtime", f_ref_hz=None,
-                 hm_reference_phase="legacy",
+                 hm_reference_phase="legacy", hm_phase_convention="legacy",
                  inclination=0, phi0=0, phic=0, tc=0, modes=SUPPORTED_MODES):
         """Return (h_plus, h_cross, intrinsic modes) without frontend inputs.
 
@@ -168,8 +200,14 @@ class WaveformSpec:
         ``legacy`` preserves the v1 adapter. ``orbital`` changes the phase
         origin by m*C(r)/2 only, preserving the m=2 carrier. Neither choice
         changes the independent printed fits or mode maps.
+        ``spa_sxs_v1`` applies the separately versioned leading-SPA factor
+        before projection, with either reference-phase origin. It preserves
+        m=2 and changes no fit, magnitude or frequency slope. The default
+        ``hm_phase_convention="legacy"`` preserves the v1/v2 composition.
         Precision follows an enclosing mpmath context, with a 50-digit floor.
         """
+        if hm_phase_convention not in ("legacy", "spa_sxs_v1"):
+            raise ValueError("hm_phase_convention must be 'legacy' or 'spa_sxs_v1'")
         if hm_reference_phase not in ("legacy", "orbital"):
             raise ValueError("hm_reference_phase must be 'legacy' or 'orbital'")
         with mp.workdps(max(50, mp.mp.dps)):
@@ -200,6 +238,8 @@ class WaveformSpec:
                         phic=phic, tc=tc, frequency_hz=f,
                         reference_gauge=(mp.mpf(m) / 2 - 1) * gauge,
                     )
+                if hm_phase_convention == "spa_sxs_v1" and m != 2:
+                    value *= _spa_phase_function(m)()
                 result[(ell, m)] = value
                 cp, cx = (fn(_number(inclination), _number(phi0))
                           for fn in _projection_functions(ell, m))
