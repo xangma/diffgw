@@ -2,6 +2,14 @@
 
 ## Scope and status
 
+**2026-09-28 closure:** The [published HM implementation review](../../math/imrphenomhm-waveform.md#implementation-closure-2026-09-28)
+is complete for its 22 recorded CPU FP64 sampled claims. Their statuses remain
+`sampled_pass`; no whole-family or physical-accuracy claim is added. The legacy
+finite-reference covariance defect remains explicit, with the tested `orbital`
+option available. The physical failures below remain failures. This closes
+the bounded implementation task, not XHM/XPHM, inherited-default provenance,
+or untested domains.
+
 This research ledger was founded at commit 5bc907d. The separate [published-calibration HM specification](../../math/imrphenomhm-waveform.md) now defines a bounded independent six-mode composition; its catalog claims, when supported by recorded runs, concern only that explicit option tuple. This ledger retains the broader family evidence and unresolved gates. It covers aligned-spin IMRPhenomHM and IMRPhenomXHM, their inherited quadrupole carriers, and the higher-mode carrier supplied to XPHM. It excludes precession dynamics, covered in [the companion ledger](phenom-precessing.md), and all SEOBNR models. “Pending” below means that the mathematical rule has a source and a native implementation but has not crossed the independent equation, branch, and reference gates at the end of this file. “Executable” identifies a bounded equation component only.
 
 Primary sources: [London et al., arXiv:1708.00404v4](https://arxiv.org/pdf/1708.00404v4) (HM, Eqs. 1–9); [García-Quirós et al., arXiv:2001.10914v2](https://arxiv.org/html/2001.10914v2) (XHM, Secs. II, IV–VI and Apps. A, D, E); [Pratten et al., arXiv:2001.11412](https://arxiv.org/abs/2001.11412) (XAS). Inherited D and XAS mathematics are documented separately in [D carrier specification](../../math/imrphenomd-waveform.md) and [XAS specification](../../math/imrphenomxas.md). The observed reference outcomes below come from the repository's [provenance ledger](../../provenance_ledger.md), not from a new numerical campaign here.
@@ -193,6 +201,7 @@ modestly. Excluded NR44 power is 17–24%, so the latter inference is restricted
 to retained support. Carrier replacement does not resolve these discrepancies;
 the combined higher-mode scaling/map approximation remains implicated.
 No production option is changed. The separate 32/43 phase and
-spherical/spheroidal comparison remains the next research question.
+spherical/spheroidal comparison is an optional future research question,
+not a prerequisite for the scoped implementation closure above.
 A later physical qualification requires
 a frozen variant/domain and untouched data; historical failures remain intact.

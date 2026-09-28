@@ -598,6 +598,8 @@ IMRPHENOMHM = WaveformDefinition(
     caveats=(
         "Executable reference and catalog entry do not by themselves qualify a model; scoped comparison claims are recorded only after validation.",
         "Inherited calibration and binary-compatible PN defaults are not qualified by this published-source composition.",
+        "The recorded sampled implementation review is complete; this is not uniform-domain or whole-family qualification.",
+        "Legacy finite-reference covariance remains defective despite native/reference agreement; the orbital option has separate bounded covariance evidence.",
         "No same-model binary or NR physical-accuracy claim is made for the published variant; previous default-variant outcomes, including red NR cases, remain unchanged.",
         "Shared generated QNM inputs have separate off-grid evidence, not an exact or full-domain physical-accuracy guarantee.",
     ),

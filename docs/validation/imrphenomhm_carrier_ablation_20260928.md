@@ -165,6 +165,11 @@ Any physically improved variant requires its own declared model scope and a
 prospectively frozen test on untouched data. Reusing these cases or weakening
 their gates would not qualify the family.
 
+The subsequent [implementation closure review](../math/imrphenomhm-waveform.md#implementation-closure-2026-09-28)
+retains these results and treats the suggested mixing comparison as optional
+future research, not a remaining prerequisite for the recorded sampled
+implementation claims.
+
 ## Execution and replay
 
 All computation ran on `len` in `/tmp/diffgw-hm-carrier-ablation-20260928`.

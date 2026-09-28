@@ -245,6 +245,47 @@ QNM data, not their evaluation algorithms.
 
 ## Evidence and limitations
 
+### Implementation closure — 2026-09-28
+
+The bounded implementation review is **closed for the 22 recorded
+`sampled_pass` claims** in composition v3. This means agreement with the
+declared independent mathematics at the recorded samples, not a uniform
+parameter-domain guarantee or whole-family physical qualification. No claim
+status, threshold, default, equation or calibration is changed by this review.
+
+| Claim group | Recorded scope | Evidence |
+| --- | --- | --- |
+| Six original claims | Published D calibration and source PN options; both maps; legacy conventions; complex modes/projections at no reference and 40 Hz, and selected smooth derivatives | [Composition run](../validation/imrphenomhm_published_composition_20260927.md) |
+| Five orbital claims | Same source options; values and reference-frequency covariance under both maps; primary-mass/reference-frequency derivatives under London mapping | [Orbital run](../validation/imrphenomhm_orbital_reference_20260928.md) |
+| Eleven SPA/SXS claims | Same source options; both maps and reference-phase options at explicitly listed samples; selected derivatives with narrower coverage | [SPA/SXS run](../validation/imrphenomhm_spa_native_20260928.md) |
+
+The exact tuples, CPU FP64 precision and exclusions remain in the catalog and
+the evidence below. [CI on revision 0b2d15c](https://github.com/xangma/diffgw/actions/runs/36448702626)
+passed all nine jobs, including strict mathematical-reference, binary-oracle
+and documentation checks. Binary-oracle CI does not establish historical
+binary identity for the distinct published-calibration variant.
+
+There is no demonstrated unresolved native/reference discrepancy within these
+recorded samples. There **is** a known finite-reference covariance defect in
+the retained `legacy` adapter: reproducing it in the scalar reference verifies
+that adapter's implementation, not its physical invariance. The separately
+tested `orbital` option addresses it on supported carrier branches. Changing
+the compatibility default is a separate API decision. Runtime map constants
+also differ from the paper's printed London choice; each option is identified
+explicitly rather than claiming both reproduce the same printed model.
+
+Physical validation remains unsuccessful on the recorded failing cases.
+The audits below found no sampled amplitude-factor transcription error and
+showed that optimizer refinement, tested conditioning changes and mapped NR22
+carrier replacement do not resolve the higher-mode discrepancies. This bounds
+the diagnosis; it does not prove a unique cause or excuse an untested defect.
+The full-IMR SPA extension and shared generated QNM data retain their stated
+assumptions. No additional mixing investigation, refit or NR campaign is
+required to close these implementation claims. Such work would need a separate
+model-development scope; a physical-accuracy claim still requires its own
+successful validation. Inherited defaults, other carriers, XHM/XPHM and
+untested parameter regions gain no qualification from this closure.
+
 The maintained complete-composition test is
 `tests/test_imrphenomhm_waveform_math_reference.py`. Its original legacy sample is
 $(m_1,m_2,\chi_1,\chi_2)=(35,20,0.2,-0.1)$ and
