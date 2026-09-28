@@ -12,6 +12,8 @@ needed before an executable reference can be trusted.
 Former complete-waveform prototypes have a separate
 [historical record](research/retired-release-surface.md); they do not appear
 in the current public dispatch inventory.
+The [qualification status review](qualification-status.md) separates supported
+implementation scopes from concrete remaining blockers and physical failures.
 
 <!-- BEGIN GENERATED WAVEFORM TABLE -->
 

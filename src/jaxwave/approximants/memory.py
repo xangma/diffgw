@@ -12,7 +12,6 @@ import jax.numpy as jnp
 
 from diffgw_core.constants import (
     C_SI,
-    G_SI,
     MPC_SI,
     PI,
 )
@@ -33,11 +32,18 @@ def compute_memory_h20_22(
     See the Torch counterpart for the normalization and convention. The
     supplied complex h22 is physical strain; times are seconds, distance_m
     is meters, and the time grid may be nonuniform.
+    For h22 shaped (..., N), distance_m must broadcast to the leading batch
+    shape (...), without a time axis; the output retains h22's shape.
     """
     if times.ndim != 1 or times.size < 2 or h22.shape[-1] != times.size:
         raise ValueError("times must be 1D with at least two samples and match h22")
     if isinstance(distance_m, (float, int)) and distance_m <= 0:
         raise ValueError("distance_m must be positive")
+    distance = as_array(distance_m, dtype=times.dtype)
+    try:
+        distance = jnp.expand_dims(jnp.broadcast_to(distance, h22.shape[:-1]), -1)
+    except ValueError as exc:
+        raise ValueError("distance_m must broadcast to h22's leading batch shape, without a time axis") from exc
     dt = jnp.diff(times)
     secants = jnp.diff(h22, axis=-1) / dt
     interior = (dt[1:] * secants[..., :-1] + dt[:-1] * secants[..., 1:]) / (dt[:-1] + dt[1:])
@@ -45,7 +51,6 @@ def compute_memory_h20_22(
     flux = jnp.abs(slope) ** 2
     increments = (flux[..., :-1] + flux[..., 1:]) * jnp.diff(times) / 2
     integral = jnp.concatenate((jnp.zeros_like(increments[..., :1]), jnp.cumsum(increments, axis=-1)), axis=-1)
-    distance = as_array(distance_m, dtype=times.dtype)
     return distance * (math.sqrt(5.0 / (6.0 * math.pi)) / (7.0 * C_SI)) * integral
 
 

@@ -36,6 +36,11 @@ least two samples; `h22` is complex dimensionless strain on that grid, at
 explicit positive `distance_m` in meters. Inclination is in radians from the
 orbital angular momentum. The mode convention is
 $h=h_+-ih_\times=\sum h_{\ell m}{}_{-2}Y_{\ell m}$; $h_\times^{\rm mem}=0$.
+For `times` shaped `(N,)`, `h22` has shape `(..., N)`. `distance_m` must
+broadcast to the leading batch shape `(...)`: a scalar applies to every
+waveform, and a `(B,)` distance array supplies one distance per waveform for
+`h22` shaped `(B, N)`, including when `B == N`. Distances have no time axis;
+per-sample distance arrays are unsupported. `h20` retains `h22`'s shape.
 The first returned memory sample is zero, fixing an integration constant only.
 The only choices are `call_route=evaluate_22`,
 `mirror=equatorial_symmetry`, and `grid_rule=gradient_trapezoid`; all run

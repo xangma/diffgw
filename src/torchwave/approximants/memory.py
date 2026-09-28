@@ -12,7 +12,6 @@ import torch.nn as nn
 
 from torchwave.constants import (
     C_SI,
-    G_SI,
     MPC_SI,
     PI,
 )
@@ -35,16 +34,22 @@ def compute_memory_h20_22(
     sets zero memory; a pre-existing offset cannot be inferred from these data.
     The supplied complex mode obeys h=h+ - i hx. A nonuniform time grid is
     supported; at least two strictly increasing samples are required.
+    For h22 shaped (..., N), distance_m must broadcast to the leading batch
+    shape (...), without a time axis; the output retains h22's shape.
     """
     if times.ndim != 1 or times.numel() < 2 or h22.shape[-1] != times.numel():
         raise ValueError("times must be 1D with at least two samples and match h22")
     if isinstance(distance_m, (float, int)) and distance_m <= 0:
         raise ValueError("distance_m must be positive")
+    distance = as_tensor(distance_m, device=times.device, dtype=times.dtype)
+    try:
+        distance = torch.broadcast_to(distance, h22.shape[:-1]).unsqueeze(-1)
+    except RuntimeError as exc:
+        raise ValueError("distance_m must broadcast to h22's leading batch shape, without a time axis") from exc
     slope = torch.gradient(h22, spacing=(times,), dim=-1)[0]
     flux = slope.abs().square()
     integral = torch.cumulative_trapezoid(flux, times, dim=-1)
     integral = torch.cat((torch.zeros_like(integral[..., :1]), integral), dim=-1)
-    distance = as_tensor(distance_m, device=times.device, dtype=times.dtype)
     return distance * (math.sqrt(5.0 / (6.0 * math.pi)) / (7.0 * C_SI)) * integral
 
 

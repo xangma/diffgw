@@ -132,3 +132,74 @@ def test_two_sample_minimum_matches_exact_linear_reference():
         jnp.asarray(times), jnp.asarray(mode), DISTANCE_M, 0.4)[2]
     for actual in (torch_h20.detach().numpy(), np.asarray(jax_h20)):
         np.testing.assert_allclose(actual, expected, rtol=RTOL, atol=ATOL)
+
+
+@pytest.mark.parametrize("batch_size", (2, len(TIMES)))
+def test_batched_distances_match_scalar_calls_and_distance_gradients(batch_size):
+    """Catch both incompatible B != N and silently column-scaled B == N."""
+    scales = np.arange(1, batch_size + 1, dtype=np.float64)
+    modes = scales[:, None] * (SLOPE_REAL + 1j * SLOPE_IMAG) * TIMES
+    distances = DISTANCE_M * (1 + scales / 3)
+    tt = torch.tensor(TIMES)
+    mode_t = torch.tensor(modes)
+    distance_t = torch.tensor(distances, requires_grad=True)
+    h20_t = tm.MemoryWaveform().evaluate_22(tt, mode_t, distance_t, 0.4)[2]
+    scalar_t = torch.stack([
+        tm.compute_memory_h20_22(tt, mode_t[i], float(distances[i]))
+        for i in range(batch_size)
+    ])
+    gradient_t = torch.autograd.grad(h20_t[:, -1].sum(), distance_t)[0]
+
+    tj, mode_j, distance_j = map(jnp.asarray, (TIMES, modes, distances))
+    h20_j = jax.jit(jm.MemoryWaveform().evaluate_22)(tj, mode_j, distance_j, 0.4)[2]
+    scalar_j = jnp.stack([
+        jm.compute_memory_h20_22(tj, mode_j[i], float(distances[i]))
+        for i in range(batch_size)
+    ])
+    gradient_j = jax.jit(jax.grad(
+        lambda distance: jm.compute_memory_h20_22(tj, mode_j, distance)[:, -1].sum()
+    ))(distance_j)
+
+    with mp.workdps(70):
+        expected = np.array([
+            [float(ref.h20_linear_mode(t, 0, scale * complex(SLOPE_REAL, SLOPE_IMAG), distance))
+             for t in TIMES]
+            for scale, distance in zip(scales, distances)
+        ])
+    for actual in (h20_t.detach().numpy(), np.asarray(h20_j), scalar_t.numpy(), np.asarray(scalar_j)):
+        assert actual.shape == modes.shape
+        np.testing.assert_allclose(actual, expected, rtol=RTOL, atol=ATOL)
+    expected_gradient = expected[:, -1] / distances
+    for actual in (gradient_t.numpy(), np.asarray(gradient_j)):
+        np.testing.assert_allclose(actual, expected_gradient, rtol=RTOL, atol=0)
+
+
+@pytest.mark.parametrize("shared_distance", (False, True))
+def test_distance_broadcasts_only_over_leading_batch_dimensions(shared_distance):
+    scales = np.arange(1, 7, dtype=np.float64).reshape(2, 3)
+    modes = scales[..., None] * (SLOPE_REAL + 1j * SLOPE_IMAG) * TIMES
+    distances = DISTANCE_M if shared_distance else DISTANCE_M * np.array([1., 2., 3.])
+    distance_grid = np.broadcast_to(distances, scales.shape)
+    with mp.workdps(70):
+        expected = np.array([
+            [float(ref.h20_linear_mode(t, 0, scale * complex(SLOPE_REAL, SLOPE_IMAG), distance))
+             for t in TIMES]
+            for scale, distance in zip(scales.flat, distance_grid.flat)
+        ]).reshape(modes.shape)
+    actual_t = tm.compute_memory_h20_22(
+        torch.tensor(TIMES), torch.tensor(modes), torch.tensor(distances, dtype=torch.float64))
+    actual_j = jax.jit(jm.compute_memory_h20_22)(
+        jnp.asarray(TIMES), jnp.asarray(modes), jnp.asarray(distances))
+    for actual in (actual_t.numpy(), np.asarray(actual_j)):
+        assert actual.shape == modes.shape
+        np.testing.assert_allclose(actual, expected, rtol=RTOL, atol=ATOL)
+
+
+@pytest.mark.parametrize("batch_shape", ((), (2,)))
+def test_per_time_distance_arrays_are_rejected(batch_shape):
+    modes = np.broadcast_to((SLOPE_REAL + 1j * SLOPE_IMAG) * TIMES, batch_shape + TIMES.shape)
+    distances = np.full(modes.shape, DISTANCE_M)
+    with pytest.raises(ValueError, match="leading batch shape"):
+        tm.compute_memory_h20_22(torch.tensor(TIMES), torch.tensor(modes), torch.tensor(distances))
+    with pytest.raises(ValueError, match="leading batch shape"):
+        jax.jit(jm.compute_memory_h20_22)(jnp.asarray(TIMES), jnp.asarray(modes), jnp.asarray(distances))
