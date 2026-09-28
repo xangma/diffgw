@@ -220,3 +220,7 @@ The source revision's [nine CI jobs](https://github.com/xangma/diffgw/actions/ru
 passed, including mathematical-reference and binary-oracle checks. Those
 implementation checks and this diagnostic audit remain distinct from physical
 qualification.
+
+The follow-up [intrinsic/projection diagnostic](imrphenomhm_intrinsic_projection_20260928.md)
+separates intrinsic amplitude/phase discrepancies from polarization effects,
+using these same frozen cases and optima.

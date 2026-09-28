@@ -176,7 +176,10 @@ eliminates polarization analytically and resolves angular boundaries. It
 reproduces all previous best scores within $10^{-11}$; the match/norm outcomes
 are unchanged. Residual accounting at one common alignment locates discrepancies
 in mode pairs and frequency bands, without identifying a unique intrinsic cause.
-The next step is to separate projection effects from intrinsic mode amplitude
-and frequency-dependent phase using published mathematics and the independent
-reference. A later physical qualification requires a frozen variant/domain and
-untouched data; the historical failures remain intact.
+The completed [intrinsic/projection diagnostic](../../validation/imrphenomhm_intrinsic_projection_20260928.md)
+finds both intrinsic amplitude/phase errors and polarization-dependent norm
+excess. The 22 intrinsic norms are within about 1% of NR, while higher-mode
+errors survive phase changes. The next source-model audit should isolate
+published amplitude factors and conditioning sensitivity, with 32/43 phase and
+mixing investigated separately. A later physical qualification requires a frozen
+variant/domain and untouched data; historical failures remain intact.

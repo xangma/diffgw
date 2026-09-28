@@ -322,7 +322,10 @@ records the run and the separate seen-NR before/after comparison, including
 remaining overlap, norm and optimizer failures. The subsequent
 [periodic optimizer and residual audit](../validation/imrphenomhm_periodic_optimizer_20260928.md)
 recovers the same best scores and explains the seed spread, while retaining
-all historical failures. Physical match/norm discrepancies remain.
+all historical failures. Physical match/norm discrepancies remain. The
+[intrinsic/projection diagnostic](../validation/imrphenomhm_intrinsic_projection_20260928.md)
+separates substantial higher-mode amplitude and phase errors from polarization
+effects on the optimized detector norm. It changes no qualification claim.
 
 ## Reproduce the checks
 
