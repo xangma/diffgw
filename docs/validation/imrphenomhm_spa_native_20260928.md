@@ -99,6 +99,12 @@ frequency-dependent phase discrepancies. Any later physical claim needs a
 frozen model/domain and suitable untouched validation data. No existing red
 receipt or threshold is reclassified.
 
+A subsequent [periodic optimizer and residual audit](imrphenomhm_periodic_optimizer_20260928.md)
+explains the poorer seeds and reproduces these best scores within $10^{-11}$.
+It leaves every match/norm outcome unchanged and preserves this receipt, including
+its seed-spread failures. Common-alignment residuals narrow the physical
+investigation without establishing an intrinsic-mode cause.
+
 ## Execution and replay
 
 Both tests and rescore used CPU FP64 on `len` in

@@ -168,11 +168,15 @@ complete-waveform reference. Defaults remain unchanged. The two seen NR cases
 were rescored with both frontends and both mappings, retaining the frozen
 numerical gates. The new option does not uniformly improve physical agreement:
 London still fails second-view matches, runtime still fails the 2163
-second-view norm, and three comparisons have unresolved optimizer seed spread.
+second-view norm, and three comparisons failed the original optimizer seed-spread gate.
 These diagnostic results preserve all original qualification failures.
 
-The next discriminating check is an independent periodic angular/time objective
-audit on the optimizer failures, holding waveforms, data and gates fixed.
-Then inspect mode- and frequency-resolved complex residuals under one common
-alignment before proposing further source-backed waveform changes. A later
-physical qualification requires a frozen variant/domain and untouched data.
+The completed [periodic optimizer and residual audit](../../validation/imrphenomhm_periodic_optimizer_20260928.md)
+eliminates polarization analytically and resolves angular boundaries. It
+reproduces all previous best scores within $10^{-11}$; the match/norm outcomes
+are unchanged. Residual accounting at one common alignment locates discrepancies
+in mode pairs and frequency bands, without identifying a unique intrinsic cause.
+The next step is to separate projection effects from intrinsic mode amplitude
+and frequency-dependent phase using published mathematics and the independent
+reference. A later physical qualification requires a frozen variant/domain and
+untouched data; the historical failures remain intact.

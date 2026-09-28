@@ -319,7 +319,10 @@ rejection. These checks establish only their recorded mathematical and API
 scope when executed; they do not promote an NR diagnostic into qualification.
 The [native extension receipt](../validation/imrphenomhm_spa_native_20260928.md)
 records the run and the separate seen-NR before/after comparison, including
-remaining overlap, norm and optimizer failures.
+remaining overlap, norm and optimizer failures. The subsequent
+[periodic optimizer and residual audit](../validation/imrphenomhm_periodic_optimizer_20260928.md)
+recovers the same best scores and explains the seed spread, while retaining
+all historical failures. Physical match/norm discrepancies remain.
 
 ## Reproduce the checks
 
