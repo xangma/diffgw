@@ -186,7 +186,13 @@ alternative does not fix the targeted 2374 21 deficit or 2163 44 excess and
 worsens 2163 21 amplitude shape despite improving its norm. Those targeted
 errors survive the five conditioning variations that preserve merger; the
 200M end-taper stress test and its substantial effect are recorded separately.
-No production option is changed. The next amplitude check should isolate the
-mapped 22 carrier using NR on common support, without a fitted gain; 32/43
-phase and spherical/spheroidal mixing remain separate. A later physical qualification requires
+The completed [mapped NR22-carrier ablation](../../validation/imrphenomhm_carrier_ablation_20260928.md)
+uses direct Fourier evaluation with fixed factors, maps, phases and common
+support. The 2374 21 error slightly worsens; the 2163 44 excess improves only
+modestly. Excluded NR44 power is 17–24%, so the latter inference is restricted
+to retained support. Carrier replacement does not resolve these discrepancies;
+the combined higher-mode scaling/map approximation remains implicated.
+No production option is changed. The separate 32/43 phase and
+spherical/spheroidal comparison remains the next research question.
+A later physical qualification requires
 a frozen variant/domain and untouched data; historical failures remain intact.

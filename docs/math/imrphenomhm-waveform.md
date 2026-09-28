@@ -332,6 +332,12 @@ paper's alternative factor leaves the targeted NR discrepancies unresolved.
 Five conditioning variations change integrated amplitude spectra by less than
 0.09%; a separate 200M end-taper stress test attenuates merger and is reported
 explicitly. Production options and physical qualification remain unchanged.
+The [mapped NR22-carrier ablation](../validation/imrphenomhm_carrier_ablation_20260928.md)
+then evaluates NR22 directly at the mapped frequencies, holding each factor,
+map and phase fixed. It leaves the large 21/44 amplitude errors unresolved
+on shared support; the receipt accounts for the excluded 17–24% of NR44 power.
+This distinguishes carrier error from the combined higher-mode scaling/map
+discrepancy without promoting either physical qualification or a new model.
 
 ## Reproduce the checks
 

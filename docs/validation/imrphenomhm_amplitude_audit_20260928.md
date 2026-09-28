@@ -183,6 +183,11 @@ small integrated 22 error does not bound its error under the different
 frequency weighting of a higher mode. This separates mapped-carrier error
 from the combined higher-mode factor/map approximation.
 
+That [mapped-carrier check is now complete](imrphenomhm_carrier_ablation_20260928.md).
+Direct NR22 substitution leaves the 2374 21 deficit and most of the 2163 44
+excess intact. The 44 comparison excludes 17–24% of NR power, so its result
+is explicitly restricted to common support. No fitted correction follows.
+
 The frequency-dependent 32/43 phase residual remains separate: a source-backed
 spherical/spheroidal and phase-map comparison is needed before attributing it
 to mixing. If a different model is pursued to
