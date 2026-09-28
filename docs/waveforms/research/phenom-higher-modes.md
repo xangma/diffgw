@@ -135,3 +135,10 @@ preserving legacy behavior. The [mapping diagnostic](../../validation/imrphenomh
 separates phase and amplitude effects on the already examined 2374/2163 data.
 Improved scores after phase-map changes do not establish a source correction
 or prospective physical qualification; the original gates remain unchanged.
+
+The [modal-phase diagnostic](../../validation/imrphenomhm_modal_phase_20260928.md)
+finds substantial 33/44 relative-phase offsets and mapping-dependent phase
+evolution on those same fixtures, well above their measured resolution
+differences in the transition bands. The 22 carrier remains a strong control.
+A source-derived convention check is needed before interpreting a constant
+offset as a production defect; changing the mapping does not remove it.

@@ -81,7 +81,10 @@ relative phase offsets with NR, especially 33 and 44, after one common 22-based
 time/orbital alignment. Evaluate the two existing phase mappings across their
 physical joins without fitting independent phase offsets for every mode. This
 can distinguish interpolation-shape error from relative-mode phase error;
-the carrier and 22 residual must remain explicit controls.
+the carrier and 22 residual must remain explicit controls. The subsequent
+[modal-phase diagnostic](imrphenomhm_modal_phase_20260928.md) performs this
+comparison and separates the low-frequency offset from mapping-dependent
+phase evolution; it does not establish a production correction.
 
 ## Evidence and reproduction
 
