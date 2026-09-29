@@ -117,7 +117,7 @@ class WaveformDefinition:
 
 
 _VERSION = re.compile(r"^[a-z0-9][a-z0-9.-]*/v[1-9][0-9]*$")
-_COMPONENT_ID = re.compile(r"^[a-z][a-z0-9_.]*\.v[1-9][0-9]*$")
+_COMPONENT_ID = re.compile(r"^[a-z][a-zA-Z0-9_.]*\.v[1-9][0-9]*$")
 
 
 def validate_catalog(definitions: Iterable[WaveformDefinition]) -> None:

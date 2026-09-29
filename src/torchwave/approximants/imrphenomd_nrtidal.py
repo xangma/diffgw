@@ -3,27 +3,25 @@
 Tidal formulas from primary literature; this continuation uses no oracle internals.
 This statement does not claim zero source exposure by all prior contributors.
 - Dietrich, Bernuzzi, Tichy (2017), Phys. Rev. D 96, 121501(R) (arXiv:1706.02969) [NRTidal v1]
-- Dietrich et al. (2019), Phys. Rev. D 100, 044003 (arXiv:1905.06011) [NRTidalv2: Eqs. 17-21, 24-25, 26-29]
+- Dietrich et al. (2019), Phys. Rev. D 100, 044003 (arXiv:1905.06011) [NRTidalv2: Eqs. 17-21, 26-29; Eq. 24 independent Pv2 component]
 - Dietrich et al. (2018), Phys. Rev. D 99, 024029 (arXiv:1804.02235) [BNS merger frequency fit Sec II.2.2 Eq. 11]
 - Yagi & Yunes (2013), Science 341, 365; PRD 88, 023009 [Universal I-Love-Q relations]
 - McKechan, Robinson, Sathyaprakash (2010), Class. Quantum Grav. 27, 084020 [Planck taper]
 """
 
 from typing import Optional, Tuple, Union
-import math
 import torch
 import torch.nn as nn
 
 from torchwave.constants import (
     C_SI,
-    MSUN_SEC,
     MPC_SI,
+    MSUN_SEC,
     PI,
 )
 from torchwave.conversions import (
     as_tensor,
     component_masses_to_eta,
-    component_masses_to_delta,
     tidal_combinations,
 )
 from torchwave.approximants.imrphenomd import IMRPhenomD
@@ -54,6 +52,14 @@ N3_V2 = NRTIDAL_V2_PHASE_COEFFS["n_3"]
 D1_V2 = NRTIDAL_V2_PHASE_COEFFS["d_1"]
 D32_V2 = NRTIDAL_V2_PHASE_COEFFS["d_3over2"]
 D2_V2 = NRTIDAL_V2_PHASE_COEFFS["d_2"]
+
+
+def _nrtidalv2_paper_tidal_phase(x, eta, lambda_tilde):
+    """Signed Dietrich et al. (2019) Eqs. (17)–(21) Fourier phase."""
+    num = (1.0 + N1_V2 * x + N32_V2 * x**1.5 + N2_V2 * x**2
+           + N52_V2 * x**2.5 + N3_V2 * x**3)
+    den = 1.0 + D1_V2 * x + D32_V2 * x**1.5 + D2_V2 * x**2
+    return -(117.0 / 256.0) * (lambda_tilde / eta) * x**2.5 * num / den
 
 
 def _bns_merger_frequency(
@@ -102,18 +108,35 @@ def _bns_merger_frequency(
     return f_mrg
 
 
-def _nrtidal_amplitude(x, m_sec, d_sec, lambda_tilde):
-    """Face-on additive planar tidal amplitude correction (Dietrich et al. 2019 Eq. 24).
-
-    A_T(f) = -9 * kappa_eff * x^(13/4) * (1 + n1 * x + n289 * x^2.89) / (1 + d * x^4)
-    a_tidal = (m_sec^2 / (2 * d_sec)) * A_T(f)
-    """
+def _nrtidal_amplitude_shape(x, lambda_tilde):
+    """Dimensionless rational tidal-amplitude shape of Dietrich et al. Eq. (24)."""
     kappa_eff = (3.0 / 16.0) * lambda_tilde
     c = NRTIDAL_V2_AMP_COEFFS
     num = 1.0 + c["n_1"] * x + c["n_289"] * (x ** 2.89)
     den = 1.0 + c["d"] * (x ** 4.0)
-    a_t = -9.0 * kappa_eff * (x ** 3.25) * (num / den)
-    return (m_sec ** 2.0 / (2.0 * d_sec)) * a_t
+    return -9.0 * kappa_eff * (x ** 3.25) * (num / den)
+
+
+def _nrtidal_amplitude(x, m_sec, d_sec, eta, lambda_tilde):
+    """Independent Pv2 tidal-amplitude component (Dietrich et al. 2019 Eq. 24).
+
+    Table II excludes this component from the published D_NRTidalv2 waveform.
+
+    A_T(f) = -9 * kappa_eff * x^(13/4) * (1 + n1 * x + n289 * x^2.89) / (1 + d * x^4)
+    a_tidal = sqrt(5*pi*eta/24) * (m_sec^2 / d_sec) * A_T(f)
+    """
+    eta = torch.as_tensor(eta, dtype=x.dtype, device=x.device)
+    return (torch.sqrt(5.0 * PI * eta / 24.0) * (m_sec ** 2.0 / d_sec)
+            * _nrtidal_amplitude_shape(x, lambda_tilde))
+
+
+def _binary_compatible_nrtidal_amplitude(x, m_sec, d_sec, lambda_tilde):
+    """Historical native normalization, binary-verified but not paper-derived.
+
+    This preserves the pre-Eq24 default's pinned-LAL behavior. The 1/2
+    normalization has unresolved provenance and must not be cited as Eq. (24).
+    """
+    return (m_sec ** 2.0 / (2.0 * d_sec)) * _nrtidal_amplitude_shape(x, lambda_tilde)
 
 
 def _planck_taper_window(
@@ -141,15 +164,14 @@ def _planck_taper_window(
 
 def _quadrupole_monopole_constants(
     lambda_val: torch.Tensor,
+    *,
+    fit: str = "historical_2013",
 ) -> Tuple[torch.Tensor, torch.Tensor]:
-    """Compute spin-induced quadrupole CQ and octupole COc constants via universal I-Love-Q relations.
+    """Return CQ and COc with an explicit quadrupole-fit choice.
 
-    Literature:
-    - Yagi & Yunes (2013), Science 341, 365
-    - Dietrich et al. (2019) Eqs. 28-29 (arXiv:1905.06011)
-
-    Returns:
-        (C_Q, C_Oc): Dimensionless quadrupole and octupole constants (>= 1.0)
+    ``dietrich_2019`` uses printed Eqs. (28)–(29); the historical fit is kept
+    for the binary-compatible default. Lambda clamps are separate native
+    conventions and are outside the positive-Lambda paper-math gate.
     """
     # Safe log avoiding singular values when lambda -> 0
     lam_safe = torch.clamp(lambda_val, min=1.0)
@@ -158,9 +180,14 @@ def _quadrupole_monopole_constants(
     ln_lam3 = ln_lam2 * ln_lam
     ln_lam4 = ln_lam3 * ln_lam
 
-    # Yagi & Yunes (2013) Science 341, 365 Eq. (2) / Table S1:
-    # log(C_Q) = 0.1940 + 0.0936 ln(Lam) + 0.0474 ln(Lam)^2 - 0.00421 ln(Lam)^3 + 0.000123 ln(Lam)^4
-    ln_cq = 0.1940 + 0.0936 * ln_lam + 0.0474 * ln_lam2 - 0.00421 * ln_lam3 + 0.000123 * ln_lam4
+    if fit == "dietrich_2019":
+        # Dietrich et al. (2019), Eq. (28), printed decimal precision.
+        ln_cq = 0.1940 + 0.09163 * ln_lam + 0.04812 * ln_lam2 - 0.004286 * ln_lam3 + 0.00012450 * ln_lam4
+    elif fit == "historical_2013":
+        # Keep the inherited binary-compatible relation unchanged.
+        ln_cq = 0.1940 + 0.0936 * ln_lam + 0.0474 * ln_lam2 - 0.00421 * ln_lam3 + 0.000123 * ln_lam4
+    else:
+        raise ValueError("fit must be 'historical_2013' or 'dietrich_2019'")
     c_q = torch.exp(ln_cq)
 
     ln_cq_safe = torch.clamp(ln_cq, min=1e-8)
@@ -186,6 +213,8 @@ def _nrtidal_self_spin_components(
     chi2: torch.Tensor,
     lambda1: torch.Tensor,
     lambda2: torch.Tensor,
+    *,
+    fit: str = "historical_2013",
 ) -> Tuple[torch.Tensor, torch.Tensor]:
     """Compute (S23, S35) self-spin phase corrections from Dietrich et al. (2019) Eqs. 26-27.
 
@@ -204,8 +233,8 @@ def _nrtidal_self_spin_components(
             zero = torch.zeros_like(x)
             return zero, zero
 
-    cq1, coc1 = _quadrupole_monopole_constants(lambda1)
-    cq2, coc2 = _quadrupole_monopole_constants(lambda2)
+    cq1, coc1 = _quadrupole_monopole_constants(lambda1, fit=fit)
+    cq2, coc2 = _quadrupole_monopole_constants(lambda2, fit=fit)
 
     c_hat_q1 = cq1 - 1.0
     c_hat_q2 = cq2 - 1.0
@@ -255,6 +284,40 @@ def _nrtidal_self_spin_components(
     return s23, s35
 
 
+def assemble_nrtidalv2_pv2_aligned_carrier(
+    f: torch.Tensor, bbh_face_on: torch.Tensor, mass1, mass2, chi1, chi2,
+    lambda1, lambda2, distance_mpc,
+) -> torch.Tensor:
+    """Compose published Pv2 BNS face-on carrier before precession rotation.
+
+    Dietrich et al. (2019), Eqs. (3)–(4), (17)–(29), Table II, Sec. III.4.
+    ``bbh_face_on`` already carries the chosen BBH phase/time origin. This
+    conditional boundary does not choose BNS precession or reference angles.
+    """
+    f = torch.as_tensor(f)
+    bbh = torch.as_tensor(bbh_face_on, device=f.device)
+    def scalar(value):
+        return torch.as_tensor(value, dtype=f.dtype, device=f.device)
+    m1, m2 = scalar(mass1), scalar(mass2)
+    s1, s2 = scalar(chi1), scalar(chi2)
+    lam1, lam2 = scalar(lambda1), scalar(lambda2)
+    d_sec = scalar(distance_mpc) * MPC_SI / C_SI
+    m_sec = (m1 + m2) * MSUN_SEC
+    eta = component_masses_to_eta(m1, m2)
+    lambda_tilde, _ = tidal_combinations(m1, m2, lam1, lam2)
+    x = (PI * m_sec * f) ** (2.0 / 3.0)
+    psi_t = _nrtidalv2_paper_tidal_phase(x, eta, lambda_tilde)
+    s23, s35 = _nrtidal_self_spin_components(
+        x, m1, m2, s1, s2, lam1, lam2, fit="dietrich_2019")
+    a_t = _nrtidal_amplitude(x, m_sec, d_sec, eta, lambda_tilde)
+    merger = _bns_merger_frequency(m1, m2, lam1, lam2)
+    window = _planck_taper_window(f, merger, 1.2 * merger)
+    modulus = torch.abs(bbh)
+    safe_modulus = torch.where(modulus > 0, modulus, torch.ones_like(modulus))
+    unit = torch.where(modulus > 0, bbh / safe_modulus, torch.zeros_like(bbh))
+    return window * (bbh + a_t * unit) * torch.exp(-1j * (psi_t + s23 + s35))
+
+
 def _nrtidal_self_spin_correction(
     x: torch.Tensor,
     mass1: torch.Tensor,
@@ -283,9 +346,12 @@ def _nrtidal_self_spin_correction(
 class IMRPhenomD_NRTidal(nn.Module):
     """IMRPhenomD_NRTidal Aligned-Spin Frequency-Domain BNS Waveform Model (Dietrich et al. 2017)."""
 
-    def __init__(self, version: str = "v1"):
+    def __init__(self, version: str = "v1", amplitude_variant: str = "binary_compatible"):
         super().__init__()
         self.version = version.lower()
+        if amplitude_variant not in ("binary_compatible", "paper_2019"):
+            raise ValueError("amplitude_variant must be 'binary_compatible' or 'paper_2019'")
+        self.amplitude_variant = amplitude_variant
         self.base_model = IMRPhenomD()
 
     def forward(
@@ -305,6 +371,7 @@ class IMRPhenomD_NRTidal(nn.Module):
         phasing_convention: Optional[str] = None,
         reference_frame: Optional[str] = None,
         apply_merger_taper: bool = True,
+        amplitude_variant: Optional[str] = None,
     ) -> Tuple[torch.Tensor, torch.Tensor]:
         """Generate IMRPhenomD_NRTidal frequency-domain polarizations (h_plus, h_cross).
 
@@ -320,7 +387,11 @@ class IMRPhenomD_NRTidal(nn.Module):
             f_ref: Reference frequency in Hz
             phasing_convention: 'coalescence' or 'reference_frequency'
             apply_merger_taper: Whether to apply the Planck taper window at f_merger
+            amplitude_variant: 'binary_compatible' (default) or 'paper_2019'
         """
+        variant = self.amplitude_variant if amplitude_variant is None else amplitude_variant
+        if variant not in ("binary_compatible", "paper_2019"):
+            raise ValueError("amplitude_variant must be 'binary_compatible' or 'paper_2019'")
         device = f.device
         dtype = f.dtype if f.is_floating_point() else torch.float64
 
@@ -357,18 +428,10 @@ class IMRPhenomD_NRTidal(nn.Module):
             f_eval = f.unsqueeze(0)
             m_sec_eval = m_sec.unsqueeze(-1)
             eta_eval = eta.unsqueeze(-1)
-            lam1_eval = lam1.unsqueeze(-1)
-            lam2_eval = lam2.unsqueeze(-1)
-            s1_eval = s1.unsqueeze(-1)
-            s2_eval = s2.unsqueeze(-1)
         else:
             f_eval = f
             m_sec_eval = m_sec
             eta_eval = eta
-            lam1_eval = lam1
-            lam2_eval = lam2
-            s1_eval = s1
-            s2_eval = s2
 
         # PN expansion parameter x = (pi * M * f)^(2/3)
         safe_f = torch.clamp(f_eval, min=1e-8)
@@ -415,7 +478,8 @@ class IMRPhenomD_NRTidal(nn.Module):
             pade_ratio = num / den
             psi_tidal = leading_factor * (x ** 2.5) * pade_ratio
 
-            # Spin-induced quadrupole-monopole terms up to 3.5PN (Dietrich et al. 2019 Eqs. 26-27)
+            # The paper D option has only 2PN+3PN self-spin (Table II).
+            self_spin_fit = "dietrich_2019" if variant == "paper_2019" else "historical_2013"
             s23, s35 = _nrtidal_self_spin_components(
                 x=x,
                 mass1=m1,
@@ -424,6 +488,7 @@ class IMRPhenomD_NRTidal(nn.Module):
                 chi2=s2,
                 lambda1=lam1,
                 lambda2=lam2,
+                fit=self_spin_fit,
             )
 
             # Determine phasing convention matching base IMRPhenomD priority
@@ -450,10 +515,15 @@ class IMRPhenomD_NRTidal(nn.Module):
                     chi2=s2,
                     lambda1=lam1,
                     lambda2=lam2,
+                    fit=self_spin_fit,
                 )
-                total_delta_psi = psi_tidal + (s23 - s23_ref) + s35
+                total_delta_psi = psi_tidal + (s23 - s23_ref)
+                if variant == "binary_compatible":
+                    total_delta_psi = total_delta_psi + s35
             else:
-                total_delta_psi = psi_tidal + s23 + s35
+                total_delta_psi = psi_tidal + s23
+                if variant == "binary_compatible":
+                    total_delta_psi = total_delta_psi + s35
 
         # 3. High-frequency BNS merger cutoff & Planck taper
         if apply_merger_taper:
@@ -468,38 +538,32 @@ class IMRPhenomD_NRTidal(nn.Module):
         # Note: In standard GW convention, h(f) ~ exp(-i * Psi(f))
         exp_factor = torch.complex(torch.cos(total_delta_psi), -torch.sin(total_delta_psi))
 
-        # 3. Tidal amplitude correction (Dietrich et al. 2019 Eq. 24-25)
-        # Eq. 24: A_T = -sqrt(5 * pi * nu / 24) * (9 * M^2 / D) * kappa_eff * x^(13/4) *
-        #               (1 + (449/108) * x + (22672/9) * x^2.89) / (1 + 13477.8 * x^4)
-        # Eq. 25: A_BNS = (A_BBH + A_T) * W_taper
-        if self.version == "v2":
+        amplitude_factor = torch.ones_like(f_eval)
+        if self.version == "v2" and variant == "binary_compatible":
+            # Preserve the historical native default, validated against the
+            # pinned binary. Its 1/2 amplitude normalization is not Eq. (24).
             dist_t = as_tensor(distance, device=device, dtype=dtype)
             d_sec = (dist_t * MPC_SI) / C_SI
             if is_batched and f_eval.dim() > d_sec.dim():
-                d_sec_eval = d_sec.unsqueeze(-1)
-            else:
-                d_sec_eval = d_sec
-
-            a_tidal = _nrtidal_amplitude(x, m_sec_eval, d_sec_eval, lam_tilde_eval)
+                d_sec = d_sec.unsqueeze(-1)
+            a_tidal = _binary_compatible_nrtidal_amplitude(
+                x, m_sec_eval, d_sec, lam_tilde_eval)
             a_tidal = torch.where(f_eval > 0.0, a_tidal, torch.zeros_like(a_tidal))
-
-            # Eq. 24 is the face-on amplitude. Remove the positive plus
-            # projection to obtain the common BBH amplitude, then apply one
-            # factor to both polarizations. This also handles edge-on systems.
             inc = as_tensor(inclination, device=device, dtype=dtype)
             if is_batched and f_eval.dim() > inc.dim():
                 inc = inc.unsqueeze(-1)
             plus_projection = 0.5 * (1.0 + torch.cos(inc)**2)
             base_amplitude = torch.abs(hp_bbh) / plus_projection
             positive = base_amplitude > 0.0
-            safe_amplitude = torch.where(positive, base_amplitude, torch.ones_like(base_amplitude))
-            amplitude_factor = torch.where(positive, 1.0 + a_tidal / safe_amplitude,
+            safe_amplitude = torch.where(positive, base_amplitude,
+                                         torch.ones_like(base_amplitude))
+            amplitude_factor = torch.where(positive,
+                                           1.0 + a_tidal / safe_amplitude,
                                            torch.ones_like(base_amplitude))
-            h_plus = hp_bbh * amplitude_factor * exp_factor * w_taper
-            h_cross = hc_bbh * amplitude_factor * exp_factor * w_taper
-        else:
-            h_plus = hp_bbh * exp_factor * w_taper.to(hp_bbh.dtype)
-            h_cross = hc_bbh * exp_factor * w_taper.to(hc_bbh.dtype)
+        # Dietrich et al. (2019), Table II gives the paper_2019 D option no
+        # tidal-amplitude correction. Eq. (24) is checked independently.
+        h_plus = hp_bbh * amplitude_factor * exp_factor * w_taper
+        h_cross = hc_bbh * amplitude_factor * exp_factor * w_taper
 
         # Enforce exact finite zeros for DC and non-positive frequency bins
         h_plus = torch.where(f_eval > 0.0, h_plus, torch.zeros_like(h_plus))
@@ -516,8 +580,7 @@ class IMRPhenomD_NRTidal(nn.Module):
 
 
 class IMRPhenomD_NRTidalv2(IMRPhenomD_NRTidal):
-    """IMRPhenomD_NRTidalv2 Aligned-Spin Frequency-Domain BNS Waveform Model (Dietrich et al. 2019)."""
+    """NRTidalv2 D model: historical binary-compatible default or paper_2019 D."""
 
-    def __init__(self):
-        super().__init__(version="v2")
-
+    def __init__(self, amplitude_variant: str = "binary_compatible"):
+        super().__init__(version="v2", amplitude_variant=amplitude_variant)

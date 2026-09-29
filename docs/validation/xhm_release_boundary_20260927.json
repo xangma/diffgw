@@ -1,0 +1,152 @@
+{
+  "case_parameters": {
+    "catalog": {
+      "chi1": 0.3,
+      "chi2": -0.1,
+      "distance_mpc": 500.0,
+      "f_ref_hz": 20.0,
+      "mass1_msun": 40.0,
+      "mass2_msun": 20.0,
+      "phi_ref_rad": 0.5
+    },
+    "holdout": {
+      "chi1": -0.4,
+      "chi2": 0.2,
+      "distance_mpc": 680.0,
+      "f_ref_hz": 27.0,
+      "mass1_msun": 55.0,
+      "mass2_msun": 11.0,
+      "phi_ref_rad": 0.71
+    }
+  },
+  "cases": {
+    "catalog": {
+      "21": {
+        "spherical_amplitude": {
+          "bitwise_equal": false,
+          "relative_l2": 0.012419512075210543
+        },
+        "spherical_phase": {
+          "bitwise_equal": true,
+          "max_abs_difference_rad": 0.0,
+          "rms_wrapped_shape_after_reference_phase_rad": 0.0
+        }
+      },
+      "32": {
+        "spherical_amplitude": {
+          "bitwise_equal": false,
+          "relative_l2": 0.04824218381666776
+        },
+        "spherical_phase": {
+          "bitwise_equal": false,
+          "max_abs_difference_rad": 151.01947171207567,
+          "rms_wrapped_shape_after_reference_phase_rad": 0.17709969238423243
+        },
+        "spheroidal_amplitude": {
+          "bitwise_equal": false,
+          "relative_l2": 2.494955435973771
+        },
+        "spheroidal_phase": {
+          "bitwise_equal": true,
+          "max_abs_difference_rad": 0.0,
+          "rms_wrapped_shape_after_reference_phase_rad": 0.0
+        }
+      },
+      "33": {
+        "spherical_amplitude": {
+          "bitwise_equal": false,
+          "relative_l2": 0.00694485752448609
+        },
+        "spherical_phase": {
+          "bitwise_equal": true,
+          "max_abs_difference_rad": 0.0,
+          "rms_wrapped_shape_after_reference_phase_rad": 0.0
+        }
+      },
+      "44": {
+        "spherical_amplitude": {
+          "bitwise_equal": false,
+          "relative_l2": 0.02185149959566987
+        },
+        "spherical_phase": {
+          "bitwise_equal": true,
+          "max_abs_difference_rad": 0.0,
+          "rms_wrapped_shape_after_reference_phase_rad": 0.0
+        }
+      }
+    },
+    "holdout": {
+      "21": {
+        "spherical_amplitude": {
+          "bitwise_equal": false,
+          "relative_l2": 0.02052814680689707
+        },
+        "spherical_phase": {
+          "bitwise_equal": true,
+          "max_abs_difference_rad": 0.0,
+          "rms_wrapped_shape_after_reference_phase_rad": 0.0
+        }
+      },
+      "32": {
+        "spherical_amplitude": {
+          "bitwise_equal": false,
+          "relative_l2": 0.0964054634257617
+        },
+        "spherical_phase": {
+          "bitwise_equal": false,
+          "max_abs_difference_rad": 50.35172371091511,
+          "rms_wrapped_shape_after_reference_phase_rad": 0.035648236783077644
+        },
+        "spheroidal_amplitude": {
+          "bitwise_equal": false,
+          "relative_l2": 0.8633047548571444
+        },
+        "spheroidal_phase": {
+          "bitwise_equal": true,
+          "max_abs_difference_rad": 0.0,
+          "rms_wrapped_shape_after_reference_phase_rad": 0.0
+        }
+      },
+      "33": {
+        "spherical_amplitude": {
+          "bitwise_equal": false,
+          "relative_l2": 0.009618689291274123
+        },
+        "spherical_phase": {
+          "bitwise_equal": true,
+          "max_abs_difference_rad": 0.0,
+          "rms_wrapped_shape_after_reference_phase_rad": 0.0
+        }
+      },
+      "44": {
+        "spherical_amplitude": {
+          "bitwise_equal": false,
+          "relative_l2": 0.014547275212338465
+        },
+        "spherical_phase": {
+          "bitwise_equal": true,
+          "max_abs_difference_rad": 0.0,
+          "rms_wrapped_shape_after_reference_phase_rad": 0.0
+        }
+      }
+    }
+  },
+  "evidence_category": "external-binary-numerical-oracle",
+  "frequency_grid_hz": {
+    "count": 201,
+    "start": 20.0,
+    "stop": 500.0
+  },
+  "production_fit_policy": "release outputs are diagnostic only; no coefficient is fitted or transcribed",
+  "qualification_implication": "Unchanged 32 spheroidal phase does not imply unchanged spherical phase: the recalibrated spheroidal amplitude enters the published mixing transform. This binary comparison provides no release-122022 fit surfaces and does not relax frozen gates.",
+  "release_versions": [
+    122019,
+    122022
+  ],
+  "schema": "diffgw.xhm.release-boundary-diagnostic/v1",
+  "versions": {
+    "lalsimulation": "6.2.1",
+    "lalsuite": "7.26.15",
+    "numpy": "2.5.3"
+  }
+}

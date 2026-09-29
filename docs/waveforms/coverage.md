@@ -27,9 +27,9 @@ class routes, as the [Pv2 ledger](research/phenom-precessing.md) explains.
 | --- | --- | --- | --- |
 | [TaylorF2](../math/taylorf2.md) | native FD | [versioned slice](index.md) | `taylorf2` |
 | [TaylorF2_HM](../math/taylorf2-hm.md) | higher-mode extension | [versioned slice](index.md) | `taylorf2hm` |
-| [TaylorF2_Eccentric](research/tidal-eccentric-higher-modes.md) | eccentric extension | provisional | `taylorf2eccentric`, `eccentrictaylorf2` |
+| [TaylorF2_Eccentric](../math/taylorf2-eccentric.md) | eccentric extension | [versioned slice](index.md) | `taylorf2eccentric`, `eccentrictaylorf2` |
 | [IMRPhenomD](../math/imrphenomd-intrinsic.md) | native FD | [versioned slice](index.md) | `imrphenomd` |
-| [IMRPhenomHM](research/phenom-higher-modes.md) | higher-mode extension | provisional | `imrphenomhm` |
+| [IMRPhenomHM](../math/imrphenomhm-waveform.md) | higher-mode extension | [versioned slice](index.md) | `imrphenomhm` |
 | [IMRPhenomXAS](../math/imrphenomxas.md) | native FD | [versioned slice](index.md) | `imrphenomxas`, `phenomxas`, `xas` |
 | [IMRPhenomXHM](research/phenom-higher-modes.md) | higher-mode extension | provisional | `imrphenomxhm` |
 | [IMRPhenomP](research/phenom-precessing.md) | precessing composition | provisional | `imrphenomp` |
@@ -37,7 +37,7 @@ class routes, as the [Pv2 ledger](research/phenom-precessing.md) explains.
 | [IMRPhenomXP](research/phenom-precessing.md) | precessing composition | provisional | `imrphenomxp`, `phenomxp`, `xp` |
 | [IMRPhenomXPHM](research/phenom-precessing.md) | precessing higher-mode composition | provisional | `imrphenomxphm`, `phenomxphm`, `xphm` |
 | [IMRPhenomXPHM_SpinTaylor](research/phenom-precessing.md) | XPHM precession variant | provisional | `imrphenomxphmspintaylor`, `phenomxphmspintaylor`, `xphmspintaylor` |
-| [IMRPhenomXPNR](research/phenom-precessing.md) | XPHM PNR variant | provisional | `imrphenomxpnr`, `phenomxpnr`, `xpnr`, `pnr`; Torch only: `imrphenomxnpr`, `phenomxnpr`, `xnpr` |
+| [IMRPhenomXPNR](research/imrphenomxpnr.md) | XPHM PNR variant | provisional component evidence; full waveform unqualified | `imrphenomxpnr`, `phenomxpnr`, `xpnr`, `pnr`; Torch only: `imrphenomxnpr`, `phenomxnpr`, `xnpr` |
 | [IMRPhenomT](research/imrphenomt-family.md) | native TD | provisional | `imrphenomt` |
 | [IMRPhenomTHM](research/imrphenomt-family.md) | T higher-mode extension | provisional | `imrphenomthm` |
 | [IMRPhenomTP](research/imrphenomt-family.md) | T precessing extension | provisional | `imrphenomtp` |
@@ -46,11 +46,19 @@ class routes, as the [Pv2 ledger](research/phenom-precessing.md) explains.
 | [IMRPhenomD_NRTidalv2](research/tidal-eccentric-higher-modes.md) | tidal composition | provisional | `imrphenomdnrtidalv2`, `nrtidalv2` |
 | [IMRPhenomNSBH](research/tidal-eccentric-higher-modes.md) | matter composition | provisional | `imrphenomnsbh`, `nsbh` |
 | [KerrRingdown](../math/standalone-family-research-ledger.md) | ringdown generator | provisional | `kerrringdown`, `ringdown` |
+| [KerrRingdown220Direct](../math/kerr-ringdown-direct-class.md) | direct class 220 variant | [versioned slice](index.md) | direct class only |
 | [OfficialSEOBNRv4ROM](../external-data.md) | external-data wrapper | separate SEOBNR track | `seobnrrom`, `seobnrv4rom`, `officialseobnrv4rom` |
 | [ContinuousWave](../math/standalone-family-research-ledger.md) | direct waveform class | provisional | direct class only |
+| [ContinuousWaveH1Direct](../math/continuous-wave-direct-class.md) | direct class H1 variant | [versioned slice](index.md) | direct class only |
 | [MemoryWaveform](../math/standalone-family-research-ledger.md) | direct waveform class | provisional | direct class only |
+| [MemoryWaveform22Direct](../math/memory-dominant-22-direct-class.md) | direct class dominant-pair route | [versioned slice](index.md) | direct class only |
 | [EMRIKludge](../math/standalone-family-research-ledger.md) | direct waveform class | provisional | direct class only |
 | [ParameterizedPostEinstein](../math/standalone-family-research-ledger.md) | direct waveform class | provisional | direct class only |
+| [taylorf2-aligned-bh-spin-3.5pn/v1](../math/taylorf2-aligned-spin.md) | aligned-spin extension | [versioned slice](index.md) | direct class only |
+| [taylorf2-adiabatic-quadrupolar-tides-6.5pn/v1](../math/taylorf2-tidal.md) | tidal extension | [versioned slice](index.md) | direct class only |
+| [taylorf2-spin-induced-quadrupole-3.5pn/v1](../math/taylorf2-spin-quadrupole.md) | spin-quadrupole extension | [versioned slice](index.md) | direct class only |
+| [ppe-supported-equations/v2](../math/ppe-phase-dispersion.md) | ppE overlay equations | [versioned slice](index.md) | direct class only |
+| [emri.newtonian_eccentric_quadrupole.v1](../math/emri-kludge.md) | direct class Newtonian EMRI variant | [versioned slice](index.md) | direct class only |
 
 <!-- END GENERATED COVERAGE TABLE -->
 

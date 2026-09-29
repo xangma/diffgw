@@ -14,7 +14,7 @@ from tests.parity_harness import SOVEREIGN_STATUSES, run_full_parity_suite
 
 
 # Deliberate inventory sizes. Changing a frozen campaign requires review here.
-EXPECTED_CASES = {"catalog": 19, "holdout": 13}
+EXPECTED_CASES = {"catalog": 19, "holdout": 16}
 ACCEPTED_CASE_STATUSES = {"PASSED", *SOVEREIGN_STATUSES}
 REPORTED_COVERAGE_GAPS = {"UNRESOLVED_ORACLE", "MISSING_COVERAGE"}
 

@@ -6,7 +6,7 @@ Literature-based reconstruction of the following models:
 - Pannarale et al. (2015), Phys. Rev. D 92, 081504 (arXiv:1509.06209)
 - Zappa et al. (2019), Phys. Rev. Lett. 123, 041102 (arXiv:1903.11622)
 - Jiménez-Forteza et al. (2017), Phys. Rev. D 95, 064024 (arXiv:1611.00332)
-- London et al. (2018), Phys. Rev. Lett. 120, 161102 (arXiv:1708.00404)
+- London and Fauchon-Jones (2019), arXiv:1810.03550, Eq. (22) for the 220 QNM fit
 - Santamaria et al. (2010), Phys. Rev. D 82, 064016 (arXiv:1005.3306)
 - Dietrich et al. (2019), Phys. Rev. D 100, 044003 (arXiv:1905.06011)
 
@@ -14,7 +14,7 @@ The bounded equation review in docs/reviews/2026-09-12-clean-room/nsbh.md
 does not certify the origin of every inherited coefficient or phase convention.
 """
 
-from typing import Optional, Tuple, Union
+from typing import NamedTuple, Optional, Tuple, Union
 import math
 import torch
 import torch.nn as nn
@@ -39,17 +39,12 @@ from torchwave.approximants.nsbh_phase_baseline import NSBHPhaseBaseline
 from torchwave.approximants.taylorf2 import TaylorF2
 from torchwave.approximants.kerr_qnm_interp import evaluate_kerr_qnm_220
 from torchwave.approximants.nsbh_clean_phase import nrtidalv2_frequency_phase
-from torchwave.approximants.nsbh_clean_amplitude import positive_tidal_frequency, delta2_prime_plus, gamma1_prime_small_lambda, outer_pn_center
-from torchwave.approximants.imrphenomd_nrtidal import (
-    N1_V2,
-    N32_V2,
-    N2_V2,
-    N52_V2,
-    N3_V2,
-    D1_V2,
-    D32_V2,
-    D2_V2,
-    _nrtidal_self_spin_components,
+from torchwave.approximants.nsbh_clean_amplitude import (
+    positive_tidal_frequency,
+    delta2_prime_plus,
+    delta2_prime_small_lambda,
+    gamma1_prime_small_lambda,
+    outer_pn_center,
 )
 
 
@@ -357,6 +352,117 @@ def london_ringdown_properties(
     return f_rd, q_factor
 
 
+def nsbh_branch_predicates(
+    f_tide: torch.Tensor, f_rd: torch.Tensor, torus_ratio: torch.Tensor
+) -> tuple[torch.Tensor, torch.Tensor]:
+    """Table I's closed frequency boundary and strictly positive torus flag."""
+    return f_tide >= f_rd, torus_ratio > 0.0
+
+
+class NSBHBranchAmplitudeFits(NamedTuple):
+    f_rd_tilde: torch.Tensor
+    x_nd: torch.Tensor
+    x_prime_nd: torch.Tensor
+    x_d: torch.Tensor
+    x_prime_d: torch.Tensor
+    epsilon_tide: torch.Tensor
+    epsilon_ins: torch.Tensor
+    sigma_tide: torch.Tensor
+
+
+class NSBHJoiningFrequencies(NamedTuple):
+    f0: torch.Tensor
+    f1: torch.Tensor
+    f2: torch.Tensor
+
+
+def nsbh_joining_frequencies(
+    q: torch.Tensor,
+    f_tide: torch.Tensor,
+    f_rd_tilde: torch.Tensor,
+    epsilon_ins: torch.Tensor,
+    tide_at_or_above_ringdown: torch.Tensor,
+    has_torus: torch.Tensor,
+) -> NSBHJoiningFrequencies:
+    """Table I joins with the documented low/no-torus carrier adapter."""
+    f0 = torch.where(
+        tide_at_or_above_ringdown,
+        torch.where(has_torus, epsilon_ins * f_rd_tilde, f_rd_tilde),
+        torch.where(
+            has_torus,
+            epsilon_ins * f_tide,
+            outer_pn_center(((q - 1.0) * f_rd_tilde + epsilon_ins * f_tide) / q, epsilon_ins),
+        ),
+    )
+    f1 = torch.where(
+        tide_at_or_above_ringdown,
+        torch.where(has_torus, epsilon_ins * f_rd_tilde, f_rd_tilde),
+        torch.where(has_torus, f_tide, ((q - 1.0) * f_rd_tilde + f_tide) / q),
+    )
+    return NSBHJoiningFrequencies(f0, f1, f_rd_tilde)
+
+
+def nsbh_branch_amplitude_fits(
+    chi: torch.Tensor,
+    eta: torch.Tensor,
+    compactness: torch.Tensor,
+    f_tide: torch.Tensor,
+    f_rd: torch.Tensor,
+    torus_ratio: torch.Tensor,
+    lambda_ns: torch.Tensor,
+    tide_at_or_above_ringdown: torch.Tensor,
+    has_torus: torch.Tensor,
+) -> NSBHBranchAmplitudeFits:
+    """Thompson Appendix A Eqs. (20)--(24), (30), and Table I factors."""
+    f_rd_tilde = 0.98 * f_rd * torch.where(
+        lambda_ns > 1.0,
+        0.99,
+        1.0 - 0.02 * lambda_ns + 0.01 * lambda_ns.square(),
+    )
+    u = ((f_tide - f_rd_tilde) / f_rd_tilde).square()
+    x_nd = u - 0.571505 * compactness - 0.00508451 * chi
+    x_prime_nd = u - 0.657424 * compactness - 0.0259977 * chi
+    x_d = torus_ratio + 0.424912 * compactness + 0.363604 * torch.sqrt(eta) - 0.060559 * chi
+    x_prime_d = (
+        torus_ratio
+        - 0.132754 * compactness
+        + 0.576669 * torch.sqrt(eta)
+        - 0.0603749 * chi
+        - 0.0601185 * chi.square()
+        - 0.0729134 * chi.pow(3.0)
+    )
+    high_arg = torch.clamp(4.0 * (x_nd + 0.0796251) / 0.0801192, -50.0, 50.0)
+    sigma_arg = torch.clamp(4.0 * (x_prime_nd + 0.206465) / 0.226844, -50.0, 50.0)
+    epsilon_tide_high = torch.sigmoid(2.0 * high_arg)
+    sigma_tide_high = torch.sigmoid(-2.0 * sigma_arg)
+    epsilon_ins_disrupt = 1.29971 - 1.61724 * x_d
+    sigma_tide_disrupt = 0.137722 - 0.293237 * x_prime_d
+    epsilon_tide = torch.where(tide_at_or_above_ringdown, epsilon_tide_high, 0.0)
+    epsilon_ins = torch.where(tide_at_or_above_ringdown & ~has_torus, 1.0, epsilon_ins_disrupt)
+    sigma_tide = torch.where(
+        tide_at_or_above_ringdown,
+        sigma_tide_high,
+        torch.where(has_torus, sigma_tide_disrupt, 0.5 * (sigma_tide_high + sigma_tide_disrupt)),
+    )
+    return NSBHBranchAmplitudeFits(
+        f_rd_tilde, x_nd, x_prime_nd, x_d, x_prime_d, epsilon_tide, epsilon_ins, sigma_tide
+    )
+
+
+def nsbh_torus_mass_ratio(
+    q: torch.Tensor,
+    chi: torch.Tensor,
+    compactness: torch.Tensor,
+    xi_tide: torch.Tensor,
+) -> torch.Tensor:
+    """Physical torus fraction from Thompson Appendix A Eqs. (11)--(12)."""
+    raw_ratio = (
+        0.296 * xi_tide * (1.0 - 2.0 * compactness)
+        - 0.171 * q * compactness * kerr_isco_radius(chi)
+    )
+    return torch.clamp(raw_ratio, min=0.0)
+
+
 def nsbh_frequencies(
     mass1: torch.Tensor,
     mass2: torch.Tensor,
@@ -409,6 +515,36 @@ def _amplitude_window(
     offset_mf = total_mass_sec * (frequency_hz - center_hz)
     arg = 8.0 * offset_mf / torch.clamp(width_mf.abs(), min=1e-8)
     return torch.sigmoid(arg if rising else -arg)
+
+
+def nsbh_amplitude_window_sum(
+    frequency_hz: torch.Tensor,
+    total_mass_sec: torch.Tensor,
+    centers_hz: tuple[torch.Tensor, torch.Tensor, torch.Tensor],
+    width_mf: torch.Tensor,
+    carriers: tuple[torch.Tensor, torch.Tensor, torch.Tensor],
+) -> torch.Tensor:
+    """Thompson Eq. (4): blend supplied PN, premerger and ringdown carriers."""
+    f0, f1, f2 = centers_hz
+    a_pn, a_pm, a_rd = carriers
+    w_ins = _amplitude_window(frequency_hz, f0, width_mf, total_mass_sec, rising=False)
+    w_pm = _amplitude_window(frequency_hz, f1, width_mf, total_mass_sec, rising=False)
+    w_rd = _amplitude_window(frequency_hz, f2, width_mf, total_mass_sec, rising=True)
+    return a_pn * w_ins + a_pm * w_pm + a_rd * w_rd
+
+
+def nsbh_polarizations_from_amplitude(full_amp, total_phase, inclination):
+    """Project a supplied positive-frequency NSBH amplitude and phase."""
+    cosine = torch.cos(inclination)
+    plus_factor = 0.5 * (1.0 + cosine * cosine)
+    h_plus = -plus_factor * full_amp * torch.complex(
+        torch.cos(total_phase), -torch.sin(total_phase),
+    )
+    h_cross = torch.complex(
+        cosine * full_amp * torch.sin(total_phase),
+        cosine * full_amp * torch.cos(total_phase),
+    )
+    return h_plus, h_cross
 
 
 def _legacy_phase_offsets(m1, m2, s1, s2, mf_ref, mf_anchor, remnant_mass, remnant_spin):
@@ -556,12 +692,7 @@ class IMRPhenomNSBH(nn.Module):
         # -------------------------------------------------------------
         # 3. Step 3: Baryonic Torus Remnant Mass Ratio
         # -------------------------------------------------------------
-        r_isco = kerr_isco_radius(s1)
-        torus_ratio = torch.clamp(
-            0.296 * xi_tide * (1.0 - 2.0 * c) - 0.171 * q * c * r_isco,
-            min=0.0,
-        )
-        has_torus = torus_ratio > 0.0
+        torus_ratio = nsbh_torus_mass_ratio(q, s1, c, xi_tide)
 
         # -------------------------------------------------------------
         # 4. Step 4: Remnant Mass M_f and Remnant Spin chi_f
@@ -579,68 +710,25 @@ class IMRPhenomNSBH(nn.Module):
         # -------------------------------------------------------------
         f_rd, q_factor = london_ringdown_properties(mf, chi_f)
         # Step 6 applies the table's f_tide >= f_RD (closed) boundary.
-        is_ftide_ge_frd = f_tide >= f_rd
+        is_ftide_ge_frd, has_torus = nsbh_branch_predicates(f_tide, f_rd, torus_ratio)
 
         # -------------------------------------------------------------
         # 6. Step 6: Merger Classification and Joining Parameters
         # -------------------------------------------------------------
         lam_safe = torch.clamp(lam2, min=0.0)
-        frd_gt1 = 0.99 * 0.98 * f_rd
-        frd_le1 = (1.0 - 0.02 * lam_safe + 0.01 * (lam_safe ** 2.0)) * 0.98 * f_rd
-        f_rd_tilde = torch.where(lam2 > 1.0, frd_gt1, frd_le1)
-
-        # Thompson Sec. II defines chi in Eqs. (21)-(24) as the BH spin,
-        # unlike the effective spin used by the PhenomC BBH amplitude below.
-        x_nd = ((f_tide - f_rd_tilde) / f_rd_tilde) ** 2.0 - 0.571505 * c - 0.00508451 * s1
-        x_prime_nd = ((f_tide - f_rd_tilde) / f_rd_tilde) ** 2.0 - 0.657424 * c - 0.0259977 * s1
-        x_d = torus_ratio + 0.424912 * c + 0.363604 * torch.sqrt(eta) - 0.060559 * s1
-        x_prime_d = (
-            torus_ratio
-            - 0.132754 * c
-            + 0.576669 * torch.sqrt(eta)
-            - 0.0603749 * s1
-            - 0.0601185 * (s1 ** 2.0)
-            - 0.0729134 * (s1 ** 3.0)
+        # Eqs. (21)--(24) use the BH spin, rather than the PhenomC effective
+        # spin used below for the BBH carrier amplitude.
+        branch_fits = nsbh_branch_amplitude_fits(
+            s1, eta, c, f_tide, f_rd, torus_ratio, lam2, is_ftide_ge_frd, has_torus
         )
+        f_rd_tilde = branch_fits.f_rd_tilde
+        eps_tide = branch_fits.epsilon_tide
+        eps_ins = branch_fits.epsilon_ins
+        sigma_tide = branch_fits.sigma_tide
 
-        def omega_plus(val: torch.Tensor, f0: Union[float, torch.Tensor], d: Union[float, torch.Tensor]) -> torch.Tensor:
-            d_val = as_tensor(d, device=device, dtype=dtype)
-            f0_val = as_tensor(f0, device=device, dtype=dtype)
-            arg = torch.clamp(4.0 * (val - f0_val) / torch.clamp(d_val.abs(), min=1e-8), -50.0, 50.0)
-            return torch.sigmoid(2.0 * arg)
-
-        def omega_minus(val: torch.Tensor, f0: Union[float, torch.Tensor], d: Union[float, torch.Tensor]) -> torch.Tensor:
-            d_val = as_tensor(d, device=device, dtype=dtype)
-            f0_val = as_tensor(f0, device=device, dtype=dtype)
-            arg = torch.clamp(4.0 * (val - f0_val) / torch.clamp(d_val.abs(), min=1e-8), -50.0, 50.0)
-            return torch.sigmoid(-2.0 * arg)
-
-        eps_tide_high = omega_plus(x_nd, -0.0796251, 0.0801192)
-        eps_tide = torch.where(is_ftide_ge_frd, eps_tide_high, torch.zeros_like(eps_tide_high))
-
-        eps_ins_disrupt = 1.29971 - 1.61724 * x_d
-        eps_ins = torch.where(is_ftide_ge_frd & (~has_torus), torch.ones_like(eps_ins_disrupt), eps_ins_disrupt)
-
-        sig_tide_high = omega_minus(x_prime_nd, -0.206465, 0.226844)
-        sig_tide_disrupt = 0.137722 - 0.293237 * x_prime_d
-        sig_tide_mild_notorus = 0.5 * (sig_tide_high + sig_tide_disrupt)
-        sigma_tide = torch.where(
-            is_ftide_ge_frd,
-            sig_tide_high,
-            torch.where(has_torus, sig_tide_disrupt, sig_tide_mild_notorus),
+        f0_tilde, f1_tilde, f2_tilde = nsbh_joining_frequencies(
+            q, f_tide, f_rd_tilde, eps_ins, is_ftide_ge_frd, has_torus
         )
-
-        f0_tilde = torch.where(
-            is_ftide_ge_frd,
-            torch.where(has_torus, eps_ins * f_rd_tilde, f_rd_tilde),
-            torch.where(has_torus, eps_ins * f_tide, outer_pn_center(((q - 1.0) * f_rd_tilde + eps_ins * f_tide) / q, eps_ins)),
-        )
-        f1_tilde = torch.where(
-            is_ftide_ge_frd,
-            torch.where(has_torus, eps_ins * f_rd_tilde, f_rd_tilde),
-            torch.where(has_torus, f_tide, ((q - 1.0) * f_rd_tilde + f_tide) / q),
-        )
-        f2_tilde = f_rd_tilde
         d_win_mf = 0.015 + sigma_tide
 
         # -------------------------------------------------------------
@@ -665,7 +753,7 @@ class IMRPhenomNSBH(nn.Module):
             gamma1_prime_small_lambda(lam_safe) * gamma1,
         )
         delta2_prime_gt1 = delta2_prime_plus(f_tide, f_rd_tilde)
-        delta2_prime_le1 = delta2 - 2.0 * (delta2 - 0.81248) * lam_safe + (delta2 - 0.81248) * (lam_safe ** 2.0)
+        delta2_prime_le1 = delta2_prime_small_lambda(delta2, lam_safe)
         delta2_prime = torch.where(lam2 > 1.0, delta2_prime_gt1, delta2_prime_le1)
         sigma_lorentz = delta2_prime * f_rd / q_factor
 
@@ -778,11 +866,10 @@ class IMRPhenomNSBH(nn.Module):
         lorentz_bar = (sigma_bar ** 2.0) / ((f_bar - f_rd_bar) ** 2.0 + (sigma_bar ** 2.0) / 4.0)
         a_rd_dimless = eps_tide_u * delta1_u * lorentz_bar * torch.pow(f_bar, -7.0 / 6.0)
 
-        w_ins = _amplitude_window(f_eval, f0_tilde_u, d_win_mf_u, m_sec_u, rising=False)
-        w_pm = _amplitude_window(f_eval, f1_tilde_u, d_win_mf_u, m_sec_u, rising=False)
-        w_rd = _amplitude_window(f_eval, f2_tilde_u, d_win_mf_u, m_sec_u, rising=True)
-
-        full_amp_dimless = a_pn_dimless * w_ins + a_pm_dimless * w_pm + a_rd_dimless * w_rd
+        full_amp_dimless = nsbh_amplitude_window_sum(
+            f_eval, m_sec_u, (f0_tilde_u, f1_tilde_u, f2_tilde_u), d_win_mf_u,
+            (a_pn_dimless, a_pm_dimless, a_rd_dimless),
+        )
 
         norm = ((m_sec_u ** 2.0) / d_sec_u) * (0.5 * math.sqrt(5.0 / (4.0 * PI)))
         full_amp = norm * full_amp_dimless
@@ -866,14 +953,8 @@ class IMRPhenomNSBH(nn.Module):
         # -------------------------------------------------------------
         # 8c. Polarizations Projection onto -2Y_2,\pm 2
         # -------------------------------------------------------------
-        cos_inc = torch.cos(unsqueeze_param(inc))
-        plus_factor = 0.5 * (1.0 + cos_inc * cos_inc)
-        cross_factor = cos_inc
-
-        h_plus = - plus_factor * full_amp * torch.complex(torch.cos(total_phase), -torch.sin(total_phase))
-        h_cross = torch.complex(
-            cross_factor * full_amp * torch.sin(total_phase),
-            cross_factor * full_amp * torch.cos(total_phase),
+        h_plus, h_cross = nsbh_polarizations_from_amplitude(
+            full_amp, total_phase, unsqueeze_param(inc),
         )
 
         # Enforce exact finite zeros for DC and non-positive frequency bins

@@ -59,12 +59,12 @@ def test_explicit_msa_remnant_mode_is_finite_and_aligned_continuous(model):
 
 
 @pytest.mark.parametrize("model_class,carrier_name,default_msa_remnant", [
-    (IMRPhenomXP, "xas_model", True), (IMRPhenomXPHM, "xhm_model", False),
+    (IMRPhenomXP, "xas_model", True), (IMRPhenomXPHM, "xhm_model", True),
 ])
 def test_explicit_nnlo_remnant_reaches_carrier_with_msa_angles(
     monkeypatch, model_class, carrier_name, default_msa_remnant
 ):
-    """XP v223 defaults to its independent MSA remnant; XPHM is unchanged."""
+    """Both public v223 routes use their independent MSA remnant by default."""
     from torchwave.approximants.imrphenom_xas import XASParameterFits
     from torchwave.approximants.precession_msa import compute_effective_chip
 

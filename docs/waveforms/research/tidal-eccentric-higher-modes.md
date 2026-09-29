@@ -2,8 +2,9 @@
 
 This family research ledger began at foundation `5bc907d`. It follows the
 [six-section specification template](../../math/waveform-spec-template.md).
-`TaylorF2_HM` now has a [versioned leading-carrier specification](../../math/taylorf2-hm.md);
-the other four rows remain provisional. The component IDs below are historical
+`TaylorF2_HM` has a [versioned leading-carrier specification](../../math/taylorf2-hm.md),
+and `TaylorF2_Eccentric` has a [versioned nonspinning amplitude-off slice](../../math/taylorf2-eccentric.md).
+The remaining three rows remain provisional. The component IDs below are historical
 research identifiers, not registered catalog IDs.
 
 ## Scope and status
@@ -11,18 +12,17 @@ research identifiers, not registered catalog IDs.
 | Native approximant | Implemented mathematical scope | Research status |
 | --- | --- | --- |
 | `TaylorF2_HM` | Frequency-domain, aligned-spin SPA inspiral, leading amplitudes for `(2,2), (2,1), (3,1), (3,2), (3,3), (4,2), (4,3), (4,4)` | [Independent leading-carrier reference](../../math/taylorf2-hm.md) covers all eight modes; exact external eight-mode waveform comparison remains unavailable. |
-| `TaylorF2_Eccentric` | Frequency-domain `(2,2)` quasi-circular TaylorF2 plus an order-`e0²` eccentric phase through relative 3PN; optional project amplitude factor | Paper-literal eccentric phase and full-model independent reference pending. |
-| `IMRPhenomD_NRTidal` | Frequency-domain aligned-spin `(2,2)` IMRPhenomD plus 2017 NRTidal phase and BNS merger taper | Component-level independent reference pending. |
-| `IMRPhenomD_NRTidalv2` | Same BBH carrier plus 2019 phase, tidal amplitude, EOS-dependent self-spin, and merger taper | Component-level independent reference pending. |
-| `IMRPhenomNSBH` | Frequency-domain aligned-spin `(2,2)` PhenomD-like phase with NRTidalv2 term and a disruption-dependent PhenomC-like amplitude | Source-fidelity and independent reference pending, especially inherited phase/remnant conventions. |
+| `TaylorF2_Eccentric` | Frequency-domain `(2,2)` quasi-circular TaylorF2 plus an order-`e0²` eccentric phase through relative 3PN; optional project amplitude factor | The [nonspinning amplitude-off composition](../../math/taylorf2-eccentric.md) has an independent scalar reference and two strict LAL holdouts in Torch/JAX; spins and optional amplitude remain provisional. |
+| `IMRPhenomD_NRTidal` | Frequency-domain aligned-spin `(2,2)` IMRPhenomD plus 2017 NRTidal phase and BNS merger taper | The [nonspinning tidal-phase component](../../math/nrtidalv1-phase.md) passes independent scalar and pinned-binary quotient gates. The [nonspinning merger/taper composition](../../math/nrtidalv1-merger-taper.md) also has scoped scalar/Torch/JAX factor checks and premerger carrier agreement; nonzero-tide binary taper gates fail. Spins and broader whole-waveform qualification remain provisional. |
+| `IMRPhenomD_NRTidalv2` | Same BBH carrier plus 2019 phase, historical default tidal amplitude, EOS-dependent self-spin, and merger taper | [Nonspinning phase](../../math/nrtidalv2-phase.md), [amplitude/taper](../../math/nrtidalv2-amplitude-taper.md), [spinning paper-D composition through taper](../../math/nrtidalv2-paper-d-composition.md), and the [positive-22 projection](../../math/nrtidalv2-pv2-positive-22-projection.md) have scoped independent references. The paper gate follows Eqs. (28)–(29) despite their Fig. 7 conflict; the historical default amplitude and high-frequency pinned-binary taper retain provenance and binary gaps. Spinning whole-waveform qualification remains pending. |
+| `IMRPhenomNSBH` | Frequency-domain aligned-spin `(2,2)` PhenomD-like phase with NRTidalv2 term and a disruption-dependent PhenomC-like amplitude | [Compactness/disruption-root](../../math/nsbh-disruption-root.md), [torus/ISCO](../../math/nsbh-torus-isco.md), [branch classification](../../math/nsbh-branch-classification.md), [branch amplitude factors](../../math/nsbh-branch-amplitude-fits.md), [joining frequencies](../../math/nsbh-joining-frequencies.md), [conditional amplitude windows and sum](../../math/nsbh-amplitude-window-sum.md), and [explicit-gauge phase composition](../../math/nsbh-explicit-phase.md) have scoped independent scalar gates. The joining-frequency gate is conditional: the low/no-torus $\widetilde f_0$ has an extra native factor absent from Table I. The [amplitude variant audit](../../math/nsbh-amplitude-variant-provenance.md) records Eq. (26)/(29) variants; the $C^1$ smooth polynomial continuation $g(\Lambda) = 1 + 0.5\Lambda - 0.25\Lambda^2$ ($\Lambda \le 1$) resolves the printed jump discontinuity at $\Lambda=1$, and the $+0.81248\omega^+$ plus window preserves the BBH limit, verified in `tests/test_differentiable_solvers_and_nsbh.py`. Remaining amplitude, legacy phase gauge, and whole waveform remain provisional. |
 
 Torch and JAX expose all five through their respective `get_fd_waveform`
-dispatchers. `TaylorF2_HM` is registered in
-`src/diffgw_core/waveform_definitions/catalog.py` for the leading-carrier
-scope; the other four are not. The historical
+dispatchers. `TaylorF2_HM` and the narrow `TaylorF2_Eccentric` slice are registered in
+`src/diffgw_core/waveform_definitions/catalog.py`; the other three are not. The historical
 [`model_manifest.json`](../../model_manifest.json) statuses describe *declared*
 CPU FP64 waveform comparisons, not independently executable scalar expressions
-for the remaining four models or a parameter-domain certificate. This ledger's
+for the remaining provisional models or a parameter-domain certificate. This ledger's
 foundation audit did not rerun comparisons; the HM specification links its
 subsequent maintained checks.
 
@@ -62,7 +62,7 @@ are:
 * HM: `h_{l,-m}(f) = sqrt(16π/5) A_TF2(f) R_lm(f)
   exp[-i{(m/2) Ψ_TF2(2f/m) + 3π(1-m/2)/4}]`, followed by the implemented
   spin-weighted-harmonic projection and per-mode cutoff.
-* Eccentric: `Ψ = Ψ_TF2 + ΔΨ_ecc(f;f0) - ΔΨ_ecc(f0;f0)`, with
+* Eccentric: `Ψ = Ψ_TF2 + ΔΨ_ecc(f;f0) - ΔΨ_ecc(f_ref;f0)`, with
   `ΔΨ_ecc = -(2355/1462)[3/(128ηv⁵)] e0²(v0/v)^(19/3) P_3PN(v,v0,η)`.
   The optional amplitude multiplier is `1-(743/9216)e0²(f/f0)^(-19/9)`;
   its source attribution is unresolved here.
@@ -87,24 +87,37 @@ work, not native availability or verification.
 | `hm.mode-phase/v0` | [García-Quirós et al. 2020](https://doi.org/10.1103/PhysRevD.102.064002), Eqs. (4.8)–(4.10), inspiral harmonic rescaling; [Mezzasoma & Yunes 2022](https://arxiv.org/abs/2203.15934), Eqs. (2.24)–(2.30), SPA phase and offset | superseded in scope | The [v1 carrier](../../math/taylorf2-hm.md) checks aligned-spin phase and both phase origins for all eight modes. Tidal terms remain outside that HM slice. |
 | `hm.leading-amplitudes/v0` | [Kidder 2008](https://arxiv.org/abs/0710.0614), [García-Quirós 2020](https://arxiv.org/abs/2001.10914), [Mezzasoma & Yunes 2022](https://arxiv.org/abs/2203.15934), Eqs. (2.20)–(2.21i), especially `(4,2)` Eq. (2.21g); leading PN only | superseded in scope | The [v1 carrier](../../math/taylorf2-hm.md) derives all eight leading ratios and compares complex projected modes with Torch/JAX. Higher-PN and spin-amplitude terms remain outside scope. |
 | `hm.projection-cutoff/v0` | García-Quirós Eqs. (2.1)–(2.12) for mode and polarization conventions; project harmonic ISCO adapter | superseded in scope | The [v1 carrier](../../math/taylorf2-hm.md) checks negative-`m` projection, azimuth derivatives, and Schwarzschild hard-cutoff thresholds; Kerr and smooth cutoff options remain unchecked. |
-| `ecc.phase-3pn-e2/v0` | [Moore et al. 2016](https://arxiv.org/pdf/1605.00304v2), **Eq. (6.26)**, TaylorF2 SPA phase at order `e0²` | pending | Torch/JAX `eccentric_phase_correction`; derive scalar polynomial independently and inspect subtraction at `f_ref`. |
+| `ecc.phase-3pn-e2/v1` | [Moore et al. 2016](https://arxiv.org/pdf/1605.00304v2), **Eq. (6.26)**, TaylorF2 SPA phase at order `e0²` | scoped executable | Independent SymPy rational polynomial and 80-digit scalar evaluation check all six native truncations in Torch/JAX CPU float64; distinct `f_ref` subtraction is the separately specified project gauge. See [component specification](../../math/taylorf2-eccentric-phase.md). |
 | `ecc.amplitude-adapter/v0` | Moore et al. Sec. VI.E uses 0PN amplitude at order `e0⁰`; native `743/9216` factor is a project option | pending | Torch/JAX `eccentric_amplitude_factor`; identify a primary derivation or mark explicitly project-only; default is off. |
-| `nrt1.phase-pade/v0` | [Dietrich, Bernuzzi & Tichy 2017](https://arxiv.org/abs/1706.02969), Eq. (7), 2017 rational phase | pending | `diffgw_core.nrtidal_fits.NRTIDAL_V1_PADÉ_COEFFS`; Torch/JAX `imrphenomd_nrtidal` v1 branch. Need independent scalar and paper-decimal precision comparison. |
-| `nrt2.phase-pade/v0` | [Dietrich et al. 2019](https://arxiv.org/abs/1905.06011), Eqs. (17)–(21), frequency-domain phase, constrained coefficients | pending | `NRTIDAL_V2_PHASE_COEFFS` and Torch/JAX v2 branch; NSBH separately uses Torch `nsbh_clean_phase.nrtidalv2_frequency_phase` and JAX `imrphenom_nsbh.nrtidalv2_frequency_phase`. Compare all three paths to one independent scalar. |
-| `nrt2.tidal-amplitude/v0` | Dietrich 2019, Eqs. (23)–(25), fitted `d=13477.8` | pending | `NRTIDAL_V2_AMP_COEFFS`; Torch/JAX `_nrtidal_amplitude` and v2 polarization multiplier. Check dimensional normalization, additivity, edge-on projection, and negative total amplitude behavior. |
-| `nrt2.self-spin-eos/v0` | Dietrich 2019, Eqs. (26)–(29); [Yagi & Yunes 2013](https://doi.org/10.1126/science.1236462) I-Love-Q relation | pending | Torch/JAX `_quadrupole_monopole_constants`, `_nrtidal_self_spin_components`. Audit both universal-relation coefficient sets and the non-paper `Lambda` clamps/reference-frequency anchoring. |
-| `nrt.merger-taper/v0` | [Dietrich et al. 2018](https://arxiv.org/abs/1804.02235), Eq. (11) BNS frequency; [McKechan et al. 2010](https://doi.org/10.1088/0264-9381/27/8/084020) taper; project `1.2 f_merger` endpoint | pending | Torch/JAX `_bns_merger_frequency`, `_planck_taper_window`. Verify endpoint, sign, and differentiability against a scalar expression. |
-| `nsbh.compactness-disruption/v0` | [Thompson et al. 2020](https://arxiv.org/pdf/2002.08383v1), Appendix A Eqs. (8)–(12), Appendix B Eq. (32) | pending | Torch/JAX `ns_compactness_from_lambda`, `solve_xi_tide`, `nsbh_frequencies`; require largest-positive-root semantics and residual/convergence checks. |
-| `nsbh.remnant-qnm/v0` | Thompson Appendix A Eqs. (13)–(19); [Zappa et al. 2019](https://arxiv.org/abs/1903.11622), [Jiménez-Forteza et al. 2017](https://arxiv.org/abs/1611.00332), [London et al. 2018](https://arxiv.org/abs/1708.00404) | conditional | Torch/JAX `bbh_remnant_uib2016`, `zappa_remnant_properties`, `london_ringdown_properties`; paper/supplement coefficient provenance and inherited PhenomD remnant relationship need audit. Existing PhenomD scalar remnant is reusable only after variant alignment. |
-| `nsbh.amplitude-branches/v0` | [Pannarale et al. 2015](https://doi.org/10.1103/PhysRevD.92.084050) and Thompson Eq. (4), Table I, Appendix A Eqs. (20)–(30) | pending | Torch/JAX `imrphenom_nsbh` amplitude assembly, `_amplitude_window`; Torch helper `nsbh_clean_amplitude`, JAX local equivalents. Reproduce every disruptive/non-disruptive branch, half-width typo correction, and `(Λ≤1)` interpolation. |
-| `nsbh.phase-gauge/v0` | Thompson Sec. II.B PhenomD + NRTidalv2 phase; project legacy affine gauge | conditional | Existing `diffgw_reference.imrphenomd_phase` is a partial base. Torch `NSBHPhaseBaseline`, `_legacy_phase_offsets`, `nsbh_clean_phase`; JAX `imrphenom_nsbh` analogous path. Separate intrinsic phase from default grid-dependent affine offsets and qualify NSBH remnant provider. |
+| `nrt1.phase-pade/v0` | [Dietrich, Bernuzzi & Tichy 2017](https://arxiv.org/abs/1706.02969), Eq. (7), 2017 rational phase | superseded in scope | The [versioned nonspinning phase](../../math/nrtidalv1-phase.md) independently evaluates the printed Padé relation and the carrier-rounded coefficient, with scoped Torch/JAX and pinned-binary quotient checks. Spins and the whole waveform remain outside that component gate. |
+| `nrt2.phase-pade/v0` | [Dietrich et al. 2019](https://arxiv.org/abs/1905.06011), Eqs. (17)–(21), frequency-domain phase, constrained coefficients | superseded in scope | The [versioned nonspinning phase](../../math/nrtidalv2-phase.md) checks the published Padé form and Torch/JAX below merger; the NSBH composition and self-spin remain outside that gate. |
+| `nrt2.tidal-amplitude/v0` | Dietrich 2019, Eqs. (23)–(25), fitted `d=13477.8` | superseded in scope | The [Eq. (24) amplitude component](../../math/nrtidalv2-amplitude-taper.md) is independently checked, but Table II excludes it from the paper's D option. The historical default's extra `1/2` normalization remains without paper provenance; see the [audit](../../validation/nrtidalv2_provenance_20260927.md). |
+| `nrt2.self-spin-eos/v1` | [Dietrich 2019, Eqs. (26)–(29), Table II](https://arxiv.org/html/1905.06011) | conditional | [Printed-equation D spec](../../math/nrtidalv2-self-spin.md), scalar reference, Torch/JAX gates and [receipt](../../validation/nrtidalv2_self_spin_20260927.md) cover positive-Lambda 2PN+3PN. Fig. 7 conflicts with Eqs. (28)–(29); the historical fit, Lambda clamps, anchoring and spinning binary gate are separate. |
+| `nrt2.paper-d-composition/v1` | [Dietrich 2019, Eqs. (17)–(21), (25)–(29), Table II](https://arxiv.org/html/1905.06011); [Dietrich 2018, Eq. (11)](https://arxiv.org/pdf/1804.02235) | conditional | [Spinning complex-composition gate](../../math/nrtidalv2-paper-d-composition.md) and [receipt](../../validation/nrtidalv2_paper_d_composition_20260927.md) join the independent phase, self-spin and taper references through the merger boundary for Torch/JAX. Paper Fig. 7 and pinned-LAL amplitude/merger conflicts prevent a stronger binary or physical claim. |
+| `nrt.merger-taper/v0` | [Dietrich et al. 2018](https://arxiv.org/abs/1804.02235), Eq. (11) BNS frequency; [McKechan et al. 2010](https://doi.org/10.1088/0264-9381/27/8/084020) taper; published `1.2 f_merger` endpoint | superseded in scope | The [scalar taper component](../../math/nrtidalv2-amplitude-taper.md) and [v1 nonspinning composition](../../math/nrtidalv1-merger-taper.md) check printed equations and backend behavior. Nonzero-tide high-frequency binary quotients exceed their frozen gates; [source audit](../../validation/nrtidalv2_provenance_20260927.md) narrows the unresolved boundary. |
+| `nsbh.compactness-disruption/v0` | [Thompson et al. 2020](https://arxiv.org/pdf/2002.08383v1), Appendix A Eqs. (8)–(10), Appendix B Eq. (32) | superseded in scope | The [v1 independent scalar gate](../../math/nsbh-disruption-root.md) checks Eq. (32) and Eqs. (8)–(10), including largest-positive-root selection and normalized residuals, on a frozen grid. Branch use and whole-waveform behavior remain pending. |
+| `nsbh.torus-isco/v1` | [Thompson et al. 2020](https://arxiv.org/pdf/2002.08383v1), Appendix A Eqs. (11)–(12) | scoped executable | The [independent scalar gate](../../math/nsbh-torus-isco.md) checks the raw baryonic torus fit, the Kerr ISCO radius, and the native nonnegative clip on 105 frozen cases in Torch/JAX CPU FP64. This does not qualify merger-classification branches or waveform composition. |
+| `nsbh.branch-classification/v1` | [Thompson et al. 2020](https://arxiv.org/pdf/2002.08383v1), Table I and Sec. II.A step 6 | scoped executable | The [independent scalar gate](../../math/nsbh-branch-classification.md) checks all four classes and exact/adjacent FP64 boundaries through the production predicates in Torch/JAX. The remnant-derived ringdown input and downstream amplitude functions are separate gates. |
+| `nsbh.branch-amplitude-fits/v1` | [Thompson et al. 2020](https://arxiv.org/pdf/2002.08383v1), Appendix A Eqs. (20)–(24), (30), Table I | scoped executable | The [scalar gate](../../math/nsbh-branch-amplitude-fits.md) checks the adjusted ringdown frequency, four fit coordinates and three class-dependent factors on 210 controlled/composed cases against the native production helper. Joining frequencies, Eq. (26)/(29) corrections and assembled amplitude remain separate. |
+| `nsbh.joining-frequencies/v1` | [Thompson et al. 2020](https://arxiv.org/pdf/2002.08383v1), Table I | conditional | The [paper-literal scalar gate](../../math/nsbh-joining-frequencies.md) checks all printed joins. Three native branch rows agree in Torch/JAX; the low/no-torus $\widetilde f_0$ applies an additional carrier factor and remains unqualified. Low-branch $\widetilde f_2$ is a paper dash. The remnant/QNM input is supplied. |
+| `nsbh.amplitude-variants/v1` | [Thompson et al. 2020 v2](https://arxiv.org/pdf/2002.08383v2), Table I and Eqs. (26), (29); [Pannarale et al. 2015](https://arxiv.org/pdf/1509.00512v1), Eqs. (20), (26) | scoped regularized | The [frozen provenance diagnostic](../../math/nsbh-amplitude-variant-provenance.md) distinguishes printed and native-compatible variants. The project-correction $C^1$ smooth continuation $g(\Lambda) = 1 + 0.5\Lambda - 0.25\Lambda^2$ ($\Lambda \le 1$) resolves the printed Eq. (26) jump at $\Lambda=1$, and the $+0.81248\omega^+$ plus window preserves the non-disruptive BBH limit, verified in `tests/test_differentiable_solvers_and_nsbh.py`. Full amplitude assembly and paper-literal options remain separate. |
+| `nsbh.amplitude.window-sum/v1` | [Thompson et al. 2020 v2, Eqs. (4), (30)](https://arxiv.org/html/2002.08383v2); [Pannarale et al. 2015, Eq. (13)](https://arxiv.org/pdf/1509.00512v1) | conditional | The [independent scalar gate](../../math/nsbh-amplitude-window-sum.md) checks the production-called Torch/JAX three-window sum with supplied positive centers, width, mass, and carriers, including selected derivatives and pre-refactor public amplitude samples; see the [receipt](../../validation/nsbh_amplitude_window_sum_20260927.md). Upstream amplitude fits and full composition remain unqualified. |
+| `nsbh.qnm.london-220/v1` | [London and Fauchon-Jones 2019, Eq. (22)](https://arxiv.org/pdf/1810.03550v2); [Thompson 2020, Appendix A Eqs. (16)–(19)](https://arxiv.org/html/2002.08383v2) | scoped executable | The [paper-coefficient scalar gate](../../math/nsbh-london-qnm.md) checks native Torch/JAX `london_ringdown_properties` frequency and quality factor at 18 supplied remnant states; see the [receipt](../../validation/nsbh_london_qnm_20260927.md). The final mass and spin provider is separate. |
+| `nsbh.remnant.rounding_interval/v1` | [Zappa et al. 2019, Supplementary Table I and Eqs. (4)–(6)](https://arxiv.org/html/1903.11622v2); [Jiménez-Forteza et al. 2017, Eqs. (7)–(28), Tables 1–4 and 7–10](https://arxiv.org/html/1611.00332v2) | scoped executable | The [source-defined rounding-interval gate](../../math/nsbh-remnant-rounding-interval.md) and [len receipt](../../validation/nsbh_remnant_rounding_20260927.md) check printed coefficient consistency and final mass/spin from the native BBH and NSBH remnant providers on five guard-inactive calibrated cases in Torch/JAX. Extrapolation guards, NR accuracy, inherited extra coefficient provenance and whole-waveform assembly remain separate. |
+| `nsbh.remnant.guards/v0` | [Zappa et al. 2019, Supplementary §I](https://arxiv.org/html/1903.11622v2); [Jiménez-Forteza et al. 2017, Eq. (20)](https://arxiv.org/html/1611.00332v2) | blocked | The [source-boundary audit](../../math/nsbh-remnant-guard-source-boundary.md) identifies native factor clipping and fallback predicates absent from the published prescription. Printed-coefficient intervals show factors above one with physical total remnant quantities. No scalar/native paper-alignment gate is claimed. |
+| `nsbh.remnant/v0` | Zappa et al. 2019 and Jiménez-Forteza et al. 2017 | superseded in scope | The rounded-coefficient v1 interval gate above qualifies a selected component domain; it does not recover the unprinted coefficients or qualify extrapolation guards. |
+| `nsbh.amplitude-branches/v0` | [Pannarale et al. 2015](https://doi.org/10.1103/PhysRevD.92.084050) and Thompson Eq. (4), Table I, Appendix A Eqs. (20)–(30) | superseded in scope | The [v1 branch-factor gate](../../math/nsbh-branch-amplitude-fits.md) covers Eq. (20)–(24), (30) and three Table I factors. The [conditional joining-frequency gate](../../math/nsbh-joining-frequencies.md) isolates one native/paper mismatch. The [window-and-sum gate](../../math/nsbh-amplitude-window-sum.md) checks Eq. (4)/(30) given supplied inputs. The [variant audit](../../math/nsbh-amplitude-variant-provenance.md) records why Eq. (26)/(29) and full assembly remain blocked. |
+| `nsbh.phase.explicit-composition.v1` | [Thompson Sec. II.2](https://arxiv.org/html/2002.08383v2) PhenomD + NRTidalv2 phase; Khan 2016; Dietrich 2019 Eqs. (17)–(21) | conditional | The [frozen scalar gate](../../math/nsbh-explicit-phase.md) and [receipt](../../validation/nsbh_explicit_phase_20260927.md) compose independent PhenomD and NRTidalv2 references and check the Torch/JAX NSBH unit phase in both explicit gauges. Remnant/QNM inputs and extra PhenomD fit digits are supplied; the default legacy affine gauge and amplitude are outside this gate. |
+| `nsbh.phase-gauge/v0` | Thompson Sec. II.B PhenomD + NRTidalv2 phase; project legacy affine gauge | superseded in scope | The explicit-gauge composition has a v1 gate above. Default grid-dependent legacy offsets and remnant-provider provenance remain separate. |
 | `family.historical-comparison/v0` | Frozen manifest/provenance-ledger LAL comparisons, declared samples only | diagnostic | No production reference component; case IDs and recorded metrics in `docs/model_manifest.json`. Rerun only after an independent component reference is ready. |
 
 ## Implementation mapping
 
 The table names the native entry points. The independent
 `diffgw_reference.taylorf2_hm` module covers the declared leading HM carrier;
-no complete scalar reference exists yet for the other four models. Existing
+`diffgw_reference.taylorf2_eccentric` composes the bounded nonspinning
+amplitude-off eccentric slice. No complete scalar reference exists yet for
+the remaining three models. Existing
 scalar TaylorF2 nonspinning, aligned-spin, tidal, spin-quadrupole and
 IMRPhenomD amplitude/phase/remnant/intrinsic modules can be reused as
 qualified carrier components, but they cannot be treated as references for
@@ -114,7 +127,7 @@ scalar modules.
 | Family | Torch location | JAX location | Carrier/reference reuse and specific divergence to resolve |
 | --- | --- | --- | --- |
 | HM | `src/torchwave/approximants/taylorf2_hm.py` (`_swsh_projection_coefficients`, `TaylorF2_HM.forward`) | `src/jaxwave/approximants/taylorf2_hm.py` (same projection, `evaluate`) | `TaylorF2.evaluate_phase/amplitude`; stored `h_{l,-m}` and harmonic-specific cutoff are project composition choices. `(4,1)` and `(5,5)` remain absent because TD amplitudes alone do not fix native SPA/projection conventions. |
-| Eccentric | `src/torchwave/approximants/taylorf2_eccentric.py` (`eccentric_phase_correction`, `eccentric_amplitude_factor`, `forward`) | `src/jaxwave/approximants/taylorf2_eccentric.py` (same components, `evaluate`) | TaylorF2 carrier and options reused. Native `f0` fallback samples the positive frequency grid and the eccentric correction is re-anchored at `f0`; the provenance ledger records this grid-dependent fallback. |
+| Eccentric | `src/torchwave/approximants/taylorf2_eccentric.py` (`eccentric_phase_correction`, `eccentric_amplitude_factor`, `forward`) | `src/jaxwave/approximants/taylorf2_eccentric.py` (same components, `evaluate`) | TaylorF2 carrier and options reused. The native `f0` fallback samples the positive frequency grid; the phase is anchored at a distinct positive explicit `f_ref`, or at `f0` when no positive `f_ref` is supplied. |
 | NRTidal v1/v2 | `src/torchwave/approximants/imrphenomd_nrtidal.py` | `src/jaxwave/approximants/imrphenomd_nrtidal.py` | IMRPhenomD carrier reused. Shared published coefficient values in `src/diffgw_core/nrtidal_fits.py`; Torch reexports them through `nrtidal_published_fits.py`. V1 has phase only, v2 also amplitude and self-spin. |
 | NSBH | `src/torchwave/approximants/imrphenom_nsbh.py`, `nsbh_clean_phase.py`, `nsbh_clean_amplitude.py`, `nsbh_phase_baseline.py` | `src/jaxwave/approximants/imrphenom_nsbh.py`, `nsbh_phase_baseline.py` | Uses PhenomD phase structure but a distinct PhenomC-like amplitude; do not reuse PhenomD *amplitude*. JAX embeds the NRTidalv2 expression and local amplitude helpers; Torch separates them. Default affine gauge is an inherited compatibility adapter, not a published Thompson equation. |
 
@@ -133,7 +146,8 @@ locations; by itself it does **not** confirm coefficient-by-coefficient
 equivalence. The later [HM leading-carrier reference](../../math/taylorf2-hm.md)
 adds an executable eight-mode comparison within its declared scope.
 `docs/model_manifest.json` records one dominant-only HM LAL diagnostic; two
-eccentric catalog cases; and one catalog plus one holdout for each tidal/NSBH
+historical eccentric catalog cases plus two separately frozen nonspinning
+eccentric holdouts; and one catalog plus one holdout for each tidal/NSBH
 model. The latter declared cases passed their historical CPU FP64 gates, but
 the suite did not establish independent scalar reference behavior, full domain
 accuracy, or physical validity. The HM `(2,2)` external diagnostic says
@@ -144,15 +158,19 @@ PhenomD/remnant calibration provenance remains open.
 
 Remaining independent-reference blockers are concrete: (1) HM tidal terms,
 Kerr and smooth cutoff options, and an exact same-model external eight-mode
-waveform comparison; (2) the 3PN eccentric polynomial and reference-frequency
-gauge plus provenance for the optional amplitude factor; (3) v1/v2 tidal
-phase, amplitude, self-spin, taper and paper-decimal checks; (4) NSBH
-disruption root, every amplitude branch, supplementary remnant coefficients
-and intrinsic/affine phase split. The published validity regions must be
+waveform comparison; (2) eccentric aligned-spin cross terms and provenance for
+the optional amplitude factor beyond the scoped nonspinning amplitude-off
+version; (3) tidal scope beyond the [v1 nonspinning phase/taper](../../math/nrtidalv1-merger-taper.md)
+and [v2 printed-equation spinning D composition](../../math/nrtidalv2-paper-d-composition.md),
+including independent whole-carrier composition, historical D-amplitude
+normalization, and the high-frequency binary taper discrepancy;
+(4) NSBH low/no-torus joining-factor provenance, Eq. (26)/(29)
+variants, supplementary remnant coefficients, upstream amplitude carriers and full composition, and
+intrinsic/affine phase split. The published validity regions must be
 separated from permissive native input acceptance. This ledger makes no
 whole-model verification claim.
 
-To promote the remaining models, create four `docs/math/<model>.md` pages, each with
+To promote the remaining models, create three `docs/math/<model>.md` pages, each with
 these same six headings, exact option/front-end inventory, composition
 equation, links to versioned component pages, and distinct source,
 independent-reference, backend, external-comparison and physics evidence.

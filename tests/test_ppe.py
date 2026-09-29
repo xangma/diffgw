@@ -44,14 +44,14 @@ def test_gr_recovery_limits():
 
 
 def test_ppe_pn_order_scaling():
-    """Verify ppE phase shift power-law frequency dependence v^b = (pi*M*f)^(b/3)."""
+    """Verify ppE phase shift power-law frequency dependence v^b = (pi*Mc*f)^(b/3)."""
     f = torch.tensor([50.0, 100.0, 200.0], dtype=torch.float64)
-    total_mass = 50.0
+    chirp_mass = 20.0
     beta = 0.1
 
     # PN orders: b = -7 (-1PN dipole), b = -2 (1.5PN), b = 0 (2.5PN)
     for b in [-7, -2, 0]:
-        d_psi = ppe_phase_shift(f, total_mass=total_mass, beta_ppe=beta, b_ppe=b)
+        d_psi = ppe_phase_shift(f, chirp_mass=chirp_mass, beta_ppe=beta, b_ppe=b)
 
         if b == 0:
             # For b = 0 (2.5PN), phase shift is independent of frequency: v^0 = 1
@@ -100,7 +100,7 @@ def test_ppe_autograd():
         b_ppe=-2,
     )
 
-    loss = torch.sum(torch.real(hp * torch.conj(hp)))
+    loss = torch.sum(torch.real(hp))
     loss.backward()
 
     assert beta_var.grad is not None and not torch.isnan(beta_var.grad)

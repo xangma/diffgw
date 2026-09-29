@@ -2,8 +2,10 @@
 
 Derived from Ruiz et al., arXiv:0707.4654v3, Eq. (2.8), with unit angular
 norm as in Flanagan--Hughes, gr-qc/9701039v2, Eq. (3.22). The finite-Q
-normalization also agrees with Berti--Cardoso--Will, gr-qc/0512160v2,
-Eq. (3.18). See docs/reviews/2026-09-12-clean-room/pass-3-ringdown-energy.md.
+coefficient maps algebraically to Berti--Cardoso--Will, gr-qc/0512160v2,
+Eq. (3.18), after Q=omega*tau/2 and f=omega/(2*pi), but that equation
+uses the FH doubled-time convention rather than this causal waveform.
+See docs/reviews/2026-09-12-clean-room/pass-3-ringdown-energy.md.
 No QNM frequency or excitation model is assumed here.
 """
 

@@ -16,25 +16,45 @@ def positive_tidal_frequency(denominator: torch.Tensor) -> torch.Tensor:
 
 
 def delta2_prime_plus(f_tide: torch.Tensor, f_rd_tilde: torch.Tensor) -> torch.Tensor:
-    """Return the NSBH delta2 numerical-constant smooth plus branch.
+    r"""Return the NSBH delta2 numerical-constant smooth plus branch.
 
-    The printed 2020 Eq. 29 uses the opposite ``omega_minus`` sign.  This
-    sign is selected here from the advertised large-tidal-frequency BBH
-    continuity limit and is corroborated by the public
-    ``SimIMRPhenomNSBH_delta2_prime`` callable.  No oracle fit is used.
+    Thompson (2020) Eq. (29) prints the minus window (\omega^-):
+      (A/2) * \omega^-_{x_3, d_3}(x) = 0.81248 * 0.5 * (1 - \tanh(4*(x - x_3)/d_3))
+    which decays to zero in the non-disruptive BBH limit (f_tide >> f_rd_tilde).
+
+    The project_correction variant implemented here uses the smooth plus window
+    (+0.81248 \omega^+):
+      0.81248 * 0.5 * (1 + \tanh(4*(x - 0.0188092) / 0.338737))
+    which preserves the BBH ringdown width constant \delta_2 = 0.81248 as
+    f_tide -> +\infty.
     """
     x = (f_tide - f_rd_tilde) / f_rd_tilde
     return 0.81248 * 0.5 * (1.0 + torch.tanh(4.0 * (x - 0.0188092) / 0.338737))
 
 
-def gamma1_prime_small_lambda(lambda2: torch.Tensor) -> torch.Tensor:
-    """Continuous quadratic for the Eq. 26 small-tidal branch.
+def delta2_prime_small_lambda(delta2: torch.Tensor, lambda2: torch.Tensor) -> torch.Tensor:
+    """Thompson Eq. (29), closed 0<=Lambda<=1 branch with supplied delta2."""
+    return delta2 - 2.0 * (delta2 - 0.81248) * lambda2 + (delta2 - 0.81248) * (lambda2 ** 2.0)
 
-    It is the unique quadratic satisfying g(0)=1, g(1)=1.25 and g'(1)=0;
-    this exposes the sign typo in the printed small-Lambda expression while
-    preserving the stated boundary continuity.
+
+def gamma1_prime_small_lambda(lambda2: torch.Tensor) -> torch.Tensor:
+    r"""Continuous quadratic for the Eq. 26 small-tidal branch (project_correction variant).
+
+    Thompson et al. (2020) Eq. (26) prints:
+      \gamma'_1 / \gamma_1 = 1 - 0.5*\Lambda - 0.25*\Lambda^2   for \Lambda <= 1
+      \gamma'_1 / \gamma_1 = 1.25                               for \Lambda > 1
+    which evaluates to 0.25 at \Lambda = 1, creating an unphysical jump discontinuity
+    of \Delta = +1.0 at \Lambda = 1.
+
+    The smooth polynomial continuation variant (labeled 'project_correction' or
+    'compatibility') implemented here is:
+      g(\Lambda) = 1 + 0.5*\Lambda - 0.25*\Lambda^2
+    It is the unique quadratic satisfying:
+      - g(0) = 1.0 (smooth connection to BBH baseline)
+      - g(1) = 1.25 (matching the \Lambda > 1 constant)
+      - g'(1) = 0.5 - 0.5(1) = 0.0 (C^1 continuous match to \Lambda > 1).
     """
-    return 1.0 + 0.5 * lambda2 - 0.25 * lambda2**2
+    return 1.0 + 0.5 * lambda2 - 0.25 * (lambda2 ** 2.0)
 
 
 def outer_pn_center(base_center: torch.Tensor, epsilon_ins: torch.Tensor) -> torch.Tensor:
@@ -50,4 +70,10 @@ def outer_pn_center(base_center: torch.Tensor, epsilon_ins: torch.Tensor) -> tor
     return epsilon_ins * base_center
 
 
-__all__ = ["positive_tidal_frequency", "delta2_prime_plus", "gamma1_prime_small_lambda", "outer_pn_center"]
+__all__ = [
+    "positive_tidal_frequency",
+    "delta2_prime_plus",
+    "delta2_prime_small_lambda",
+    "gamma1_prime_small_lambda",
+    "outer_pn_center",
+]

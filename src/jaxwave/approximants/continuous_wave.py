@@ -45,7 +45,7 @@ def continuous_wave_h0(
     Formula:
         h_0 = (4 * pi^2 * G / c^4) * (I_zz * epsilon * f_0^2 / d)
     Reference:
-        Jaranowski, Królak, Schutz (1998) Eq. (3)
+        Jaranowski, Królak, Schutz (1998) v1 PDF Eqs. (23)-(24), with f_0=2*f_rot
 
     Args:
         frequency: Continuous GW frequency f_0 in Hz (twice rotation frequency)
@@ -150,7 +150,8 @@ def continuous_wave_phase(
     Formula:
         phi(t) = phi_0 + 2*pi * sum_{k=0}^s [ f_k / (k+1)! * (t - t_0 + tau(t))^(k+1) ]
     Reference:
-        Jaranowski, Królak, Schutz (1998) Eq. (10)
+        Jaranowski, Królak, Schutz (1998) v1 PDF Eq. (14) is first order
+        in tau; this carrier retains higher powers of tau for f1/f2.
     """
     t_t = as_array(t, dtype=jnp.float64)
     f0_t = as_array(f0, dtype=t_t.dtype)
@@ -180,7 +181,9 @@ def continuous_wave_amplitudes(
         A_4 = -h_0 * [ 0.5 * (1 + cos^2 iota) * sin(2*psi) * sin(phi_0) - cos(iota) * cos(2*psi) * cos(phi_0) ]
 
     Reference:
-        Jaranowski, Królak, Schutz (1998) Eq. (14)-(17); Prix (2011) Eq. (18)
+        Jaranowski, Królak, Schutz (1998) v1 PDF Eqs. (32)-(35), at
+        theta=pi/2 and with sin(zeta) absorbed into the basis patterns;
+        Prix (2011) Eq. (18)
 
     Returns:
         Array of shape (..., 4)
@@ -226,7 +229,7 @@ def continuous_wave_basis(
     where a(t) = F_+(t; psi=0), b(t) = F_x(t; psi=0), and Phi(t) = phi(t) - phi_0.
 
     Reference:
-        Jaranowski, Królak, Schutz (1998) Eq. (13); Prix (2011) Eq. (19)
+        Jaranowski, Królak, Schutz (1998) v1 PDF Eq. (36); Prix (2011) Eq. (19)
 
     Returns:
         h_basis: Array of shape (..., 4, N_samples)
@@ -278,7 +281,7 @@ def continuous_wave_strain(
     detector: Optional[Union[str, Detector]] = None,
     i_zz: float = 1.0e38,
 ) -> jnp.ndarray:
-    """Compute the full detector strain h(t) for a continuous gravitational-wave signal in JAX.
+    """Compute detector strain for the principal-axis 2f_rot CW branch in JAX.
 
     Can be evaluated directly via:
         h(t) = h_0 * [ 0.5 * (1 + cos^2 iota) * F_+(t) * cos(phi(t)) + cos(iota) * F_x(t) * sin(phi(t)) ]
@@ -325,6 +328,8 @@ def continuous_wave_strain(
 @jax.tree_util.register_pytree_node_class
 class ContinuousWave:
     """Continuous Gravitational Wave signal generator in JAX."""
+
+    definition_id = "ContinuousWaveH1Direct"
 
     def __init__(
         self,

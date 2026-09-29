@@ -91,6 +91,27 @@ def _project(h22, alpha, gamma, beta, theta, zeta):
     return c2*hp+s2*hc, c2*hc-s2*hp
 
 
+def face_on_to_positive_22(face_on):
+    """Invert the zero-angle Pv2 projection of face-on plus strain."""
+    return 2 * face_on / math.sqrt(5 / (4 * math.pi))
+
+
+def _precessing_final_spin(aligned_final_spin, m1, m2, chip):
+    """Pv2 note Eq. (46)/(51), retaining the historical signed branch."""
+    in_plane = chip * (m1 / (m1 + m2))**2
+    magnitude = jnp.sqrt(aligned_final_spin**2 + in_plane**2)
+    return jnp.where(aligned_final_spin < 0, -magnitude, magnitude)
+
+
+def _effective_chip(m1, m2, s1x, s1y, s2x, s2y):
+    """Pv2 note Eqs. (29)–(30), with m1 the heavier body."""
+    q = m1 / m2
+    a1, a2 = 2 + 1.5 / q, 2 + 1.5 * q
+    p1 = a1 * m1 * m1 * _safe_in_plane_norm(s1x, s1y)
+    p2 = a2 * m2 * m2 * _safe_in_plane_norm(s2x, s2y)
+    return jnp.maximum(p1, p2) / (a1 * m1 * m1)
+
+
 def waveform(f, mass1, mass2, spin1x=0., spin1y=0., spin1z=0.,
              spin2x=0., spin2y=0., spin2z=0., distance=100., inclination=0.,
              phic=0., tc=0., f_ref=None, convention=0,
@@ -130,8 +151,7 @@ def waveform(f, mass1, mass2, spin1x=0., spin1y=0., spin1z=0.,
         ff = jnp.where(f > 0, f, 1.0)
         v, vr = (math.pi*M*ff)**(1/3), (math.pi*M*rf)**(1/3)
         eta, delta = m1*m2/(m1+m2)**2, (m1-m2)/(m1+m2)
-        q = m1/m2
-        chip = jnp.maximum((2+1.5/q)*m1*m1*_safe_in_plane_norm(x1,y1), (2+1.5*q)*m2*m2*_safe_in_plane_norm(x2,y2))/((2+1.5/q)*m1*m1)
+        chip = _effective_chip(m1,m2,x1,y1,x2,y2)
         n1, n2 = m1/(m1+m2), m2/(m1+m2)
         chil = (m1*z1+m2*z2)/(m1+m2)
         coeffs = nnlo_angle_coefficients(eta, -delta, n1, chip, chil/n1)
@@ -146,8 +166,7 @@ def waveform(f, mass1, mass2, spin1x=0., spin1y=0., spin1z=0.,
 
         def remnant_provider(a,b,za,zb):
             mf,afd,_,_ = IMRPhenomD.remnant_properties(a,b,za,zb)
-            ap = jnp.sqrt(afd**2+(chip*(a/(a+b))**2)**2)
-            ap = jnp.where(afd < 0, -ap, ap)
+            ap = _precessing_final_spin(afd,a,b,chip)
             wr,wd = evaluate_d_qnm_220(ap)
             return mf,ap,wr/(mf/(a+b)),wd/(mf/(a+b))
 
@@ -163,7 +182,7 @@ def waveform(f, mass1, mass2, spin1x=0., spin1y=0., spin1z=0.,
         _,_,phase_samples = d_call(nodes,0.,0.,True)
         slope = _natural_cubic_derivative(nodes,phase_samples,frd)
         carrier = carrier*jnp.exp(1j*ff*slope)
-        hp,hc = _project(2*carrier/math.sqrt(5/(4*math.pi)),alpha,gamma,beta,theta,zeta)
+        hp,hc = _project(face_on_to_positive_22(carrier),alpha,gamma,beta,theta,zeta)
         return jnp.where(f > 0,hp,0.),jnp.where(f > 0,hc,0.)
 
     hp,hc = jax.vmap(single)(*[value.reshape(-1) for value in vals])

@@ -52,6 +52,30 @@ dependencies.
 
 ## Scope of this notice
 
+The independent IMRPhenomHM physical holdout obtains the official
+[SXS:BBH:2265v3.0](https://doi.org/10.26138/SXS:BBH:2265v3.0) Lev3/Lev2
+N2 strain and metadata from the SXS Collaboration's
+[CaltechDATA record](https://data.caltech.edu/records/258wv-a5t45).
+The record's metadata cite [SXS Catalog 3](https://doi.org/10.26138/SXSCatalog3)
+and the [SXS catalog paper](https://doi.org/10.1103/PhysRevD.99.064045).
+The [SXS waveform database](https://data.black-holes.org/waveforms/) asks
+users to acknowledge the first scientific publication describing each
+simulation. These raw and conditioned validation arrays remain external and
+are not distributed with the software. The CaltechDATA v3 record API did not
+state a per-record SPDX licence; this notice does not infer one from older
+SXS deposits.
+
+The separate published-calibration HM comparison uses
+[SXS:BBH:2374v3.0](https://doi.org/10.26138/SXS:BBH:2374v3.0)
+([record r0wpw-4pq24](https://data.caltech.edu/records/r0wpw-4pq24)) and
+[SXS:BBH:2163v3.0](https://doi.org/10.26138/SXS:BBH:2163v3.0)
+([record t670m-yry50](https://data.caltech.edu/records/t670m-yry50)).
+The [prospective protocol](docs/validation/imrphenomhm_published_nr_protocol_20260927.md)
+pins their two resolutions, official file identities, catalog release and
+processing. Raw and conditioned arrays remain external. The dataset terms
+are separate from this package's MIT software license; the same catalog and
+simulation-publication attribution requirements apply.
+
 The native Numerical Relativity higher-harmonic calibrations in `xhm_native_fits.py`
 for modes (2,1), (3,3), (4,4), and (3,2) use public SXS datasets under CC-BY-4.0.
 Versioned dataset links, creator records, and processing changes are listed in
@@ -76,6 +100,62 @@ source or wheel distributions. Their URLs and pinned hashes are retained by
 the verification tests and metadata; no MIT grant has been established for
 these supplementary assets, so this notice makes no licensing assurance.
 
+This includes Mishra et al.'s `supl-mkaf16.m` from the pinned
+arXiv:1601.05588v1 source bundle. The repository does not redistribute that
+file: the opt-in fixture generator reads a user-supplied archive, verifies its
+bundle and member hashes, and writes generated numerical ratios, a transformed
+normalized nonspinning `TF28Phasing` expression, and provenance metadata. The
+frozen fixture is not a verbatim copy of the Mathematica file, but that
+expression remains third-party-derived verification material. No explicit
+downstream redistribution or MIT grant for it was found in the paper, arXiv
+metadata, or source bundle. The arXiv record instead points to a
+[non-exclusive distribution grant to arXiv](https://arxiv.org/licenses/nonexclusive-distrib/1.0/).
+Its downstream terms therefore remain unresolved and the repository's MIT
+grant does not extend to it.
+
+## PhenomXPNR calibration sources and unresolved inherited tensors
+
+The equation text used by the independent XPNR scalar component reference is
+from Hamilton et al., arXiv:2507.02604v1, and Thompson et al.,
+arXiv:2312.10025v1; both arXiv HTML records state CC BY 4.0. Hamilton et al.,
+arXiv:2107.08876v1, also documents the partial 40-waveform predecessor fitting
+procedure under CC BY 4.0. The 80 single-spin BAM configurations described as
+the later angle calibration set are publicly listed by the BAM catalogue. Its
+minimal and complete Zenodo releases, records 7673796 and 7677297, contain 80
+waveform HDF5 files apiece and state CC BY 4.0. DiffGW does not bundle those
+waveform archives in source or wheel distributions.
+
+The 2021 paper cites `positive` v1.0, Zenodo record 3901856, for its polynomial
+fitting algorithm. The archived software carries an MIT license (Zenodo's
+metadata labels it `other-open`). DiffGW does not bundle that tool. Its terms
+apply to the tool, not automatically to fit inputs, outputs, or the inherited
+coefficient arrays.
+
+An author-controlled PhenomXCP repository pinned at
+`a411e5966a73445efad0db9dc7806d2195374ab1` contains a historical carrier-fit
+workflow and partial fit artifacts. Its root license is MIT, but its generated
+`xcp/parameter_space_fits.c` carries a GPL-2.0-or-later notice and the inspected
+data artifacts carry no separate notice. DiffGW does not bundle these files.
+The repository does not contain the angle tensors and does not document an
+authoritative mapping from its partial carrier outputs to the final XO4a/XPNR
+carrier coefficients. Its root license is not evidence of blanket MIT terms
+for generated outputs or for DiffGW's inherited tensors.
+
+The numerical `A1..A4`, `B0..B5`, and `Bf` arrays already present in
+`src/torchwave/approximants/pnr_coefficients.py` and
+`src/jaxwave/approximants/pnr_coefficients.py` are not printed in the cited
+model papers.
+Their independent origin and redistribution terms have not been established.
+They first appear in DiffGW's initial repository commit,
+`ceb6ae15c00bbbd3eaca2bdc12bb3307b38e9beb`, so repository history supplies no
+earlier source or permission record. The public papers and deposits do not
+provide the 80-case per-simulation fit targets, complete run configuration,
+sparse basis selection, final tensor manifest, or a licensed tensor release.
+The papers point to files in LALSuite, which is GPL-2.0-or-later, but this audit
+did not inspect, copy, translate, or fit coefficients from LAL source and does
+not infer a licence for the inherited arrays. Pinned LAL binaries are used only
+as black-box comparison oracles. See
+`docs/waveforms/research/imrphenomxpnr.md` for hashes and qualification scope.
 ## IMRPhenomT author formulas and calibration expressions — MIT
 
 `src/diffgw_core/phenomt_fits.py` transcribes the aligned dominant- and higher-mode fit branches from

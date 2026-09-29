@@ -466,7 +466,7 @@ class IMRPhenomT(nn.Module):
         ur = torch.maximum(u, torch.zeros_like(u))
         ex = torch.exp(-c2f[..., None] * ur)
         win = IMRPhenomT._omega_insp(ui, eta, delta, s1, s2, wc)
-        # Eq. (25): c4=0 for the 22 frequency ansatz.
+        # Peak-matched c4=0 branch; printed Eq. (25) conflicts with Eq. (27a).
         wring = rd_wr[..., None] - rd_c1f[..., None] * c2f[..., None] * c3f[..., None] * ex / (1 + c3f[..., None] * ex)
         x = torch.asinh(alpha[..., None] * um)
         wm = wr[..., None] * (

@@ -65,7 +65,8 @@ def test_independent_physical_cubic_expansion_converges():
         initial_invariants, cubic_coefficients,
     )
     cases = ((35., 25., (.2, .1, .2), (-.1, .15, -.1)),
-             (45., 15., (.45, -.2, .3), (.1, .2, -.25)))
+             (45., 15., (.45, -.2, .3), (.1, .2, -.25)),
+             (60., 6., (.2, .1, .8), (.1, 0., .1)))
     for m1, m2, chi1, chi2 in cases:
         Msec = (m1 + m2) * 4.925490947641267e-6
         eta0 = m1 * m2 / (m1 + m2) ** 2

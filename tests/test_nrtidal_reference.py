@@ -1,8 +1,8 @@
-"""Independent acceptance tests for reference-normalized self-spin phase.
+"""Regression checks for the inherited reference-normalized self-spin phase.
 
-Derived strictly from published literature (Dietrich et al. 2019, arXiv:1905.06011v2 Eqs. 26-29)
-and the compatibility specification in SPECIFICATION.md.
-No oracle sources, no external ports, no LAL/PyCBC imports.
+This historical default uses the earlier quadrupole fit, not the coefficients
+printed in Dietrich et al. (2019), Eq. (28). The independent paper-D gate is
+``test_nrtidalv2_self_spin_math_reference.py``.
 """
 
 import math
@@ -19,8 +19,8 @@ from torchwave.approximants.imrphenomd_nrtidal import (
 )
 
 
-def _independent_paper_self_spin_components(x, m1, m2, s1, s2, l1, l2):
-    """Independent evaluation of Dietrich et al. (2019) Eqs. 26-29 for S23 and S35."""
+def _independent_historical_self_spin_components(x, m1, m2, s1, s2, l1, l2):
+    """Independent scalar form of the inherited Eq. (27) phasing and earlier CQ fit."""
     m_tot = m1 + m2
     eta = (m1 * m2) / (m_tot * m_tot)
     xa = m1 / m_tot
@@ -73,13 +73,13 @@ SYSTEMS = [
 ]
 
 
-def test_independent_self_spin_separation_matches_paper():
-    """Verify that independent paper formula matches _nrtidal_self_spin_components."""
+def test_independent_self_spin_separation_matches_historical_default():
+    """Verify the historical default without claiming Dietrich Eq. (28) coefficients."""
     f = torch.tensor([30.0, 100.0, 500.0, 1000.0], dtype=torch.float64)
     for p in SYSTEMS:
         m_sec = (p["m1"] + p["m2"]) * MSUN_SEC
         x = (PI * m_sec * f) ** (2.0 / 3.0)
-        s23_paper, s35_paper = _independent_paper_self_spin_components(
+        s23_historical, s35_historical = _independent_historical_self_spin_components(
             x, p["m1"], p["m2"], p["s1"], p["s2"], p["l1"], p["l2"]
         )
         s23_prod, s35_prod = _nrtidal_self_spin_components(
@@ -91,8 +91,8 @@ def test_independent_self_spin_separation_matches_paper():
             lambda1=torch.tensor(p["l1"], dtype=torch.float64),
             lambda2=torch.tensor(p["l2"], dtype=torch.float64),
         )
-        torch.testing.assert_close(s23_prod, s23_paper, rtol=1e-12, atol=1e-15)
-        torch.testing.assert_close(s35_prod, s35_paper, rtol=1e-12, atol=1e-15)
+        torch.testing.assert_close(s23_prod, s23_historical, rtol=1e-12, atol=1e-15)
+        torch.testing.assert_close(s35_prod, s35_historical, rtol=1e-12, atol=1e-15)
         # Total helper sum
         total_prod = _nrtidal_self_spin_correction(
             x=x,
@@ -103,7 +103,7 @@ def test_independent_self_spin_separation_matches_paper():
             lambda1=torch.tensor(p["l1"], dtype=torch.float64),
             lambda2=torch.tensor(p["l2"], dtype=torch.float64),
         )
-        torch.testing.assert_close(total_prod, s23_paper + s35_paper, rtol=1e-12, atol=1e-15)
+        torch.testing.assert_close(total_prod, s23_historical + s35_historical, rtol=1e-12, atol=1e-15)
 
 
 def test_reference_normalization_complex_ratio():
@@ -147,10 +147,10 @@ def test_reference_normalization_complex_ratio():
             ratio_c = hp_bns_c / hp_bbh_c
             ratio_r = hp_bns_r / hp_bbh_r
 
-            # Independent paper S23 at f_ref
+            # Independent historical S23 at f_ref
             m_sec = (p["m1"] + p["m2"]) * MSUN_SEC
             x_ref = (PI * m_sec * f_ref) ** (2.0 / 3.0)
-            s23_ref, _ = _independent_paper_self_spin_components(
+            s23_ref, _ = _independent_historical_self_spin_components(
                 torch.tensor([x_ref], dtype=torch.float64),
                 p["m1"], p["m2"], p["s1"], p["s2"], p["l1"], p["l2"]
             )
@@ -246,7 +246,7 @@ def test_tidal_and_35pn_not_reference_subtracted():
 
     m_sec = (p["m1"] + p["m2"]) * MSUN_SEC
     x_ref = (PI * m_sec * f_ref) ** (2.0 / 3.0)
-    s23_ref, s35_ref = _independent_paper_self_spin_components(
+    s23_ref, s35_ref = _independent_historical_self_spin_components(
         torch.tensor([x_ref], dtype=torch.float64),
         p["m1"], p["m2"], p["s1"], p["s2"], p["l1"], p["l2"]
     )

@@ -1,0 +1,117 @@
+{
+  "generated_utc": "2026-09-26T20:30:10.040240+00:00",
+  "execution": {
+    "host": "len",
+    "working_directory": "/tmp/diffgw-pv300-clock-chart-20260926",
+    "command": "PYTHONPATH=src /tmp/diffgw-phenomt-latest-20260925/bin/python scripts/diagnose_phenomt_pv300_clock_chart.py --output pv300_clock_chart_20260926.json"
+  },
+  "versions": {
+    "python": "3.12.3",
+    "numpy": "2.5.3",
+    "scipy": "1.18.1",
+    "torch": "2.14.0+cu130",
+    "lalsuite": "7.26.15"
+  },
+  "result": {
+    "case": "high_mass_ratio",
+    "parameters": {
+      "mass1": 60.0,
+      "mass2": 6.0,
+      "spin1": [
+        0.2,
+        0.1,
+        0.8
+      ],
+      "spin2": [
+        0.1,
+        0.0,
+        0.1
+      ],
+      "f_ref_hz": 20.0,
+      "sample_rate_hz": 16384,
+      "precession_version": 300,
+      "final_spin_mod": 4
+    },
+    "conventions": {
+      "reference": "TPHM Eqs. (12)-(14) and minimal-rotation Eq. (5); native T carrier from author-pinned fit",
+      "public": "Unmodified public coprecessing (2,2) mode and Euler series; no internal state exposed",
+      "alignment": "First public sample and native f_ref event identified; no fitted shift or phase",
+      "limitation": "Common-clock test cannot exclude a separate hidden precession clock; gamma check cannot validate alpha/beta construction or hidden spin ODE",
+      "source_restriction": "No LAL implementation source inspected or translated; no binary output fitted",
+      "production": "No equation, coefficient, or gate change"
+    },
+    "event": {
+      "public_epoch_seconds": -2.629817046,
+      "native_reference_seconds": -2.6298159284410594,
+      "difference_seconds": 1.1175589404999187e-06
+    },
+    "carrier_probes": [
+      {
+        "elapsed_seconds": 0.0,
+        "public_mode_frequency_hz": 19.999996843749635,
+        "native_carrier_frequency_hz": 19.99999999999998,
+        "relative_difference": 1.5781251716529e-07,
+        "derivative_order_difference_hz": 1.4652171390518921e-08
+      },
+      {
+        "elapsed_seconds": 0.25,
+        "public_mode_frequency_hz": 20.759611067772482,
+        "native_carrier_frequency_hz": 20.759614705296215,
+        "relative_difference": 1.7522115824952778e-07,
+        "derivative_order_difference_hz": 1.4328362086916824e-09
+      },
+      {
+        "elapsed_seconds": 0.5,
+        "public_mode_frequency_hz": 21.636687057095514,
+        "native_carrier_frequency_hz": 21.636691288570823,
+        "relative_difference": 1.9556942665310828e-07,
+        "derivative_order_difference_hz": 1.6057679142523582e-09
+      },
+      {
+        "elapsed_seconds": 1.0,
+        "public_mode_frequency_hz": 23.90249295867694,
+        "native_carrier_frequency_hz": 23.90249905216635,
+        "relative_difference": 2.549310594845977e-07,
+        "derivative_order_difference_hz": 3.00154797510326e-09
+      },
+      {
+        "elapsed_seconds": 2.0,
+        "public_mode_frequency_hz": 33.978617458840624,
+        "native_carrier_frequency_hz": 33.97863964200218,
+        "relative_difference": 6.52856082195008e-07,
+        "derivative_order_difference_hz": 2.6038118374970255e-08
+      }
+    ],
+    "initial_axis_rate": {
+      "public_speed_per_second": 0.5161520240466398,
+      "independent_published_speed_per_second": 0.44602778268965027,
+      "public_over_published": 1.1572194470356179,
+      "derivative_order_difference_per_second": 1.9981747142600164e-10,
+      "common_clock_ratio_from_mode": 0.9999998421874817
+    },
+    "minimal_rotation_chart": {
+      "equation": "gamma(t)-gamma(0) = -integral cos(beta) d alpha",
+      "window_seconds": 2.0,
+      "window_samples": 32769,
+      "max_residual_window_radians": 1.695266149681629e-11,
+      "final_residual_window_radians": 3.3146818623208674e-12,
+      "max_residual_full_inspiral_radians": 2.503449181290307e-08,
+      "two_grid_quadrature_difference_window_radians": 5.084466181415337e-11,
+      "beta_range_window_radians": [
+        0.174614144012035,
+        0.19120915719723228
+      ]
+    }
+  },
+  "evidence_retention": {
+    "scope": "Historical post-result diagnostic; not a new whole-waveform qualification gate.",
+    "reproduction_status": "Historical execution only; exploratory generator excluded from the distributed repository.",
+    "generator_snapshot": {
+      "path": "scripts/diagnose_phenomt_pv300_clock_chart.py",
+      "source_revision": "e447916e119fcadc26ceafb13a2688f6060fb440",
+      "sha256": "03bdab0518eb1fed5002c3d73a6603a47bdb6d7881ec1bb444520f1f30058ff0",
+      "boundary": "Source snapshot before cleanup; original execution revision was not independently recorded."
+    },
+    "full_receipt_sha256_before_retention_annotation": "8f3a15048d7a0dec3d69997e4840ec959607ddde885c48e4f71f20d10e88597d"
+  }
+}

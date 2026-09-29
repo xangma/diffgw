@@ -1,0 +1,424 @@
+{
+  "generated_utc": "2026-09-26T18:05:14.521905+00:00",
+  "reproduction": "PYTHONPATH=src /tmp/diffgw-waveform-library-1315f6e/venv-latest/bin/python scripts/diagnose_phenomt_msa_scalar_angles.py --case high_mass_ratio --sample-rate 2048 --table-nodes 4097 --output phenomt_msa_scalar_angles_20260926.json",
+  "execution": {
+    "host": "len",
+    "working_directory": "/home/xangma/tmp/diffgw-phenomt-q10-cc37-20260926",
+    "command": "PYTHONPATH=src /tmp/diffgw-waveform-library-1315f6e/venv-latest/bin/python scripts/diagnose_phenomt_msa_scalar_angles.py --case high_mass_ratio --sample-rate 2048 --table-nodes 4097 --output phenomt_msa_scalar_angles_20260926.json"
+  },
+  "versions": {
+    "python": "3.12.3",
+    "numpy": "2.3.5",
+    "scipy": "1.16.3",
+    "torch": "2.14.0+cu130",
+    "lalsuite": "7.26.15",
+    "lal": "7.7.1",
+    "lalsimulation": "6.2.1"
+  },
+  "dtype": "float64",
+  "parameters": {
+    "mass1": 60.0,
+    "mass2": 6.0,
+    "spin1": [
+      0.2,
+      0.1,
+      0.8
+    ],
+    "spin2": [
+      0.1,
+      0.0,
+      0.1
+    ],
+    "distance_mpc": 100.0,
+    "inclination": 1.2,
+    "phic": 0.1,
+    "f_lower_hz": 20.0,
+    "f_ref_hz": 20.0
+  },
+  "conventions": {
+    "analytical": "Raw PV223 values come from the audited native evaluator; public PV22300 independently observes the analytical branch.",
+    "continuation": "Independent scalar PCHIP derivatives and adaptive quadrature implement PhenomTP Eqs. (5), (20), and (24).",
+    "public": "Public binary angles are not fitted and no LAL implementation source is inspected or translated.",
+    "relative_rotation": "R(first)^T R(t) removes only the fixed first-sample frame within each reported segment."
+  },
+  "result": {
+    "case": "high_mass_ratio",
+    "sample_rate_hz": 2048,
+    "reference_time_seconds": -2.6298159284410594,
+    "meco_time_seconds": -0.029407475969157958,
+    "peak_time_seconds": 0.0,
+    "ringdown_alpha_slope_radians_per_second": 435.7930304869112,
+    "selected_samples": 9,
+    "raw_scalar_table": {
+      "start_time_seconds": -2.629817046,
+      "end_time_seconds": 0.0,
+      "fine_nodes": 4120,
+      "coarse_nodes": 2065,
+      "interpolation": "shape-preserving piecewise cubic; alpha and gamma unwrapped",
+      "meco_local_spacing_seconds": 2e-06
+    },
+    "analytical_angle_onset": {
+      "scope": "PV22300 samples strictly before MECO; no MECO, peak, ringdown, or numerical-gamma rule applies",
+      "samples": 5326,
+      "first_time_seconds": -2.629817046,
+      "last_time_seconds": -0.02971938974999988,
+      "initial_absolute_rotation_radians": 1.542258061017859,
+      "relative_rotation_max_radians": 0.016225773147368748,
+      "relative_rotation_final_radians": 0.016225773147368748,
+      "first_relative_rotation_crossings": {
+        "0.0001": {
+          "sample_index": 65,
+          "time_seconds": -2.59807876475,
+          "elapsed_from_first_sample_seconds": 0.03173828125,
+          "relative_rotation_radians": 0.0001015728752882557,
+          "alpha_anchored_residual_radians": 0.00016981100786317427,
+          "beta_residual_radians": 0.0009467041827845579,
+          "gamma_anchored_residual_radians": -0.00015188342806604638
+        },
+        "0.001": {
+          "sample_index": 1494,
+          "time_seconds": -1.9003248584999999,
+          "elapsed_from_first_sample_seconds": 0.7294921875,
+          "relative_rotation_radians": 0.0010021190547627812,
+          "alpha_anchored_residual_radians": -0.004987382534186402,
+          "beta_residual_radians": 0.0006919547328671505,
+          "gamma_anchored_residual_radians": 0.0047812423912536595
+        },
+        "0.01": {
+          "sample_index": 5241,
+          "time_seconds": -0.07073501474999988,
+          "elapsed_from_first_sample_seconds": 2.55908203125,
+          "relative_rotation_radians": 0.01004128682603691,
+          "alpha_anchored_residual_radians": -0.034144516014571025,
+          "beta_residual_radians": -0.0060733738774496615,
+          "gamma_anchored_residual_radians": 0.030453763305895
+        }
+      }
+    },
+    "v223_compatibility_vs_public_pre_meco": {
+      "scope": "PV22300 samples strictly before MECO; no MECO, peak, ringdown, or numerical-gamma rule applies",
+      "samples": 5326,
+      "first_time_seconds": -2.629817046,
+      "last_time_seconds": -0.02971938974999988,
+      "initial_absolute_rotation_radians": 1.5418608744276627,
+      "relative_rotation_max_radians": 3.3156792316679897e-06,
+      "relative_rotation_final_radians": 1.0363151036916646e-08,
+      "first_relative_rotation_crossings": {
+        "0.0001": null,
+        "0.001": null,
+        "0.01": null
+      }
+    },
+    "table_convergence": {
+      "22300": {
+        "coarse_nodes": 2065,
+        "fine_nodes": 4120,
+        "max_rotation_radians": 0.0
+      },
+      "22310": {
+        "coarse_nodes": 2065,
+        "fine_nodes": 4120,
+        "max_rotation_radians": 1.4178647907874755e-14
+      },
+      "22311": {
+        "coarse_nodes": 2065,
+        "fine_nodes": 4120,
+        "max_rotation_radians": 8.232184368275813e-08
+      },
+      "22321": {
+        "coarse_nodes": 2065,
+        "fine_nodes": 4120,
+        "max_rotation_radians": 8.940959498165795e-07
+      }
+    },
+    "summaries": {
+      "22300": {
+        "native_vs_independent": {
+          "analytical_inspiral": {
+            "samples": 3,
+            "absolute_rotation_max_radians": 0.0,
+            "relative_rotation_max_radians": 0.0,
+            "alpha_anchored_max_abs_radians": 0.0,
+            "beta_max_abs_radians": 0.0,
+            "gamma_anchored_max_abs_radians": 0.0
+          },
+          "meco_to_peak": {
+            "samples": 3,
+            "absolute_rotation_max_radians": 2.7755575615628914e-17,
+            "relative_rotation_max_radians": 4.807406715958909e-17,
+            "alpha_anchored_max_abs_radians": 0.0,
+            "beta_max_abs_radians": 2.7755575615628914e-17,
+            "gamma_anchored_max_abs_radians": 0.0
+          },
+          "ringdown": {
+            "samples": 3,
+            "absolute_rotation_max_radians": 3.5381555418772973e-17,
+            "relative_rotation_max_radians": 9.007208163871439e-17,
+            "alpha_anchored_max_abs_radians": 0.0,
+            "beta_max_abs_radians": 2.7755575615628914e-17,
+            "gamma_anchored_max_abs_radians": 0.0
+          },
+          "all": {
+            "samples": 9,
+            "absolute_rotation_max_radians": 3.5381555418772973e-17,
+            "relative_rotation_max_radians": 3.925231146709437e-17,
+            "alpha_anchored_max_abs_radians": 0.0,
+            "beta_max_abs_radians": 2.7755575615628914e-17,
+            "gamma_anchored_max_abs_radians": 0.0
+          }
+        },
+        "independent_vs_public": {
+          "analytical_inspiral": {
+            "samples": 3,
+            "absolute_rotation_max_radians": 1.54760681453406,
+            "relative_rotation_max_radians": 0.016225773147368748,
+            "alpha_anchored_max_abs_radians": 0.02967470632590974,
+            "beta_max_abs_radians": 0.014855285798082485,
+            "gamma_anchored_max_abs_radians": 0.024895095363117736
+          },
+          "meco_to_peak": {
+            "samples": 3,
+            "absolute_rotation_max_radians": 1.547425604451232,
+            "relative_rotation_max_radians": 0.028053919555509673,
+            "alpha_anchored_max_abs_radians": 0.09012864247471342,
+            "beta_max_abs_radians": 0.015098683221707598,
+            "gamma_anchored_max_abs_radians": 0.08349781161739678
+          },
+          "ringdown": {
+            "samples": 3,
+            "absolute_rotation_max_radians": 1.5708308968335232,
+            "relative_rotation_max_radians": 0.037744325276213124,
+            "alpha_anchored_max_abs_radians": 0.13458070841172898,
+            "beta_max_abs_radians": 0.01063689101488216,
+            "gamma_anchored_max_abs_radians": 0.11371145898404222
+          },
+          "all": {
+            "samples": 9,
+            "absolute_rotation_max_radians": 1.5708308968335232,
+            "relative_rotation_max_radians": 0.03725628597323422,
+            "alpha_anchored_max_abs_radians": 0.1410454755679087,
+            "beta_max_abs_radians": 0.015098683221707598,
+            "gamma_anchored_max_abs_radians": 0.11501207386360024
+          }
+        }
+      },
+      "22310": {
+        "native_vs_independent": {
+          "analytical_inspiral": {
+            "samples": 3,
+            "absolute_rotation_max_radians": 0.0,
+            "relative_rotation_max_radians": 0.0,
+            "alpha_anchored_max_abs_radians": 0.0,
+            "beta_max_abs_radians": 0.0,
+            "gamma_anchored_max_abs_radians": 0.0
+          },
+          "meco_to_peak": {
+            "samples": 3,
+            "absolute_rotation_max_radians": 2.7755575615628914e-17,
+            "relative_rotation_max_radians": 4.807406715958909e-17,
+            "alpha_anchored_max_abs_radians": 0.0,
+            "beta_max_abs_radians": 2.7755575615628914e-17,
+            "gamma_anchored_max_abs_radians": 0.0
+          },
+          "ringdown": {
+            "samples": 3,
+            "absolute_rotation_max_radians": 2.8486504742032495e-15,
+            "relative_rotation_max_radians": 2.8470485473674073e-15,
+            "alpha_anchored_max_abs_radians": 1.4210854715202004e-14,
+            "beta_max_abs_radians": 0.0,
+            "gamma_anchored_max_abs_radians": 1.4210854715202004e-14
+          },
+          "all": {
+            "samples": 9,
+            "absolute_rotation_max_radians": 2.8486504742032495e-15,
+            "relative_rotation_max_radians": 2.857157499562814e-15,
+            "alpha_anchored_max_abs_radians": 1.4210854715202004e-14,
+            "beta_max_abs_radians": 2.7755575615628914e-17,
+            "gamma_anchored_max_abs_radians": 1.4210854715202004e-14
+          }
+        },
+        "independent_vs_public": {
+          "analytical_inspiral": {
+            "samples": 3,
+            "absolute_rotation_max_radians": 1.54760681453406,
+            "relative_rotation_max_radians": 0.016225773147368748,
+            "alpha_anchored_max_abs_radians": 0.02967470632590974,
+            "beta_max_abs_radians": 0.014855285798082485,
+            "gamma_anchored_max_abs_radians": 0.024895095363117736
+          },
+          "meco_to_peak": {
+            "samples": 3,
+            "absolute_rotation_max_radians": 1.547425604451232,
+            "relative_rotation_max_radians": 0.03777813001795187,
+            "alpha_anchored_max_abs_radians": 0.09012864247471342,
+            "beta_max_abs_radians": 0.015098683221707598,
+            "gamma_anchored_max_abs_radians": 0.08349781161739678
+          },
+          "ringdown": {
+            "samples": 3,
+            "absolute_rotation_max_radians": 1.6312175357372949,
+            "relative_rotation_max_radians": 0.1456513531876871,
+            "alpha_anchored_max_abs_radians": 0.24142064768072302,
+            "beta_max_abs_radians": 0.010343560855570755,
+            "gamma_anchored_max_abs_radians": 6.090197464682307
+          },
+          "all": {
+            "samples": 9,
+            "absolute_rotation_max_radians": 1.6312175357372949,
+            "relative_rotation_max_radians": 0.10014163954834357,
+            "alpha_anchored_max_abs_radians": 0.13664434483823662,
+            "beta_max_abs_radians": 0.015098683221707598,
+            "gamma_anchored_max_abs_radians": 6.2451504871901875
+          }
+        }
+      },
+      "22311": {
+        "native_vs_independent": {
+          "analytical_inspiral": {
+            "samples": 3,
+            "absolute_rotation_max_radians": 5.240850260258509e-07,
+            "relative_rotation_max_radians": 5.240866309504495e-07,
+            "alpha_anchored_max_abs_radians": 0.0,
+            "beta_max_abs_radians": 0.0,
+            "gamma_anchored_max_abs_radians": 5.240866900457775e-07
+          },
+          "meco_to_peak": {
+            "samples": 3,
+            "absolute_rotation_max_radians": 7.255488432321489e-06,
+            "relative_rotation_max_radians": 7.694927576992908e-06,
+            "alpha_anchored_max_abs_radians": 0.0,
+            "beta_max_abs_radians": 2.7755575615628914e-17,
+            "gamma_anchored_max_abs_radians": 7.718631950481836e-06
+          },
+          "ringdown": {
+            "samples": 3,
+            "absolute_rotation_max_radians": 6.429209491668519e-06,
+            "relative_rotation_max_radians": 2.374758803598111e-06,
+            "alpha_anchored_max_abs_radians": 1.4210854715202004e-14,
+            "beta_max_abs_radians": 0.0,
+            "gamma_anchored_max_abs_radians": 1.0658141036401503e-14
+          },
+          "all": {
+            "samples": 9,
+            "absolute_rotation_max_radians": 7.255488432321489e-06,
+            "relative_rotation_max_radians": 7.255486888915238e-06,
+            "alpha_anchored_max_abs_radians": 1.4210854715202004e-14,
+            "beta_max_abs_radians": 2.7755575615628914e-17,
+            "gamma_anchored_max_abs_radians": 7.255486768276143e-06
+          }
+        },
+        "independent_vs_public": {
+          "analytical_inspiral": {
+            "samples": 3,
+            "absolute_rotation_max_radians": 1.5422580150968435,
+            "relative_rotation_max_radians": 0.016070653531960605,
+            "alpha_anchored_max_abs_radians": 0.02967470632590974,
+            "beta_max_abs_radians": 0.014855285798082485,
+            "gamma_anchored_max_abs_radians": 0.033001899932453505
+          },
+          "meco_to_peak": {
+            "samples": 3,
+            "absolute_rotation_max_radians": 1.5395194815452504,
+            "relative_rotation_max_radians": 0.027748602590206766,
+            "alpha_anchored_max_abs_radians": 0.09012864247471342,
+            "beta_max_abs_radians": 0.015098683221707598,
+            "gamma_anchored_max_abs_radians": 0.0857794055439065
+          },
+          "ringdown": {
+            "samples": 3,
+            "absolute_rotation_max_radians": 1.6761925633779033,
+            "relative_rotation_max_radians": 0.14663880939267296,
+            "alpha_anchored_max_abs_radians": 0.24142064768072302,
+            "beta_max_abs_radians": 0.010343560855570755,
+            "gamma_anchored_max_abs_radians": 6.0901974646823085
+          },
+          "all": {
+            "samples": 9,
+            "absolute_rotation_max_radians": 1.6761925633779033,
+            "relative_rotation_max_radians": 0.14451850354964899,
+            "alpha_anchored_max_abs_radians": 0.13664434483823662,
+            "beta_max_abs_radians": 0.015098683221707598,
+            "gamma_anchored_max_abs_radians": 6.199433411623025
+          }
+        }
+      },
+      "22321": {
+        "native_vs_independent": {
+          "analytical_inspiral": {
+            "samples": 3,
+            "absolute_rotation_max_radians": 5.240850260258509e-07,
+            "relative_rotation_max_radians": 5.240866309504495e-07,
+            "alpha_anchored_max_abs_radians": 0.0,
+            "beta_max_abs_radians": 0.0,
+            "gamma_anchored_max_abs_radians": 5.240866900457775e-07
+          },
+          "meco_to_peak": {
+            "samples": 3,
+            "absolute_rotation_max_radians": 4.744234836040866e-07,
+            "relative_rotation_max_radians": 1.1719460437870465e-07,
+            "alpha_anchored_max_abs_radians": 1.2182522723946931e-07,
+            "beta_max_abs_radians": 2.1495122071168993e-08,
+            "gamma_anchored_max_abs_radians": 2.1388015802870086e-07
+          },
+          "ringdown": {
+            "samples": 3,
+            "absolute_rotation_max_radians": 3.904574037699478e-07,
+            "relative_rotation_max_radians": 3.3641442437813307e-07,
+            "alpha_anchored_max_abs_radians": 7.105427357601002e-15,
+            "beta_max_abs_radians": 2.1808457179028906e-08,
+            "gamma_anchored_max_abs_radians": 3.42303689393475e-07
+          },
+          "all": {
+            "samples": 9,
+            "absolute_rotation_max_radians": 5.240850260258509e-07,
+            "relative_rotation_max_radians": 5.240866309504495e-07,
+            "alpha_anchored_max_abs_radians": 1.2435776852726121e-07,
+            "beta_max_abs_radians": 2.1808457179028906e-08,
+            "gamma_anchored_max_abs_radians": 5.240866900457775e-07
+          }
+        },
+        "independent_vs_public": {
+          "analytical_inspiral": {
+            "samples": 3,
+            "absolute_rotation_max_radians": 1.5422580150968435,
+            "relative_rotation_max_radians": 0.016070653522165863,
+            "alpha_anchored_max_abs_radians": 0.02967470632590974,
+            "beta_max_abs_radians": 0.014855285798082485,
+            "gamma_anchored_max_abs_radians": 0.033001899890414244
+          },
+          "meco_to_peak": {
+            "samples": 3,
+            "absolute_rotation_max_radians": 1.539520150717232,
+            "relative_rotation_max_radians": 0.052022148258459446,
+            "alpha_anchored_max_abs_radians": 0.1597546919038937,
+            "beta_max_abs_radians": 0.028910247509011666,
+            "gamma_anchored_max_abs_radians": 0.15094011495368953
+          },
+          "ringdown": {
+            "samples": 3,
+            "absolute_rotation_max_radians": 1.5340121418824817,
+            "relative_rotation_max_radians": 0.4295167796117526,
+            "alpha_anchored_max_abs_radians": 0.2414206476807177,
+            "beta_max_abs_radians": 0.029124870165838646,
+            "gamma_anchored_max_abs_radians": 0.19114072468805432
+          },
+          "all": {
+            "samples": 9,
+            "absolute_rotation_max_radians": 1.5422580150968435,
+            "relative_rotation_max_radians": 0.4405986440151552,
+            "alpha_anchored_max_abs_radians": 0.20913333483796315,
+            "beta_max_abs_radians": 0.029124870165838646,
+            "gamma_anchored_max_abs_radians": 0.23282596528281285
+          }
+        }
+      }
+    }
+  },
+  "evidence_retention": {
+    "scope": "Historical q=10 scalar-angle diagnostic; no change to whole-waveform qualification gates.",
+    "omitted_field": "result.scalar_table",
+    "omitted_rows": 36,
+    "full_receipt_sha256": "5f8046f5ca21a5d42502d0685385108ce1c3533eac03f99dadf172ef95dee87e",
+    "distribution": "Full sampled table excluded from the distributed repository; summaries, inputs, convergence checks and historical execution metadata retained."
+  }
+}

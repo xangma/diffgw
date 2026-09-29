@@ -1,5 +1,24 @@
 # TaylorF2 spin-induced quadrupoles
 
+<!-- BEGIN GENERATED WAVEFORM DEFINITION -->
+
+| Definition field | Catalog value |
+| --- | --- |
+| Model ID | `taylorf2-spin-induced-quadrupole-3.5pn/v1` |
+| Reference composition | `taylorf2-spin-induced-quadrupole-3.5pn/v1` |
+| Scope | Spin-induced quadrupole moment phase corrections through 3.5PN added to aligned-spin and tidal TaylorF2. |
+| Domain and modes | `frequency`; `(2, 2)` |
+| Native backends | `torch`, `jax` |
+| Scoped verification claims | 0 |
+
+| Option | Default | Native choices | Reference-only choices |
+| --- | --- | --- | --- |
+| `spin_order` | `7` | `-1`, `0`, `1`, `2`, `3`, `4`, `5`, `6`, `7`, `8` | None |
+| `phasing_convention` | `coalescence` | `coalescence`, `reference_frequency` | None |
+| `phenom_d_calibration` | `false` | `false`, `true` | None |
+
+<!-- END GENERATED WAVEFORM DEFINITION -->
+
 ## Scope and status
 
 Specification: **`taylorf2-spin-induced-quadrupole-3.5pn/v1`**. The independent
@@ -124,12 +143,12 @@ From the repository root after installing the reference and both frontends:
 ```sh
 python -m pip install -e '.[reference,torch,jax,dev]'
 python -m diffgw_reference.spin_quadrupole_artifacts --check
-JAX_ENABLE_X64=1 JAX_PLATFORMS=cpu python -m pytest tests/test_taylorf2_spin_quadrupole_math_reference.py tests/test_spin_quadrupole_math_reference_traceability.py --require-math-reference --reference-device=cpu -ra
+JAX_ENABLE_X64=1 JAX_PLATFORMS=cpu python -m pytest tests/test_taylorf2_spin_quadrupole_math_reference.py tests/test_spin_quadrupole_math_reference_traceability.py --reference-device=cpu -ra
 ```
 
-The focused tests check this correction and its traceability. The maintained CI
-reference gate also runs the full `tests/test_*math_reference*.py` suite in
-required mode, including inherited TaylorF2 specifications. A change to the
+The focused tests check this correction and its traceability. The [full strict
+CPU reference gate](../waveforms/qualification-status.md#reproduction)
+also includes inherited TaylorF2 specifications. A change to the
 phase equation or convention needs a new component/specification version and
 reviewed regeneration of the coefficient table and frozen fixtures; changing
 only test coverage does not change the mathematical version.

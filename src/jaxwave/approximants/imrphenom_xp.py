@@ -23,7 +23,10 @@ from jaxwave.conversions import (
 )
 from jaxwave.approximants.imrphenom_xas import IMRPhenomXAS, XASParameterFits
 from jaxwave.approximants.precession_msa import (
+    _compute_msa_final_spin_with_domain,
+    _enforce_msa_final_spin_domain,
     compute_effective_chip,
+    compute_msa_initialization_validity,
     compute_msa_final_spin,
     compute_l_3pn,
     evaluate_msa_precession,
@@ -31,6 +34,9 @@ from jaxwave.approximants.precession_msa import (
 )
 from jaxwave.approximants.precession_msa_v223_one_spin_projection import (
     one_spin_msa_v223_waveform,
+)
+from jaxwave.approximants.precession_msa_v223_generic_projection import (
+    generic_msa_v223_waveform,
 )
 
 
@@ -152,6 +158,7 @@ class IMRPhenomXP:
         """Generate precessing dominant-mode polarizations in JAX."""
         p_ver = resolve_precession_version(precession_method, prec_version)
         force_legacy = kwargs.pop("_force_legacy", False)
+        msa_spin_override = kwargs.pop("_msa_final_spin_override", None)
         final_spin_version = kwargs.pop("final_spin_version", None)
         if final_spin_version is not None:
             if isinstance(final_spin_version, bool) or final_spin_version not in (0, 3):
@@ -220,9 +227,11 @@ class IMRPhenomXP:
         in_plane_sq = s1x * s1x + s1y * s1y + s2x * s2x + s2y * s2y
         is_aligned = (in_plane_sq == 0.0)
 
-        # The published constant-spin/zero-nutation solution has no split-root
-        # singularity.  Route its supported rows through the source-derived
-        # JAX kernel; leave generic two-spin rows on the existing public path.
+        # The zero-nutation continuation covers one-spin rows.  The generic
+        # two-spin MSA kernel follows the distinct-root equations of
+        # Chatziioannou et al. (2017); their equal-mass limit needs a separate
+        # continuation, so that boundary retains the inherited public route.
+        # Pratten et al. (2021), Eqs. (8)--(13), App. C fix the projection.
         if p_ver == 223 and convention in (0, 1, 6) and final_spin_mod == 3 and not force_legacy:
             from jaxwave.approximants.precession_msa_v223_endpoint import _opening_l_3pn
 
@@ -241,7 +250,16 @@ class IMRPhenomXP:
             delta = n1 - n2
             v_ref = (PI * total * MSUN_SEC * clean_fref) ** (1.0 / 3.0)
             j_ref = _opening_l_3pn(v_ref, eta, delta, spin_l, sigma_l) + spin_l
-            use_clean = one_spin & (j_ref > 0.0) & (clean_fref > 0.0)
+            msa_valid = compute_msa_initialization_validity(
+                v_ref, m1, m2, s1x, s1y, s1z, s2x, s2y, s2z
+            )
+            # The clean two-spin kernel requires distinct MSA roots.  Reuse
+            # the inherited initialization validity gate so coalescing-root
+            # rows take the published NNLO fallback.
+            generic = (
+                (~one_spin) & (m1 != m2) & msa_valid
+            )
+            use_clean = (one_spin | generic) & (j_ref > 0.0) & (clean_fref > 0.0)
             if convention == 6:
                 f_guard = jnp.where(
                     f_source.reshape(-1) > 0.0,
@@ -255,23 +273,45 @@ class IMRPhenomXP:
                 ) + spin_l[..., None]
                 use_clean = use_clean & jnp.all(j_grid > 0.0, axis=-1)
 
+            # Enforce only the selected legacy remnant's domain, outside the
+            # conditional branches. An unused callback-bearing branch changes
+            # XLA staging of the exact aligned carrier and runs under vmap.
+            fallback_spin, unsupported = _compute_msa_final_spin_with_domain(
+                v_ref, m1, m2, s1x, s1y, s1z, s2x, s2y, s2z
+            )
+            _enforce_msa_final_spin_domain(unsupported & ~use_clean)
+
             def evaluate_row(row):
                 (r_m1, r_m2, r_s1x, r_s1y, r_s1z, r_s2x, r_s2y, r_s2z,
                  r_dist, r_inc, r_phi, r_time, r_phi0, r_fref, r_clean_fref,
-                 r_clean) = row
+                 r_generic, r_clean, r_fallback_spin) = row
 
                 def clean(_):
-                    hp, hc = one_spin_msa_v223_waveform(
-                        f_safe, r_m1, r_m2,
-                        jnp.stack((r_s1x, r_s1y, r_s1z)),
-                        jnp.stack((r_s2x, r_s2y, r_s2z)),
-                        distance=r_dist, inclination=r_inc,
-                        phic=r_phi-r_phi0, tc=r_time,
-                        f_ref=r_clean_fref if fref is not None else None,
-                        convention=1 if convention == 6 else convention,
-                        phasing_convention=phasing_convention,
-                        reference_frame=reference_frame,
-                    )
+                    spin1 = jnp.stack((r_s1x, r_s1y, r_s1z))
+                    spin2 = jnp.stack((r_s2x, r_s2y, r_s2z))
+
+                    def two_spin(_):
+                        return generic_msa_v223_waveform(
+                            f_safe, r_m1, r_m2, spin1, spin2,
+                            distance=r_dist, inclination=r_inc,
+                            phic=r_phi-r_phi0, tc=r_time, f_ref=r_clean_fref,
+                            convention=1 if convention == 6 else convention,
+                            phasing_convention=phasing_convention,
+                            reference_frame=reference_frame,
+                        )
+
+                    def zero_nutation(_):
+                        return one_spin_msa_v223_waveform(
+                            f_safe, r_m1, r_m2, spin1, spin2,
+                            distance=r_dist, inclination=r_inc,
+                            phic=r_phi-r_phi0, tc=r_time,
+                            f_ref=r_clean_fref if fref is not None else None,
+                            convention=1 if convention == 6 else convention,
+                            phasing_convention=phasing_convention,
+                            reference_frame=reference_frame,
+                        )
+
+                    hp, hc = jax.lax.cond(r_generic, two_spin, zero_nutation, None)
                     if convention == 6:
                         phase = jnp.exp(2.0j * r_phi)
                         hp, hc = phase * hp, phase * hc
@@ -280,25 +320,34 @@ class IMRPhenomXP:
                             jnp.where(f_source > 0.0, hc, 0.0j))
 
                 def legacy(_):
-                    return IMRPhenomXP.evaluate(
-                        f=f_source, mass1=r_m1, mass2=r_m2,
-                        spin1x=r_s1x, spin1y=r_s1y, spin1z=r_s1z,
-                        spin2x=r_s2x, spin2y=r_s2y, spin2z=r_s2z,
-                        distance=r_dist, inclination=r_inc,
-                        phic=r_phi, tc=r_time,
-                        f_ref=r_fref if fref is not None else None,
-                        phi0=r_phi0, phasing_convention=phasing_convention,
-                        reference_frame=reference_frame,
-                        precession_method=precession_method, prec_version=p_ver,
-                        convention=convention, final_spin_mod=final_spin_mod,
-                        _force_legacy=True,
-                    )
+                    def established(final_spin):
+                        return IMRPhenomXP.evaluate(
+                            f=f_source, mass1=r_m1, mass2=r_m2,
+                            spin1x=r_s1x, spin1y=r_s1y, spin1z=r_s1z,
+                            spin2x=r_s2x, spin2y=r_s2y, spin2z=r_s2z,
+                            distance=r_dist, inclination=r_inc,
+                            phic=r_phi, tc=r_time,
+                            f_ref=r_fref if fref is not None else None,
+                            phi0=r_phi0, phasing_convention=phasing_convention,
+                            reference_frame=reference_frame,
+                            precession_method=precession_method,
+                            prec_version=p_ver, convention=convention,
+                            final_spin_mod=final_spin, _force_legacy=True,
+                            _msa_final_spin_override=r_fallback_spin,
+                        )
+
+                    # The angle evaluator retains its documented NNLO
+                    # fallback.  Preserve the independently selected remnant
+                    # mode so mode 3 reports an unsupported MSA root instead
+                    # of silently becoming mode 0.
+                    return established(final_spin_mod)
 
                 return jax.lax.cond(r_clean, clean, legacy, operand=None)
 
             row_values = (
                 m1, m2, s1x, s1y, s1z, s2x, s2y, s2z,
-                dist, inc, phi_c, t_c, phi_0, fref_eval, clean_fref, use_clean,
+                dist, inc, phi_c, t_c, phi_0, fref_eval, clean_fref,
+                generic, use_clean, fallback_spin,
             )
             if m1.ndim == 0:
                 return evaluate_row(row_values)
@@ -311,7 +360,9 @@ class IMRPhenomXP:
         m_sec = total_mass * MSUN_SEC
 
         final_spin_override = None
-        if final_spin_mod == 3:
+        if msa_spin_override is not None:
+            final_spin_override = msa_spin_override
+        elif final_spin_mod == 3:
             v0_remnant = (PI * m_sec * fref_eval) ** (1.0 / 3.0)
             final_spin_override = compute_msa_final_spin(
                 v0_remnant, m1, m2, s1x, s1y, s1z, s2x, s2y, s2z

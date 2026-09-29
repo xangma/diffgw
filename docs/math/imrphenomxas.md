@@ -386,7 +386,7 @@ gauges. The [XHM companion paper, Appendix C](https://arxiv.org/html/2001.10914v
 documents related reference-frequency, orbital-phase, and waveform-time
 conventions; its mode-phase relation is distinct from the assembled
 polarization phase. The arbitrary upper reconstruction cutoff discussed in
-XAS Sec. V is not an intrinsic cutoff in this carrier; public wrapper
+XAS Sec. V (Eqs. (64)–(65), $Mf=0.3$) is not an intrinsic cutoff in this carrier; public wrapper
 `f_lower`/`f_final` limits are outside this component.
 
 The [maintained test](https://github.com/xangma/diffgw/blob/main/tests/test_imrphenomxas_waveform_math_reference.py)
@@ -403,6 +403,15 @@ parameter-space calibration, physical agreement with NR/hybrid waveforms,
 the fifth-order paper amplitude option, the public wrapper's user masks, or
 full-domain intrinsic derivatives. Selected mass-ratio and spin tangents are
 checked below.
+
+The [maintained pinned-binary whole-polarization gate](../validation/imrphenomxas_whole_waveform_20260927.md)
+compares Torch and JAX directly with the public LALSimulation 7.26.15
+`IMRPhenomXAS` waveform-sequence API over every positive-frequency sample
+below the paper's $Mf=0.3$ upper limit. It checks absolute complex $h_+$ and
+$h_\times$, without phase/time alignment, over a catalog case and two frozen
+unequal-mass spin holdouts. The public binary zeroes bins above that limit;
+the native carrier continues to evaluate there, so the gate explicitly tests
+the public cutoff and does not count its zero tail as intrinsic carrier error.
 
 | Component ID | Evidence | Native relationship | Maintained check |
 | --- | --- | --- | --- |
@@ -545,7 +554,8 @@ calibration components or verification claims to the public catalog.
 
 From the repository root with the optional reference, Torch, and JAX
 dependencies installed, run
-`JAX_ENABLE_X64=1 JAX_PLATFORMS=cpu python -m pytest tests/test_imrphenomxas*math_reference.py --require-math-reference --reference-device=cpu -ra`.
+`JAX_ENABLE_X64=1 JAX_PLATFORMS=cpu python -m pytest tests/test_imrphenomxas*math_reference.py --reference-device=cpu -ra`.
+For qualification, run the [full strict CPU reference gate](../waveforms/qualification-status.md#reproduction).
 The opt-in author-asset verifier command and required hash are given in the
 [cross-check](#author-fit-surface-cross-check); the maintained CI gate runs
 without that external file.

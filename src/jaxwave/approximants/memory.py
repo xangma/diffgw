@@ -1,9 +1,8 @@
-"""Non-Linear Gravitational Wave Memory (Christodoulou Memory Effect) in JAX.
+"""Provisional strain-memory carrier and a published dominant-(2, ±2) slice.
 
-Strict Clean-Room Implementation based exclusively on published peer-reviewed literature:
-- Christodoulou (1991), Phys. Rev. Lett. 67, 1486
-- Favata (2010), Class. Quantum Grav. 27, 084036 (arXiv:1003.3486)
-- Talbot, Thrane, Biscoveanu, Smith (2018), Phys. Rev. D 98, 084031 (arXiv:1807.00990)
+The legacy ``compute_memory_h20`` is a diagnostic energy-flux proxy. The
+explicit ``*_22`` path follows Favata (2010), arXiv:1003.3486v1, Sec. 6.2,
+and Talbot, Thrane, Lasky & Lin (2018), arXiv:1807.00990v2, Eqs. (1)-(9).
 """
 
 from typing import Dict, Optional, Tuple, Union
@@ -13,7 +12,6 @@ import jax.numpy as jnp
 
 from diffgw_core.constants import (
     C_SI,
-    G_SI,
     MPC_SI,
     PI,
 )
@@ -22,6 +20,52 @@ from jaxwave.conversions import as_array
 
 # Spherical harmonic coefficient for (l=2, m=0): sqrt(15 / (32 * pi))
 Y20_COEFF: float = math.sqrt(15.0 / (32.0 * math.pi))
+
+
+def compute_memory_h20_22(
+    times: jnp.ndarray,
+    h22: jnp.ndarray,
+    distance_m: Union[float, jnp.ndarray],
+) -> jnp.ndarray:
+    """Published ±22-sourced h20 with explicit SI distance and sample-zero offset.
+
+    See the Torch counterpart for the normalization and convention. The
+    supplied complex h22 is physical strain; times are seconds, distance_m
+    is meters, and the time grid may be nonuniform.
+    For h22 shaped (..., N), distance_m must broadcast to the leading batch
+    shape (...), without a time axis; the output retains h22's shape.
+    """
+    if times.ndim != 1 or times.size < 2 or h22.shape[-1] != times.size:
+        raise ValueError("times must be 1D with at least two samples and match h22")
+    if isinstance(distance_m, (float, int)) and distance_m <= 0:
+        raise ValueError("distance_m must be positive")
+    distance = as_array(distance_m, dtype=times.dtype)
+    try:
+        distance = jnp.expand_dims(jnp.broadcast_to(distance, h22.shape[:-1]), -1)
+    except ValueError as exc:
+        raise ValueError("distance_m must broadcast to h22's leading batch shape, without a time axis") from exc
+    dt = jnp.diff(times)
+    secants = jnp.diff(h22, axis=-1) / dt
+    interior = (dt[1:] * secants[..., :-1] + dt[:-1] * secants[..., 1:]) / (dt[:-1] + dt[1:])
+    slope = jnp.concatenate((secants[..., :1], interior, secants[..., -1:]), axis=-1)
+    flux = jnp.abs(slope) ** 2
+    increments = (flux[..., :-1] + flux[..., 1:]) * jnp.diff(times) / 2
+    integral = jnp.concatenate((jnp.zeros_like(increments[..., :1]), jnp.cumsum(increments, axis=-1)), axis=-1)
+    return distance * (math.sqrt(5.0 / (6.0 * math.pi)) / (7.0 * C_SI)) * integral
+
+
+def memory_polarizations_22(
+    h20_mem: jnp.ndarray,
+    inclination: Union[float, jnp.ndarray] = 0.0,
+) -> Tuple[jnp.ndarray, jnp.ndarray]:
+    """Full dominant-22 pattern, including the l=4,m=0 memory projection."""
+    inc = as_array(inclination, dtype=h20_mem.dtype)
+    cos_i = jnp.cos(inc)
+    pattern = Y20_COEFF * jnp.sin(inc) ** 2 * (7.0 / 120.0) * (17.0 + cos_i ** 2)
+    if h20_mem.ndim > pattern.ndim:
+        pattern = jnp.expand_dims(pattern, -1)
+    hp_mem = h20_mem * pattern
+    return hp_mem, jnp.zeros_like(hp_mem)
 
 
 def compute_memory_h20(
@@ -160,7 +204,7 @@ def add_memory_to_waveform(
 
 @jax.tree_util.register_pytree_node_class
 class MemoryWaveform:
-    """JAX class for computing Non-Linear Gravitational Wave Memory."""
+    """Provisional hp/hc carrier with an explicit published dominant-22 path."""
 
     def __init__(self, scale_factor: float = 1.0):
         self.scale_factor = scale_factor
@@ -195,3 +239,15 @@ class MemoryWaveform:
         inclination: Union[float, jnp.ndarray] = 0.0,
     ) -> Tuple[jnp.ndarray, jnp.ndarray, jnp.ndarray]:
         return self(times=times, hp=hp, hc=hc, inclination=inclination)
+
+    def evaluate_22(
+        self,
+        times: jnp.ndarray,
+        h22: jnp.ndarray,
+        distance_m: Union[float, jnp.ndarray],
+        inclination: Union[float, jnp.ndarray] = 0.0,
+    ) -> Tuple[jnp.ndarray, jnp.ndarray, jnp.ndarray]:
+        """Return (h+_mem, hx_mem, h20) for the published ±22-only scope."""
+        h20 = compute_memory_h20_22(times, h22, distance_m)
+        hp, hc = memory_polarizations_22(h20, inclination)
+        return hp, hc, h20

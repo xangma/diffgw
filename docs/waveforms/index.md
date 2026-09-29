@@ -12,15 +12,27 @@ needed before an executable reference can be trusted.
 Former complete-waveform prototypes have a separate
 [historical record](research/retired-release-surface.md); they do not appear
 in the current public dispatch inventory.
+The [qualification status review](qualification-status.md) separates supported
+implementation scopes from concrete remaining blockers and physical failures.
 
 <!-- BEGIN GENERATED WAVEFORM TABLE -->
 
 | Model and specification | Definition version | Scope | Backends |
 | --- | --- | --- | --- |
 | [TaylorF2](../math/taylorf2.md) | `taylorf2-nonspinning-3.5pn/v1` | Nonspinning 3.5PN inspiral with restricted quadrupole amplitude and positive frequencies. | `torch`, `jax` |
+| [TaylorF2_Eccentric](../math/taylorf2-eccentric.md) | `taylorf2-eccentric-nonspinning-e2-3pn/v1` | Nonspinning comparable-mass (q <= 2), 0 < e0 <= 0.1, positive-frequency inspiral: restricted quadrupole amplitude and 3PN order-e0² eccentric phase at explicit f0_ecc and f_ref, with amplitude correction off. | `torch`, `jax` |
 | [TaylorF2_HM](../math/taylorf2-hm.md) | `taylorf2-hm-leading-carrier/v1` | Eight leading nonspinning SPA mode amplitudes with inherited aligned-spin TaylorF2 phase and negative-m polarization projection. | `torch`, `jax` |
 | [IMRPhenomD](../math/imrphenomd-intrinsic.md) | `imrphenomd-intrinsic-composition/v1` | Aligned-spin (2,2) IMR composition with declared fit rows and QNM data. | `torch`, `jax` |
+| [IMRPhenomHM](../math/imrphenomhm-waveform.md) | `imrphenomhm-independent-waveform/v3` | Bounded independent mathematical composition for published D calibration and named source PN variants; inherited defaults remain separate. | `torch`, `jax` |
 | [IMRPhenomXAS](../math/imrphenomxas.md) | `imrphenomxas-composed-polarizations-carrier/v1` | Aligned-spin (2,2) carrier composition with supplied fit and QNM outputs. | `torch`, `jax` |
+| [KerrRingdown220Direct](../math/kerr-ringdown-direct-class.md) | `kerr-ringdown-220-energy-direct-class/v1` | Direct Torch/JAX KerrRingdown class only: one physical-energy spheroidal (2,2,0) mode with independent QNM; selected FP64 inputs. | `torch`, `jax` |
+| [ContinuousWaveH1Direct](../math/continuous-wave-direct-class.md) | `cw-monochromatic-h1-direct-class/v2` | Direct Torch/JAX ContinuousWave class: selected float64 CPU monochromatic principal-axis 2f strain at H1, GPS epoch in 2015–2016. | `torch`, `jax` |
+| [MemoryWaveform22Direct](../math/memory-dominant-22-direct-class.md) | `memory-dominant-22-direct-class/v1` | Only Torch/JAX MemoryWaveform.evaluate_22 with supplied physical-strain h22, symmetric mirror, and relative memory offset on selected CPU float64 grids. | `torch`, `jax` |
+| [taylorf2-aligned-bh-spin-3.5pn/v1](../math/taylorf2-aligned-spin.md) | `taylorf2-aligned-bh-spin-3.5pn/v1` | Aligned black-hole spin phase corrections through 3.5PN conservative dynamics and flux to infinity with restricted quadrupole amplitude. | `torch`, `jax` |
+| [taylorf2-adiabatic-quadrupolar-tides-6.5pn/v1](../math/taylorf2-tidal.md) | `taylorf2-adiabatic-quadrupolar-tides-6.5pn/v1` | Adiabatic quadrupolar gravitoelectric TaylorF2 tidal phase corrections through 6.5PN added to aligned-spin TaylorF2. | `torch`, `jax` |
+| [taylorf2-spin-induced-quadrupole-3.5pn/v1](../math/taylorf2-spin-quadrupole.md) | `taylorf2-spin-induced-quadrupole-3.5pn/v1` | Spin-induced quadrupole moment phase corrections through 3.5PN added to aligned-spin and tidal TaylorF2. | `torch`, `jax` |
+| [ppe-supported-equations/v2](../math/ppe-phase-dispersion.md) | `ppe-supported-equations/v2` | Parameterized post-Einstein inspiral amplitude modification, phase increment, and massive-graviton dispersion applied to supported GR carriers. | `torch`, `jax` |
+| [emri.newtonian_eccentric_quadrupole.v1](../math/emri-kludge.md) | `emri-newtonian-eccentric-quadrupole/v1` | Weak-field, leading-quadrupole Newtonian eccentric EMRI polarizations at a fixed observer with adiabatic Peters p,e evolution. | `torch`, `jax` |
 
 <!-- END GENERATED WAVEFORM TABLE -->
 

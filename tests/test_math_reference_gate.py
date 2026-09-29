@@ -52,6 +52,36 @@ def test_gate_rejects_missing_reference_module(pytester):
     assert "Required math reference modules were not collected" in result.stderr.str()
 
 
+@pytest.mark.parametrize("filename", (
+    "test_nsbh_probe_reference.py",
+    "test_emri_newtonian_quadrupole_reference.py",
+    "test_xp_msa_remnant_boundary_policy.py",
+))
+def test_gate_requires_named_reference_module(pytester, filename):
+    prepare(pytester, "def test_probe(): pass")
+    (pytester.path / "tests" / filename).write_text(
+        "import pytest\ndef test_reference(): pytest.skip('missing evidence')"
+    )
+    result = pytester.runpytest_subprocess("--require-math-reference", "-q")
+    assert result.ret != 0
+    assert "1/2 passed; 1 skipped/xfail; 0 deselected" in result.stdout.str()
+
+
+@pytest.mark.parametrize("filename", (
+    "test_emri_newtonian_quadrupole_reference.py",
+    "test_xp_msa_remnant_boundary_policy.py",
+))
+def test_gate_rejects_omitted_named_reference_module(pytester, filename):
+    prepare(pytester, "def test_probe(): pass")
+    (pytester.path / "tests" / filename).write_text("def test_reference(): pass")
+    result = pytester.runpytest_subprocess(
+        "tests/test_probe_math_reference.py", "--require-math-reference", "-q"
+    )
+    assert result.ret != 0
+    assert filename in result.stderr.str()
+    assert "Required math reference modules were not collected" in result.stderr.str()
+
+
 def test_gate_rejects_missing_dependency(pytester):
     prepare(pytester, "def test_probe(): pass", """
 original_import = importlib.import_module

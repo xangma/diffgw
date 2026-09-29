@@ -7,12 +7,22 @@ import pytest
 import diffgw
 
 
+def test_core_excludes_unqualified_mock_refits():
+    import diffgw_core
+
+    for name in ("load_xhm_amplitude_coefficients", "load_xpnr_angle_coefficients"):
+        assert not hasattr(diffgw_core, name)
+        assert name not in diffgw_core.__all__
+    assert util.find_spec("diffgw_core.data") is None
+
+
 @pytest.fixture(params=["torch", "jax"])
 def frontend(request):
     library = pytest.importorskip(request.param)
     package = {"torch": "torchwave", "jax": "jaxwave"}[request.param]
     if request.param == "torch":
-        array = lambda value: library.tensor(value, dtype=library.float64)
+        def array(value):
+            return library.tensor(value, dtype=library.float64)
     else:
         library.config.update("jax_enable_x64", True)
         array = import_module("jax.numpy").asarray

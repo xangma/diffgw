@@ -121,6 +121,103 @@ def _raw_angles(v, eta, delta, m1, chi_l, chi_p):
     return jnp.sum(aa * basis, axis=-1), jnp.sum(ee * basis, axis=-1)
 
 
+def frequency_domain_nnlo_geometry(
+    v,
+    v0,
+    mass1,
+    mass2,
+    spin1x,
+    spin1y,
+    spin1z,
+    spin2x,
+    spin2y,
+    spin2z,
+    inclination,
+    phic,
+    *,
+    convention=1,
+    observer_azimuth=None,
+):
+    """Published NNLO-102 geometry on a frequency-domain SPA grid.
+
+    Unsupported ``L+S_parallel<=0`` samples are marked with NaN in eager and
+    JIT execution alike, matching the Torch frontend's transform-safe policy.
+    """
+    if convention not in (0, 1, 5, 6, 7):
+        raise ValueError("published NNLO-102 geometry supports conventions 0, 1, 5, 6, and 7")
+    total = mass1 + mass2
+    eta = mass1 * mass2 / total**2
+    delta = (mass1 - mass2) / total
+    x1 = mass1 / total
+    chip = _effective_chip(mass1, mass2, spin1x, spin1y, spin2x, spin2y)
+    chi_eff = (mass1 * spin1z + mass2 * spin2z) / total
+
+    alpha_raw, epsilon_raw = _raw_angles(v, eta, -delta, x1, chi_eff / x1, chip)
+    alpha_ref, epsilon_ref = _raw_angles(v0, eta, -delta, x1, chi_eff / x1, chip)
+
+    source_phase = phic if observer_azimuth is None else phic - observer_azimuth
+    f_ref = v0**3 / (math.pi * total * MSUN_SEC)
+    alpha0, theta_jn, zeta, phi_j = _source_geometry(
+        mass1,
+        mass2,
+        spin1x,
+        spin1y,
+        spin1z,
+        spin2x,
+        spin2y,
+        spin2z,
+        inclination,
+        source_phase,
+        f_ref,
+    )
+    # Select the published zero-azimuth gauge at exact alignment.
+    is_aligned = spin1x**2 + spin1y**2 + spin2x**2 + spin2y**2 == 0
+    alpha0 = jnp.where(is_aligned, math.pi / 2 + source_phase, alpha0)
+    phi_j = jnp.where(is_aligned, jnp.zeros_like(phi_j), phi_j)
+    if alpha_raw.ndim > alpha0.ndim:
+        alpha0 = jnp.expand_dims(alpha0, -1)
+        phi_j = jnp.expand_dims(phi_j, -1)
+    anchored = convention in (0, 1, 6)
+    alpha = alpha_raw - alpha_ref + alpha0 if anchored else alpha_raw + alpha0
+    gamma = -epsilon_raw + epsilon_ref if anchored else -epsilon_raw
+    if convention in (1, 6):
+        gamma = gamma + math.pi - phi_j
+    carrier_phase = phi_j if convention == 0 else phic
+    if convention == 1:
+        zeta = zeta - math.pi / 2
+        carrier_phase = jnp.zeros_like(phi_j)
+
+    frequency = v**3 / (math.pi * total * MSUN_SEC)
+    n1, n2 = mass1 / total, mass2 / total
+    l_plus_s = (
+        _orbital_angular_momentum(mass1, mass2, frequency, spin1z, spin2z)
+        + n1**2 * spin1z
+        + n2**2 * spin2z
+    )
+    l_plus_s_ref = (
+        _orbital_angular_momentum(mass1, mass2, f_ref, spin1z, spin2z)
+        + n1**2 * spin1z
+        + n2**2 * spin2z
+    )
+    requires_rotation = ~is_aligned if convention == 1 else jnp.ones_like(is_aligned, dtype=bool)
+    unsupported = requires_rotation & ((l_plus_s <= 0) | (l_plus_s_ref <= 0))
+    beta = _clean_beta(
+        mass1,
+        mass2,
+        frequency,
+        spin1x,
+        spin1y,
+        spin1z,
+        spin2x,
+        spin2y,
+        spin2z,
+    )
+    alpha = jnp.where(unsupported, jnp.nan, alpha)
+    beta = jnp.where(unsupported, jnp.nan, beta)
+    gamma = jnp.where(unsupported, jnp.nan, gamma)
+    return alpha, beta, gamma, theta_jn, zeta, carrier_phase
+
+
 def _orbital_angular_momentum(m1, m2, f, s1z, s2z):
     total = m1 + m2
     eta = m1 * m2 / total**2
@@ -279,8 +376,10 @@ def nnlo_geometry(
             raise ValueError("frequency_at_time is required for numerical angle options")
         fq = jnp.maximum(frequency_at_time(query), jnp.finfo(frequency.dtype).tiny)
         fq_angle = jnp.where(query >= 0, fp[..., None, None] if query.ndim > fp.ndim + 1 else fp[..., None], fq)
+
         def expand_param(value):
             return value.reshape(value.shape + (1,) * (query.ndim - value.ndim))
+
         vv = (math.pi * expand_param(ms) * fq_angle) ** (1.0 / 3.0)
         aa, _ee = _raw_angles(vv, eta, -delta, x1, chi_l / x1, chip)
         aa = aa - expand_param(alpha_ref_raw) + expand_param(alpha0)

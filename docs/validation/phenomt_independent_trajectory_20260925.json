@@ -1,0 +1,247 @@
+{
+  "generated_utc": "2026-09-25T15:34:54.933612+00:00",
+  "reproduction": "PYTHONPATH=src /tmp/diffgw-phenomt-latest-20260925/bin/python scripts/diagnose_phenomt_independent_trajectory.py --case high_mass_ratio --samples 65 --sample-rate 16384 --output docs/validation/phenomt_independent_trajectory_20260925.json",
+  "execution": {
+    "host": "len",
+    "working_directory": "/tmp/diffgw-pr44-20260925/repo",
+    "command": "PYTHONPATH=src /tmp/diffgw-phenomt-latest-20260925/bin/python scripts/diagnose_phenomt_independent_trajectory.py --case high_mass_ratio --samples 65 --sample-rate 16384 --output docs/validation/phenomt_independent_trajectory_20260925.json"
+  },
+  "versions": {
+    "python": "3.12.3",
+    "numpy": "2.5.3",
+    "scipy": "1.18.1",
+    "torch": "2.14.0+cu130",
+    "lalsuite": "7.26.15",
+    "lal": "7.7.1",
+    "lalsimulation": "6.2.1"
+  },
+  "dtype": "float64 with 50-decimal mpmath scalar RHS",
+  "parameters": {
+    "mass1": 60.0,
+    "mass2": 6.0,
+    "spin1": [
+      0.2,
+      0.1,
+      0.8
+    ],
+    "spin2": [
+      0.1,
+      0.0,
+      0.1
+    ],
+    "distance_mpc": 100.0,
+    "inclination": 1.2,
+    "phic": 0.1,
+    "f_lower_hz": 20.0,
+    "f_ref_hz": 20.0
+  },
+  "conventions": {
+    "reference": "Published equations only; public binary used as an unmodified initial-rate and relative-orientation observation reconstructed from public Euler angles.",
+    "evidence_boundary": "The public binary does not expose its internal orbital-axis or ODE state, so this diagnostic cannot distinguish public trajectory evolution from public angle construction or carrier/time mapping.",
+    "production": "No production equation or coefficient is modified by this diagnostic.",
+    "source_restriction": "No LAL implementation source is inspected or translated; no binary output is fitted."
+  },
+  "result": {
+    "case": "high_mass_ratio",
+    "samples": 65,
+    "carrier_scope": "native scalar PhenomT v(t/M); all event/ODE/transport/angle operations independent",
+    "reference_event": {
+      "target_velocity": 0.2733533766992865,
+      "bracket_t_over_m": [
+        -8898.659228072935,
+        -7280.7211866051275
+      ],
+      "independent_t_over_m": -8089.690207339012,
+      "native_t_over_m": -8089.690207339031,
+      "absolute_difference_t_over_m": 1.9099388737231493e-11,
+      "absolute_difference_seconds": 6.208875177827208e-15
+    },
+    "solver": {
+      "method": "SciPy DOP853 with dense output",
+      "tight": {
+        "rtol": 2e-11,
+        "atol": 2e-13,
+        "nfev": 1736,
+        "njev": 0,
+        "nlu": 0
+      },
+      "loose": {
+        "rtol": 2e-09,
+        "atol": 2e-11,
+        "nfev": 1067,
+        "njev": 0,
+        "nlu": 0
+      },
+      "convergence_state_max_vector_norm": 2.271895431953729e-09,
+      "convergence_rotation_max_radians": 1.6560294001448721e-09
+    },
+    "independent_invariants": {
+      "lhat_norm_max_abs": 6.791234241632083e-13,
+      "spin1_norm_max_abs": 8.637535131583718e-14,
+      "spin2_norm_max_abs": 1.111044199350597e-12,
+      "tangent_norm_max_abs": 2.091660178393795e-13,
+      "lhat_dot_tangent_max_abs": 2.486344463648038e-13
+    },
+    "native_minus_independent_states": {
+      "lhat": {
+        "max_vector_norm": 4.7188543144071294e-09,
+        "relative_l2": 1.2224430394077278e-09
+      },
+      "spin1": {
+        "max_vector_norm": 7.720915911791932e-10,
+        "relative_l2": 3.193817682816719e-10
+      },
+      "spin2": {
+        "max_vector_norm": 6.74624864328097e-10,
+        "relative_l2": 1.967689276932768e-07
+      },
+      "tangent": {
+        "max_vector_norm": 3.2696779995579803e-09,
+        "relative_l2": 8.364793456455231e-10
+      }
+    },
+    "native_minus_independent_rotation": {
+      "max_radians": 4.782127941350529e-09,
+      "final_radians": 8.455017702809029e-10
+    },
+    "production_angle_reconstruction_minus_independent": {
+      "fixed_initial_frame_radians": 0.0030660667931198915,
+      "absolute_max_radians": 0.003066066793119975,
+      "relative_evolution_max_radians": 7.95810694473519e-16
+    },
+    "public_binary_minus_independent_orientation": {
+      "public_model_options": {
+        "precession_version": 300,
+        "final_spin_mod": 4
+      },
+      "measurement_scope": "Rotations reconstructed from public alpha, cos(beta), and gamma are compared with the independent paper-derived trajectory rotation; the public internal orbital-axis and ODE state are not exposed.",
+      "localization": "Pre-merger orientation/rotation residual after the reference event; public trajectory evolution, Euler-angle construction, and carrier/time mapping remain unresolved alternatives.",
+      "alignment": "The first public sample and the independently solved carrier event are both the supplied f_ref event; R(first)^T R(t) removes their fixed initial frames. No fitted time shift, phase, or rotation is used.",
+      "samples": 43087,
+      "public_epoch_seconds": -2.629817046,
+      "independent_reference_time_seconds": -2.629815928441053,
+      "event_clock_shift_seconds": 1.1175589467171676e-06,
+      "initial_triad_error_radians": 1.3780383643572082e-16,
+      "max_axis_error_radians": 0.3891079429643013,
+      "rms_axis_error_radians": 0.17612190264282276,
+      "final_axis_error_radians": 0.3703440445660585,
+      "max_triad_error_radians": 0.3927554089942023,
+      "rms_triad_error_radians": 0.1764629084530687,
+      "final_triad_error_radians": 0.3781015620283788,
+      "first_triad_error_crossings": {
+        "0.0001": {
+          "sample_offset": 24,
+          "time_seconds": -2.62835220225,
+          "elapsed_from_reference_seconds": 0.00146484375,
+          "value_radians": 0.00010275494247484448
+        },
+        "0.001": {
+          "sample_offset": 234,
+          "time_seconds": -2.6155348194375,
+          "elapsed_from_reference_seconds": 0.0142822265625,
+          "value_radians": 0.0010040699681888637
+        },
+        "0.01": {
+          "sample_offset": 2283,
+          "time_seconds": -2.49047378428125,
+          "elapsed_from_reference_seconds": 0.13934326171875,
+          "value_radians": 0.010003914863918661
+        },
+        "0.1": {
+          "sample_offset": 19110,
+          "time_seconds": -1.4634352100624999,
+          "elapsed_from_reference_seconds": 1.1663818359375,
+          "value_radians": 0.10000233115785094
+        }
+      }
+    },
+    "initial_spin_even_rate": {
+      "construction": "average of +chi1 and -chi1 with chi2=0; odd-in-spin terms cancel",
+      "independent_published_rate_per_second": [
+        -0.030698834125987604,
+        0.06139766825197515,
+        0.0
+      ],
+      "native_rate_per_second": [
+        -0.030698834125987617,
+        0.061397668251975235,
+        -0.0
+      ],
+      "public_binary_rate_per_second": [
+        -1.4495911346279478e-08,
+        2.9389014721825646e-08,
+        5.368681555231623e-12
+      ],
+      "independent_norm_per_second": 0.06864467993569857,
+      "native_norm_per_second": 0.06864467993569866,
+      "public_binary_norm_per_second": 3.276958438707486e-08,
+      "native_minus_independent_max_abs_per_second": 8.326672684688674e-17,
+      "public_minus_independent_norm_per_second": 0.06864464716659606,
+      "spin_taylor_kappa1": {
+        "kappa1": 1.0,
+        "kappa2": 1.0,
+        "signed_rates": [
+          {
+            "chi1_rate_per_second": [
+              -0.07937916843916171,
+              0.15875833669128614,
+              2.6938366847525236e-11
+            ],
+            "stencil_difference_per_second": 9.328903120708771e-11
+          },
+          {
+            "chi1_rate_per_second": [
+              0.10483451811253253,
+              -0.20966903626855204,
+              4.098139812528864e-11
+            ],
+            "stencil_difference_per_second": 4.091852408539309e-11
+          }
+        ],
+        "chi1_even_rate_per_second": [
+          0.01272767483668541,
+          -0.025455349788632953,
+          3.395988248640694e-11
+        ]
+      },
+      "spin_taylor_kappa0": {
+        "kappa1": 0.0,
+        "kappa2": 0.0,
+        "signed_rates": [
+          {
+            "chi1_rate_per_second": [
+              -0.09210684339487274,
+              0.18421368642690283,
+              3.958467410737805e-11
+            ],
+            "stencil_difference_per_second": 1.6696047260771396e-10
+          },
+          {
+            "chi1_rate_per_second": [
+              0.09210684323865426,
+              -0.1842136864817423,
+              8.569605542221338e-11
+            ],
+            "stencil_difference_per_second": 7.989853503957758e-11
+          }
+        ],
+        "chi1_even_rate_per_second": [
+          -7.810924129714181e-11,
+          -2.7419733150679804e-11,
+          6.264036476479572e-11
+        ]
+      }
+    }
+  },
+  "evidence_retention": {
+    "scope": "Historical post-result diagnostic; not a new whole-waveform qualification gate.",
+    "reproduction_status": "Historical execution only; exploratory generator excluded from the distributed repository.",
+    "generator_snapshot": {
+      "path": "scripts/diagnose_phenomt_independent_trajectory.py",
+      "source_revision": "e447916e119fcadc26ceafb13a2688f6060fb440",
+      "sha256": "ee3d8eb4c3095c1a2078e22f2ad1b2652019e173c2d5beb39ae25fd421b527db",
+      "boundary": "Source snapshot before cleanup; original execution revision was not independently recorded."
+    },
+    "full_receipt_sha256_before_retention_annotation": "d3c19dc521037c032a22754edeb9dee349ac346c02d856d71f9983ce94ca0612"
+  }
+}
