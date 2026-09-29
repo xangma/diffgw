@@ -5,6 +5,10 @@ pilot surrogate, and development checks. It is excluded from release packages.
 The prototypes are not registered runtime models, qualified SEOBNRv4 generators,
 or replacements for the official ROM data. No trained asset is promoted here.
 
+The [ell=8 source disposition](evidence/2026-09-29/ell8_source_disposition.md)
+separates the remaining mathematical and historical-selector questions,
+provides an unsent author clarification, and states when to resume that gate.
+
 The [first frozen qualification run](evidence/2026-09-22/README.md) failed the ODE
 convergence budget. The generator is not qualified for independent ROM training.
 An opt-in [fixed-restart numerical diagnostic](evidence/2026-09-23/README.md)
