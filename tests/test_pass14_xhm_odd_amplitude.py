@@ -16,9 +16,13 @@ def _equal_mass_odd_fit_values():
     chi2 = torch.tensor(-0.3, dtype=DTYPE)
     eta = mass * mass / (2.0 * mass).square()
     _, _, _, spin = XHMParameterFits.compute_spin_variables(eta, chi1, chi2)
+    chi_eff = (chi1 + chi2) / 2.0
+    chi_pn_hat = (
+        chi_eff - (38.0 / 113.0) * eta * (chi1 + chi2)
+    ) / (1.0 - (76.0 / 113.0) * eta)
     inspiral = torch.stack([
-        getattr(XHMParameterFits, f"amp_insp{i}_21")(eta, chi1, chi2, spin)
-        for i in (1, 2, 3)
+        getattr(XHMParameterFits, f"amp_insp{i}_21")(eta, chi1, chi2, chi_pn_hat)
+        for i in (3, 2, 1)
     ])
     intermediate = torch.stack([
         getattr(XHMParameterFits, f"amp_int{i}_21")(eta, chi1, chi2, spin)

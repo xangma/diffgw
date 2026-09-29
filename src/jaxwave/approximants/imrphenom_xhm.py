@@ -998,9 +998,21 @@ class IMRPhenomXHM:
                 h2_pn = _pn_amplitude_ratio(l, m, f2_ins, eta, delta, chi_s, chi_a)
                 h3_pn = _pn_amplitude_ratio(l, m, f3_ins, eta, delta, chi_s, chi_a)
 
-                h1_fit = getattr(XHMParameterFits, f"amp_insp1_{lm_str}")(eta, s1, s2, S)
-                h2_fit = getattr(XHMParameterFits, f"amp_insp2_{lm_str}")(eta, s1, s2, S)
-                h3_fit = getattr(XHMParameterFits, f"amp_insp3_{lm_str}")(eta, s1, s2, S)
+                if (l, m) == (2, 1):
+                    # The inherited 21 fits are ordered from f_ins down to
+                    # 0.5 f_ins and use chiPNHat, not the merger-spin S.
+                    # Public 122019 mode amplitudes independently reproduce
+                    # these three targets at the corresponding nodes.
+                    fit_spin = (
+                        chi_eff - (38.0 / 113.0) * eta * (s1 + s2)
+                    ) / (1.0 - (76.0 / 113.0) * eta)
+                    fit_indices = (3, 2, 1)
+                else:
+                    fit_spin = S
+                    fit_indices = (1, 2, 3)
+                h1_fit = getattr(XHMParameterFits, f"amp_insp{fit_indices[0]}_{lm_str}")(eta, s1, s2, fit_spin)
+                h2_fit = getattr(XHMParameterFits, f"amp_insp{fit_indices[1]}_{lm_str}")(eta, s1, s2, fit_spin)
+                h3_fit = getattr(XHMParameterFits, f"amp_insp{fit_indices[2]}_{lm_str}")(eta, s1, s2, fit_spin)
                 if m % 2 != 0:
                     h1_fit = jnp.abs(h1_fit)
                     h2_fit = jnp.abs(h2_fit)
