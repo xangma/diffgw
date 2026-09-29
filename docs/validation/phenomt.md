@@ -33,6 +33,36 @@ backend/case combinations). Its TaylorT3 coefficients and calibration fits
 remain shared inputs, so this narrows the independent equation check to the
 collocation reconstruction. It does not change any binary acceptance gate.
 
+The [dominant merger supplied-input specification](../math/phenomt-merger.md)
+now independently solves THM Eqs. (28)–(32) at high precision. For three
+mass/spin cases, including mass ratio 10, Torch and JAX agree on merger
+coefficients, off-node frequency and slope, phase differences from quadrature,
+and signed-amplitude reconstruction before the native magnitude projection.
+The [len receipt](phenomt_merger_20260929.md) records 29 passing nearby scalar
+tests and 9 passing aligned/NNLO binary comparisons. Its fitted boundary
+targets, PN cutoff values, and QNM rates are supplied; the complete T/THM
+calibration and HM merger remain open. The four q=10 MSA/numerical gates still
+produce strict expected failures against the pinned binary.
+
+## Public implementation and option comparison
+
+The family name alone does not define an identical output path. This table
+uses the versions underlying this qualification, with the actual options
+selected by the tests above and below.
+
+| Implementation | Verified family capability and relevant options | Scope relative to this evidence |
+| --- | --- | --- |
+| [LALSimulation `6.2.1`](https://git.ligo.org/lscsoft/lalsuite/-/blob/lalsimulation-v6.2.1/lalsimulation/lib/LALSimIMRPhenomTPHM.c#L61) | Native T/THM/TP/TPHM time-domain polarizations; THM/TPHM signed `(2,2),(2,1),(3,3),(4,4),(5,5)` mode set. Analytical precession versions include the `102xx` and `223xx` branches and numerical `300`; final-spin choice and suffix select distinct paths. [THM's inspiral switch](https://git.ligo.org/lscsoft/lalsuite/-/blob/lalsimulation-v6.2.1/lalsimulation/lib/LALSimIMRPhenomTHM.c#L188) defaults to `0`. | Binary oracle here: NNLO `10210`/final spin `0`, MSA `22310`/`3`, numerical `300`/`4`. Nine aligned/NNLO tests pass; all four q=10 MSA/numerical gates remain red. |
+| [Author `phenomxpy` `4121fafa`](https://gitlab.com/imrphenom-dev/phenomxpy/-/blob/4121fafa0484f3db2a7352f4eea697faaaf29f65/README.md) | T/THM/TP/TPHM time-domain modes and polarizations, plus FFT-derived frequency-domain polarizations; CPU Numba and GPU CuPy paths. It exposes coprecessing, J-frame, and L0-frame modes and an optional THM `(2,0)` contribution. Its precession defaults and [option handling](https://gitlab.com/imrphenom-dev/phenomxpy/-/blob/4121fafa0484f3db2a7352f4eea697faaaf29f65/phenomxpy/precession/precession.py#L26) are distinct from the explicit binary tuples here. | Pinned MIT source for the adapted aligned reconstruction and unprinted fit surfaces; its frozen output tests check implementation transcription, not an independent NR calibration or matched precession option parity. |
+| DiffGW on this branch | Native Torch/JAX FP64 time-domain T/THM/TP/TPHM, fixed caller grid, selected positive modes, `nnlo`/`msa`/`numerical` precession and explicit version/final-spin mapping. | The scalar merger gate checks only the shared `(2,2)` component with supplied fits. No dedicated frequency-domain carrier or author-only `(2,0)` extension is qualified. |
+
+[PyCBC's waveform registry](https://github.com/gwastro/pycbc/blob/master/pycbc/waveform/waveform.py)
+can expose LALSimulation time-domain approximants through its LAL wrapper;
+that is another interface to the same binary, not a third independent
+T-family physics implementation. Matching mode set, frame, precession suffix,
+final spin, and inspiral switch is necessary for a parity claim. The current
+evidence does not establish parity for all such tuples.
+
 ## Aligned-spin and NNLO reference checks
 
 The optional LAL regression tests define the following acceptance criteria:
