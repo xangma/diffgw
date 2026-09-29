@@ -454,15 +454,12 @@ def evaluate_spintaylor_precession(
     f_trans = 0.98 * f_meco
     v_trans = (PI * m_sec * f_trans).pow(1.0 / 3.0)
 
-    # Target frequency bounds (physical integration down to seismic band)
+    # Use a fixed low-frequency anchor so angles at a shared frequency do not
+    # depend on which other frequencies were requested.
     f_eval = f if f.dim() > 0 else f.unsqueeze(0)
     if is_batched and f_eval.dim() == 1:
         f_eval = f_eval.unsqueeze(0)
-
-    pos_f_min = torch.where(f_eval > 0, f_eval, torch.full_like(f_eval, float("inf"))).amin()
-    f_min_grid = torch.where(torch.isfinite(pos_f_min), pos_f_min, f_ref_t)
-    # Clamp minimum physical frequency for ODE stability in PN band
-    f_min_eval = torch.minimum(f_ref_t, torch.clamp(f_min_grid, min=15.0))
+    f_min_eval = torch.minimum(f_ref_t, torch.full_like(f_ref_t, 15.0))
     v_min = (PI * m_sec * f_min_eval).pow(1.0 / 3.0)
 
     # Integrate ODE on velocity grid
@@ -477,16 +474,12 @@ def evaluate_spintaylor_precession(
     s1_curr = s1_0.clone()
     s2_curr = s2_0.clone()
 
-    lnh_traj = [lnh_curr]
     h_step = (v_trans - v_min) / float(n_nodes - 1)
     m1_exp = m1_m.unsqueeze(-1) if m1_m.dim() > 0 else m1_m
     m2_exp = m2_m.unsqueeze(-1) if m2_m.dim() > 0 else m2_m
     eta_exp = eta.unsqueeze(-1) if eta.dim() > 0 else eta
 
-    for i in range(n_nodes - 1):
-        v_cur = v_nodes[..., i].unsqueeze(-1)
-        h = h_step.unsqueeze(-1)
-
+    def rk4_step(v_cur, h, lnh_curr, s1_curr, s2_curr):
         def step_derivs(v_in, l_in, s1_in, s2_in):
             return SpinTaylorT4Engine.derivatives(v_in, l_in, s1_in, s2_in, m1_exp, m2_exp, eta_exp)
 
@@ -522,6 +515,23 @@ def evaluate_spintaylor_precession(
         s1_curr = s1_curr * (s1_norm_0 / s1_norm)
         s2_curr = s2_curr * (s2_norm_0 / s2_norm)
 
+        return lnh_curr, s1_curr, s2_curr
+
+    # Spins and L are specified at f_ref. Evolve backward to the fixed
+    # low-frequency anchor before starting the forward trajectory.
+    if bool(torch.any(v_min < v0)):
+        v_backward = v0.unsqueeze(-1) + v_grid * (v_min - v0).unsqueeze(-1)
+        h_back = ((v_min - v0) / float(n_nodes - 1)).unsqueeze(-1)
+        for i in range(n_nodes - 1):
+            lnh_curr, s1_curr, s2_curr = rk4_step(
+                v_backward[..., i].unsqueeze(-1), h_back, lnh_curr, s1_curr, s2_curr
+            )
+
+    lnh_traj = [lnh_curr]
+    for i in range(n_nodes - 1):
+        lnh_curr, s1_curr, s2_curr = rk4_step(
+            v_nodes[..., i].unsqueeze(-1), h_step.unsqueeze(-1), lnh_curr, s1_curr, s2_curr
+        )
         lnh_traj.append(lnh_curr)
 
     lnh_all = torch.stack(lnh_traj, dim=-2)
@@ -616,11 +626,21 @@ def evaluate_spintaylor_precession(
     beta_out = torch.acos(torch.clamp(cosb_out, -1.0, 1.0))
 
     # Reference value offset alignment at f_ref
-    u_ref = (v0 - v_min) / torch.clamp(v_trans - v_min, min=1e-12)
-    idx_ref = torch.clamp((u_ref * float(n_nodes - 1)).to(torch.int64), 0, n_nodes - 2)
+    u_ref = torch.clamp((v0 - v_min) / torch.clamp(v_trans - v_min, min=1e-12), 0.0, 1.0)
+    idx_ref_float = u_ref * float(n_nodes - 1)
+    idx_ref = torch.clamp(idx_ref_float.to(torch.int64), 0, n_nodes - 2)
+    t_ref = (idx_ref_float - idx_ref.to(f.dtype)).clamp(0.0, 1.0)
     idx_g = idx_ref.unsqueeze(-1)
-    alpha_ref_val = torch.gather(alpha_nodes, -1, idx_g).squeeze(-1)
-    gamma_ref_val = torch.gather(gamma_nodes, -1, idx_g).squeeze(-1)
+    alpha_ref_val = torch.lerp(
+        torch.gather(alpha_nodes, -1, idx_g).squeeze(-1),
+        torch.gather(alpha_nodes, -1, idx_g + 1).squeeze(-1),
+        t_ref,
+    )
+    gamma_ref_val = torch.lerp(
+        torch.gather(gamma_nodes, -1, idx_g).squeeze(-1),
+        torch.gather(gamma_nodes, -1, idx_g + 1).squeeze(-1),
+        t_ref,
+    )
 
     # In LAL, alpha(f_ref) = 0 for SpinTaylor
     alpha_offset = -alpha_ref_val
