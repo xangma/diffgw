@@ -143,6 +143,11 @@ def main(argv=None):
             parser.error("the prerequisite numerical campaign is incomplete or sources changed")
         numerical_result = prior["results"][0]
         numerical_choice = dict(hermite_resampling=False, local_nqc_phase_derivatives=False)
+    scientific_choices = (dict(q.CHOICES) if diagnostic else
+                          prior.get("config", {}).get("scientific_choices", {}))
+    spin_truncation = scientific_choices.get("spin_truncation")
+    if spin_truncation not in {"tabulated", "generic-leading-ell8"}:
+        parser.error("the numerical campaign must record an explicit ell8 spin truncation")
     expected_sources = q.source_snapshot()
     if diagnostic:
         campaign_source = q.ROOT / "dev/native_rom/diagnose_hermite_campaign.py"
@@ -170,7 +175,7 @@ def main(argv=None):
                   whole_waveform_parity_validated=False, prerequisite=str(prior_path),
                   prerequisite_numerical_checks_passed=numerical_result["numerical_checks_passed"],
                   prerequisite_sha256=q.sha256(prior_path),
-                  numerical_choice=numerical_choice,
+                  numerical_choice=numerical_choice, scientific_choices=scientific_choices,
                   source_manifest_sha256=prior["source_manifest_sha256"],
                   script_sha256=q.sha256(__file__), lal_binary=identity,
                   process=dict(host=socket.gethostname(), cwd=str(Path.cwd()), pid=os.getpid(),
@@ -184,6 +189,7 @@ def main(argv=None):
             run = q.native_run(
                 row, level, settings,
                 diagnostic_hermite_resampling=numerical_choice["hermite_resampling"],
+                diagnostic_spin_truncation=spin_truncation,
                 diagnostic_local_nqc_derivatives=numerical_choice["local_nqc_phase_derivatives"],
                 diagnostic_restart_time_M=numerical_choice.get("fixed_restart_time_M"))
             comparison = compare_public_binary(row, run)

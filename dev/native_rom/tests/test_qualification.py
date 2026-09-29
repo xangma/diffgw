@@ -123,6 +123,33 @@ def test_default_numerical_source_budget_remains_strict():
     assert q.Settings().relative_l2_limit == 1e-6
 
 
+def test_tabulated_selector_is_explicit_in_qualification_plan(capsys, tmp_path):
+    assert q.main(["--json-out", str(tmp_path / "evidence.json"),
+                   "--spin-truncation", "tabulated", "--print-plan"]) == 0
+    plan = json.loads(capsys.readouterr().out)
+    assert plan["config"]["scientific_choices"]["spin_truncation"] == "tabulated"
+    assert plan["config"]["settings"]["relative_l2_limit"] == 1e-6
+
+
+def test_tabulated_campaign_passes_selector_to_native_run(monkeypatch, tmp_path):
+    selectors = []
+    def fake_native_run(*args, diagnostic_spin_truncation):
+        selectors.append(diagnostic_spin_truncation)
+
+    def fake_qualify_row(row, settings, runner, oracle, progress):
+        runner(row, q.run_plan(settings)[0], settings)
+        return {"numerical_checks_passed": True}
+
+    monkeypatch.setattr(q, "native_run", fake_native_run)
+    monkeypatch.setattr(q, "qualify_row", fake_qualify_row)
+    monkeypatch.setattr(q, "source_snapshot", lambda: {})
+    evidence_path = tmp_path / "evidence.json"
+    assert q.main(["--json-out", str(evidence_path), "--spin-truncation", "tabulated"]) == 0
+    assert selectors == ["tabulated"]
+    assert json.loads(evidence_path.read_text())["config"]["scientific_choices"][
+        "spin_truncation"] == "tabulated"
+
+
 def test_tighter_tolerance_plan_preserves_declared_error_budget():
     atol, rtol = q.validate_tolerance_levels((1e-12, 1e-13, 1e-14),
                                               (1e-11, 1e-12, 1e-13))

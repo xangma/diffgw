@@ -461,6 +461,8 @@ def main(argv=None):
     parser.add_argument("--max-evaluations", type=int, default=200000)
     parser.add_argument("--atol-levels", type=float, nargs=3, default=Settings.atol_levels)
     parser.add_argument("--rtol-levels", type=float, nargs=3, default=Settings.rtol_levels)
+    parser.add_argument("--spin-truncation", choices=("tabulated", "generic-leading-ell8"),
+                        default=CHOICES["spin_truncation"])
     parser.add_argument("--compare-lal", action="store_true")
     parser.add_argument("--lal-version")
     parser.add_argument("--lalsimulation-version")
@@ -479,7 +481,8 @@ def main(argv=None):
         dict(mass1=30., mass2=20., chi1=0., chi2=0., omega_start=.04)])
     settings = Settings(atol_levels=atol_levels, rtol_levels=rtol_levels,
                         max_run_seconds=args.max_run_seconds, max_evaluations=args.max_evaluations)
-    config = dict(rows=rows, settings=asdict(settings), scientific_choices=CHOICES,
+    scientific_choices = {**CHOICES, "spin_truncation": args.spin_truncation}
+    config = dict(rows=rows, settings=asdict(settings), scientific_choices=scientific_choices,
                   dtype="float64", device="cpu", execution="one scalar row per solve",
                   reference_pins=dict(lal=args.lal_version, lalsimulation=args.lalsimulation_version))
     if args.print_plan:
@@ -503,8 +506,12 @@ def main(argv=None):
         if args.compare_lal:
             evidence["lal_binary"] = lal_binary_identity(args.lal_version, args.lalsimulation_version)
         for index, row in enumerate(rows):
-            result = qualify_row(row, settings, oracle=compare_lal if args.compare_lal else None,
-                                 progress=lambda name: print(f"row={index} run={name}", flush=True))
+            result = qualify_row(
+                row, settings,
+                runner=lambda row, level, settings: native_run(
+                    row, level, settings, diagnostic_spin_truncation=args.spin_truncation),
+                oracle=compare_lal if args.compare_lal else None,
+                progress=lambda name: print(f"row={index} run={name}", flush=True))
             evidence["results"].append(result)
             write_evidence(args.json_out, evidence)
     except (Exception, KeyboardInterrupt) as exc:
