@@ -25,11 +25,14 @@ from torch import Tensor
 from torchwave.approximants.eob.integrator import EOBTrajectoryIntegrator
 from torchwave.approximants.eob.numerical_attachment import (
     attach_seobnrv4_22_numerical_compatibility,
+    natural_cubic_spline,
 )
 from torchwave.approximants.eob.nqc import (
     nqc_22_basis,
     seobnrv4_nqc_time_offset_numerical_compatibility,
 )
+from torchwave.approximants.eob.nqc_analytic_clean import directional_derivatives
+from torchwave.approximants.eob.published_waveform import published_mode22_and_frequency
 
 from torchwave.approximants.eob.adaptive_driver_clean import (
     GSL_STATE_SCALED_CONTROLLER,
@@ -129,6 +132,33 @@ def _diagnostic_local_matching_second(time, nqc, match_time):
     return 2 * polynomial[2] / window**2
 
 
+def _diagnostic_chain_rule_matching(time, state, match_time, vector_field,
+                                    hamiltonian, radiation_reaction, spin_v6):
+    """Eq. (7) matching derivatives along the full published ODE field."""
+    match_state = natural_cubic_spline(time, state).evaluate(match_time)
+
+    def values_fn(x):
+        omega = vector_field(x)[1]
+        mode, _ = published_mode22_and_frequency(
+            x, hamiltonian, radiation_reaction, spin_v6=spin_v6,
+            include_pan_v8=False, include_positive_chi_540=False,
+            retain_pan_cubic_spin=True)
+        amplitude = mode.abs()
+        q, p = nqc_22_basis(x[0], x[2], omega)
+        return torch.cat((amplitude.reshape(1), amplitude*q, p,
+                          (-torch.angle(mode)).reshape(1)))
+
+    with torch.inference_mode(False), torch.enable_grad():
+        value, first, second = directional_derivatives(
+            values_fn, match_state, vector_field)
+    if not all(bool(torch.isfinite(item).all()) for item in (value, first, second)):
+        raise ValueError("nonfinite continuous NQC matching derivatives")
+    return (torch.stack((first[1:4], second[1:4])),
+            torch.stack((first[4:6], second[4:6])),
+            torch.stack((torch.stack((first[0], second[0])),
+                         torch.stack((first[6], second[6])))))
+
+
 def reconstruct_seobnrv4_22_adaptive(
     omega_start: Tensor,
     mass1,
@@ -161,6 +191,7 @@ def reconstruct_seobnrv4_22_adaptive(
     diagnostic_local_nqc_derivatives: bool = False,
     diagnostic_nqc_phase_window_M: float = 0.5,
     diagnostic_matching_second_derivatives: bool = False,
+    diagnostic_chain_rule_nqc_derivatives: bool = False,
     diagnostic_combined_local_fit: Optional[dict] = None,
     num_steps: int = 20000,
     ringdown_duration: float = 150.0,
@@ -232,6 +263,11 @@ def reconstruct_seobnrv4_22_adaptive(
         raise ValueError("diagnostic_nqc_phase_window_M requires local NQC derivatives")
     if not isinstance(diagnostic_matching_second_derivatives, bool):
         raise TypeError("diagnostic_matching_second_derivatives must be bool")
+    if not isinstance(diagnostic_chain_rule_nqc_derivatives, bool):
+        raise TypeError("diagnostic_chain_rule_nqc_derivatives must be bool")
+    if diagnostic_chain_rule_nqc_derivatives and (diagnostic_local_nqc_derivatives
+            or diagnostic_matching_second_derivatives or diagnostic_combined_local_fit is not None):
+        raise ValueError("chain-rule matching must run without other NQC derivative controls")
     if diagnostic_combined_local_fit is not None:
         if (diagnostic_combined_local_fit != {"half_width_M": 2.0, "degree": 4}
                 or diagnostic_local_nqc_derivatives
@@ -456,6 +492,11 @@ def reconstruct_seobnrv4_22_adaptive(
                 row_fine_time, provisional.nqc, match_local)
                 if diagnostic_matching_second_derivatives else None)
             amplitude_derivatives = rhs_derivatives = None
+            if diagnostic_chain_rule_nqc_derivatives:
+                amplitude_derivatives, phase_matrix, rhs_derivatives = (
+                    _diagnostic_chain_rule_matching(
+                        row_fine_time, row_fine_state, match_local, row_field,
+                        row_ham, rr, spin_v6))
         else:
             from .local_nqc_control import local_nqc_controls, stationary_peak_time
             match_local = (stationary_peak_time(row_fine_time, fine_field[..., 1])
