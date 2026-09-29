@@ -77,6 +77,16 @@ nonspinning ODE complex error improves to `2.614471e-6` but still exceeds
 `1e-6`; its grid errors are below the budget but fail the unchanged decreasing
 error check (`6.220681e-9` to `8.178640e-9`). The two-row generator therefore
 remains unqualified, and the default generator is unchanged.
+The [frozen residual follow-up](https://github.com/xangma/diffgw/blob/88e005003d1f5d85b1ae6ebb9669b5454de38f65/dev/native_rom/evidence/2026-09-29/ode_chain_residual/README.md)
+rules out the retained sampled-spline amplitude value row as the main cause:
+direct and sampled values differ by at most `8.6e-14`, moving the solved
+amplitude coefficients by less than `1e-10`. The remaining nonspinning ODE
+error is associated with tolerance-dependent trajectory and match-state changes
+followed by phase matching; the diagnostic cannot separate integration from
+event-location error. Holding the restart and initial step fixed across output
+grids makes their nested waveforms identical. This localizes the tiny
+nonmonotonicity to grid-dependent trajectory setup, but does not define a
+justified default rule or qualify the two-row generator.
 The frozen whole-path gradient check passes: eager/JIT complex relative L2 is
 `3.4370e-11` against `1e-10`. This is one initial-radius derivative with fixed
 mesh and attachment decisions, not general physical-parameter autodiff.
