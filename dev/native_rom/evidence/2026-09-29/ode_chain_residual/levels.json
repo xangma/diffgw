@@ -1,0 +1,989 @@
+{
+  "grid": {
+    "coarse_to_medium": {
+      "amplitude_relative_l2": 5.1509807356173164e-11,
+      "boundary_time_M_abs_difference": 0.0,
+      "candidate_samples": 921,
+      "common_samples": 921,
+      "complex_relative_l2": 6.220681283284825e-09,
+      "grid_step_M": 0.5,
+      "match_time_M_abs_difference": 0.0,
+      "peak_time_M_abs_difference": 0.0,
+      "phase_max_abs_rad": 1.7601106262558483e-07,
+      "phase_rms_rad": 7.412431919561944e-09,
+      "phase_samples": 854,
+      "reference_samples": 921,
+      "relative_norm_error": 1.0524914273446484e-12,
+      "samples": 921,
+      "support_end_difference_M": -0.25,
+      "unmaximized_real_overlap": 1.0000000000000002
+    },
+    "gates": {
+      "amplitude_error_budget": true,
+      "boundary_time_M": true,
+      "complex_error_budget": true,
+      "error_decreased": false,
+      "match_time_M": true,
+      "peak_time_M": true
+    },
+    "medium_to_fine": {
+      "amplitude_relative_l2": 3.610875052958973e-11,
+      "boundary_time_M_abs_difference": 0.0,
+      "candidate_samples": 1842,
+      "common_samples": 1842,
+      "complex_relative_l2": 8.17864033897492e-09,
+      "grid_step_M": 0.25,
+      "match_time_M_abs_difference": 0.0,
+      "peak_time_M_abs_difference": 0.0,
+      "phase_max_abs_rad": 1.519189007371261e-07,
+      "phase_rms_rad": 1.7385603170587688e-08,
+      "phase_samples": 1708,
+      "reference_samples": 1842,
+      "relative_norm_error": 5.465627950229646e-13,
+      "samples": 1842,
+      "support_end_difference_M": -0.125,
+      "unmaximized_real_overlap": 0.9999999999999998
+    },
+    "numerical_check_passed": false
+  },
+  "ode": {
+    "coarse_to_medium": {
+      "amplitude_relative_l2": 1.367599567514389e-07,
+      "boundary_time_M_abs_difference": 0.0,
+      "candidate_samples": 921,
+      "common_samples": 921,
+      "complex_relative_l2": 5.100139018188284e-06,
+      "grid_step_M": 0.5,
+      "match_time_M_abs_difference": 3.0517578125e-05,
+      "peak_time_M_abs_difference": 3.0517578125e-05,
+      "phase_max_abs_rad": 1.2524972262910488e-05,
+      "phase_rms_rad": 6.775859744621491e-06,
+      "phase_samples": 854,
+      "reference_samples": 921,
+      "relative_norm_error": 9.474196582814898e-08,
+      "samples": 921,
+      "support_end_difference_M": 0.0,
+      "unmaximized_real_overlap": 0.9999999999869986
+    },
+    "gates": {
+      "amplitude_error_budget": true,
+      "boundary_time_M": true,
+      "complex_error_budget": false,
+      "error_decreased": true,
+      "match_time_M": true,
+      "peak_time_M": true
+    },
+    "medium_to_fine": {
+      "amplitude_relative_l2": 6.866631905699549e-08,
+      "boundary_time_M_abs_difference": 0.0,
+      "candidate_samples": 921,
+      "common_samples": 921,
+      "complex_relative_l2": 2.614471228362189e-06,
+      "grid_step_M": 0.5,
+      "match_time_M_abs_difference": 1.52587890625e-05,
+      "peak_time_M_abs_difference": 1.52587890625e-05,
+      "phase_max_abs_rad": 6.667594220818168e-06,
+      "phase_rms_rad": 3.5786938569238397e-06,
+      "phase_samples": 854,
+      "reference_samples": 921,
+      "relative_norm_error": 4.766049943594197e-08,
+      "samples": 921,
+      "support_end_difference_M": 0.0,
+      "unmaximized_real_overlap": 0.9999999999965834
+    },
+    "numerical_check_passed": false
+  },
+  "part": "levels",
+  "plan_sha256": "0a223c0f467dd0b26760118ca5aa2582bed1e30d53da085461ac1873699fd35a",
+  "prior_gate_sha256": "a66e75d0d78eb91a356496f548dde3b75e0c67ecefb37f5f3ca5cacc4af96ea7",
+  "process": {
+    "argv": [
+      "dev/native_rom/evidence/2026-09-29/ode_chain_residual/probe.py",
+      "--part",
+      "levels",
+      "--json-out",
+      "dev/native_rom/evidence/2026-09-29/ode_chain_residual/levels.json"
+    ],
+    "cwd": "/home/xangma/tmp/diffgw-seobnr-ode-gate-aa1f365f",
+    "host": "len",
+    "pid": 1515369
+  },
+  "row": {
+    "chi1": 0.0,
+    "chi2": 0.0,
+    "mass1": 30.0,
+    "mass2": 20.0,
+    "omega_start": 0.04
+  },
+  "runs": [
+    {
+      "accepted_array_sha256": {
+        "coarse": {
+          "derivative": "f3035446bae26b295b16c3447743871962a206bb5f8389620c545ae1bb63d3a9",
+          "state": "6cea2ebd1d5073b22ffcf3f9a5de299e826800358888fab309684b16c9d39cd8",
+          "time": "9a28185a8166e338ba48606cb9b4fb11067847cb8284007744f947e733c2a23e",
+          "valid": "4b614acdfbc2bf6b01dcbb3db718cbc1b48ad4268d9dbc074f59225e6b15301a"
+        },
+        "fine": {
+          "derivative": "089ae68d896f48028c42939808e10705e6136d61298972c6cefafd6f96d6f2fa",
+          "state": "2ef7cd49e4cd9f1e8d5964b49b88409968d51b587f2d26a81345957075c8cf52",
+          "time": "02655e78ecad7340b4973f99cf585b61e637944bafd856e4c449cbc2c8d85485",
+          "valid": "902977f7d95ba07770428ec9f3413939a119dcf1b4fb1bac2f29f7a033aaa929"
+        }
+      },
+      "array_dtype": {
+        "mode": "complex128",
+        "time": "float64"
+      },
+      "array_sha256": {
+        "mode": "ba8542263f87df674a6f857a52e957417974eb5a29323f2d13d473aad4fded1b",
+        "time": "94e34c1277eacf6c66cdb95b29babaa1d4a2bad2156f6b7a793e78c0e775aac6"
+      },
+      "atol": 1e-14,
+      "boundary_time_M": 310.421875,
+      "continuous": {
+        "local_match_time_M": 145.4267986637539,
+        "state": [
+          2.8954448990579813,
+          18.063298387352653,
+          -0.19314209726358442,
+          2.8484553642883275
+        ],
+        "value": [
+          0.42641326059659124,
+          0.08403209995569755,
+          0.02902217202718552,
+          0.017055806478924858,
+          -0.44392260199500044,
+          -0.01656003091741062
+        ]
+      },
+      "dt_geom": 0.5,
+      "elapsed_seconds": 243.9279484669678,
+      "final_mass_fraction": 0.9550166356939277,
+      "final_spin": 0.6638743502317226,
+      "internal_step_M": 0.015625,
+      "match_time_M": 310.4267986637539,
+      "name": "ode_2",
+      "nqc_coefficients": {
+        "amplitude": [
+          4.1232089944612005,
+          -47.13189014513539,
+          56.93904749201568
+        ],
+        "phase": [
+          4.136782450745492,
+          -21.976912910574317
+        ]
+      },
+      "nqc_full_spline_phase_matrix": [
+        [
+          -0.03704046087447127,
+          -0.0038193527847517157
+        ],
+        [
+          -0.008118401647429989,
+          -0.0013375576511145016
+        ]
+      ],
+      "nqc_matching_matrices": {
+        "amplitude": [
+          [
+            0.08403209995561357,
+            0.02902217202713729,
+            0.01705580647888948
+          ],
+          [
+            0.015172015372681022,
+            0.006299028563401974,
+            0.004013023096393592
+          ],
+          [
+            0.00446269889945664,
+            0.0020519748607843646,
+            0.0013730050851892986
+          ]
+        ],
+        "phase": [
+          [
+            -0.037040459468546776,
+            -0.003819352639363102
+          ],
+          [
+            -0.008118277645030038,
+            -0.0013375427034315428
+          ]
+        ]
+      },
+      "peak_time_M": 314.7991714477539,
+      "restart_time_M": 165.0,
+      "rtol": 1e-13,
+      "samples": 921,
+      "stages": {
+        "coarse": {
+          "accepted": 578,
+          "evaluations": 3619,
+          "event_time_M": 314.82685473921913,
+          "rejected": 30,
+          "termination": [
+            "event"
+          ]
+        },
+        "fine": {
+          "accepted": 404,
+          "evaluations": 2570,
+          "event_time_M": 149.95772112988266,
+          "rejected": 29,
+          "termination": [
+            "event"
+          ]
+        }
+      },
+      "support_M": [
+        0.0,
+        460.0
+      ],
+      "value_row": {
+        "active_amplitude": [
+          4.1232089944612005,
+          -47.13189014513539,
+          56.93904749201568
+        ],
+        "coefficient_delta": [
+          -1.325961562770317e-11,
+          9.3635321718466e-11,
+          -9.685408031145926e-11
+        ],
+        "direct": [
+          0.42641326059659124,
+          0.08403209995569755,
+          0.02902217202718552,
+          0.017055806478924858,
+          -0.44392260199500044,
+          -0.01656003091741062
+        ],
+        "direct_minus_spline": [
+          -3.8746783559417963e-14,
+          8.397449402508528e-14,
+          4.822878207910719e-14,
+          3.5377950569071004e-14,
+          -7.077671781985373e-14,
+          -3.68594044175552e-14
+        ],
+        "direct_value_amplitude": [
+          4.123208994447941,
+          -47.13189014504175,
+          56.93904749191883
+        ],
+        "matrix_condition": 8065.681541729809,
+        "spline": [
+          0.42641326059663,
+          0.08403209995561357,
+          0.02902217202713729,
+          0.01705580647888948,
+          -0.44392260199492967,
+          -0.01656003091737376
+        ]
+      }
+    },
+    {
+      "accepted_array_sha256": {
+        "coarse": {
+          "derivative": "aa590745dfac62b46c9f6bfa3f506f074ca430898713d924da391fa69daf686c",
+          "state": "ffdef0d00ed77a7a64abe7413455121a1a963d81c850d832adffc483b864b7f5",
+          "time": "ebc34ad5de8f5608d4b505ed89e8bb6b12b808d0df674e594000548806fd0a0d",
+          "valid": "c9159d253082e16ad5fc07152465125cbd7507455f83c26a52ea692d2502fa36"
+        },
+        "fine": {
+          "derivative": "4a4d39c0bf97af00c520ad3c497f4c49def7154632631a12d99332152469e2bb",
+          "state": "8c081cd73150b8bd47a7eae1bdc5d83ccea2af37fcfa0d3304a7f1448ee1e55f",
+          "time": "904fe53ae59087d3fa331d8960fed4a52febd072b46d849678a92c27af598a0b",
+          "valid": "03411d2fcd4550fbd2b01a33a236472f53da2f31f4d0a4ddf8f871eb0aaddf68"
+        }
+      },
+      "array_dtype": {
+        "mode": "complex128",
+        "time": "float64"
+      },
+      "array_sha256": {
+        "mode": "0b855a54c4a1c2e459cf499410c1bbf5e6b27c94d1c325a38a94c3d44658ba48",
+        "time": "94e34c1277eacf6c66cdb95b29babaa1d4a2bad2156f6b7a793e78c0e775aac6"
+      },
+      "atol": 1e-12,
+      "boundary_time_M": 310.421875,
+      "continuous": {
+        "local_match_time_M": 145.42678340496485,
+        "state": [
+          2.8954465133130616,
+          18.063296092714022,
+          -0.19314187953611617,
+          2.8484556526233833
+        ],
+        "value": [
+          0.42641317159795833,
+          0.0840318676690552,
+          0.0290220756220785,
+          0.017055745068964654,
+          -0.44392203476213277,
+          -0.016559972421530112
+        ]
+      },
+      "dt_geom": 0.5,
+      "elapsed_seconds": 110.74787017516792,
+      "final_mass_fraction": 0.9550166356939277,
+      "final_spin": 0.6638743502317226,
+      "internal_step_M": 0.015625,
+      "match_time_M": 310.42678340496485,
+      "name": "ode_0",
+      "nqc_coefficients": {
+        "amplitude": [
+          4.12324449791094,
+          -47.13217078144802,
+          56.939350079900834
+        ],
+        "phase": [
+          4.136797256110324,
+          -21.97701253847814
+        ]
+      },
+      "nqc_full_spline_phase_matrix": [
+        [
+          -0.03704028924983753,
+          -0.003819327191312244
+        ],
+        [
+          -0.008118517683448168,
+          -0.001337563805645898
+        ]
+      ],
+      "nqc_matching_matrices": {
+        "amplitude": [
+          [
+            0.0840318676689697,
+            0.029022075622029596,
+            0.01705574506892884
+          ],
+          [
+            0.015171947138559396,
+            0.006298997186073803,
+            0.004013002100978298
+          ],
+          [
+            0.004462668669259493,
+            0.002051960373932148,
+            0.0013729951516163622
+          ]
+        ],
+        "phase": [
+          [
+            -0.0370403354327709,
+            -0.003819332183664333
+          ],
+          [
+            -0.008118227669369591,
+            -0.0013375323545898128
+          ]
+        ]
+      },
+      "peak_time_M": 314.79915618896484,
+      "restart_time_M": 165.0,
+      "rtol": 1e-11,
+      "samples": 921,
+      "stages": {
+        "coarse": {
+          "accepted": 232,
+          "evaluations": 1528,
+          "event_time_M": 314.86955483354086,
+          "rejected": 27,
+          "termination": [
+            "event"
+          ]
+        },
+        "fine": {
+          "accepted": 166,
+          "evaluations": 1127,
+          "event_time_M": 150.2105592409488,
+          "rejected": 26,
+          "termination": [
+            "event"
+          ]
+        }
+      },
+      "support_M": [
+        0.0,
+        460.0
+      ],
+      "value_row": {
+        "active_amplitude": [
+          4.12324449791094,
+          -47.13217078144802,
+          56.939350079900834
+        ],
+        "coefficient_delta": [
+          -1.326760923348047e-11,
+          9.369216513732681e-11,
+          -9.691092373032006e-11
+        ],
+        "direct": [
+          0.42641317159795833,
+          0.0840318676690552,
+          0.0290220756220785,
+          0.017055745068964654,
+          -0.44392203476213277,
+          -0.016559972421530112
+        ],
+        "direct_minus_spline": [
+          -3.835820550079916e-14,
+          8.550105068394487e-14,
+          4.8905324234738146e-14,
+          3.581510088501716e-14,
+          -7.122080702970379e-14,
+          -3.745614929329122e-14
+        ],
+        "direct_value_amplitude": [
+          4.123244497897672,
+          -47.132170781354326,
+          56.93935007980392
+        ],
+        "matrix_condition": 8065.704339362592,
+        "spline": [
+          0.4264131715979967,
+          0.0840318676689697,
+          0.029022075622029596,
+          0.01705574506892884,
+          -0.44392203476206155,
+          -0.016559972421492656
+        ]
+      }
+    },
+    {
+      "accepted_array_sha256": {
+        "coarse": {
+          "derivative": "b776d81c5ec44a85371c10e7fc0bff2028eedf4ceb87814312efec77e1ab1646",
+          "state": "0d3bcde3e34a889adafdcfec073aa7029c219003041058c5913284338423d9f6",
+          "time": "59b3b5c48f63b1b4ecdaaef3ce69cf13d835c11cd52dd1e03c1aea81c48a5bfc",
+          "valid": "508318bc99b77301b5e8fc7a87e790629cb5729e9478dd524cda8bbd45606001"
+        },
+        "fine": {
+          "derivative": "8308f2314d1c14fe4d5bd7d94a3029b479d88b8348257a25f4551585862e949d",
+          "state": "8daff2df058b2e9d2b633cc7a4a004821e4134dc28bd067c8122da8f1e8c3589",
+          "time": "b4a8778cac20209e2719fecfeac0744d5f4874dfb982ec3dcc56f84f108b4c89",
+          "valid": "7353e79b3e597ef53cb67ac9a94a31d3ad4ecc81d174d12c3b7436cf3fbfe7f9"
+        }
+      },
+      "array_dtype": {
+        "mode": "complex128",
+        "time": "float64"
+      },
+      "array_sha256": {
+        "mode": "6b415339304eaa10dae73fb3df8bbe9f2fd4a275a09488598177a9f748383d66",
+        "time": "94e34c1277eacf6c66cdb95b29babaa1d4a2bad2156f6b7a793e78c0e775aac6"
+      },
+      "atol": 1e-13,
+      "boundary_time_M": 310.421875,
+      "continuous": {
+        "local_match_time_M": 145.42681392254298,
+        "state": [
+          2.8954432892453967,
+          18.063300677627584,
+          -0.1931423137886842,
+          2.8484550766134205
+        ],
+        "value": [
+          0.4264133494292096,
+          0.08403233106709722,
+          0.02902226798197713,
+          0.017055867611193848,
+          -0.4439231662090561,
+          -0.016560089094632024
+        ]
+      },
+      "dt_geom": 0.5,
+      "elapsed_seconds": 162.90048190625384,
+      "final_mass_fraction": 0.9550166356939277,
+      "final_spin": 0.6638743502317226,
+      "internal_step_M": 0.015625,
+      "match_time_M": 310.426813922543,
+      "name": "ode_1",
+      "nqc_coefficients": {
+        "amplitude": [
+          4.1231734285344075,
+          -47.13160910824614,
+          56.938744506791735
+        ],
+        "phase": [
+          4.136767653912007,
+          -21.97681339349564
+        ]
+      },
+      "nqc_full_spline_phase_matrix": [
+        [
+          -0.03704057187307681,
+          -0.0038193717913974183
+        ],
+        [
+          -0.008118306866218963,
+          -0.0013375519857648534
+        ]
+      ],
+      "nqc_matching_matrices": {
+        "amplitude": [
+          [
+            0.08403233106701287,
+            0.029022267981928685,
+            0.017055867611158314
+          ],
+          [
+            0.015172083360498132,
+            0.006299059824332591,
+            0.004013044013484834
+          ],
+          [
+            0.004462729026211072,
+            0.00205198929715889,
+            0.001373014983920452
+          ]
+        ],
+        "phase": [
+          [
+            -0.03704058315660665,
+            -0.003819373015947434
+          ],
+          [
+            -0.008118327456371342,
+            -0.001337553015645569
+          ]
+        ]
+      },
+      "peak_time_M": 314.79918670654297,
+      "restart_time_M": 165.0,
+      "rtol": 1e-12,
+      "samples": 921,
+      "stages": {
+        "coarse": {
+          "accepted": 366,
+          "evaluations": 2342,
+          "event_time_M": 314.83394479174444,
+          "rejected": 29,
+          "termination": [
+            "event"
+          ]
+        },
+        "fine": {
+          "accepted": 259,
+          "evaluations": 1695,
+          "event_time_M": 150.09101630704257,
+          "rejected": 28,
+          "termination": [
+            "event"
+          ]
+        }
+      },
+      "support_M": [
+        0.0,
+        460.0
+      ],
+      "value_row": {
+        "active_amplitude": [
+          4.1231734285344075,
+          -47.13160910824614,
+          56.938744506791735
+        ],
+        "coefficient_delta": [
+          -1.3464784842653899e-11,
+          9.5042196335271e-11,
+          -9.828227121033706e-11
+        ],
+        "direct": [
+          0.4264133494292096,
+          0.08403233106709722,
+          0.02902226798197713,
+          0.017055867611193848,
+          -0.4439231662090561,
+          -0.016560089094632024
+        ],
+        "direct_minus_spline": [
+          -3.8691272408186705e-14,
+          8.434919429589627e-14,
+          4.8443887790128315e-14,
+          3.5534075681908917e-14,
+          -7.077671781985373e-14,
+          -3.704675455296069e-14
+        ],
+        "direct_value_amplitude": [
+          4.123173428520943,
+          -47.131609108151096,
+          56.93874450669345
+        ],
+        "matrix_condition": 8065.658858505883,
+        "spline": [
+          0.4264133494292483,
+          0.08403233106701287,
+          0.029022267981928685,
+          0.017055867611158314,
+          -0.4439231662089853,
+          -0.016560089094594978
+        ]
+      }
+    },
+    {
+      "accepted_array_sha256": {
+        "coarse": {
+          "derivative": "54a5e009708983861c9e40f5b4630c80ae703f741a9dae62811d2d4c114659df",
+          "state": "d350504225e8015fc36f06c7895249006a212649bbdf2985547e999f1d4cf9ac",
+          "time": "1e667da27e998cfb138ef0717d38c8497a642fc37fcf03342f6e568b3c6c55a3",
+          "valid": "d1d02d8bd5290385d5f7644494211e24d72bfddc3eb078d18b11a5ef54963db7"
+        },
+        "fine": {
+          "derivative": "bcdc872542aa38bf903ae2f0dfa5fc0e56e64f2899639ebef5a97ff2de9cd024",
+          "state": "e2b4fe013636799ad1205abd4105ae5fd9e968004c4d946e2590feb1e14b4474",
+          "time": "d27dc7246696948e3e3b4bffd1b8fc320bc7ece39b75e6acb5c656d1ed409e6c",
+          "valid": "902977f7d95ba07770428ec9f3413939a119dcf1b4fb1bac2f29f7a033aaa929"
+        }
+      },
+      "array_dtype": {
+        "mode": "complex128",
+        "time": "float64"
+      },
+      "array_sha256": {
+        "mode": "ba5eb26ef3c6396b711f69e1d3779ef1c5987bd78f0e5de93c873d07a6ea37d6",
+        "time": "6d2b4a193e4bd619bec715d0fa66a5aeab52079e79107f0ed67b3ba5f5e25cda"
+      },
+      "atol": 1e-14,
+      "boundary_time_M": 310.421875,
+      "continuous": {
+        "local_match_time_M": 145.4267986637539,
+        "state": [
+          2.8954448989000325,
+          18.063298387522142,
+          -0.19314209728498333,
+          2.84845536425978
+        ],
+        "value": [
+          0.4264132606052353,
+          0.08403209997850927,
+          0.029022172036647188,
+          0.017055806484950514,
+          -0.4439226020507555,
+          -0.01656003092315999
+        ]
+      },
+      "dt_geom": 0.25,
+      "elapsed_seconds": 244.00825226306915,
+      "final_mass_fraction": 0.9550166356939277,
+      "final_spin": 0.6638743502317226,
+      "internal_step_M": 0.015625,
+      "match_time_M": 310.4267986637539,
+      "name": "grid_1",
+      "nqc_coefficients": {
+        "amplitude": [
+          4.123208991005133,
+          -47.131890117783314,
+          56.93904746250986
+        ],
+        "phase": [
+          4.1367824492976295,
+          -21.976912900816206
+        ]
+      },
+      "nqc_full_spline_phase_matrix": [
+        [
+          -0.037040460921677856,
+          -0.0038193527905428524
+        ],
+        [
+          -0.008118398863187659,
+          -0.0013375573515946558
+        ]
+      ],
+      "nqc_matching_matrices": {
+        "amplitude": [
+          [
+            0.08403209997842538,
+            0.029022172036598997,
+            0.017055806484915156
+          ],
+          [
+            0.015172015379373769,
+            0.006299028566479371,
+            0.00401302309845265
+          ],
+          [
+            0.004462698902419299,
+            0.002051974862204305,
+            0.0013730050861629915
+          ]
+        ],
+        "phase": [
+          [
+            -0.03704045948070569,
+            -0.003819352641370592
+          ],
+          [
+            -0.008118277649925098,
+            -0.0013375427044461609
+          ]
+        ]
+      },
+      "peak_time_M": 314.7991714477539,
+      "restart_time_M": 165.0,
+      "rtol": 1e-13,
+      "samples": 1842,
+      "stages": {
+        "coarse": {
+          "accepted": 579,
+          "evaluations": 3625,
+          "event_time_M": 314.8242358556655,
+          "rejected": 30,
+          "termination": [
+            "event"
+          ]
+        },
+        "fine": {
+          "accepted": 404,
+          "evaluations": 2570,
+          "event_time_M": 149.9576105784883,
+          "rejected": 29,
+          "termination": [
+            "event"
+          ]
+        }
+      },
+      "support_M": [
+        0.0,
+        460.25
+      ],
+      "value_row": {
+        "active_amplitude": [
+          4.123208991005133,
+          -47.131890117783314,
+          56.93904746250986
+        ],
+        "coefficient_delta": [
+          -1.340794142379309e-11,
+          9.458744898438454e-11,
+          -9.777778586794739e-11
+        ],
+        "direct": [
+          0.4264132606052353,
+          0.08403209997850927,
+          0.029022172036647188,
+          0.017055806484950514,
+          -0.4439226020507555,
+          -0.01656003092315999
+        ],
+        "direct_minus_spline": [
+          -3.863576125695545e-14,
+          8.389122729823839e-14,
+          4.81906181626357e-14,
+          3.535713388735928e-14,
+          -7.05546732149287e-14,
+          -3.683511828889152e-14
+        ],
+        "direct_value_amplitude": [
+          4.123208990991725,
+          -47.13189011768873,
+          56.939047462412084
+        ],
+        "matrix_condition": 8065.681539486541,
+        "spline": [
+          0.42641326060527396,
+          0.08403209997842538,
+          0.029022172036598997,
+          0.017055806484915156,
+          -0.44392260205068496,
+          -0.016560030923123154
+        ]
+      }
+    },
+    {
+      "accepted_array_sha256": {
+        "coarse": {
+          "derivative": "625521dbf14b3ad32f165383becb177e054389d68455ca398da8dcb3fc1ab589",
+          "state": "ded4ddc61f80ba399fccd2af9811cd5fc1e13fb1224adb7272e024ac06a1690a",
+          "time": "9ffa7259363308dc018fef634f0d928b7d0aab3526da9d1a7912739bf1fc7997",
+          "valid": "d1d02d8bd5290385d5f7644494211e24d72bfddc3eb078d18b11a5ef54963db7"
+        },
+        "fine": {
+          "derivative": "3a57289bef928315601c258874c7097e8424ffd0a065fe5b362f4faea2a4fad7",
+          "state": "633531b54cffbdc9839cd4241dac4959e67119c5e85fec060764d2af6895d780",
+          "time": "f9637c28593e87f2793441c5b25f65450242f649ead2f29a70b222d2933c8530",
+          "valid": "902977f7d95ba07770428ec9f3413939a119dcf1b4fb1bac2f29f7a033aaa929"
+        }
+      },
+      "array_dtype": {
+        "mode": "complex128",
+        "time": "float64"
+      },
+      "array_sha256": {
+        "mode": "a82699fb321e2238a83f943fa086b4b09d138dd603d97ff20e755476ef10103a",
+        "time": "ad84514950a2d29dbfa1da9062d275d092e4f98a9937e3d403d4c27f7323cde6"
+      },
+      "atol": 1e-14,
+      "boundary_time_M": 310.421875,
+      "continuous": {
+        "local_match_time_M": 145.5517986637539,
+        "state": [
+          2.895444899088432,
+          18.063298387319342,
+          -0.19314209726007064,
+          2.848455364294001
+        ],
+        "value": [
+          0.42641326059484996,
+          0.08403209995184388,
+          0.02902217202554936,
+          0.01705580647787363,
+          -0.4439226019857278,
+          -0.01656003091646217
+        ]
+      },
+      "dt_geom": 0.125,
+      "elapsed_seconds": 244.0500933472067,
+      "final_mass_fraction": 0.9550166356939277,
+      "final_spin": 0.6638743502317226,
+      "internal_step_M": 0.015625,
+      "match_time_M": 310.4267986637539,
+      "name": "grid_2",
+      "nqc_coefficients": {
+        "amplitude": [
+          4.123208995293715,
+          -47.13189015163135,
+          56.939047498989346
+        ],
+        "phase": [
+          4.136782451057757,
+          -21.97691291262522
+        ]
+      },
+      "nqc_full_spline_phase_matrix": [
+        [
+          -0.03704046266459715,
+          -0.003819352977971857
+        ],
+        [
+          -0.008118272318834082,
+          -0.0013375437257460501
+        ]
+      ],
+      "nqc_matching_matrices": {
+        "amplitude": [
+          [
+            0.08403209995176143,
+            0.029022172025501846,
+            0.017055806477838727
+          ],
+          [
+            0.0151720153714497,
+            0.006299028562839064,
+            0.0040130230960174285
+          ],
+          [
+            0.004462698898906099,
+            0.0020519748605214157,
+            0.0013730050850092135
+          ]
+        ],
+        "phase": [
+          [
+            -0.0370404594662075,
+            -0.0038193526389990987
+          ],
+          [
+            -0.008118277644113811,
+            -0.0013375427032442178
+          ]
+        ]
+      },
+      "peak_time_M": 314.7991714477539,
+      "restart_time_M": 164.875,
+      "rtol": 1e-13,
+      "samples": 3684,
+      "stages": {
+        "coarse": {
+          "accepted": 579,
+          "evaluations": 3625,
+          "event_time_M": 314.82971840459714,
+          "rejected": 30,
+          "termination": [
+            "event"
+          ]
+        },
+        "fine": {
+          "accepted": 404,
+          "evaluations": 2570,
+          "event_time_M": 150.09281167897734,
+          "rejected": 29,
+          "termination": [
+            "event"
+          ]
+        }
+      },
+      "support_M": [
+        0.0,
+        460.375
+      ],
+      "value_row": {
+        "active_amplitude": [
+          4.123208995293715,
+          -47.13189015163135,
+          56.939047498989346
+        ],
+        "coefficient_delta": [
+          -1.3507417406799505e-11,
+          9.537615142107825e-11,
+          -9.864464800557471e-11
+        ],
+        "direct": [
+          0.42641326059484996,
+          0.08403209995184388,
+          0.02902217202554936,
+          0.01705580647787363,
+          -0.4439226019857278,
+          -0.01656003091646217
+        ],
+        "direct_minus_spline": [
+          -3.824718319833664e-14,
+          8.244793736622569e-14,
+          4.7514076007004746e-14,
+          3.490263633665336e-14,
+          -6.994405055138486e-14,
+          -3.623143451925159e-14
+        ],
+        "direct_value_amplitude": [
+          4.123208995280208,
+          -47.13189015153598,
+          56.9390474988907
+        ],
+        "matrix_condition": 8065.681542114856,
+        "spline": [
+          0.4264132605948882,
+          0.08403209995176143,
+          0.029022172025501846,
+          0.017055806477838727,
+          -0.44392260198565786,
+          -0.01656003091642594
+        ]
+      }
+    }
+  ],
+  "schema": "diffgw.seobnrv4.chain-residual-probe.v1",
+  "scope": {
+    "description": "Scalar CPU float64 numerical stability evidence only; no training or promotion.",
+    "development_only": true,
+    "known_limitations": [
+      "Convergence cannot establish correctness of the equations or published model fidelity.",
+      "The adaptive prototype uses a diagnostic QNM spline with independently generated values and black-box-inferred knot metadata; this is not wholly literature-specified provenance.",
+      "Changing dt also changes the adaptive initial step and coarse/fine restart sampling; the grid check measures the complete generator's grid sensitivity.",
+      "No time, phase, amplitude, or coefficient fitting is performed.",
+      "No derivatives, batched execution, accelerators, or JAX are qualified here."
+    ],
+    "physics_validated": false,
+    "production_asset": false,
+    "production_promotion_allowed": false,
+    "training_generator_qualified": false
+  },
+  "source_manifest_sha256": "2caa5b4a3bb20e01cd6e0b0e8891e76b5d49345e3a254c9cc2395d7304d06a13",
+  "source_unchanged": true,
+  "status": "diagnostic_complete"
+}

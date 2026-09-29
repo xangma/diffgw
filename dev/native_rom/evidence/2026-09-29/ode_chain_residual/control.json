@@ -1,0 +1,606 @@
+{
+  "controlled_nested_equal": {
+    "grid_1_to_grid_2": true,
+    "ode_2_to_grid_1": true
+  },
+  "grid": {
+    "coarse_to_medium": {
+      "amplitude_relative_l2": 0.0,
+      "boundary_time_M_abs_difference": 0.0,
+      "candidate_samples": 921,
+      "common_samples": 921,
+      "complex_relative_l2": 0.0,
+      "grid_step_M": 0.5,
+      "match_time_M_abs_difference": 0.0,
+      "peak_time_M_abs_difference": 0.0,
+      "phase_max_abs_rad": 5.238682283971367e-17,
+      "phase_rms_rad": 1.63522626265192e-17,
+      "phase_samples": 854,
+      "reference_samples": 921,
+      "relative_norm_error": 0.0,
+      "samples": 921,
+      "support_end_difference_M": -0.25,
+      "unmaximized_real_overlap": 0.9999999999999996
+    },
+    "gates": {
+      "amplitude_error_budget": true,
+      "boundary_time_M": true,
+      "complex_error_budget": true,
+      "error_decreased": true,
+      "match_time_M": true,
+      "peak_time_M": true
+    },
+    "medium_to_fine": {
+      "amplitude_relative_l2": 0.0,
+      "boundary_time_M_abs_difference": 0.0,
+      "candidate_samples": 1842,
+      "common_samples": 1842,
+      "complex_relative_l2": 0.0,
+      "grid_step_M": 0.25,
+      "match_time_M_abs_difference": 0.0,
+      "peak_time_M_abs_difference": 0.0,
+      "phase_max_abs_rad": 5.238682283971367e-17,
+      "phase_rms_rad": 1.6451466291731872e-17,
+      "phase_samples": 1708,
+      "reference_samples": 1842,
+      "relative_norm_error": 0.0,
+      "samples": 1842,
+      "support_end_difference_M": -0.125,
+      "unmaximized_real_overlap": 1.0
+    },
+    "numerical_check_passed": true
+  },
+  "part": "control",
+  "plan_sha256": "0a223c0f467dd0b26760118ca5aa2582bed1e30d53da085461ac1873699fd35a",
+  "prior_gate_sha256": "a66e75d0d78eb91a356496f548dde3b75e0c67ecefb37f5f3ca5cacc4af96ea7",
+  "process": {
+    "argv": [
+      "dev/native_rom/evidence/2026-09-29/ode_chain_residual/probe.py",
+      "--part",
+      "control",
+      "--json-out",
+      "dev/native_rom/evidence/2026-09-29/ode_chain_residual/control.json"
+    ],
+    "cwd": "/home/xangma/tmp/diffgw-seobnr-ode-gate-aa1f365f",
+    "host": "len",
+    "pid": 1516002
+  },
+  "row": {
+    "chi1": 0.0,
+    "chi2": 0.0,
+    "mass1": 30.0,
+    "mass2": 20.0,
+    "omega_start": 0.04
+  },
+  "runs": [
+    {
+      "accepted_array_sha256": {
+        "coarse": {
+          "derivative": "f3035446bae26b295b16c3447743871962a206bb5f8389620c545ae1bb63d3a9",
+          "state": "6cea2ebd1d5073b22ffcf3f9a5de299e826800358888fab309684b16c9d39cd8",
+          "time": "9a28185a8166e338ba48606cb9b4fb11067847cb8284007744f947e733c2a23e",
+          "valid": "4b614acdfbc2bf6b01dcbb3db718cbc1b48ad4268d9dbc074f59225e6b15301a"
+        },
+        "fine": {
+          "derivative": "089ae68d896f48028c42939808e10705e6136d61298972c6cefafd6f96d6f2fa",
+          "state": "2ef7cd49e4cd9f1e8d5964b49b88409968d51b587f2d26a81345957075c8cf52",
+          "time": "02655e78ecad7340b4973f99cf585b61e637944bafd856e4c449cbc2c8d85485",
+          "valid": "902977f7d95ba07770428ec9f3413939a119dcf1b4fb1bac2f29f7a033aaa929"
+        }
+      },
+      "array_dtype": {
+        "mode": "complex128",
+        "time": "float64"
+      },
+      "array_sha256": {
+        "mode": "ba8542263f87df674a6f857a52e957417974eb5a29323f2d13d473aad4fded1b",
+        "time": "94e34c1277eacf6c66cdb95b29babaa1d4a2bad2156f6b7a793e78c0e775aac6"
+      },
+      "atol": 1e-14,
+      "boundary_time_M": 310.421875,
+      "continuous": {
+        "local_match_time_M": 145.4267986637539,
+        "state": [
+          2.8954448990579813,
+          18.063298387352653,
+          -0.19314209726358442,
+          2.8484553642883275
+        ],
+        "value": [
+          0.42641326059659124,
+          0.08403209995569755,
+          0.02902217202718552,
+          0.017055806478924858,
+          -0.44392260199500044,
+          -0.01656003091741062
+        ]
+      },
+      "dt_geom": 0.5,
+      "elapsed_seconds": 242.729976776056,
+      "final_mass_fraction": 0.9550166356939277,
+      "final_spin": 0.6638743502317226,
+      "internal_step_M": 0.015625,
+      "match_time_M": 310.4267986637539,
+      "name": "ode_2",
+      "nqc_coefficients": {
+        "amplitude": [
+          4.1232089944612005,
+          -47.13189014513539,
+          56.93904749201568
+        ],
+        "phase": [
+          4.136782450745492,
+          -21.976912910574317
+        ]
+      },
+      "nqc_full_spline_phase_matrix": [
+        [
+          -0.03704046087447127,
+          -0.0038193527847517157
+        ],
+        [
+          -0.008118401647429989,
+          -0.0013375576511145016
+        ]
+      ],
+      "nqc_matching_matrices": {
+        "amplitude": [
+          [
+            0.08403209995561357,
+            0.02902217202713729,
+            0.01705580647888948
+          ],
+          [
+            0.015172015372681022,
+            0.006299028563401974,
+            0.004013023096393592
+          ],
+          [
+            0.00446269889945664,
+            0.0020519748607843646,
+            0.0013730050851892986
+          ]
+        ],
+        "phase": [
+          [
+            -0.037040459468546776,
+            -0.003819352639363102
+          ],
+          [
+            -0.008118277645030038,
+            -0.0013375427034315428
+          ]
+        ]
+      },
+      "peak_time_M": 314.7991714477539,
+      "restart_time_M": 165.0,
+      "rtol": 1e-13,
+      "samples": 921,
+      "stages": {
+        "coarse": {
+          "accepted": 578,
+          "evaluations": 3619,
+          "event_time_M": 314.82685473921913,
+          "rejected": 30,
+          "termination": [
+            "event"
+          ]
+        },
+        "fine": {
+          "accepted": 404,
+          "evaluations": 2570,
+          "event_time_M": 149.95772112988266,
+          "rejected": 29,
+          "termination": [
+            "event"
+          ]
+        }
+      },
+      "support_M": [
+        0.0,
+        460.0
+      ],
+      "value_row": {
+        "active_amplitude": [
+          4.1232089944612005,
+          -47.13189014513539,
+          56.93904749201568
+        ],
+        "coefficient_delta": [
+          -1.325961562770317e-11,
+          9.3635321718466e-11,
+          -9.685408031145926e-11
+        ],
+        "direct": [
+          0.42641326059659124,
+          0.08403209995569755,
+          0.02902217202718552,
+          0.017055806478924858,
+          -0.44392260199500044,
+          -0.01656003091741062
+        ],
+        "direct_minus_spline": [
+          -3.8746783559417963e-14,
+          8.397449402508528e-14,
+          4.822878207910719e-14,
+          3.5377950569071004e-14,
+          -7.077671781985373e-14,
+          -3.68594044175552e-14
+        ],
+        "direct_value_amplitude": [
+          4.123208994447941,
+          -47.13189014504175,
+          56.93904749191883
+        ],
+        "matrix_condition": 8065.681541729809,
+        "spline": [
+          0.42641326059663,
+          0.08403209995561357,
+          0.02902217202713729,
+          0.01705580647888948,
+          -0.44392260199492967,
+          -0.01656003091737376
+        ]
+      }
+    },
+    {
+      "accepted_array_sha256": {
+        "coarse": {
+          "derivative": "f3035446bae26b295b16c3447743871962a206bb5f8389620c545ae1bb63d3a9",
+          "state": "6cea2ebd1d5073b22ffcf3f9a5de299e826800358888fab309684b16c9d39cd8",
+          "time": "9a28185a8166e338ba48606cb9b4fb11067847cb8284007744f947e733c2a23e",
+          "valid": "4b614acdfbc2bf6b01dcbb3db718cbc1b48ad4268d9dbc074f59225e6b15301a"
+        },
+        "fine": {
+          "derivative": "089ae68d896f48028c42939808e10705e6136d61298972c6cefafd6f96d6f2fa",
+          "state": "2ef7cd49e4cd9f1e8d5964b49b88409968d51b587f2d26a81345957075c8cf52",
+          "time": "02655e78ecad7340b4973f99cf585b61e637944bafd856e4c449cbc2c8d85485",
+          "valid": "902977f7d95ba07770428ec9f3413939a119dcf1b4fb1bac2f29f7a033aaa929"
+        }
+      },
+      "array_dtype": {
+        "mode": "complex128",
+        "time": "float64"
+      },
+      "array_sha256": {
+        "mode": "31f38a4dc4b40a751cb1cd6c866062600742733b7deea38ee556e5967e12ba44",
+        "time": "6d2b4a193e4bd619bec715d0fa66a5aeab52079e79107f0ed67b3ba5f5e25cda"
+      },
+      "atol": 1e-14,
+      "boundary_time_M": 310.421875,
+      "continuous": {
+        "local_match_time_M": 145.4267986637539,
+        "state": [
+          2.8954448990579813,
+          18.063298387352653,
+          -0.19314209726358442,
+          2.8484553642883275
+        ],
+        "value": [
+          0.42641326059659124,
+          0.08403209995569755,
+          0.02902217202718552,
+          0.017055806478924858,
+          -0.44392260199500044,
+          -0.01656003091741062
+        ]
+      },
+      "dt_geom": 0.25,
+      "elapsed_seconds": 240.86849173204973,
+      "final_mass_fraction": 0.9550166356939277,
+      "final_spin": 0.6638743502317226,
+      "internal_step_M": 0.015625,
+      "match_time_M": 310.4267986637539,
+      "name": "grid_1",
+      "nqc_coefficients": {
+        "amplitude": [
+          4.1232089944612005,
+          -47.13189014513539,
+          56.93904749201568
+        ],
+        "phase": [
+          4.136782450745492,
+          -21.976912910574317
+        ]
+      },
+      "nqc_full_spline_phase_matrix": [
+        [
+          -0.03704046087447127,
+          -0.0038193527847517157
+        ],
+        [
+          -0.008118401647429989,
+          -0.0013375576511145016
+        ]
+      ],
+      "nqc_matching_matrices": {
+        "amplitude": [
+          [
+            0.08403209995561357,
+            0.02902217202713729,
+            0.01705580647888948
+          ],
+          [
+            0.015172015372681022,
+            0.006299028563401974,
+            0.004013023096393592
+          ],
+          [
+            0.00446269889945664,
+            0.0020519748607843646,
+            0.0013730050851892986
+          ]
+        ],
+        "phase": [
+          [
+            -0.037040459468546776,
+            -0.003819352639363102
+          ],
+          [
+            -0.008118277645030038,
+            -0.0013375427034315428
+          ]
+        ]
+      },
+      "peak_time_M": 314.7991714477539,
+      "restart_time_M": 165.0,
+      "rtol": 1e-13,
+      "samples": 1842,
+      "stages": {
+        "coarse": {
+          "accepted": 578,
+          "evaluations": 3619,
+          "event_time_M": 314.82685473921913,
+          "rejected": 30,
+          "termination": [
+            "event"
+          ]
+        },
+        "fine": {
+          "accepted": 404,
+          "evaluations": 2570,
+          "event_time_M": 149.95772112988266,
+          "rejected": 29,
+          "termination": [
+            "event"
+          ]
+        }
+      },
+      "support_M": [
+        0.0,
+        460.25
+      ],
+      "value_row": {
+        "active_amplitude": [
+          4.1232089944612005,
+          -47.13189014513539,
+          56.93904749201568
+        ],
+        "coefficient_delta": [
+          -1.325961562770317e-11,
+          9.3635321718466e-11,
+          -9.685408031145926e-11
+        ],
+        "direct": [
+          0.42641326059659124,
+          0.08403209995569755,
+          0.02902217202718552,
+          0.017055806478924858,
+          -0.44392260199500044,
+          -0.01656003091741062
+        ],
+        "direct_minus_spline": [
+          -3.8746783559417963e-14,
+          8.397449402508528e-14,
+          4.822878207910719e-14,
+          3.5377950569071004e-14,
+          -7.077671781985373e-14,
+          -3.68594044175552e-14
+        ],
+        "direct_value_amplitude": [
+          4.123208994447941,
+          -47.13189014504175,
+          56.93904749191883
+        ],
+        "matrix_condition": 8065.681541729809,
+        "spline": [
+          0.42641326059663,
+          0.08403209995561357,
+          0.02902217202713729,
+          0.01705580647888948,
+          -0.44392260199492967,
+          -0.01656003091737376
+        ]
+      }
+    },
+    {
+      "accepted_array_sha256": {
+        "coarse": {
+          "derivative": "f3035446bae26b295b16c3447743871962a206bb5f8389620c545ae1bb63d3a9",
+          "state": "6cea2ebd1d5073b22ffcf3f9a5de299e826800358888fab309684b16c9d39cd8",
+          "time": "9a28185a8166e338ba48606cb9b4fb11067847cb8284007744f947e733c2a23e",
+          "valid": "4b614acdfbc2bf6b01dcbb3db718cbc1b48ad4268d9dbc074f59225e6b15301a"
+        },
+        "fine": {
+          "derivative": "089ae68d896f48028c42939808e10705e6136d61298972c6cefafd6f96d6f2fa",
+          "state": "2ef7cd49e4cd9f1e8d5964b49b88409968d51b587f2d26a81345957075c8cf52",
+          "time": "02655e78ecad7340b4973f99cf585b61e637944bafd856e4c449cbc2c8d85485",
+          "valid": "902977f7d95ba07770428ec9f3413939a119dcf1b4fb1bac2f29f7a033aaa929"
+        }
+      },
+      "array_dtype": {
+        "mode": "complex128",
+        "time": "float64"
+      },
+      "array_sha256": {
+        "mode": "0cac38b1f605670e448082dbc465385d1f9407eab232fc6642058d1e7d0f32e2",
+        "time": "ad84514950a2d29dbfa1da9062d275d092e4f98a9937e3d403d4c27f7323cde6"
+      },
+      "atol": 1e-14,
+      "boundary_time_M": 310.421875,
+      "continuous": {
+        "local_match_time_M": 145.4267986637539,
+        "state": [
+          2.8954448990579813,
+          18.063298387352653,
+          -0.19314209726358442,
+          2.8484553642883275
+        ],
+        "value": [
+          0.42641326059659124,
+          0.08403209995569755,
+          0.02902217202718552,
+          0.017055806478924858,
+          -0.44392260199500044,
+          -0.01656003091741062
+        ]
+      },
+      "dt_geom": 0.125,
+      "elapsed_seconds": 239.59159715892747,
+      "final_mass_fraction": 0.9550166356939277,
+      "final_spin": 0.6638743502317226,
+      "internal_step_M": 0.015625,
+      "match_time_M": 310.4267986637539,
+      "name": "grid_2",
+      "nqc_coefficients": {
+        "amplitude": [
+          4.1232089944612005,
+          -47.13189014513539,
+          56.93904749201568
+        ],
+        "phase": [
+          4.136782450745492,
+          -21.976912910574317
+        ]
+      },
+      "nqc_full_spline_phase_matrix": [
+        [
+          -0.03704046087447127,
+          -0.0038193527847517157
+        ],
+        [
+          -0.008118401647429989,
+          -0.0013375576511145016
+        ]
+      ],
+      "nqc_matching_matrices": {
+        "amplitude": [
+          [
+            0.08403209995561357,
+            0.02902217202713729,
+            0.01705580647888948
+          ],
+          [
+            0.015172015372681022,
+            0.006299028563401974,
+            0.004013023096393592
+          ],
+          [
+            0.00446269889945664,
+            0.0020519748607843646,
+            0.0013730050851892986
+          ]
+        ],
+        "phase": [
+          [
+            -0.037040459468546776,
+            -0.003819352639363102
+          ],
+          [
+            -0.008118277645030038,
+            -0.0013375427034315428
+          ]
+        ]
+      },
+      "peak_time_M": 314.7991714477539,
+      "restart_time_M": 165.0,
+      "rtol": 1e-13,
+      "samples": 3684,
+      "stages": {
+        "coarse": {
+          "accepted": 578,
+          "evaluations": 3619,
+          "event_time_M": 314.82685473921913,
+          "rejected": 30,
+          "termination": [
+            "event"
+          ]
+        },
+        "fine": {
+          "accepted": 404,
+          "evaluations": 2570,
+          "event_time_M": 149.95772112988266,
+          "rejected": 29,
+          "termination": [
+            "event"
+          ]
+        }
+      },
+      "support_M": [
+        0.0,
+        460.375
+      ],
+      "value_row": {
+        "active_amplitude": [
+          4.1232089944612005,
+          -47.13189014513539,
+          56.93904749201568
+        ],
+        "coefficient_delta": [
+          -1.325961562770317e-11,
+          9.3635321718466e-11,
+          -9.685408031145926e-11
+        ],
+        "direct": [
+          0.42641326059659124,
+          0.08403209995569755,
+          0.02902217202718552,
+          0.017055806478924858,
+          -0.44392260199500044,
+          -0.01656003091741062
+        ],
+        "direct_minus_spline": [
+          -3.8746783559417963e-14,
+          8.397449402508528e-14,
+          4.822878207910719e-14,
+          3.5377950569071004e-14,
+          -7.077671781985373e-14,
+          -3.68594044175552e-14
+        ],
+        "direct_value_amplitude": [
+          4.123208994447941,
+          -47.13189014504175,
+          56.93904749191883
+        ],
+        "matrix_condition": 8065.681541729809,
+        "spline": [
+          0.42641326059663,
+          0.08403209995561357,
+          0.02902217202713729,
+          0.01705580647888948,
+          -0.44392260199492967,
+          -0.01656003091737376
+        ]
+      }
+    }
+  ],
+  "schema": "diffgw.seobnrv4.chain-residual-probe.v1",
+  "scope": {
+    "description": "Scalar CPU float64 numerical stability evidence only; no training or promotion.",
+    "development_only": true,
+    "known_limitations": [
+      "Convergence cannot establish correctness of the equations or published model fidelity.",
+      "The adaptive prototype uses a diagnostic QNM spline with independently generated values and black-box-inferred knot metadata; this is not wholly literature-specified provenance.",
+      "Changing dt also changes the adaptive initial step and coarse/fine restart sampling; the grid check measures the complete generator's grid sensitivity.",
+      "No time, phase, amplitude, or coefficient fitting is performed.",
+      "No derivatives, batched execution, accelerators, or JAX are qualified here."
+    ],
+    "physics_validated": false,
+    "production_asset": false,
+    "production_promotion_allowed": false,
+    "training_generator_qualified": false
+  },
+  "source_manifest_sha256": "2caa5b4a3bb20e01cd6e0b0e8891e76b5d49345e3a254c9cc2395d7304d06a13",
+  "source_unchanged": true,
+  "status": "diagnostic_complete"
+}
