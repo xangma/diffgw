@@ -1,5 +1,29 @@
 # Qualification status and next steps
 
+## Closure standard
+
+Each family is reviewed against the specific public model, version, modes,
+parameters and waveform options it claims. A completed *bounded scope* needs
+the cited published equations and conventions, an independently evaluable
+reference where the public information permits one, tests connecting that
+reference to the native Torch and JAX paths, and recorded external comparisons
+with their actual thresholds and results. The reference must not be inferred
+solely from the implementation being checked. A passing internal parity test
+does not establish agreement with a paper, an independent code, or numerical
+relativity.
+
+If a complete public construction, calibration asset, or convention cannot be
+identified, record the exact missing input and close only the components that
+can be independently evaluated. Keep binary compatibility, historical-model
+fidelity, numerical convergence, differentiability and physical accuracy as
+distinct claims. Failed gates remain visible; neither a newly chosen tolerance
+nor a match to one sampled binary case silently widens a qualified domain.
+
+The current family reviews are being developed in separate worktrees. Their
+family-specific math, reference, backend, test and evidence changes will be
+integrated here only after review. Shared dispatch, coverage and release claims
+are owned by this integration branch so parallel work cannot overwrite them.
+
 This 29 September 2026 review separates implemented mathematical scopes from
 remaining implementation, provenance and physical-accuracy questions. It
 summarizes the evidence available at integration revision `9c4a3a8`; the linked
