@@ -1,4 +1,4 @@
-# XHM (2,1) carrier and fit boundary, 2026-09-29
+# XHM (2,1) carrier and fit candidate boundary, 2026-09-29
 
 This audit starts from integration `c70bceae`. It compares the published
 [XHM v2 paper](https://arxiv.org/html/2001.10914v2), the independent scalar
@@ -38,8 +38,12 @@ For each case, the three old-paper nodes are \(0.5 f_{\rm ins}\),
 \(0.75 f_{\rm ins}\), and \(f_{\rm ins}\). Public one-mode `122019` amplitudes,
 divided by the leading \(A_{22}\), reproduce the inherited **fit 3, fit 2,
 fit 1** surfaces at those ascending frequencies, respectively, when evaluated
-with the paper's normalized \(\chi_{\rm PN}\) (`chiPNHat`). The old production
-assembly instead used **fit 1, fit 2, fit 3** and the merger-spin `S`. For
+with `chiPNHat`. This normalizes the paper's Eq. (18) \(\chi_{\rm PN}\) so
+equal component spins map to their common value. The paper does not state
+that these inherited fits use `chiPNHat`, nor print their index-to-node
+assignment. Those contracts are inferred from public `122019` binary
+outputs and checked by the independent clean assembly test. The current
+production assembly uses **fit 1, fit 2, fit 3** and the merger-spin `S`. For
 example:
 
 | Case | Node frequencies (Hz) | Public `122019` normalized amplitudes |
@@ -49,10 +53,12 @@ example:
 | Holdout | 17.689250, 26.533875, 35.378501 | 0.0463215425, 0.0457680534, 0.0462397678 |
 
 The inherited surfaces with reversed indices and `chiPNHat` reproduce all
-nine public `122019` values to floating-point precision. The Torch and JAX
-(2,1) assembly now uses that order and spin variable. Other modes keep their
-previous fit arguments. A fixed-node regression requires both backends to
-reproduce the public `122019` amplitudes without loading LAL at test time.
+nine public `122019` values to floating-point precision. The isolated Torch
+and JAX candidate uses that order and spin variable only for (2,1); other
+modes keep their previous fit arguments. A fixed-node regression on the
+candidate requires both backends to reproduce six public `122019` amplitudes
+without loading LAL at test time. Neither the candidate nor that regression
+has been merged into the default integration branch.
 
 ## Binary outcome and remaining release boundary
 
@@ -71,8 +77,8 @@ inspiral wiring; the full band also includes intermediate and ringdown code.
 | Holdout | 122022 | 0.060907 → 0.060246 | 1.996590 → 1.975875 |
 
 The catalog full-band error grows despite the exact old-release inspiral
-nodes. That is a measured boundary of this local correction, not evidence for
-reversing the verified fit mapping. In the probe's isolated **projected**
+nodes. That is a measured boundary of this local candidate, not evidence for
+reversing the observed `122019` fit mapping. In the probe's isolated **projected**
 (2,1) polarization comparison against default LAL, plus amplitude L2 falls
 from 10.695721 to 1.359491 and plus norm ratio from 10.996537 to 1.958647;
 cross amplitude L2 falls from 8.784065 to 1.070997. The isolated (2,2)
@@ -92,7 +98,8 @@ L2 values on the same pinned host and environment are:
 
 The companion mismatch limit remains \(10^{-8}\); all four cases fail both
 limits. The after receipt is `/tmp/xhm21_frozen_after_c70bceae.json` on
-`len`.
+`len`. Two default-release full-waveform errors worsen, so this candidate
+does not justify changing the unversioned production route.
 
 The binary `122019` and `122022` (2,1) amplitudes differ. Public option
 lookups reporting sub-option labels `122018` for both releases do not prove
@@ -102,9 +109,12 @@ from the native production assembly; the [component boundary
 receipt](../../validation/xhm_carrier_components_20260925.json) describes
 what is missing. The native old-paper inspiral cutoff is 60.426841 Hz for
 the probe, versus 34.174989 Hz for the release-122022 clean assembly
-contract. This patch does not transplant the new cutoff without its matching
+contract. The candidate does not transplant the new cutoff without its matching
 calibration. The existing [strict qualification
 record](xhm-xphm-qualification-20260929.md) therefore remains unpromoted.
+The candidate remains in the isolated chat branch
+`codex/xhm21-carrier-diagnosis`; the default Torch/JAX production
+implementations remain unchanged.
 
 Reproduction artifacts on `len`: the before and after probe logs are
 `/tmp/xhm21_probe_c70bceae.log` and
