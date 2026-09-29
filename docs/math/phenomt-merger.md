@@ -1,5 +1,7 @@
 # IMRPhenomT dominant merger: supplied-input specification v1
 
+## Scope and status
+
 This specification implements the updated [IMRPhenomTHM paper,
 Eqs. (28)–(32)](https://arxiv.org/html/2012.11923v1). It applies to the
 shared aligned `(2,2)` carrier in T, THM, TP, and TPHM. The [earlier T/TP
@@ -7,16 +9,20 @@ paper](https://arxiv.org/html/2004.08302v2) uses different collocation nodes
 and merger ansätze and is not substituted here.
 
 The executable scalar source is
-[`phenomt_merger.py`](../../src/diffgw_reference/phenomt_merger.py), version
+[`phenomt_merger.py`](https://github.com/xangma/diffgw/blob/main/src/diffgw_reference/phenomt_merger.py), version
 `phenomt-merger/v1`. It imports no production carrier, fit, or amplitude
 module. Its numerical solves use `mpmath`; an optional `SymPy` entry point
 exposes the exact symbolic ansätze and their derivatives for audit.
 
-## Frequency and phase
+## Inputs, conventions, and options
 
 In total-mass time `u`, let `x=asinh(alpha u)`, where `alpha=2 pi f_damp`
 and `omega_RD=2 pi f_ring` are in inverse total-mass units. The paper's
 merger ansatz is
+
+## Mathematics and components
+
+### Frequency and phase
 
 `omega(u)=omega_RD [1-sum_{k=0}^4 a_k x^k]`.
 
@@ -33,7 +39,7 @@ generic `-25 M` description. The peak slope is supplied by the joined
 ringdown branch. Neither QNM rate nor fitted interior/peak target is inferred
 from a waveform comparison.
 
-## Amplitude
+### Amplitude
 
 With `tau=u-u_peak`, the paper's amplitude basis is
 
@@ -46,6 +52,8 @@ The native strain uses `|H|`; a signed zero can therefore make the observed
 amplitude nondifferentiable and produce a mode-phase jump. The checked finite
 cases compare magnitudes after solving the signed system.
 
+## Implementation mapping
+
 The PN cutoff value and slope, fitted midpoint and peak, and damping rate
 are supplied inputs. The cutoff slope is computed from the existing PN
 amplitude and frequency derivatives, so the gate does not independently
@@ -53,9 +61,9 @@ validate their PN coefficients. The current native amplitude stores merger
 coefficients in `[b0,b3,b2,b1]` order; the reference follows the paper's
 `[b0,b1,b2,b3]` order.
 
-## Evidence boundary
+## Evidence and limitations
 
-[`test_phenomt_merger_math_reference.py`](../../tests/test_phenomt_merger_math_reference.py)
+[`test_phenomt_merger_math_reference.py`](https://github.com/xangma/diffgw/blob/main/tests/test_phenomt_merger_math_reference.py)
 checks the symbolic forms, scalar collocation identities, and derivatives, then compares
 coefficients, frequency, slope, integrated phase, and amplitude at off-node
 times in Torch and JAX FP64. It covers three mass/spin cases, including
@@ -72,3 +80,8 @@ and [Jiménez-Forteza's remnant fits](https://arxiv.org/html/1611.00332v2)
 offer separate primary lineage checks; they do not replace the particular
 one-dimensional fits used in this carrier. The existing [provenance ledger](../provenance_ledger.md)
 and `THIRD_PARTY_NOTICES.md` retain the MIT adaptation attribution.
+
+## Reproduce the checks
+
+The [len receipt](../validation/phenomt_merger_20260929.md) records the
+environment and commands for the scalar and native checks.

@@ -49,11 +49,11 @@ standalone bound.
 ## Implementation mapping
 
 The versioned specification is
-[`xpnr_symbolic.py`](../../src/diffgw_reference/xpnr_symbolic.py). The
+[`xpnr_symbolic.py`](https://github.com/xangma/diffgw/blob/main/src/diffgw_reference/xpnr_symbolic.py). The
 independently written float64 scalar forms are
-[`xpnr_angles.py`](../../src/diffgw_reference/xpnr_angles.py). Native
-attachment forms live in the [Torch](../../src/torchwave/approximants/pnr_attachment.py)
-and [JAX](../../src/jaxwave/approximants/pnr_attachment.py) modules. The
+[`xpnr_angles.py`](https://github.com/xangma/diffgw/blob/main/src/diffgw_reference/xpnr_angles.py). Native
+attachment forms live in the [Torch](https://github.com/xangma/diffgw/blob/main/src/torchwave/approximants/pnr_attachment.py)
+and [JAX](https://github.com/xangma/diffgw/blob/main/src/jaxwave/approximants/pnr_attachment.py) modules. The
 reference accepts caller-supplied carrier deviations and asymmetry amplitudes;
 neither native frontend composes the XHM-CP deviations, adjusted ringdown, or
 dominant-mode asymmetry into the public route. Endpoint-completing window
@@ -62,7 +62,7 @@ its printed trigonometric argument.
 
 ## Evidence and limitations
 
-The maintained [symbolic test](../../tests/test_xpnr_symbolic_reference.py)
+The maintained [symbolic test](https://github.com/xangma/diffgw/blob/main/tests/test_xpnr_symbolic_reference.py)
 checks all 37 expressions against separately constructed scalar expectations,
 exact rational polynomial coefficients, four join values/slopes, and high
 precision derivative stability. Eleven isolated attachment kernels pass

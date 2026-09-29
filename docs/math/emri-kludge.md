@@ -61,7 +61,7 @@ Here `D_sec=D_Mpc × Mpc_SI/c`. The circular limit has only `n=2`: `h_+=2A_h(1+u
 | `emri.observer.fixed_polarizations.v1` | Barack–Cutler Eq. (10), fixed `u,γ,D` | SymPy expressions, mpmath evaluation | Native source-frame `polarizations` | Sampled value and parameter-gradient checks |
 | `emri.ak_kerr.v0`, `emri.nk_kerr.v0`, `emri.lisa.v0` | Complete AK/NK/Kerr and TDI models | None | None in new class | Open; no such capability claim |
 
-## Implementation mapping and public-code comparison
+## Implementation mapping
 
 The reference file `src/diffgw_reference/emri_newtonian_quadrupole.py` records `SPEC_VERSION=emri-newtonian-eccentric-quadrupole/v1` and the three new component IDs. It builds harmonic and observer expressions in SymPy, evaluates them with mpmath Bessel functions, and integrates paper-derived rates at high precision. It imports neither native frontend nor native constants; the existing symbolic flux reference supplies only Peters' rates. Both native frontends independently run RK4 on the requested grid and differentiate through native tensor operations. Torch uses autograd; JAX supports `grad`, batch broadcasting, `jit`, and `lax.scan`. This comparison checks implementation agreement with the bounded specification; a common fixed-grid RK4 method can share numerical truncation error.
 
