@@ -143,7 +143,7 @@
         "(4,4)"
       ],
       "status": "scoped_math_reference",
-      "notes": "The versioned independent scalar reference checks the leading-amplitude eight-mode carrier, negative-m polarization projection, inherited aligned-spin phase, and Schwarzschild hard-cutoff thresholds against Torch and JAX. The historical external TaylorF2 case checks only (2,2); no exact external all-eight-mode same-model waveform comparison or physical validation is claimed. The available (4,1) and (5,5) time-domain expressions do not independently fix the native negative-m storage and SPA phase conventions, so those modes remain excluded. Higher-PN and spin-amplitude completeness remains unresolved. See docs/math/taylorf2-hm.md.",
+      "notes": "The versioned independent scalar reference checks the leading-amplitude eight-mode carrier, negative-m polarization projection, inherited aligned-spin phase, and Schwarzschild hard-cutoff thresholds against Torch and JAX. A checksum-pinned author Mathematica supplement checks all eight leading amplitude ratios and signed nonspinning complex modes; composition with a separately published polarization map checks per-mode and summed complex polarizations at two orientations in the unwindowed f_ref=None slice. Paper-level output identities separately check the published native negative-m storage, polarization projection, 2f/m phase map, SPA offset, and phase/time signs. Public LAL spin-weighted harmonics independently check the angular basis only. The supplement is symbolic input, not an independently published numerical generator for the complete native complex-waveform contract; the historical external TaylorF2 waveform case checks only (2,2). Exact external all-eight-mode same-model complex-waveform parity and physical validation remain unavailable. Higher-PN and spin-amplitude completeness remains unresolved. See docs/math/taylorf2-hm.md.",
       "primary_references": [
         {
           "citation": "Kidder (2008), Phys. Rev. D 77, 044016",
@@ -160,23 +160,23 @@
         {
           "citation": "Garc\u00eda-Quir\u00f3s et al. (2020), Phys. Rev. D 102, 064002",
           "doi": "10.1103/PhysRevD.102.064002",
-          "equations": "Eq. (3)"
+          "equations": "Eqs. (2)-(9), (29), and (34)"
         },
         {
           "citation": "Mezzasoma and Yunes (2022), Phys. Rev. D 106, 024026",
           "arxiv": "2203.15934",
-          "equations": "Eqs. (2.20), (2.21g), and (2.26)"
+          "equations": "Eqs. (20)-(21i) and (23)-(30)"
         },
         {
           "citation": "Mishra et al. (2016), Phys. Rev. D 93, 084054",
           "arxiv": "1601.05588",
-          "equations": "Eqs. (9)-(12h); opposite Fourier convention"
+          "equations": "Eqs. (9)-(12h) and arXiv v1 supplement supl-mkaf16.m; opposite Fourier convention"
         }
       ],
       "math_reference": {
         "version": "taylorf2-hm-leading-carrier/v1",
         "scope": "eight leading-amplitude modes; unwindowed complex polarizations and selected derivatives; Schwarzschild hard-cutoff thresholds",
-        "evidence": "tests/test_taylorf2_hm_math_reference.py",
+        "evidence": "tests/test_taylorf2_hm_author_supplement_math_reference.py (all-eight leading amplitude ratios, nonspinning complex modes, and composed polarizations); tests/test_taylorf2_hm_math_reference.py; tests/test_taylorf2_hm_paper_math_reference.py; tests/test_taylorf2_hm_external_api.py (public angular basis and API boundary only)",
         "external_eight_mode_oracle": "unavailable"
       },
       "validation": {
@@ -220,7 +220,20 @@
         "ecc_order": "Up to 6 (3PN eccentric phase expansion)"
       },
       "status": "verified_declared_cases",
-      "notes": "The declared frozen catalog and available holdout cases passed the CPU FP64 gates for polarizations and detector projections. Results are historical and configuration-specific; they do not establish full-domain accuracy. See the pinned validation artifacts and docs/provenance_ledger.md.",
+      "notes": "The historical catalog includes a circular case and a spinning eccentric case. A separate versioned slice now covers only nonspinning, comparable-mass, nonzero low-eccentricity inspiral with explicit f0_ecc/f_ref and optional amplitude correction off; two new frozen holdouts passed Torch and JAX CPU FP64 direct LAL gates. The native API accepts wider inputs than the qualified slice. Historical aggregate counts below remain tied to their pinned artifacts.",
+      "scoped_qualification": {
+        "reference_version": "taylorf2-eccentric-nonspinning-e2-3pn/v1",
+        "specification": "docs/math/taylorf2-eccentric.md",
+        "receipt": "docs/validation/taylorf2_eccentric_nonspinning_holdout_20260927.json",
+        "test": "tests/test_taylorf2_eccentric_holdout.py",
+        "scope": "nonspinning q<=2, 0<e0<=0.1, positive-frequency band below Schwarzschild ISCO, 3PN O(e0^2), explicit f0_ecc/f_ref, reference-frequency gauge, amplitude correction off",
+        "holdout_case_ids": [
+          "TF2Ecc_nonspin_offcatalog_20260927",
+          "TF2Ecc_nonspin_offcatalog_second_20260927"
+        ],
+        "backends": ["torch", "jax"],
+        "status": "sampled_pass"
+      },
       "primary_references": [
         {
           "citation": "Moore, Favata, Arun, Mishra (2016), Phys. Rev. D 93, 124061",
@@ -374,14 +387,19 @@
       "modes": [
         "(2,2) coprecessing"
       ],
-      "frame_convention": "Default MSA version 223, convention 1, final_spin_mod=3; supported convention-0/1/6 requests use the clean MSA route. One-spin-aligned rows use the continuous physical opening, including nonzero phi0. Generic two-spin nonzero-phi0 rows retain the inherited rotation, and unsupported guard rows use explicit fallback. Convention 6 applies its quadrupole output phase to clean convention-1 strain.",
+      "frame_convention": "Default MSA version 223, convention 1, final_spin_mod=3; supported convention-0/1/6 requests use the clean MSA route when its roots are valid. One-spin-aligned rows use the continuous physical opening, including nonzero phi0. Generic equal-mass or invalid-root rows use NNLO angles; explicit final_spin_mod=3 raises for an invalid nonaligned MSA remnant root, while mode 0 is available. Valid unequal-mass generic two-spin nonzero-phi0 rows use the same clean source chart; unsupported guard rows use explicit fallback. Convention 6 applies its quadrupole output phase to clean convention-1 strain.",
       "status": "verified_declared_cases",
-      "notes": "Frozen checkpoint-3 public catalog and holdout generic rows pass for convention 1 (maximum polarization complex relative L2 7.36e-14 catalog and 3.52e-14 holdout; detector projection errors are 3.02e-7 and 3.40e-7). The production default is MSA version 223 with convention=1 and final_spin_mod=3; convention 6 applies the sourced quadrupole output phase after projection. The physical zero-nutation opening is a later scoped change: explicit v223 diagnostics preserve the strict LAL gate, while the public aligned convention-6 fixture differs by 1e-5 to 5e-5 complex relative L2. Historical tiny-spin and exact-aligned measurements in earlier artifacts describe their recorded implementation, not a newly qualified parameter domain. Unsupported guard rows use explicit fallback, and generic two-spin nonzero phi0 retains inherited geometry.",
+      "notes": "Frozen checkpoint-3 public catalog and holdout generic rows pass for convention 1 (maximum polarization complex relative L2 7.36e-14 catalog and 3.52e-14 holdout; detector projection errors are 3.02e-7 and 3.40e-7). The production default is MSA version 223 with convention=1 and final_spin_mod=3; convention 6 applies the sourced quadrupole output phase after projection. The physical zero-nutation opening is a later scoped change: explicit v223 diagnostics preserve the strict LAL gate, while the public aligned convention-6 fixture differs by 1e-5 to 5e-5 complex relative L2. An independent arbitrary-precision generic-boundary diagnostic resolves the published cubic and chart singularity, but does not supply a sourced float64 small-misalignment continuation. The later paper-prescribed NNLO angle fallback makes the two former near-aligned expected-failure tests pass the unchanged internal gate; invalid nonaligned MSA remnant roots still reject explicit final_spin_mod=3. The declared nonzero-phi0 generic full-waveform fixture passes the mapped public-binary strict gate; equal-mass and near-aligned v223 boundary comparisons still fail. Historical tiny-spin and exact-aligned measurements in earlier artifacts describe their recorded implementation, not a newly qualified parameter domain. Unsupported guard rows use explicit fallback. The nonzero-phi0 map is derived from the published source frames, not quoted as a paper equation.",
       "primary_references": [
         {
           "citation": "Pratten et al. (2021), Phys. Rev. D 103, 104056",
           "doi": "10.1103/PhysRevD.103.104056",
-          "equations": "Appendix B, Eqs. (B1)-(B2); Appendix C, Eqs. (67), (79), (81); Appendix F, Table IV"
+          "equations": "Appendix B, Eq. (63); Appendix C, Eqs. (67)-(68), (76)-(85); Appendix E, Eqs. (110)-(113); Appendix F, Table IV"
+        },
+        {
+          "citation": "Chatziioannou et al. (2017), Phys. Rev. D 95, 104004",
+          "doi": "10.1103/PhysRevD.95.104004",
+          "equations": "Eqs. (21)-(25), Eq. (51), and Appendices B and E"
         }
       ],
       "validation": {
@@ -410,7 +428,7 @@
           ]
         }
       },
-      "precession_domain": "The clean MSA v223 helper supports declared convention-0/1 requests with final_spin_mod=3; its explicit binary-compatibility opening remains available. Public Torch and JAX XP select the physical zero-nutation opening for one-spin-aligned rows, including nonzero phi0; the JAX branch is checked against Torch composition for selected rows, zero bins, JIT, batching and a gradient. Generic two-spin rows and unsupported guard rows retain inherited JAX behavior. The XP convention-6 quadrupole output uses a phase adapter to clean convention 1 on the same tuple. Passing frozen rows and selected cross-frontend cases do not certify the full precession parameter domain or physical accuracy.",
+      "precession_domain": "The clean MSA v223 helper supports declared convention-0/1 requests with final_spin_mod=3; its explicit binary-compatibility opening remains available. Public Torch and JAX XP select the physical zero-nutation opening for one-spin-aligned rows, including nonzero phi0; the JAX branch is checked against Torch composition for selected rows, zero bins, JIT, batching and a gradient. Valid unequal-mass generic two-spin rows select the distinct-root route at zero or nonzero phi0. Invalid-root rows use NNLO angles, and explicit final_spin_mod=3 rejects invalid nonaligned MSA remnant roots; mode 0 retains the tested continuous boundary. Other unsupported routes retain inherited behavior. The declared generic nonzero-phi0 full-waveform fixture passes the strict mapped-binary gate. The XP convention-6 quadrupole output uses a phase adapter to clean convention 1 on the same tuple. Passing frozen rows and selected cross-frontend cases do not certify the full precession parameter domain or physical accuracy.",
       "convention_evidence": "docs/provenance_ledger.md (Sections 2.4 and 2.4a)"
     },
     "IMRPhenomHM": {
@@ -482,7 +500,7 @@
       ],
       "frame_convention": "Garc\u00eda-Quir\u00f3s et al. (2020) spherical harmonic decomposition and collocation reconstruction",
       "status": "sovereign_nr_calibrated",
-      "notes": "Native SXS NR fits supply ringdown amplitude and phase components for (2,1), (3,3), (4,4) and (3,2). Phase-component tests use reference amplitudes, restricted ringdown bands and affine phase/time alignment. These checks do not validate a complete multimode waveform. The frozen catalog and holdout full-waveform LAL comparisons did not pass the strict gates.",
+      "notes": "Native SXS NR fits supply ringdown amplitude and phase components for (2,1), (3,3), (4,4) and (3,2). The paper's analytic inspiral carrier-rescaling slice has an independent scalar reference and Torch/JAX checks; all phase corrections and attachment terms remain conditional. Mode/regime diagnostics localize the largest frozen-case residuals to higher-mode intermediate amplitude and phase, but do not fit calibration data. Restricted ringdown and affine phase checks do not validate a complete multimode waveform. The frozen catalog and holdout full-waveform LAL comparisons did not pass the strict gates.",
       "primary_references": [
         {
           "citation": "Garc\u00eda-Quir\u00f3s et al. (2020), Phys. Rev. D 102, 064002",
@@ -541,7 +559,7 @@
       ],
       "frame_convention": "XPHM precession dynamics evaluated cleanly in native PyTorch with batch broadcasting.",
       "status": "sovereign_nr_calibrated",
-      "notes": "Precessing multimode waveform incorporating native SXS NR ringdown fits for (2,1), (3,3), (4,4) and (3,2). The phase-component checks described for IMRPhenomXHM do not validate precession or the complete waveform. The frozen catalog and holdout LAL comparisons did not pass the strict gates.",
+      "notes": "Precessing multimode waveform incorporating native SXS NR ringdown fits for (2,1), (3,3), (4,4) and (3,2). Torch and JAX default to MSA version 223, convention 1, and final-spin option 3. Independent scalar checks cover the rotation layer only. The historical frozen metrics below remain tied to their pinned artifacts and failed gates; the current-default rerun is recorded separately in the XPHM closure ledger.",
       "primary_references": [
         {
           "citation": "Pratten et al. (2021), Phys. Rev. D 103, 104056",
@@ -581,7 +599,7 @@
         }
       },
       "precession_domain": "Tensor precession and multimode evaluation; gradient and batching support must be checked for the selected path. Passing component tests does not establish complete precession-domain accuracy.",
-      "convention_evidence": "docs/provenance_ledger.md"
+      "convention_evidence": "docs/waveforms/research/xphm-precession-reference-closure.md"
     },
     "IMRPhenomXPHM-SpinTaylor": {
       "name": "IMRPhenomXPHM-SpinTaylor",
@@ -628,14 +646,22 @@
       "domain": "frequency_domain",
       "spins": "precessing",
       "modes": [
-        "(2,2)"
+        "(2,2)",
+        "(2,1)",
+        "(3,3)",
+        "(3,2)",
+        "(4,4) native symmetric coprecessing carrier"
       ],
-      "status": "sovereign_nr_calibrated",
-      "notes": "NR-tuned PhenomPNR opening and precession angles. tests/test_imrphenom_xpnr.py defines four optional comparisons against default LAL IMRPhenomXPNR, requiring time/phase-optimized plus-polarization match >= 0.99 over 20-400 Hz. This is a test threshold, not an observed full-domain bound; this model is outside the frozen catalog.",
+      "status": "provisional_component_evidence",
+      "notes": "The printed transition-spin map, angle-fit polynomial and transforms, merger-ringdown angle ansatzes, and higher-mode frequency map have independent scalar/Torch/JAX component evidence. The public route still maps reference-frequency spins, lacks the published attachment/continuation and XHM-CP carrier deformation/effective-ringdown/asymmetry pieces, and its inherited numeric fit tensors have unresolved independent provenance and terms. The native composition is not a qualified full PhenomXPNR waveform and inherits XHM's failed strict catalog and holdout gates. Four optional black-box LAL comparisons retain a time/phase-optimized plus-polarization match threshold >= 0.99 over 20-400 Hz; a threshold is not an observed result or domain bound. See docs/waveforms/research/imrphenomxpnr.md.",
       "primary_references": [
         {
-          "citation": "Hamilton et al. (2021), Phys. Rev. D 104, 124027",
-          "doi": "10.1103/PhysRevD.104.124027"
+          "citation": "Hamilton et al. (2025), PhenomXPNR: An improved gravitational wave model linking precessing inspirals and NR-calibrated merger-ringdown",
+          "arxiv": "2507.02604v1"
+        },
+        {
+          "citation": "Thompson et al. (2024), Phys. Rev. D 109, 063012",
+          "doi": "10.1103/PhysRevD.109.063012"
         }
       ]
     },
@@ -752,7 +778,7 @@
         "(2,2)"
       ],
       "status": "verified_declared_cases",
-      "notes": "The declared frozen catalog and available holdout cases passed the CPU FP64 gates for polarizations and detector projections. Results are historical and configuration-specific; they do not establish full-domain accuracy. See the pinned validation artifacts and docs/provenance_ledger.md.",
+      "notes": "The default binary_compatible variant preserves the historical native M^2/(2D) tidal-amplitude normalization and passes the frozen pinned-LAL catalog/holdout gates. The 1/2 normalization has unresolved paper provenance; binary verification does not qualify it as the published Dietrich et al. (2019) D model. The explicit paper_2019 option omits tidal amplitude as Table II specifies, passes its independent phase-only composition checks, and is unqualified against the pinned LAL D binary at nonzero tide. The separate Eq. (24) amplitude component passes scalar Torch/JAX/SymPy checks and is not part of either D variant. The metrics below apply only to the default binary_compatible variant. See docs/math/nrtidalv2-amplitude-taper.md and docs/validation/nrtidalv2_amplitude_20260926.md.",
       "primary_references": [
         {
           "citation": "Dietrich et al. (2019), Phys. Rev. D 100, 044003",
@@ -856,7 +882,7 @@
         "(4,4)"
       ],
       "status": "verified_declared_cases",
-      "notes": "The canonical (2,2), n=0 physical-energy waveform passes the frozen catalog and four expanded public TD-to-FD comparisons at the original 1e-6 tolerance. Its independent public reference uses SimBlackHoleRingdown and composite-Simpson Fourier integration. The angular series stopping rule and adaptive integration tolerance are inferred numerical compatibility conventions, not fitted calibration. Other listed modes and overtones do not inherit this full-waveform result.",
+      "notes": "The canonical (2,2), n=0 physical-energy waveform passes the frozen catalog, four expanded public TD-to-FD comparisons, and one off-canonical holdout at the original 1e-6 tolerance. Its independent public reference uses SimBlackHoleRingdown and composite-Simpson Fourier integration. A conditional scalar paper-form reference separately checks energy normalization and the causal time/Fourier carrier on supplied QNM and angular inputs in Torch and JAX. The angular series stopping rule and adaptive integration tolerance are inferred numerical compatibility conventions, not fitted calibration. Other listed modes and overtones do not inherit this full-waveform result.",
       "primary_references": [
         {
           "citation": "Cook and Zalutskiy (2014), Phys. Rev. D 90, 124021",
@@ -887,12 +913,16 @@
           ]
         },
         "holdout": {
-          "case_ids": [],
-          "cases_passed": 0,
-          "cases_total": 0,
-          "max_polarization_complex_relative_l2": null,
-          "max_projection_complex_relative_l2": null,
-          "verification_scopes": []
+          "case_ids": [
+            "KerrRingdown_holdout_off_axis_energy_onset"
+          ],
+          "cases_passed": 1,
+          "cases_total": 1,
+          "max_polarization_complex_relative_l2": 5.852069864247967e-08,
+          "max_projection_complex_relative_l2": 4.249138559216386e-07,
+          "verification_scopes": [
+            "full_polarizations"
+          ]
         }
       },
       "overtones": [

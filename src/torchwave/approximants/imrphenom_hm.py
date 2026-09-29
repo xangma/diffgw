@@ -11,6 +11,7 @@ Strict Clean-Room Implementation based exclusively on published literature:
 
 from typing import Dict, List, Optional, Sequence, Tuple, Union
 import math
+from diffgw_core.phenomd_published_fits import validate_calibration
 import torch
 import torch.nn as nn
 
@@ -206,7 +207,7 @@ def _d_ringdown_phase_correction(
     f_rd_lm: torch.Tensor,
     f_damp_lm: torch.Tensor,
 ) -> torch.Tensor:
-    """Replace the D ringdown arctangent by London Eq. (9), with C1 matching.
+    """Replace the D ringdown arctangent by London Eq. (14), with C1 matching.
 
     All frequencies are geometric. Subtracting the value and tangent of the
     arctangent difference at D's merger-ringdown join recomputes alpha_0 and
@@ -282,6 +283,10 @@ def _production_hhat(
     eta: torch.Tensor,
     chi_s: torch.Tensor,
     chi_a: torch.Tensor,
+    *,
+    hm_21_pn_variant: str = "binary_compatible",
+    hm_32_pn_variant: str = "binary_compatible",
+    hm_43_pn_variant: str = "binary_compatible",
 ) -> torch.Tensor:
     if (l, m) == (2, 2):
         return -torch.ones_like(v_m)
@@ -307,7 +312,10 @@ def _production_hhat(
             -math.pi * one,
             (-0.5 - 2.0 * math.log(2.0)) * one,
         )
-        c = c_tail + c_spa - c_td
+        # Keep the established binary-compatible carrier as the default.
+        # Mishra Eq. (12b) prints the opposite sign for this TD spin term;
+        # expose that source-traceable polynomial as an explicit variant.
+        c = c_tail + c_spa + (c_td if hm_21_pn_variant == "mishra_eq12b" else -c_td)
         return -(torch.sqrt(v_m.new_tensor(2.0)) / 3.0) * (
             delta * v_m
             - 1.5 * (chi_a + delta * chi_s) * v_m.square()
@@ -315,17 +323,17 @@ def _production_hhat(
             + c * v_m.pow(4.0)
         )
     if (l, m) == (3, 2):
-        return -(1.0 / 3.0) * torch.sqrt(v_m.new_tensor(5.0 / 7.0)) * (
-            (1.0 - 3.0 * eta) * v_m.square()
-        )
+        p = (1.0 - 3.0 * eta) * v_m.square()
+        if hm_32_pn_variant == "mishra_eq12d":
+            p = p + 4.0 * eta * chi_s * v_m.pow(3.0)
+        return -(1.0 / 3.0) * torch.sqrt(v_m.new_tensor(5.0 / 7.0)) * p
     if (l, m) == (4, 3):
-        # The London production truncation retains the leading antisymmetric
-        # mass term for (4,3).  The public ``h_hat_multipole`` helper above
-        # remains the full restricted-PN expression for callers that need its
-        # displayed higher-order spin correction.
-        return -(3.0 / 4.0) * torch.sqrt(v_m.new_tensor(3.0 / 35.0)) * (
-            delta * (1.0 - 2.0 * eta) * v_m.pow(3.0)
-        )
+        # Preserve the original mass-only carrier unless the printed Mishra
+        # Eq. (12g) spin term is explicitly selected.
+        leading = delta * (1.0 - 2.0 * eta) * v_m.pow(3.0)
+        if hm_43_pn_variant == "mishra_eq12g":
+            leading = leading + 2.5 * eta * (chi_a - delta * chi_s) * v_m.pow(4.0)
+        return -(3.0 / 4.0) * torch.sqrt(v_m.new_tensor(3.0 / 35.0)) * leading
     raise ValueError(f"Mode ({l}, {m}) not supported.")
 
 
@@ -437,6 +445,8 @@ class IMRPhenomHM(nn.Module):
     - Berti, Cardoso, Will (2006), Phys. Rev. D 73, 064030 (arXiv:gr-qc/0512160)
     """
 
+    definition_id = "IMRPhenomHM"
+
     SUPPORTED_MODES: Tuple[Tuple[int, int], ...] = (
         (2, 2),
         (2, 1),
@@ -473,6 +483,8 @@ class IMRPhenomHM(nn.Module):
         mass2: torch.Tensor,
         chi1: torch.Tensor,
         chi2: torch.Tensor,
+        *,
+        calibration: str = "inherited",
     ) -> Tuple[torch.Tensor, torch.Tensor]:
         """Compute fundamental QNM frequency f_RD and damping width f_damp for mode (l, m).
 
@@ -485,7 +497,7 @@ class IMRPhenomHM(nn.Module):
         Returns ``(f_rd, f_damp)`` in dimensionless total-mass units ``M*f``.
         """
         total_mass = mass1 + mass2
-        m_final, a_final, _, _ = IMRPhenomD.remnant_properties(mass1, mass2, chi1, chi2)
+        m_final, a_final, _, _ = IMRPhenomD.remnant_properties(mass1, mass2, chi1, chi2, calibration=calibration)
         omega_real_final, omega_imag_final = evaluate_n61_qnm((l, m), a_final)
         m_ratio = total_mass / m_final
         scale = m_ratio / (2.0 * PI)
@@ -540,6 +552,7 @@ class IMRPhenomHM(nn.Module):
                 f = sample_frequencies
             else:
                 raise ValueError("Must provide frequency grid via 'f' or 'sample_frequencies'")
+
         device = f.device
         dtype = f.dtype if f.is_floating_point() else torch.float64
 
@@ -650,7 +663,7 @@ class IMRPhenomHM(nn.Module):
             f_damp_22_u = f_damp_22_geom
         f_rd_22_phys = f_rd_22_u / m_sec_eval
 
-        # Eq. (9) refines the D ansatz specifically; arbitrary carriers retain
+        # London Eq. (14) refines the D ansatz specifically; arbitrary carriers retain
         # the model-agnostic phase mapping.
         use_d_ringdown = isinstance(self.base_22, IMRPhenomD)
         if use_d_ringdown:
@@ -905,6 +918,14 @@ class IMRPhenomHM(nn.Module):
         phasing_convention: Optional[str] = None,
         reference_frame: Optional[str] = None,
         sample_frequencies: Optional[torch.Tensor] = None,
+        hm_mapping_transitions: str = "phenomd_runtime",
+        hm_21_pn_variant: str = "binary_compatible",
+        hm_32_pn_variant: str = "binary_compatible",
+        hm_43_pn_variant: str = "binary_compatible",
+        *,
+        calibration: str = "inherited",
+        hm_reference_phase: str = "legacy",
+        hm_phase_convention: str = "legacy",
     ) -> Union[
         Tuple[torch.Tensor, torch.Tensor],
         Tuple[torch.Tensor, torch.Tensor, Dict[Tuple[int, int], Union[Tuple[torch.Tensor, torch.Tensor], torch.Tensor]]],
@@ -915,13 +936,64 @@ class IMRPhenomHM(nn.Module):
         its own absolute QNM pair is retained inside the Eq. (14) arctangent;
         the HM pair enters there only as the two London ratios.  All boundary
         evaluations and projections stay in Torch so parameter gradients are
-        retained in scalar and batched calls.
+        retained in scalar and batched calls. ``calibration="published"``
+        selects the paper-precision D fits throughout the carrier and HM
+        remnant/QNM chain; the mapping and PN options remain separate.
+        ``hm_reference_phase="orbital"`` omits the legacy HM phase factor,
+        so a change of D reference phase maps to an orbital rotation. It
+        requires the native D carrier and leaves its phase convention and
+        the (2,2) mode unchanged. The default ``"legacy"`` preserves earlier
+        results, including with explicit carrier phase-convention aliases.
+        The orbital option requires an explicit ``f_ref`` when a reference-
+        frequency carrier convention is selected explicitly.
+        ``hm_phase_convention="spa_sxs_v1"`` independently multiplies each
+        positive-frequency intrinsic mode by exp[i(m/2-1)3*pi/4] before
+        projection. It requires native D, preserves m=2, and may be combined
+        with either reference-phase option. This source-derived leading-SPA
+        convention is not a physical-accuracy qualification. Its default
+        ``"legacy"`` leaves the existing waveform unchanged.
         """
+        if hm_phase_convention not in ("legacy", "spa_sxs_v1"):
+            raise ValueError(f"Unknown HM phase convention: {hm_phase_convention}")
+        if hm_phase_convention == "spa_sxs_v1" and type(self.base_22) is not IMRPhenomD:
+            raise ValueError("SPA/SXS HM phase convention requires the native D carrier")
+        if hm_reference_phase not in ("legacy", "orbital"):
+            raise ValueError(f"Unknown HM reference phase: {hm_reference_phase}")
+        if hm_reference_phase == "orbital" and type(self.base_22) is not IMRPhenomD:
+            raise ValueError("orbital HM reference phase requires the native D carrier")
+        carrier_phase_convention = reference_frame if reference_frame is not None else phasing_convention
+        if (
+            hm_reference_phase == "orbital"
+            and f_ref is None
+            and carrier_phase_convention is not None
+            and carrier_phase_convention.lower() in ("reference_frequency", "reffreq", "ref")
+        ):
+            raise ValueError("orbital HM reference-frequency phasing requires an explicit f_ref")
+        validate_calibration(calibration)
+        if calibration == "published" and type(self.base_22) is not IMRPhenomD:
+            raise ValueError("published calibration requires the native D carrier")
         if f is None:
             if sample_frequencies is not None:
                 f = sample_frequencies
             else:
                 raise ValueError("Must provide frequency grid via 'f' or 'sample_frequencies'")
+
+        if hm_mapping_transitions not in ("phenomd_runtime", "london_2018"):
+            raise ValueError(f"Unknown HM mapping transitions: {hm_mapping_transitions}")
+        if hm_21_pn_variant not in ("binary_compatible", "mishra_eq12b"):
+            raise ValueError(f"Unknown HM (2,1) PN variant: {hm_21_pn_variant}")
+        if hm_32_pn_variant not in ("binary_compatible", "mishra_eq12d"):
+            raise ValueError(f"Unknown HM (3,2) PN variant: {hm_32_pn_variant}")
+        if hm_43_pn_variant not in ("binary_compatible", "mishra_eq12g"):
+            raise ValueError(f"Unknown HM (4,3) PN variant: {hm_43_pn_variant}")
+        if hm_mapping_transitions == "london_2018" and not isinstance(self.base_22, IMRPhenomD):
+            raise ValueError("london_2018 HM mapping transitions require the D carrier")
+        if hm_21_pn_variant == "mishra_eq12b" and not isinstance(self.base_22, IMRPhenomD):
+            raise ValueError("mishra_eq12b HM (2,1) PN variant requires the D carrier")
+        if hm_32_pn_variant == "mishra_eq12d" and not isinstance(self.base_22, IMRPhenomD):
+            raise ValueError("mishra_eq12d HM (3,2) PN variant requires the D carrier")
+        if hm_43_pn_variant == "mishra_eq12g" and not isinstance(self.base_22, IMRPhenomD):
+            raise ValueError("mishra_eq12g HM (4,3) PN variant requires the D carrier")
 
         # Keep custom/XAS carriers on the established opaque-carrier path.
         # The Torch-native London route below relies on the IMRPhenomD
@@ -1091,6 +1163,8 @@ class IMRPhenomHM(nn.Module):
                 "phasing_convention": phasing_convention,
                 "reference_frame": reference_frame,
             }
+            if type(self.base_22) is IMRPhenomD:
+                kwargs["calibration"] = calibration
             if need_phase:
                 result = self.base_22(return_phase=True, **kwargs)
             else:
@@ -1130,25 +1204,25 @@ class IMRPhenomHM(nn.Module):
 
         # D's remnant call provides the absolute carrier pair in total-mass
         # units.  HM mode_qnm_frequencies supplies the independent N=61 pair.
-        m_final, a_final, base_fr22, base_fd22 = IMRPhenomD.remnant_properties(m1, m2, s1, s2)
+        m_final, a_final, base_fr22, base_fd22 = IMRPhenomD.remnant_properties(m1, m2, s1, s2, calibration=calibration)
         hm_qnm: Dict[Tuple[int, int], Tuple[torch.Tensor, torch.Tensor]] = {
-            lm: self.mode_qnm_frequencies(lm[0], lm[1], m1, m2, s1, s2)
+            lm: self.mode_qnm_frequencies(lm[0], lm[1], m1, m2, s1, s2, calibration=calibration)
             for lm in active_modes
         }
         if (2, 2) not in hm_qnm:
-            hm_qnm[(2, 2)] = self.mode_qnm_frequencies(2, 2, m1, m2, s1, s2)
+            hm_qnm[(2, 2)] = self.mode_qnm_frequencies(2, 2, m1, m2, s1, s2, calibration=calibration)
 
         hm_fr22 = expand_param(hm_qnm[(2, 2)][0])
         hm_fd22 = expand_param(hm_qnm[(2, 2)][1])
         base_fr22_eval = expand_param(base_fr22)
         base_fd22_eval = expand_param(base_fd22)
-        alpha4 = expand_param(IMRPhenomD.eval_table_v("alpha4", eta, chi_pn))
-        alpha5 = expand_param(IMRPhenomD.eval_table_v("alpha5", eta, chi_pn))
+        alpha4 = expand_param(IMRPhenomD.eval_table_v("alpha4", eta, chi_pn, calibration=calibration))
+        alpha5 = expand_param(IMRPhenomD.eval_table_v("alpha5", eta, chi_pn, calibration=calibration))
 
-        if f_ref is None:
+        if hm_reference_phase == "orbital" or f_ref is None:
             reference_gauge_base = torch.zeros_like(f_eval)
         else:
-            slope_peak = expand_param(IMRPhenomD.compute_slope_peak(m1, m2, s1, s2))
+            slope_peak = expand_param(IMRPhenomD.compute_slope_peak(m1, m2, s1, s2, calibration=calibration))
             reference_gauge_base = slope_peak * m_sec_eval * fref_eval
 
         complex_dtype = torch.complex128 if dtype == torch.float64 else torch.complex64
@@ -1161,8 +1235,12 @@ class IMRPhenomHM(nn.Module):
             hm_fr_lm, hm_fd_lm = hm_qnm[(l, m)]
             hm_fr_lm = expand_param(hm_fr_lm)
             hm_fd_lm = expand_param(hm_fd_lm)
-            f0_amp = 0.014 * hm_fr_lm / hm_fr22
-            f0_phi = 0.018 * hm_fr_lm / hm_fr22
+            if hm_mapping_transitions == "london_2018":
+                f0_amp = 0.018 * hm_fr_lm / hm_fr22
+                f0_phi = 0.014 * hm_fr_lm / hm_fr22
+            else:
+                f0_amp = 0.014 * hm_fr_lm / hm_fr22
+                f0_phi = 0.018 * hm_fr_lm / hm_fr22
             f_map_amp = frequency_mapping_amplitude(
                 mf_eval, f0_amp, hm_fr_lm, hm_fr22, m
             )
@@ -1180,14 +1258,29 @@ class IMRPhenomHM(nn.Module):
                 ga_safe = f_map_amp_safe
                 v_ga = torch.pow(2.0 * PI * ga_safe / float(m), 1.0 / 3.0)
                 v_x = torch.pow(2.0 * PI * x_safe / float(m), 1.0 / 3.0)
-                hhat_ga = _production_hhat(l, m, v_ga, delta_eval, eta_eval, chi_s_eval, chi_a_eval)
-                hhat_x = _production_hhat(l, m, v_x, delta_eval, eta_eval, chi_s_eval, chi_a_eval)
+                hhat_ga = _production_hhat(
+                    l, m, v_ga, delta_eval, eta_eval, chi_s_eval, chi_a_eval,
+                    hm_21_pn_variant=hm_21_pn_variant,
+                    hm_32_pn_variant=hm_32_pn_variant,
+                    hm_43_pn_variant=hm_43_pn_variant,
+                )
+                hhat_x = _production_hhat(
+                    l, m, v_x, delta_eval, eta_eval, chi_s_eval, chi_a_eval,
+                    hm_21_pn_variant=hm_21_pn_variant,
+                    hm_32_pn_variant=hm_32_pn_variant,
+                    hm_43_pn_variant=hm_43_pn_variant,
+                )
                 hlm_ga = hhat_ga * v_ga.pow(-3.5)
                 hlm_x = hhat_x * v_x.pow(-3.5)
                 h22_ga = -torch.pow(2.0 * PI * ga_safe / 2.0, 1.0 / 3.0).pow(-3.5)
                 mode_at_22_x = 2.0 * x_safe / float(m)
                 v_22_x = torch.pow(2.0 * PI * mode_at_22_x / float(m), 1.0 / 3.0)
-                h22_at_x = _production_hhat(l, m, torch.pow(2.0 * PI * mode_at_22_x / float(m), 1.0 / 3.0), delta_eval, eta_eval, chi_s_eval, chi_a_eval) * v_22_x.pow(-3.5)
+                h22_at_x = _production_hhat(
+                    l, m, v_22_x, delta_eval, eta_eval, chi_s_eval, chi_a_eval,
+                    hm_21_pn_variant=hm_21_pn_variant,
+                    hm_32_pn_variant=hm_32_pn_variant,
+                    hm_43_pn_variant=hm_43_pn_variant,
+                ) * v_22_x.pow(-3.5)
                 tiny = torch.finfo(dtype).tiny
                 nonzero = torch.abs(h22_at_x) > tiny
                 safe_h22_at_x = torch.where(nonzero, h22_at_x, torch.ones_like(h22_at_x))
@@ -1237,15 +1330,20 @@ class IMRPhenomHM(nn.Module):
                 l,
                 carrier_lm,
             )
-            # The D reference-frequency gauge is defined for the (2,2)
-            # carrier.  Harmonic m carries the relative factor m/2 - 1 in
-            # the mapped HM phase contract.
+            # Retain the historical extra factor only for the legacy option.
+            # The orbital option relies on the London map's m/2 scaling of
+            # a constant carrier-phase shift, for either D phase convention.
             reference_gauge = (float(m) / 2.0 - 1.0) * reference_gauge_base
             physical_phase = -mapped_phase + reference_gauge + float(m) * phic_eval
             phase_factor = torch.complex(torch.cos(physical_phase), torch.sin(physical_phase))
             if (l, m) == (2, 2):
                 mode_factor = torch.ones_like(ratio)
             h_mode = amp_22_mapped * ratio * mode_factor * phase_factor
+            if hm_phase_convention == "spa_sxs_v1" and m != 2:
+                # Source-derived leading-SPA convention; multiply once before
+                # projection, preserving the unmodified D-anchored m=2 modes.
+                angle = physical_phase.new_tensor((float(m) / 2.0 - 1.0) * 3.0 * PI / 4.0)
+                h_mode = h_mode * torch.complex(torch.cos(angle), torch.sin(angle))
             h_mode = torch.where(f_eval > 0.0, h_mode, torch.zeros_like(h_mode))
 
             d_plus, d_cross = _swsh_projection_coefficients(l, m, inc_eval, phi0_eval)

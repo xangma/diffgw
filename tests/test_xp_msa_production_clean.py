@@ -333,7 +333,7 @@ def test_unsupported_versions_do_not_route_to_clean_helper(monkeypatch):
                       final_spin_mod=3)
 
 
-def test_nonzero_phi0_uses_established_rotation_path(monkeypatch):
+def test_nonzero_phi0_uses_clean_source_chart(monkeypatch):
     f = torch.linspace(20.0, 160.0, 9, dtype=DTYPE)
     params = _case()
     calls = []
@@ -355,7 +355,7 @@ def test_nonzero_phi0_uses_established_rotation_path(monkeypatch):
         f, **params, phi0=0.7, prec_version=223, convention=1,
         final_spin_mod=3,
     )
-    assert len(calls) == 1
+    assert len(calls) == 3
     assert torch.isfinite(hp_a).all() and torch.isfinite(hc_a).all()
     assert torch.isfinite(hp_b).all() and torch.isfinite(hc_b).all()
     assert torch.max(torch.abs(hp_a - hp_b)).item() > 0.0
@@ -377,7 +377,8 @@ def test_mixed_phi0_rows_match_independent_scalar_routes():
             prec_version=223, convention=1, final_spin_mod=3,
         )
         for actual, expected in zip(batched, scalar):
-            torch.testing.assert_close(actual[row], expected, rtol=0.0, atol=0.0)
+            # Batched and scalar chart arithmetic can round one ulp apart.
+            torch.testing.assert_close(actual[row], expected, rtol=1e-15, atol=0.0)
 
 
 def test_one_spin_physical_row_survives_generic_azimuth_batch():
@@ -402,7 +403,8 @@ def test_one_spin_physical_row_survives_generic_azimuth_batch():
             prec_version=223, convention=1, final_spin_mod=3,
         )
         for actual, expected in zip(batched, scalar):
-            torch.testing.assert_close(actual[row], expected, rtol=0.0, atol=0.0)
+            # The mixed clean branches can differ by one rounding step.
+            torch.testing.assert_close(actual[row], expected, rtol=1e-15, atol=0.0)
 
 
 def test_aligned_nonzero_phi0_has_expected_m2_phase_rotation():

@@ -52,6 +52,16 @@ def test_gate_rejects_missing_reference_module(pytester):
     assert "Required math reference modules were not collected" in result.stderr.str()
 
 
+def test_gate_requires_nsbh_reference_module(pytester):
+    prepare(pytester, "def test_probe(): pass")
+    (pytester.path / "tests" / "test_nsbh_probe_reference.py").write_text(
+        "import pytest\ndef test_nsbh_probe(): pytest.skip('missing evidence')"
+    )
+    result = pytester.runpytest_subprocess("--require-math-reference", "-q")
+    assert result.ret != 0
+    assert "1/2 passed; 1 skipped/xfail; 0 deselected" in result.stdout.str()
+
+
 def test_gate_rejects_missing_dependency(pytester):
     prepare(pytester, "def test_probe(): pass", """
 original_import = importlib.import_module

@@ -101,6 +101,7 @@ nav:
   - Waveforms:
       - Waveform library: waveforms/index.md
       - Specification coverage: waveforms/coverage.md
+      - Qualification status: waveforms/qualification-status.md
       - Catalog and support: models.md
       - Component specification index: math/index.md
       - Specification template: math/waveform-spec-template.md
@@ -110,19 +111,70 @@ nav:
           - Quadrupolar tides: math/taylorf2-tidal.md
           - Spin-induced quadrupoles: math/taylorf2-spin-quadrupole.md
           - Leading higher modes: math/taylorf2-hm.md
+          - Eccentric phase: math/taylorf2-eccentric-phase.md
       - IMRPhenomD:
           - Intrinsic composition: math/imrphenomd-intrinsic.md
           - Amplitude and joins: math/imrphenomd-amplitude.md
           - Remnant and QNM inputs: math/imrphenomd-remnant-qnm.md
           - Phase and joins: math/imrphenomd-phase.md
           - Composed polarizations: math/imrphenomd-waveform.md
+      - IMRPhenomT dominant ringdown frequency: math/phenomt-ringdown-frequency.md
+      - IMRPhenomT dominant ringdown amplitude: math/phenomt-ringdown-amplitude.md
+      - IMRPhenomHM published-calibration composition: math/imrphenomhm-waveform.md
+      - IMRPhenomHM frequency map: math/imrphenomhm-frequency-map.md
+      - IMRPhenomHM N61 six-mode QNM off-grid input: math/imrphenomhm-qnm-n61-offgrid.md
+      - IMRPhenomHM ringdown phase shape: math/imrphenomhm-ringdown-phase.md
+      - IMRPhenomHM public intrinsic phase composition: math/imrphenomhm-phase-composition.md
+      - IMRPhenomHM complex intrinsic modes: math/imrphenomhm-intrinsic-modes.md
+      - IMRPhenomHM–SXS mode conventions: math/imrphenomhm-sxs-conventions.md
+      - IMRPhenomHM SPA convention reference: math/imrphenomhm-spa-conventions.md
+      - IMRPhenomHM signed-mode phase transport: math/imrphenomhm-signed-projection.md
+      - IMRPhenomHM six-mode projection: math/imrphenomhm-projection.md
+      - IMRPhenomHM amplitude ratio: math/imrphenomhm-amplitude-ratio.md
+      - IMRPhenomHM (2,1) amplitude ratio: math/imrphenomhm-amplitude-ratio-21.md
+      - IMRPhenomHM (3,2) amplitude ratio: math/imrphenomhm-amplitude-ratio-32.md
+      - IMRPhenomHM (4,3) amplitude ratio: math/imrphenomhm-amplitude-ratio-43.md
+      - NRTidal v1 nonspinning phase: math/nrtidalv1-phase.md
+      - NRTidal v1 merger taper and composition: math/nrtidalv1-merger-taper.md
+      - NRTidalv2 nonspinning phase: math/nrtidalv2-phase.md
+      - NRTidalv2 amplitude and merger taper: math/nrtidalv2-amplitude-taper.md
+      - NRTidalv2 self-spin: math/nrtidalv2-self-spin.md
+      - NRTidalv2 paper-D composition: math/nrtidalv2-paper-d-composition.md
+      - NRTidalv2 Pv2 aligned additive terms: math/nrtidalv2-pv2-aligned-additive-terms.md
+      - NRTidalv2 Pv2 aligned BNS carrier: math/nrtidalv2-pv2-aligned-carrier.md
+      - NRTidalv2 Pv2 inherited remnant spin: math/nrtidalv2-pv2-remnant-spin.md
+      - NRTidalv2 Pv2 positive-22 projection: math/nrtidalv2-pv2-positive-22-projection.md
+      - NRTidalv2 Pv2 tidal-mode normalization: math/nrtidalv2-pv2-tidal-mode-normalization.md
+      - NRTidalv2 Pv2 public assembly boundary: math/nrtidalv2-pv2-public-assembly-boundary.md
+      - NSBH disruption root: math/nsbh-disruption-root.md
+      - NSBH torus and ISCO: math/nsbh-torus-isco.md
+      - NSBH merger branches: math/nsbh-branch-classification.md
+      - NSBH branch amplitude factors: math/nsbh-branch-amplitude-fits.md
+      - NSBH joining frequencies: math/nsbh-joining-frequencies.md
+      - NSBH amplitude variant provenance: math/nsbh-amplitude-variant-provenance.md
+      - NSBH explicit phase composition: math/nsbh-explicit-phase.md
+      - NSBH London 220 QNM input: math/nsbh-london-qnm.md
+      - Kerr 220 energy carrier: math/kerr-ringdown.md
+      - Kerr angular projection: math/kerr-angular-projection.md
+      - ContinuousWave monochromatic H1 direct class: math/continuous-wave-direct-class.md
       - IMRPhenomXAS: math/imrphenomxas.md
+      - IMRPhenomXHM (3,2) transition and mixing: math/imrphenomxhm-transition-mixing.md
+      - IMRPhenomXHM non-mixing intermediate phase: math/imrphenomxhm-intermediate-phase.md
+      - IMRPhenomXHM ringdown amplitude shape: math/imrphenomxhm-ringdown-amplitude.md
+      - IMRPhenomXHM non-mixing ringdown phase: math/imrphenomxhm-nonmix-ringdown-phase.md
+      - IMRPhenomXHM default ringdown cuts: math/imrphenomxhm-ringdown-cuts.md
+      - IMRPhenomXHM (3,2) spheroidal ringdown phase: math/imrphenomxhm-32-spheroidal-ringdown-phase.md
+      - IMRPhenomXHM positive-frequency projection: math/imrphenomxhm-projection.md
       - Provisional research ledgers:
           - Higher-mode and tidal inspirals: waveforms/research/tidal-eccentric-higher-modes.md
           - Phenom higher modes: waveforms/research/phenom-higher-modes.md
           - Phenom precession: waveforms/research/phenom-precessing.md
+          - PhenomXPNR evidence: waveforms/research/imrphenomxpnr.md
           - IMRPhenomT family: waveforms/research/imrphenomt-family.md
           - Standalone waveform family: math/standalone-family-research-ledger.md
+          - EMRI prototype flux: math/emri-kludge.md
+          - Dominant-pair memory: math/memory-dominant-22.md
+          - ppE inspiral amplitude, phase and dispersion: math/ppe-phase-dispersion.md
           - Retired prototype routes: waveforms/research/retired-release-surface.md
       - Parameters and conventions: conventions.md
       - Unit constants: math/units.md
@@ -139,6 +191,31 @@ nav:
       - Evidence overview: validation.md
       - Differences from LAL: differences_from_lal.md
       - IMRPhenomT reference report: validation/phenomt.md
+      - NRTidalv2 phase receipt: validation/nrtidalv2_phase_20260926.md
+      - NRTidalv2 amplitude diagnostic: validation/nrtidalv2_amplitude_20260926.md
+      - NRTidalv2 premerger composition holdout: validation/nrtidalv2_composed_holdout_20260927.md
+      - NRTidalv2 self-spin component gate: validation/nrtidalv2_self_spin_20260927.md
+      - NRTidalv2 paper-D composition gate: validation/nrtidalv2_paper_d_composition_20260927.md
+      - NRTidalv2 Pv2 aligned terms gate: validation/nrtidalv2_pv2_aligned_additive_terms_20260927.md
+      - NRTidalv2 Pv2 aligned carrier gate: validation/nrtidalv2_pv2_aligned_carrier_20260927.md
+      - NRTidalv2 Pv2 positive-22 projection gate: validation/nrtidalv2_pv2_positive_22_projection_20260927.md
+      - NRTidalv2 Pv2 tidal-mode normalization gate: validation/nrtidalv2_pv2_tidal_mode_normalization_20260927.md
+      - NSBH disruption-root component gate: validation/nsbh_disruption_root_20260927.md
+      - NSBH torus and ISCO component gate: validation/nsbh_torus_isco_20260927.md
+      - NSBH branch-classification component gate: validation/nsbh_branch_classification_20260927.md
+      - NSBH branch amplitude factors gate: validation/nsbh_branch_amplitude_fits_20260927.md
+      - NSBH joining frequencies gate: validation/nsbh_joining_frequencies_20260927.md
+      - NSBH amplitude variant provenance: validation/nsbh_amplitude_variants_20260927.md
+      - NSBH explicit phase gate: validation/nsbh_explicit_phase_20260927.md
+      - NSBH London 220 QNM gate: validation/nsbh_london_qnm_20260927.md
+      - IMRPhenomHM N61 six-mode QNM off-grid gate: validation/imrphenomhm_qnm_n61_offgrid_20260927.md
+      - PhenomT q10 source discrepancy: validation/phenomt_q10_gate_blocker_20260927.md
+      - PhenomT dominant ringdown gate: validation/phenomt_ringdown_frequency_20260927.md
+      - PhenomT dominant ringdown amplitude gate: validation/phenomt_ringdown_amplitude_20260927.md
+      - IMRPhenomHM six-mode projection gate: validation/imrphenomhm_projection_20260927.md
+      - IMRPhenomHM–SXS convention bridge gate: validation/imrphenomhm_sxs_conventions_20260927.md
+      - IMRPhenomHM six-mode binary holdout: validation/imrphenomhm_lal_six_modes_20260927.md
+      - IMRPhenomHM plus/cross binary holdout: validation/imrphenomhm_lal_polarizations_20260927.md
       - Inference checks: validation/inference.md
   - Performance:
       - Results overview: performance.md

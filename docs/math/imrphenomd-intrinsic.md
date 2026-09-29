@@ -13,6 +13,7 @@
 
 | Option | Default | Native choices | Reference-only choices |
 | --- | --- | --- | --- |
+| `calibration` | `inherited` | `inherited`, `published` | None |
 | `phasing_convention` | `coalescence` | `coalescence`, `reference_frequency` | None |
 
 <!-- END GENERATED WAVEFORM DEFINITION -->
@@ -50,6 +51,16 @@ polarization signs, and the peak time gauge; the
 [remnant and QNM specification](imrphenomd-remnant-qnm.md) specifies its
 interpolation and high-spin continuation. The generated option table above
 describes which choices the native carriers accept.
+
+The native `calibration` option defaults to `inherited`, preserving the existing
+extra fit digits. Explicit `calibration="published"` uses the printed Khan
+Table V and Husa remnant constants consistently in amplitude, phase, remnant
+and peak slope. QNM data and their interpolation prescription are unchanged.
+The scalar reference's printed defaults remain separately transcribed; the
+older comparisons below still inject inherited rows at the test boundary.
+The [published-calibration HM composition](imrphenomhm-waveform.md) uses this
+new native option to test a complete source-defined six-mode composition.
+Published calibration does not accept a custom remnant provider.
 
 ## Mathematics and components
 

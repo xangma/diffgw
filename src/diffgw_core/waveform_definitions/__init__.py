@@ -15,11 +15,11 @@ from .schema import (
     WaveformDefinition,
     validate_catalog,
 )
-from .catalog import IMRPHENOMD, IMRPHENOMXAS, TAYLORF2, WAVEFORMS
+from .catalog import IMRPHENOMD, IMRPHENOMXAS, KERR_RINGDOWN_220_DIRECT, MEMORY_22_DIRECT, TAYLORF2, WAVEFORMS
 
 __all__ = [
     "ComponentDefinition", "ConventionDefinition", "OptionDefinition",
     "ParameterDefinition", "SourceDefinition", "SourceRef", "UnitDefinition",
     "VerificationClaim", "WaveformDefinition", "validate_catalog",
-    "TAYLORF2", "IMRPHENOMD", "IMRPHENOMXAS", "WAVEFORMS",
+    "TAYLORF2", "IMRPHENOMD", "IMRPHENOMXAS", "KERR_RINGDOWN_220_DIRECT", "MEMORY_22_DIRECT", "WAVEFORMS",
 ]

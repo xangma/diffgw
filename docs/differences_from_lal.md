@@ -23,7 +23,7 @@ DiffGW revisions and measurement dates belong to those individual evidence recor
 | IMRPhenomXP | Agreement depends on precession and reference-phase options; aligned and small-spin residuals remain. | Use the recorded option set below and check your configuration independently. |
 | IMRPhenomXHM / XPHM, including SpinTaylor / PNR | Independent higher-mode calibration is intentional. Numerical precession and attachment introduce additional differences. | Treat the carrier and angle prescriptions as scientific model choices; inspect the component checks and their limits below. |
 | IMRPhenomT / THM / TP / TPHM | Sampling and epoch conventions differ; comparisons require matching precession and remnant-spin options. Numerical-precession residuals remain unresolved. | Use the [model guide](imrphenomt.md) and [reference report](validation/phenomt.md); the strongly spinning 10:1 case is a known concern. |
-| TaylorF2_HM | Leading-order higher modes extend the dominant-mode reference, with incomplete independent validation. | Do not extend the dominant-mode check to the complete higher-mode waveform. |
+| TaylorF2_HM | Leading-order higher modes extend the dominant-mode reference. Paper/scalar checks cover all eight; pinned LAL checks the angular basis and only the `(2,2)` waveform. | Do not describe angular agreement or the dominant-mode case as exact all-eight external waveform parity. |
 | SEOBNR_ROM | The selected data asset defines the surrogate. | Match and record the asset before interpreting a reference comparison. |
 
 <a id="technical-comparison-and-reference-validation"></a>
@@ -60,9 +60,9 @@ methods relate to LAL, and summarize the available reference evidence.
 | Model or family | DiffGW implementation | Reference evidence |
 | --- | --- | --- |
 | **IMRPhenomD / IMRPhenomXAS** | Published models with explicit coefficient precision, reference-phase and time-origin conventions. XAS uses the author-supplied symbolic calibration deposit identified in the provenance ledger. | Both DiffGW frontends pass the strict LAL gate for all measured D/XAS configurations in the [FP64 campaign](package_benchmarks.md#accuracy-across-the-measured-configurations). |
-| **IMRPhenomXP** | The clean MSA version-223, `final_spin_mod=3` route uses a paper-derived physical opening on one-spin-aligned rows. It supports nonzero `phi0` for those rows; generic two-spin nonzero-`phi0` rows retain the inherited rotation. Convention 6 applies its quadrupole output phase to clean convention 1. | Frozen generic convention-1 cases agree closely. The explicit v223 helper preserves the strict LAL compatibility comparison; the physical aligned convention-6 waveform has a separate measured residual of (10^{-5})–(5\times10^{-5}). See the [boundary analysis](waveforms/research/xp-v223-reference-closure.md#physical-zero-nutation-continuation-2026-09-24). |
-| **IMRPhenomXHM / IMRPhenomXPHM** | Five modes: `(2,2)`, `(2,1)`, `(3,3)`, `(3,2)` and `(4,4)`. The four higher modes use independent SXS-based ringdown fits and native Kerr QNM calculations; XPHM adds precession to this carrier. | The calibration differs from LAL's. Recorded NR checks examine phase in a restricted ringdown band with reference amplitudes and affine phase alignment; they do not validate full-waveform amplitude and phase accuracy. |
-| **TaylorF2_HM** | Literature-based frequency-domain PN extension with eight leading-order modes through `l=4`: `(2,2)`, `(2,1)`, `(3,1)`, `(3,2)`, `(3,3)`, `(4,2)`, `(4,3)`, `(4,4)`. | The external TaylorF2 check covers `(2,2)`. An independent full-waveform reference for the higher modes, higher-PN completeness and spin-amplitude completeness remain unresolved in the manifest. |
+| **IMRPhenomXP** | The clean MSA version-223, `final_spin_mod=3` route uses a paper-derived physical opening on one-spin-aligned rows. Valid unequal-mass generic two-spin rows also use the clean source chart at nonzero `phi0`; the observer-azimuth map is derived from the published frame conventions. Convention 6 applies its quadrupole output phase to clean convention 1. | Frozen generic convention-1 cases agree closely. The declared generic nonzero-`phi0` fixture passes the unchanged strict public-binary gate for conventions 0/1/6. Equal-mass and near-aligned v223 boundary comparisons still fail; the physical aligned convention-6 waveform has a measured residual of (10^{-5})–(5\times10^{-5}). See the [boundary qualification](validation/xp_xphm_boundary_qualification_20260925.md) and [boundary analysis](waveforms/research/xp-v223-reference-closure.md#physical-zero-nutation-continuation-2026-09-24). |
+| **IMRPhenomXHM / IMRPhenomXPHM** | Five modes: `(2,2)`, `(2,1)`, `(3,3)`, `(3,2)` and `(4,4)`. The four higher modes use independent SXS-based ringdown fits and native Kerr QNM calculations; XPHM adds the [paper-backed rotation layer](waveforms/research/xphm-precession-reference-closure.md) to this declared carrier dependency. | The calibration differs from LAL's. A [2026-09-25 binary-oracle receipt](validation/xhm_xphm_binary_oracle_20260925.json) records four frozen public-binary diagnostics; every strict catalog and holdout gate remains failed. Executable paper-derived math/reference gates are maintained separately in the test suite. |
+| **TaylorF2_HM** | Literature-based frequency-domain PN extension with eight leading-order modes through `l=4`: `(2,2)`, `(2,1)`, `(3,1)`, `(3,2)`, `(3,3)`, `(4,2)`, `(4,3)`, `(4,4)`. | Published equations and an independent scalar kernel cover all eight. Pinned LAL externally checks the angular basis, but its TaylorF2 waveform API supplies only the dominant carrier. Exact all-eight external waveform parity, higher-PN completeness, spin-amplitude completeness, and physical accuracy remain unresolved in the manifest. |
 | **SEOBNR_ROM** | Data-backed reduced-order evaluation; the chosen surrogate and calibration asset define the model. Official SEOBNRv4ROM data are external. | Validation applies to the selected asset. See [external data](external-data.md) for acquisition and [third-party notices](../THIRD_PARTY_NOTICES.md) for unresolved redistribution terms. |
 
 The EOB [peak locator](../src/torchwave/approximants/eob/continuous_matching.py)
@@ -76,17 +76,21 @@ JAX's non-symmetric Kerr angular eigensolver uses a host CPU callback.
 
 `IMRPhenomXPHM-SpinTaylor` (`prec_version=320`) integrates spin-precession
 equations with fixed-grid RK4 in velocity space. `IMRPhenomXPNR`
-(`prec_version=330`, `final_spin_mod=2`) combines NR-tuned PNR angles with
-DiffGW's native XHM coprecessing carrier. The carrier, precession integration,
-angle attachment and minimal-rotation quadrature contribute to differences from
-LAL; comparisons specify the precession and tuned-coprecessing options.
+(`prec_version=330`, `final_spin_mod=2`) is presently a provisional composition
+of partially NR-tuned PNR angles with DiffGW's native symmetric XHM
+coprecessing carrier. It is not the full 2025 XPNR prescription: transition-spin
+mapping, published angle attachment/continuation, XHM-CP coefficient
+deformations, effective ringdown frequencies and dominant-mode asymmetry remain
+open. The exact component evidence and reduction relationships are in the
+[XPNR ledger](waveforms/research/imrphenomxpnr.md).
 
 The [SpinTaylor tests](https://github.com/xangma/diffgw/blob/5226141/tests/test_imrphenom_xphm_spintaylor.py)
 and [PNR tests](https://github.com/xangma/diffgw/blob/5226141/tests/test_imrphenom_xpnr.py)
 use optimized plus-polarization overlaps with model-specific tolerances.
 Their scope differs from the direct, both-polarization gate in the
 [FP64 campaign](package_benchmarks.md#numerical-qualification); these variants
-were not timed in that campaign.
+were not timed in that campaign. The XPNR value `0.99` is an acceptance
+threshold, not an observed lower bound and not a calibration-domain boundary.
 
 ### Native IMRPhenomT family
 

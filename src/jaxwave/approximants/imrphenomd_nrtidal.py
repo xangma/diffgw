@@ -2,7 +2,7 @@
 
 Tidal formulas from peer-reviewed literature:
 - Dietrich, Bernuzzi, Tichy (2017), Phys. Rev. D 96, 121501(R) (arXiv:1706.02969) [NRTidal v1]
-- Dietrich et al. (2019), Phys. Rev. D 100, 044003 (arXiv:1905.06011) [NRTidalv2: Eqs. 17-21, 24-25, 26-29]
+- Dietrich et al. (2019), Phys. Rev. D 100, 044003 (arXiv:1905.06011) [NRTidalv2: Eqs. 17-21, 26-29; Eq. 24 independent Pv2 component]
 - Dietrich et al. (2018), Phys. Rev. D 99, 024029 (arXiv:1804.02235) [BNS merger frequency fit Sec II.2.2 Eq. 11]
 - Yagi & Yunes (2013), Science 341, 365; PRD 88, 023009 [Universal I-Love-Q relations]
 - McKechan, Robinson, Sathyaprakash (2010), Class. Quantum Grav. 27, 084020 [Planck taper]
@@ -13,8 +13,8 @@ import jax.numpy as jnp
 
 from diffgw_core.constants import (
     C_SI,
-    MSUN_SEC,
     MPC_SI,
+    MSUN_SEC,
     PI,
 )
 from diffgw_core.nrtidal_fits import (
@@ -49,6 +49,14 @@ N3_V2 = NRTIDAL_V2_PHASE_COEFFS["n_3"]
 D1_V2 = NRTIDAL_V2_PHASE_COEFFS["d_1"]
 D32_V2 = NRTIDAL_V2_PHASE_COEFFS["d_3over2"]
 D2_V2 = NRTIDAL_V2_PHASE_COEFFS["d_2"]
+
+
+def _nrtidalv2_paper_tidal_phase(x, eta, lambda_tilde):
+    """Signed Dietrich et al. (2019) Eqs. (17)–(21) Fourier phase."""
+    num = (1.0 + N1_V2 * x + N32_V2 * x**1.5 + N2_V2 * x**2
+           + N52_V2 * x**2.5 + N3_V2 * x**3)
+    den = 1.0 + D1_V2 * x + D32_V2 * x**1.5 + D2_V2 * x**2
+    return -(117.0 / 256.0) * (lambda_tilde / eta) * x**2.5 * num / den
 
 
 def _bns_merger_frequency(
@@ -96,23 +104,44 @@ def _bns_merger_frequency(
     return f_mrg
 
 
+def _nrtidal_amplitude_shape(
+    x: jnp.ndarray,
+    lambda_tilde: jnp.ndarray,
+) -> jnp.ndarray:
+    """Dimensionless rational tidal-amplitude shape of Dietrich et al. Eq. (24)."""
+    kappa_eff = (3.0 / 16.0) * lambda_tilde
+    c = NRTIDAL_V2_AMP_COEFFS
+    num = 1.0 + c["n_1"] * x + c["n_289"] * (x ** 2.89)
+    den = 1.0 + c["d"] * (x ** 4.0)
+    return -9.0 * kappa_eff * (x ** 3.25) * (num / den)
+
+
 def _nrtidal_amplitude(
+    x: jnp.ndarray,
+    m_sec: jnp.ndarray,
+    d_sec: jnp.ndarray,
+    eta: jnp.ndarray,
+    lambda_tilde: jnp.ndarray,
+) -> jnp.ndarray:
+    """Independent Pv2 tidal-amplitude component (Dietrich et al. 2019 Eq. 24).
+
+    Table II excludes this component from the published D_NRTidalv2 waveform.
+
+    A_T(f) = -9 * kappa_eff * x^(13/4) * (1 + n1 * x + n289 * x^2.89) / (1 + d * x^4)
+    a_tidal = sqrt(5*pi*eta/24) * (m_sec^2 / d_sec) * A_T(f)
+    """
+    return (jnp.sqrt(5.0 * PI * eta / 24.0) * (m_sec ** 2.0 / d_sec)
+            * _nrtidal_amplitude_shape(x, lambda_tilde))
+
+
+def _binary_compatible_nrtidal_amplitude(
     x: jnp.ndarray,
     m_sec: jnp.ndarray,
     d_sec: jnp.ndarray,
     lambda_tilde: jnp.ndarray,
 ) -> jnp.ndarray:
-    """Face-on additive planar tidal amplitude correction (Dietrich et al. 2019 Eq. 24).
-
-    A_T(f) = -9 * kappa_eff * x^(13/4) * (1 + n1 * x + n289 * x^2.89) / (1 + d * x^4)
-    a_tidal = (m_sec^2 / (2 * d_sec)) * A_T(f)
-    """
-    kappa_eff = (3.0 / 16.0) * lambda_tilde
-    c = NRTIDAL_V2_AMP_COEFFS
-    num = 1.0 + c["n_1"] * x + c["n_289"] * (x ** 2.89)
-    den = 1.0 + c["d"] * (x ** 4.0)
-    a_t = -9.0 * kappa_eff * (x ** 3.25) * (num / den)
-    return (m_sec ** 2.0 / (2.0 * d_sec)) * a_t
+    """Historical binary-verified 1/2 normalization; paper provenance unresolved."""
+    return (m_sec ** 2.0 / (2.0 * d_sec)) * _nrtidal_amplitude_shape(x, lambda_tilde)
 
 
 def _planck_taper_window(
@@ -140,15 +169,14 @@ def _planck_taper_window(
 
 def _quadrupole_monopole_constants(
     lambda_val: jnp.ndarray,
+    *,
+    fit: str = "historical_2013",
 ) -> Tuple[jnp.ndarray, jnp.ndarray]:
-    """Compute spin-induced quadrupole CQ and octupole COc constants via universal I-Love-Q relations.
+    """Return CQ and COc with an explicit quadrupole-fit choice.
 
-    Literature:
-    - Yagi & Yunes (2013), Science 341, 365
-    - Dietrich et al. (2019) Eqs. 28-29 (arXiv:1905.06011)
-
-    Returns:
-        (C_Q, C_Oc): Dimensionless quadrupole and octupole constants (>= 1.0)
+    ``dietrich_2019`` uses printed Eqs. (28)–(29); the historical fit is kept
+    for the binary-compatible default. Lambda clamps are separate native
+    conventions and are outside the positive-Lambda paper-math gate.
     """
     lam_safe = jnp.maximum(lambda_val, 1.0)
     ln_lam = jnp.log(lam_safe)
@@ -156,8 +184,14 @@ def _quadrupole_monopole_constants(
     ln_lam3 = ln_lam2 * ln_lam
     ln_lam4 = ln_lam3 * ln_lam
 
-    # Yagi & Yunes (2013) Science 341, 365 Eq. (2) / Table S1:
-    ln_cq = 0.1940 + 0.0936 * ln_lam + 0.0474 * ln_lam2 - 0.00421 * ln_lam3 + 0.000123 * ln_lam4
+    if fit == "dietrich_2019":
+        # Dietrich et al. (2019), Eq. (28), printed decimal precision.
+        ln_cq = 0.1940 + 0.09163 * ln_lam + 0.04812 * ln_lam2 - 0.004286 * ln_lam3 + 0.00012450 * ln_lam4
+    elif fit == "historical_2013":
+        # Keep the inherited binary-compatible relation unchanged.
+        ln_cq = 0.1940 + 0.0936 * ln_lam + 0.0474 * ln_lam2 - 0.00421 * ln_lam3 + 0.000123 * ln_lam4
+    else:
+        raise ValueError("fit must be 'historical_2013' or 'dietrich_2019'")
     c_q = jnp.exp(ln_cq)
 
     ln_cq_safe = jnp.maximum(ln_cq, 1e-8)
@@ -183,6 +217,8 @@ def _nrtidal_self_spin_components(
     chi2: jnp.ndarray,
     lambda1: jnp.ndarray,
     lambda2: jnp.ndarray,
+    *,
+    fit: str = "historical_2013",
 ) -> Tuple[jnp.ndarray, jnp.ndarray]:
     """Compute (S23, S35) self-spin phase corrections from Dietrich et al. (2019) Eqs. 26-27.
 
@@ -195,8 +231,8 @@ def _nrtidal_self_spin_components(
     xa = mass1 / total_mass
     xb = mass2 / total_mass
 
-    cq1, coc1 = _quadrupole_monopole_constants(lambda1)
-    cq2, coc2 = _quadrupole_monopole_constants(lambda2)
+    cq1, coc1 = _quadrupole_monopole_constants(lambda1, fit=fit)
+    cq2, coc2 = _quadrupole_monopole_constants(lambda2, fit=fit)
 
     c_hat_q1 = cq1 - 1.0
     c_hat_q2 = cq2 - 1.0
@@ -246,6 +282,39 @@ def _nrtidal_self_spin_components(
     return s23, s35
 
 
+def assemble_nrtidalv2_pv2_aligned_carrier(
+    f: jnp.ndarray, bbh_face_on: jnp.ndarray, mass1, mass2, chi1, chi2,
+    lambda1, lambda2, distance_mpc,
+) -> jnp.ndarray:
+    """Compose published Pv2 BNS face-on carrier before precession rotation.
+
+    Dietrich et al. (2019), Eqs. (3)–(4), (17)–(29), Table II, Sec. III.4.
+    The supplied BBH carrier already has its phase/time origin selected.
+    """
+    f = jnp.asarray(f)
+    bbh = jnp.asarray(bbh_face_on)
+    def scalar(value):
+        return jnp.asarray(value, dtype=f.dtype)
+    m1, m2 = scalar(mass1), scalar(mass2)
+    s1, s2 = scalar(chi1), scalar(chi2)
+    lam1, lam2 = scalar(lambda1), scalar(lambda2)
+    d_sec = scalar(distance_mpc) * MPC_SI / C_SI
+    m_sec = (m1 + m2) * MSUN_SEC
+    eta = component_masses_to_eta(m1, m2)
+    lambda_tilde, _ = tidal_combinations(m1, m2, lam1, lam2)
+    x = (PI * m_sec * f) ** (2.0 / 3.0)
+    psi_t = _nrtidalv2_paper_tidal_phase(x, eta, lambda_tilde)
+    s23, s35 = _nrtidal_self_spin_components(
+        x, m1, m2, s1, s2, lam1, lam2, fit="dietrich_2019")
+    a_t = _nrtidal_amplitude(x, m_sec, d_sec, eta, lambda_tilde)
+    merger = _bns_merger_frequency(m1, m2, lam1, lam2)
+    window = _planck_taper_window(f, merger, 1.2 * merger)
+    modulus = jnp.abs(bbh)
+    safe_modulus = jnp.where(modulus > 0, modulus, 1.0)
+    unit = jnp.where(modulus > 0, bbh / safe_modulus, 0.0j)
+    return window * (bbh + a_t * unit) * jnp.exp(-1j * (psi_t + s23 + s35))
+
+
 def _nrtidal_self_spin_correction(
     x: jnp.ndarray,
     mass1: jnp.ndarray,
@@ -271,11 +340,15 @@ def _nrtidal_self_spin_correction(
 class IMRPhenomD_NRTidal:
     """IMRPhenomD_NRTidal Aligned-Spin Frequency-Domain BNS Waveform Model in JAX (Dietrich et al. 2017)."""
 
-    def __init__(self, version: str = "v1"):
+    def __init__(self, version: str = "v1", amplitude_variant: str = "binary_compatible"):
         self.version = version.lower()
+        if amplitude_variant not in ("binary_compatible", "paper_2019"):
+            raise ValueError("amplitude_variant must be 'binary_compatible' or 'paper_2019'")
+        self.amplitude_variant = amplitude_variant
 
     def __call__(self, *args, **kwargs):
         kwargs.setdefault("version", self.version)
+        kwargs.setdefault("amplitude_variant", self.amplitude_variant)
         return self.evaluate(*args, **kwargs)
 
     @classmethod
@@ -298,6 +371,7 @@ class IMRPhenomD_NRTidal:
         apply_merger_taper: bool = True,
         return_phase: bool = False,
         version: str = "v1",
+        amplitude_variant: str = "binary_compatible",
     ) -> Union[Tuple[jnp.ndarray, jnp.ndarray], Tuple[jnp.ndarray, jnp.ndarray, jnp.ndarray]]:
         """Generate IMRPhenomD_NRTidal frequency-domain polarizations (h_plus, h_cross).
 
@@ -316,10 +390,13 @@ class IMRPhenomD_NRTidal:
             apply_merger_taper: Whether to apply the Planck taper window at f_merger
             return_phase: Whether to return the total phase
             version: 'v1' or 'v2'
+            amplitude_variant: 'binary_compatible' (default) or 'paper_2019'
 
         Returns:
             (h_plus, h_cross) or (h_plus, h_cross, total_phase)
         """
+        if amplitude_variant not in ("binary_compatible", "paper_2019"):
+            raise ValueError("amplitude_variant must be 'binary_compatible' or 'paper_2019'")
         dtype = jnp.float64
         m1 = as_array(mass1, dtype=dtype)
         m2 = as_array(mass2, dtype=dtype)
@@ -359,18 +436,10 @@ class IMRPhenomD_NRTidal:
             f_eval = jnp.expand_dims(f_arr, 0)
             m_sec_eval = jnp.expand_dims(m_sec, -1)
             eta_eval = jnp.expand_dims(eta, -1)
-            lam1_eval = jnp.expand_dims(lam1, -1)
-            lam2_eval = jnp.expand_dims(lam2, -1)
-            s1_eval = jnp.expand_dims(s1, -1)
-            s2_eval = jnp.expand_dims(s2, -1)
         else:
             f_eval = f_arr
             m_sec_eval = m_sec
             eta_eval = eta
-            lam1_eval = lam1
-            lam2_eval = lam2
-            s1_eval = s1
-            s2_eval = s2
 
         # PN expansion parameter x = (pi * M * f)^(2/3)
         safe_f = jnp.maximum(f_eval, 1e-8)
@@ -413,6 +482,7 @@ class IMRPhenomD_NRTidal:
             pade_ratio = num / den
             psi_tidal = leading_factor * (x ** 2.5) * pade_ratio
 
+            self_spin_fit = "dietrich_2019" if amplitude_variant == "paper_2019" else "historical_2013"
             s23, s35 = _nrtidal_self_spin_components(
                 x=x,
                 mass1=m1,
@@ -421,6 +491,7 @@ class IMRPhenomD_NRTidal:
                 chi2=s2,
                 lambda1=lam1,
                 lambda2=lam2,
+                fit=self_spin_fit,
             )
 
             conv = reference_frame if reference_frame is not None else (
@@ -446,10 +517,15 @@ class IMRPhenomD_NRTidal:
                     chi2=s2,
                     lambda1=lam1,
                     lambda2=lam2,
+                    fit=self_spin_fit,
                 )
-                total_delta_psi = psi_tidal + (s23 - s23_ref) + s35
+                total_delta_psi = psi_tidal + (s23 - s23_ref)
+                if amplitude_variant == "binary_compatible":
+                    total_delta_psi = total_delta_psi + s35
             else:
-                total_delta_psi = psi_tidal + s23 + s35
+                total_delta_psi = psi_tidal + s23
+                if amplitude_variant == "binary_compatible":
+                    total_delta_psi = total_delta_psi + s35
 
         # 3. High-frequency BNS merger cutoff & Planck taper
         f_merger = _bns_merger_frequency(m1, m2, lam1, lam2)
@@ -465,34 +541,31 @@ class IMRPhenomD_NRTidal:
         # Complex phase factor exp(-i * delta_psi)
         exp_factor = jnp.cos(total_delta_psi) - 1j * jnp.sin(total_delta_psi)
 
-        # 4. Tidal amplitude correction (Dietrich et al. 2019 Eq. 24-25)
-        if ver == "v2":
+        amplitude_factor = jnp.ones_like(f_eval)
+        if ver == "v2" and amplitude_variant == "binary_compatible":
+            # Preserve the historical native default, validated against the
+            # pinned binary. Its 1/2 amplitude normalization is not Eq. (24).
             dist_t = as_array(distance, dtype=dtype)
             d_sec = (dist_t * MPC_SI) / C_SI
             if is_batched and f_eval.ndim > d_sec.ndim:
-                d_sec_eval = jnp.expand_dims(d_sec, -1)
-            else:
-                d_sec_eval = d_sec
-
-            a_tidal = _nrtidal_amplitude(x, m_sec_eval, d_sec_eval, lam_tilde_eval)
+                d_sec = jnp.expand_dims(d_sec, -1)
+            a_tidal = _binary_compatible_nrtidal_amplitude(
+                x, m_sec_eval, d_sec, lam_tilde_eval)
             a_tidal = jnp.where(f_eval > 0.0, a_tidal, 0.0)
-
             inc = as_array(inclination, dtype=dtype)
             if is_batched and f_eval.ndim > inc.ndim:
                 inc = jnp.expand_dims(inc, -1)
             plus_projection = 0.5 * (1.0 + jnp.cos(inc)**2)
-
             safe_hp = jnp.where(f_eval > 0.0, hp_bbh, 1.0 + 0.0j)
             base_amplitude = jnp.abs(safe_hp) / plus_projection
             positive = (base_amplitude > 0.0) & (f_eval > 0.0)
             safe_amplitude = jnp.where(positive, base_amplitude, 1.0)
-            amplitude_factor = jnp.where(positive, 1.0 + a_tidal / safe_amplitude, 1.0)
-
-            h_plus = hp_bbh * amplitude_factor * exp_factor * w_taper
-            h_cross = hc_bbh * amplitude_factor * exp_factor * w_taper
-        else:
-            h_plus = hp_bbh * exp_factor * w_taper
-            h_cross = hc_bbh * exp_factor * w_taper
+            amplitude_factor = jnp.where(
+                positive, 1.0 + a_tidal / safe_amplitude, 1.0)
+        # Dietrich et al. (2019), Table II gives the paper_2019 D option no
+        # tidal-amplitude correction. Eq. (24) is checked independently.
+        h_plus = hp_bbh * amplitude_factor * exp_factor * w_taper
+        h_cross = hc_bbh * amplitude_factor * exp_factor * w_taper
 
         # Enforce exact finite zeros for DC and non-positive frequency bins
         h_plus = jnp.where(f_eval > 0.0, h_plus, 0.0 + 0.0j)
@@ -505,10 +578,10 @@ class IMRPhenomD_NRTidal:
 
 
 class IMRPhenomD_NRTidalv2(IMRPhenomD_NRTidal):
-    """IMRPhenomD_NRTidalv2 Aligned-Spin Frequency-Domain BNS Waveform Model in JAX (Dietrich et al. 2019)."""
+    """NRTidalv2 D model: historical binary-compatible default or paper_2019 D."""
 
-    def __init__(self):
-        super().__init__(version="v2")
+    def __init__(self, amplitude_variant: str = "binary_compatible"):
+        super().__init__(version="v2", amplitude_variant=amplitude_variant)
 
     @classmethod
     def evaluate(cls, *args, **kwargs):

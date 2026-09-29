@@ -1,0 +1,129 @@
+{
+  "schema": "diffgw.xhm-xphm.release-qualification/v1",
+  "date": "2026-09-25",
+  "base_revision": "4814835f7744fe00a5863ed70eb590d41a7e3ac3",
+  "scope": "IMRPhenomXHM and IMRPhenomXPHM full-waveform release qualification",
+  "clean_room_policy": {
+    "lal_interface": "public installed binary APIs and numerical outputs only",
+    "lal_source_inspected": false,
+    "lal_coefficients_translated": false,
+    "lal_outputs_used_as_fit_targets": false
+  },
+  "environment": {
+    "host": "len",
+    "python": "3.12.3",
+    "torch": "2.14.0+cu130",
+    "jax": "0.11.2",
+    "numpy": "2.3.5",
+    "lal": "7.7.1",
+    "lalsimulation": "6.2.1",
+    "lalsuite_distribution": "7.26.15"
+  },
+  "published_sources": [
+    "https://arxiv.org/abs/2001.10914",
+    "https://arxiv.org/src/2001.10914v2",
+    "https://journals.aps.org/prd/abstract/10.1103/PhysRevD.102.064002"
+  ],
+  "author_asset_review": {
+    "archive_version": "arXiv:2001.10914v2",
+    "downloaded_archive_sha256": "cc05e7dbff7bf0c42a10b7da1f4840eefc55b252168d6bfb085155a7bdc5318e",
+    "file_count": 218,
+    "inventory": {
+      "mixing_coefficients": 8,
+      "qnm_files": 10,
+      "amplitude_fit_files": 37,
+      "phase_fit_files": 33,
+      "amplitude_notebook_present": true,
+      "phase_notebook_present": true,
+      "fit_readme_present": true
+    },
+    "paper_era_assets_present": true,
+    "publisher_checksum_found": false,
+    "release_122022_identifier_or_mapping_found": false,
+    "finding": "The published v2 archive contains paper-era fits and mixing assets, but no authoritative manifest maps it to the installed default 122022 release. It cannot justify replacing current native calibration, mixing, vetoes, or transition cuts."
+  },
+  "strict_gate": {
+    "complex_relative_l2_max": 1e-06,
+    "flat_mismatch_max": 1e-08,
+    "catalog_passed": 0,
+    "catalog_total": 2,
+    "holdout_passed": 0,
+    "holdout_total": 2,
+    "result": "failed",
+    "full_waveform_cases": {
+      "catalog_xhm": {
+        "plus": {
+          "complex_relative_l2": 0.45553385792615614,
+          "flat_mismatch": 0.09119459296684473
+        },
+        "cross": {
+          "complex_relative_l2": 0.446770618340011,
+          "flat_mismatch": 0.0909664184632546
+        }
+      },
+      "catalog_xphm": {
+        "plus": {
+          "complex_relative_l2": 0.22881790727328782,
+          "flat_mismatch": 0.025734053284783842
+        },
+        "cross": {
+          "complex_relative_l2": 0.22641701045075546,
+          "flat_mismatch": 0.025321404029660988
+        }
+      },
+      "holdout_xhm": {
+        "plus": {
+          "complex_relative_l2": 0.718737542409653,
+          "flat_mismatch": 0.2236765435330178
+        },
+        "cross": {
+          "complex_relative_l2": 0.6581257007125263,
+          "flat_mismatch": 0.19923517754706077
+        }
+      },
+      "holdout_xphm": {
+        "plus": {
+          "complex_relative_l2": 0.5041125739427325,
+          "flat_mismatch": 0.11210914391477245
+        },
+        "cross": {
+          "complex_relative_l2": 0.5560212744607049,
+          "flat_mismatch": 0.1341335900553805
+        }
+      }
+    }
+  },
+  "mode_32": {
+    "catalog": {
+      "inspiral_amplitude_relative_l2": 0.47847072820479275,
+      "whole_mode_direct_complex_relative_l2": 1.8091059893435828,
+      "whole_mode_flat_mismatch": 0.5339026970409912,
+      "whole_mode_complex_relative_l2_after_optimal_scalar": 0.8847334650471509
+    },
+    "holdout": {
+      "inspiral_amplitude_relative_l2": 0.10594593969797324,
+      "whole_mode_direct_complex_relative_l2": 1.5613045346149474,
+      "whole_mode_flat_mismatch": 0.617904191209656,
+      "whole_mode_complex_relative_l2_after_optimal_scalar": 0.9241227152845309
+    },
+    "interpretation": "The direct whole-mode metrics fail the strict gate. The optimal-scalar metric is localization evidence only and is not an acceptance relaxation."
+  },
+  "frontend_verification": {
+    "command": "PYTHONPATH=src:tests JAX_ENABLE_X64=1 python -m pytest -q tests/parity/test_xhm_parity.py tests/parity/test_phenom_xphm_parity.py tests/test_xhm_inspiral_amplitude_math_reference.py",
+    "result": "passed",
+    "passed": 49,
+    "failed": 0,
+    "skipped": 0,
+    "warnings": 1,
+    "duration_seconds": 832.82
+  },
+  "decision": {
+    "release": false,
+    "verdict": "no-release",
+    "production_waveform_changes": [],
+    "justified_changes": [
+      "record qualification evidence and source-backed blocker"
+    ],
+    "blocker": "An author-published, checksum-pinned current-release 122022 calibration package or independently reproducible calibration data and procedure is required, including collocation surfaces and vetoes, transition cuts, and the current (3,2) mixing prescription. Physical or NR holdouts must then pass before release."
+  }
+}

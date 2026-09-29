@@ -6,12 +6,12 @@ Literature-based reconstruction of the following models:
 - Pannarale et al. (2015), Phys. Rev. D 92, 081504 (arXiv:1509.06209)
 - Zappa et al. (2019), Phys. Rev. Lett. 123, 041102 (arXiv:1903.11622)
 - Jiménez-Forteza et al. (2017), Phys. Rev. D 95, 064024 (arXiv:1611.00332)
-- London et al. (2018), Phys. Rev. Lett. 120, 161102 (arXiv:1708.00404)
+- London and Fauchon-Jones (2019), arXiv:1810.03550, Eq. (22) for the 220 QNM fit
 - Santamaria et al. (2010), Phys. Rev. D 82, 064016 (arXiv:1005.3306)
 - Dietrich et al. (2019), Phys. Rev. D 100, 044003 (arXiv:1905.06011)
 """
 
-from typing import Optional, Tuple, Union
+from typing import NamedTuple, Optional, Tuple, Union
 import math
 import jax
 import jax.numpy as jnp
@@ -81,8 +81,13 @@ def delta2_prime_plus(f_tide: jnp.ndarray, f_rd_tilde: jnp.ndarray) -> jnp.ndarr
     return 0.81248 * 0.5 * (1.0 + jnp.tanh(4.0 * (x - 0.0188092) / 0.338737))
 
 
+def delta2_prime_small_lambda(delta2: jnp.ndarray, lambda2: jnp.ndarray) -> jnp.ndarray:
+    """Thompson Eq. (29), closed 0<=Lambda<=1 branch with supplied delta2."""
+    return delta2 - 2.0 * (delta2 - 0.81248) * lambda2 + (delta2 - 0.81248) * (lambda2 ** 2.0)
+
+
 def gamma1_prime_small_lambda(lambda2: jnp.ndarray) -> jnp.ndarray:
-    """Continuous quadratic for the Eq. 26 small-tidal branch."""
+    """Compatibility quadratic; its linear sign differs from printed Eq. 26."""
     return 1.0 + 0.5 * lambda2 - 0.25 * (lambda2 ** 2.0)
 
 
@@ -386,6 +391,117 @@ def london_ringdown_properties(
     return f_rd, q_factor
 
 
+def nsbh_branch_predicates(
+    f_tide: jnp.ndarray, f_rd: jnp.ndarray, torus_ratio: jnp.ndarray
+) -> tuple[jnp.ndarray, jnp.ndarray]:
+    """Table I's closed frequency boundary and strictly positive torus flag."""
+    return f_tide >= f_rd, torus_ratio > 0.0
+
+
+class NSBHBranchAmplitudeFits(NamedTuple):
+    f_rd_tilde: jnp.ndarray
+    x_nd: jnp.ndarray
+    x_prime_nd: jnp.ndarray
+    x_d: jnp.ndarray
+    x_prime_d: jnp.ndarray
+    epsilon_tide: jnp.ndarray
+    epsilon_ins: jnp.ndarray
+    sigma_tide: jnp.ndarray
+
+
+class NSBHJoiningFrequencies(NamedTuple):
+    f0: jnp.ndarray
+    f1: jnp.ndarray
+    f2: jnp.ndarray
+
+
+def nsbh_joining_frequencies(
+    q: jnp.ndarray,
+    f_tide: jnp.ndarray,
+    f_rd_tilde: jnp.ndarray,
+    epsilon_ins: jnp.ndarray,
+    tide_at_or_above_ringdown: jnp.ndarray,
+    has_torus: jnp.ndarray,
+) -> NSBHJoiningFrequencies:
+    """Table I joins with the documented low/no-torus carrier adapter."""
+    f0 = jnp.where(
+        tide_at_or_above_ringdown,
+        jnp.where(has_torus, epsilon_ins * f_rd_tilde, f_rd_tilde),
+        jnp.where(
+            has_torus,
+            epsilon_ins * f_tide,
+            outer_pn_center(((q - 1.0) * f_rd_tilde + epsilon_ins * f_tide) / q, epsilon_ins),
+        ),
+    )
+    f1 = jnp.where(
+        tide_at_or_above_ringdown,
+        jnp.where(has_torus, epsilon_ins * f_rd_tilde, f_rd_tilde),
+        jnp.where(has_torus, f_tide, ((q - 1.0) * f_rd_tilde + f_tide) / q),
+    )
+    return NSBHJoiningFrequencies(f0, f1, f_rd_tilde)
+
+
+def nsbh_branch_amplitude_fits(
+    chi: jnp.ndarray,
+    eta: jnp.ndarray,
+    compactness: jnp.ndarray,
+    f_tide: jnp.ndarray,
+    f_rd: jnp.ndarray,
+    torus_ratio: jnp.ndarray,
+    lambda_ns: jnp.ndarray,
+    tide_at_or_above_ringdown: jnp.ndarray,
+    has_torus: jnp.ndarray,
+) -> NSBHBranchAmplitudeFits:
+    """Thompson Appendix A Eqs. (20)--(24), (30), and Table I factors."""
+    f_rd_tilde = 0.98 * f_rd * jnp.where(
+        lambda_ns > 1.0,
+        0.99,
+        1.0 - 0.02 * lambda_ns + 0.01 * lambda_ns**2,
+    )
+    u = ((f_tide - f_rd_tilde) / f_rd_tilde) ** 2
+    x_nd = u - 0.571505 * compactness - 0.00508451 * chi
+    x_prime_nd = u - 0.657424 * compactness - 0.0259977 * chi
+    x_d = torus_ratio + 0.424912 * compactness + 0.363604 * jnp.sqrt(eta) - 0.060559 * chi
+    x_prime_d = (
+        torus_ratio
+        - 0.132754 * compactness
+        + 0.576669 * jnp.sqrt(eta)
+        - 0.0603749 * chi
+        - 0.0601185 * chi**2
+        - 0.0729134 * chi**3
+    )
+    high_arg = jnp.clip(4.0 * (x_nd + 0.0796251) / 0.0801192, -50.0, 50.0)
+    sigma_arg = jnp.clip(4.0 * (x_prime_nd + 0.206465) / 0.226844, -50.0, 50.0)
+    epsilon_tide_high = jax.nn.sigmoid(2.0 * high_arg)
+    sigma_tide_high = jax.nn.sigmoid(-2.0 * sigma_arg)
+    epsilon_ins_disrupt = 1.29971 - 1.61724 * x_d
+    sigma_tide_disrupt = 0.137722 - 0.293237 * x_prime_d
+    epsilon_tide = jnp.where(tide_at_or_above_ringdown, epsilon_tide_high, 0.0)
+    epsilon_ins = jnp.where(tide_at_or_above_ringdown & ~has_torus, 1.0, epsilon_ins_disrupt)
+    sigma_tide = jnp.where(
+        tide_at_or_above_ringdown,
+        sigma_tide_high,
+        jnp.where(has_torus, sigma_tide_disrupt, 0.5 * (sigma_tide_high + sigma_tide_disrupt)),
+    )
+    return NSBHBranchAmplitudeFits(
+        f_rd_tilde, x_nd, x_prime_nd, x_d, x_prime_d, epsilon_tide, epsilon_ins, sigma_tide
+    )
+
+
+def nsbh_torus_mass_ratio(
+    q: jnp.ndarray,
+    chi: jnp.ndarray,
+    compactness: jnp.ndarray,
+    xi_tide: jnp.ndarray,
+) -> jnp.ndarray:
+    """Physical torus fraction from Thompson Appendix A Eqs. (11)--(12)."""
+    raw_ratio = (
+        0.296 * xi_tide * (1.0 - 2.0 * compactness)
+        - 0.171 * q * compactness * kerr_isco_radius(chi)
+    )
+    return jnp.maximum(raw_ratio, 0.0)
+
+
 def nsbh_frequencies(
     mass1: jnp.ndarray,
     mass2: jnp.ndarray,
@@ -433,6 +549,32 @@ def _amplitude_window(
     offset_mf = total_mass_sec * (frequency_hz - center_hz)
     arg = 8.0 * offset_mf / jnp.maximum(jnp.abs(width_mf), 1e-8)
     return jax.nn.sigmoid(arg if rising else -arg)
+
+
+def nsbh_amplitude_window_sum(
+    frequency_hz: jnp.ndarray,
+    total_mass_sec: jnp.ndarray,
+    centers_hz: tuple[jnp.ndarray, jnp.ndarray, jnp.ndarray],
+    width_mf: jnp.ndarray,
+    carriers: tuple[jnp.ndarray, jnp.ndarray, jnp.ndarray],
+) -> jnp.ndarray:
+    """Thompson Eq. (4): blend supplied PN, premerger and ringdown carriers."""
+    f0, f1, f2 = centers_hz
+    a_pn, a_pm, a_rd = carriers
+    w_ins = _amplitude_window(frequency_hz, f0, width_mf, total_mass_sec, rising=False)
+    w_pm = _amplitude_window(frequency_hz, f1, width_mf, total_mass_sec, rising=False)
+    w_rd = _amplitude_window(frequency_hz, f2, width_mf, total_mass_sec, rising=True)
+    return a_pn * w_ins + a_pm * w_pm + a_rd * w_rd
+
+
+def nsbh_polarizations_from_amplitude(full_amp, total_phase, inclination):
+    """Project a supplied positive-frequency NSBH amplitude and phase."""
+    cosine = jnp.cos(inclination)
+    plus_factor = 0.5 * (1.0 + cosine * cosine)
+    phase_factor = jnp.cos(total_phase) - 1j * jnp.sin(total_phase)
+    h_plus = -plus_factor * full_amp * phase_factor
+    h_cross = cosine * full_amp * (jnp.sin(total_phase) + 1j * jnp.cos(total_phase))
+    return h_plus, h_cross
 
 
 def _legacy_phase_offsets(
@@ -592,12 +734,7 @@ class IMRPhenomNSBH:
         # -------------------------------------------------------------
         # 3. Step 3: Baryonic Torus Remnant Mass Ratio
         # -------------------------------------------------------------
-        r_isco = kerr_isco_radius(s1)
-        torus_ratio = jnp.maximum(
-            0.296 * xi_tide * (1.0 - 2.0 * c) - 0.171 * q * c * r_isco,
-            0.0,
-        )
-        has_torus = torus_ratio > 0.0
+        torus_ratio = nsbh_torus_mass_ratio(q, s1, c, xi_tide)
 
         # -------------------------------------------------------------
         # 4. Step 4: Remnant Mass M_f and Remnant Spin chi_f
@@ -608,66 +745,23 @@ class IMRPhenomNSBH:
         # 5. Step 5: Kerr Ringdown Frequency f_RD and Quality Factor Q (London 2018)
         # -------------------------------------------------------------
         f_rd, q_factor = london_ringdown_properties(mf, chi_f)
-        is_ftide_ge_frd = f_tide >= f_rd
+        is_ftide_ge_frd, has_torus = nsbh_branch_predicates(f_tide, f_rd, torus_ratio)
 
         # -------------------------------------------------------------
         # 6. Step 6: Merger Classification and Joining Parameters
         # -------------------------------------------------------------
         lam_safe = jnp.maximum(lam2, 0.0)
-        frd_gt1 = 0.99 * 0.98 * f_rd
-        frd_le1 = (1.0 - 0.02 * lam_safe + 0.01 * (lam_safe ** 2.0)) * 0.98 * f_rd
-        f_rd_tilde = jnp.where(lam2 > 1.0, frd_gt1, frd_le1)
-
-        x_nd = ((f_tide - f_rd_tilde) / f_rd_tilde) ** 2.0 - 0.571505 * c - 0.00508451 * s1
-        x_prime_nd = ((f_tide - f_rd_tilde) / f_rd_tilde) ** 2.0 - 0.657424 * c - 0.0259977 * s1
-        x_d = torus_ratio + 0.424912 * c + 0.363604 * jnp.sqrt(eta) - 0.060559 * s1
-        x_prime_d = (
-            torus_ratio
-            - 0.132754 * c
-            + 0.576669 * jnp.sqrt(eta)
-            - 0.0603749 * s1
-            - 0.0601185 * (s1 ** 2.0)
-            - 0.0729134 * (s1 ** 3.0)
+        branch_fits = nsbh_branch_amplitude_fits(
+            s1, eta, c, f_tide, f_rd, torus_ratio, lam2, is_ftide_ge_frd, has_torus
         )
+        f_rd_tilde = branch_fits.f_rd_tilde
+        eps_tide = branch_fits.epsilon_tide
+        eps_ins = branch_fits.epsilon_ins
+        sigma_tide = branch_fits.sigma_tide
 
-        def omega_plus(val: jnp.ndarray, f0: Union[float, jnp.ndarray], d: Union[float, jnp.ndarray]) -> jnp.ndarray:
-            d_val = as_array(d, dtype=dtype)
-            f0_val = as_array(f0, dtype=dtype)
-            arg = jnp.clip(4.0 * (val - f0_val) / jnp.maximum(jnp.abs(d_val), 1e-8), -50.0, 50.0)
-            return jax.nn.sigmoid(2.0 * arg)
-
-        def omega_minus(val: jnp.ndarray, f0: Union[float, jnp.ndarray], d: Union[float, jnp.ndarray]) -> jnp.ndarray:
-            d_val = as_array(d, dtype=dtype)
-            f0_val = as_array(f0, dtype=dtype)
-            arg = jnp.clip(4.0 * (val - f0_val) / jnp.maximum(jnp.abs(d_val), 1e-8), -50.0, 50.0)
-            return jax.nn.sigmoid(-2.0 * arg)
-
-        eps_tide_high = omega_plus(x_nd, -0.0796251, 0.0801192)
-        eps_tide = jnp.where(is_ftide_ge_frd, eps_tide_high, 0.0)
-
-        eps_ins_disrupt = 1.29971 - 1.61724 * x_d
-        eps_ins = jnp.where(is_ftide_ge_frd & (~has_torus), 1.0, eps_ins_disrupt)
-
-        sig_tide_high = omega_minus(x_prime_nd, -0.206465, 0.226844)
-        sig_tide_disrupt = 0.137722 - 0.293237 * x_prime_d
-        sig_tide_mild_notorus = 0.5 * (sig_tide_high + sig_tide_disrupt)
-        sigma_tide = jnp.where(
-            is_ftide_ge_frd,
-            sig_tide_high,
-            jnp.where(has_torus, sig_tide_disrupt, sig_tide_mild_notorus),
+        f0_tilde, f1_tilde, f2_tilde = nsbh_joining_frequencies(
+            q, f_tide, f_rd_tilde, eps_ins, is_ftide_ge_frd, has_torus
         )
-
-        f0_tilde = jnp.where(
-            is_ftide_ge_frd,
-            jnp.where(has_torus, eps_ins * f_rd_tilde, f_rd_tilde),
-            jnp.where(has_torus, eps_ins * f_tide, outer_pn_center(((q - 1.0) * f_rd_tilde + eps_ins * f_tide) / q, eps_ins)),
-        )
-        f1_tilde = jnp.where(
-            is_ftide_ge_frd,
-            jnp.where(has_torus, eps_ins * f_rd_tilde, f_rd_tilde),
-            jnp.where(has_torus, f_tide, ((q - 1.0) * f_rd_tilde + f_tide) / q),
-        )
-        f2_tilde = f_rd_tilde
         d_win_mf = 0.015 + sigma_tide
 
         # -------------------------------------------------------------
@@ -692,7 +786,7 @@ class IMRPhenomNSBH:
             gamma1_prime_small_lambda(lam_safe) * gamma1,
         )
         delta2_prime_gt1 = delta2_prime_plus(f_tide, f_rd_tilde)
-        delta2_prime_le1 = delta2 - 2.0 * (delta2 - 0.81248) * lam_safe + (delta2 - 0.81248) * (lam_safe ** 2.0)
+        delta2_prime_le1 = delta2_prime_small_lambda(delta2, lam_safe)
         delta2_prime = jnp.where(lam2 > 1.0, delta2_prime_gt1, delta2_prime_le1)
         sigma_lorentz = delta2_prime * f_rd / q_factor
 
@@ -805,11 +899,10 @@ class IMRPhenomNSBH:
         lorentz_bar = (sigma_bar ** 2.0) / ((f_bar - f_rd_bar) ** 2.0 + (sigma_bar ** 2.0) / 4.0)
         a_rd_dimless = eps_tide_u * delta1_u * lorentz_bar * (f_bar ** (-7.0 / 6.0))
 
-        w_ins = _amplitude_window(f_eval, f0_tilde_u, d_win_mf_u, m_sec_u, rising=False)
-        w_pm = _amplitude_window(f_eval, f1_tilde_u, d_win_mf_u, m_sec_u, rising=False)
-        w_rd = _amplitude_window(f_eval, f2_tilde_u, d_win_mf_u, m_sec_u, rising=True)
-
-        full_amp_dimless = a_pn_dimless * w_ins + a_pm_dimless * w_pm + a_rd_dimless * w_rd
+        full_amp_dimless = nsbh_amplitude_window_sum(
+            f_eval, m_sec_u, (f0_tilde_u, f1_tilde_u, f2_tilde_u), d_win_mf_u,
+            (a_pn_dimless, a_pm_dimless, a_rd_dimless),
+        )
 
         norm = ((m_sec_u ** 2.0) / d_sec_u) * (0.5 * math.sqrt(5.0 / (4.0 * PI)))
         full_amp = norm * full_amp_dimless
@@ -892,13 +985,9 @@ class IMRPhenomNSBH:
         # -------------------------------------------------------------
         # 8c. Polarizations Projection onto -2Y_2,\pm 2
         # -------------------------------------------------------------
-        cos_inc = jnp.cos(unsqueeze_param(inc))
-        plus_factor = 0.5 * (1.0 + cos_inc * cos_inc)
-        cross_factor = cos_inc
-
-        phase_factor = jnp.cos(total_phase) - 1j * jnp.sin(total_phase)
-        h_plus = - plus_factor * full_amp * phase_factor
-        h_cross = cross_factor * full_amp * (jnp.sin(total_phase) + 1j * jnp.cos(total_phase))
+        h_plus, h_cross = nsbh_polarizations_from_amplitude(
+            full_amp, total_phase, unsqueeze_param(inc),
+        )
 
         h_plus = jnp.where(f_eval > 0.0, h_plus, 0.0)
         h_cross = jnp.where(f_eval > 0.0, h_cross, 0.0)
@@ -926,6 +1015,7 @@ __all__ = [
     "nsbh_frequencies",
     "positive_tidal_frequency",
     "delta2_prime_plus",
+    "delta2_prime_small_lambda",
     "gamma1_prime_small_lambda",
     "outer_pn_center",
     "nrtidalv2_frequency_phase",

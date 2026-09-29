@@ -27,12 +27,17 @@ def delta2_prime_plus(f_tide: torch.Tensor, f_rd_tilde: torch.Tensor) -> torch.T
     return 0.81248 * 0.5 * (1.0 + torch.tanh(4.0 * (x - 0.0188092) / 0.338737))
 
 
+def delta2_prime_small_lambda(delta2: torch.Tensor, lambda2: torch.Tensor) -> torch.Tensor:
+    """Thompson Eq. (29), closed 0<=Lambda<=1 branch with supplied delta2."""
+    return delta2 - 2.0 * (delta2 - 0.81248) * lambda2 + (delta2 - 0.81248) * (lambda2 ** 2.0)
+
+
 def gamma1_prime_small_lambda(lambda2: torch.Tensor) -> torch.Tensor:
     """Continuous quadratic for the Eq. 26 small-tidal branch.
 
-    It is the unique quadratic satisfying g(0)=1, g(1)=1.25 and g'(1)=0;
-    this exposes the sign typo in the printed small-Lambda expression while
-    preserving the stated boundary continuity.
+    It is the unique quadratic satisfying g(0)=1, g(1)=1.25 and g'(1)=0.
+    Thompson et al. Eq. 26 prints a different sign; no published correction
+    establishes this compatibility variant as the paper-literal equation.
     """
     return 1.0 + 0.5 * lambda2 - 0.25 * lambda2**2
 
@@ -50,4 +55,10 @@ def outer_pn_center(base_center: torch.Tensor, epsilon_ins: torch.Tensor) -> tor
     return epsilon_ins * base_center
 
 
-__all__ = ["positive_tidal_frequency", "delta2_prime_plus", "gamma1_prime_small_lambda", "outer_pn_center"]
+__all__ = [
+    "positive_tidal_frequency",
+    "delta2_prime_plus",
+    "delta2_prime_small_lambda",
+    "gamma1_prime_small_lambda",
+    "outer_pn_center",
+]

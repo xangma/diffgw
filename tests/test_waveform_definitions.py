@@ -13,7 +13,9 @@ import sys
 import pytest
 
 
-MODEL_IDS = {"TaylorF2", "TaylorF2_HM", "IMRPhenomD", "IMRPhenomXAS"}
+MODEL_IDS = {"TaylorF2", "TaylorF2_HM", "TaylorF2_Eccentric", "IMRPhenomD", "IMRPhenomHM",
+             "IMRPhenomXAS", "KerrRingdown220Direct", "ContinuousWaveH1Direct",
+             "MemoryWaveform22Direct"}
 
 
 def test_catalog_import_needs_no_optional_math_or_tensor_packages():
@@ -35,7 +37,9 @@ import diffgw.waveforms as waveforms
 import diffgw.reference as reference
 
 assert {definition.id for definition in waveforms.list_waveforms()} == {
-    "TaylorF2", "TaylorF2_HM", "IMRPhenomD", "IMRPhenomXAS"
+    "TaylorF2", "TaylorF2_HM", "TaylorF2_Eccentric", "IMRPhenomD", "IMRPhenomHM",
+    "IMRPhenomXAS", "KerrRingdown220Direct", "ContinuousWaveH1Direct",
+    "MemoryWaveform22Direct"
 }
 assert waveforms.get_waveform("TaylorF2").id == "TaylorF2"
 assert callable(reference.get_reference_module)
@@ -59,19 +63,29 @@ def test_public_catalog_is_versioned_immutable_and_json_safe():
 
     for definition in definitions:
         assert get_waveform(definition.id) is definition
-        assert definition.reference_version.endswith("/v1")
+        assert re.search(r"/v[1-9][0-9]*$", definition.reference_version)
         assert definition.reference_module.startswith("diffgw_reference.")
         assert (Path(__file__).resolve().parents[1] / "docs" / definition.spec_page).is_file()
         assert definition.components
         assert definition.sources
-        assert {"mass1", "mass2"}.issubset({parameter.name for parameter in definition.parameters})
+        if definition.id == "MemoryWaveform22Direct":
+            assert {"times", "h22", "distance_m"}.issubset(
+                {parameter.name for parameter in definition.parameters})
+        elif definition.id == "KerrRingdown220Direct":
+            assert {"final_mass", "final_spin", "distance", "energy_fraction"}.issubset(
+                {parameter.name for parameter in definition.parameters})
+        elif definition.id == "ContinuousWaveH1Direct":
+            assert {"t", "t0", "f0", "ra", "dec", "h0"}.issubset(
+                {parameter.name for parameter in definition.parameters})
+        else:
+            assert {"mass1", "mass2"}.issubset({parameter.name for parameter in definition.parameters})
         assert definition.units
         assert definition.conventions
         assert definition.options
         assert len({component.id for component in definition.components}) == len(definition.components)
         for component in definition.components:
             assert component.id
-            assert component.spec_version.endswith("/v1")
+            assert re.search(r"/v[1-9][0-9]*$", component.spec_version)
             assert component.scope
             assert component.variant
             assert component.source_refs
@@ -209,7 +223,11 @@ def test_catalog_component_ids_and_versions_match_reference_modules():
             reference = import_module(component.reference_module)
             assert component.id in reference.COMPONENT_IDS.values(), component.id
             version_attribute = special_versions.get((component.reference_module, component.id), "SPEC_VERSION")
-            assert component.spec_version == getattr(reference, version_attribute), component.id
+            component_versions = getattr(reference, "COMPONENT_SPEC_VERSIONS", {})
+            name = next(name for name, component_id in reference.COMPONENT_IDS.items()
+                        if component_id == component.id)
+            expected_version = component_versions.get(name, getattr(reference, version_attribute))
+            assert component.spec_version == expected_version, component.id
 
 
 @pytest.mark.parametrize("backend", ("torch", "jax"))
@@ -219,7 +237,7 @@ def test_catalog_models_are_bound_to_public_backend_dispatch(backend):
     root = Path(__file__).resolve().parents[1]
     code = f'''
 import diffgw
-model_ids = {{"TaylorF2", "TaylorF2_HM", "IMRPhenomD", "IMRPhenomXAS"}}
+model_ids = {{"TaylorF2", "TaylorF2_HM", "TaylorF2_Eccentric", "IMRPhenomD", "IMRPhenomHM", "IMRPhenomXAS"}}
 frontend = getattr(diffgw, {backend!r})
 assert model_ids.issubset(set(diffgw.list_approximants(backend={backend!r})))
 for model_id in model_ids:
@@ -229,3 +247,27 @@ for model_id in model_ids:
     result = subprocess.run([sys.executable, "-c", code], env=env,
                             capture_output=True, text=True, check=False)
     assert result.returncode == 0, result.stderr
+
+
+def test_hm_published_reference_scope_keeps_native_defaults_explicit():
+    from diffgw.waveforms import get_waveform
+
+    model = get_waveform("IMRPhenomHM")
+    options = {option.name: option for option in model.options}
+    assert options["calibration"].default == "inherited"
+    assert options["calibration"].choices == ("inherited", "published")
+    assert options["hm_phase_convention"].default == "legacy"
+    assert options["hm_phase_convention"].choices == ("legacy", "spa_sxs_v1")
+    for mode, source in (("21", "mishra_eq12b"), ("32", "mishra_eq12d"), ("43", "mishra_eq12g")):
+        option = options[f"hm_{mode}_pn_variant"]
+        assert option.default == "binary_compatible"
+        assert source in option.choices
+    for claim in model.claims:
+        assert dict(claim.options)["calibration"] == "published"
+        assert claim.category == "implementation_verification"
+        for mode, source in (("21", "mishra_eq12b"), ("32", "mishra_eq12d"), ("43", "mishra_eq12g")):
+            assert dict(claim.options)[f"hm_{mode}_pn_variant"] == source
+    assert set(model.modes) == {(2, 2), (2, 1), (3, 3), (3, 2), (4, 4), (4, 3)}
+    page = Path(__file__).resolve().parents[1] / "docs" / model.spec_page
+    rows = re.findall(r"^\| `(hm\.waveform\.[^`]+\.v\d+)` \|", page.read_text(), re.MULTILINE)
+    assert set(rows) == {component.id for component in model.components}

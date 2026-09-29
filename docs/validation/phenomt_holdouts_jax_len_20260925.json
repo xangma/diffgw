@@ -1,0 +1,230 @@
+{
+  "generated_utc": "2026-09-25T08:45:54.071794+00:00",
+  "reproduction": "python scripts/validate_phenomt_precession.py --backend jax --case baseline high_mass_ratio --method msa numerical --sample-rate 2048 --output receipt.json",
+  "versions": {
+    "python": "3.12.3",
+    "numpy": "2.5.3",
+    "lalsimulation": "6.2.1",
+    "jax": "0.11.2"
+  },
+  "dtype": "float64",
+  "devices": {
+    "jax": [
+      "cuda:0"
+    ]
+  },
+  "parameters": {
+    "baseline": {
+      "mass1": 40.0,
+      "mass2": 15.0,
+      "spin1": [
+        0.2,
+        0.1,
+        0.3
+      ],
+      "spin2": [
+        0.0,
+        0.1,
+        -0.2
+      ],
+      "distance_mpc": 100.0,
+      "inclination": 0.8,
+      "phic": 0.3,
+      "f_lower_hz": 20.0,
+      "f_ref_hz": 20.0
+    },
+    "high_mass_ratio": {
+      "mass1": 60.0,
+      "mass2": 6.0,
+      "spin1": [
+        0.2,
+        0.1,
+        0.8
+      ],
+      "spin2": [
+        0.1,
+        0.0,
+        0.1
+      ],
+      "distance_mpc": 100.0,
+      "inclination": 1.2,
+      "phic": 0.1,
+      "f_lower_hz": 20.0,
+      "f_ref_hz": 20.0
+    }
+  },
+  "metrics": {
+    "relative_l2": "norm(actual-reference)/norm(reference); no alignment",
+    "mismatch": "1-abs(vdot(actual,reference))/(norm(actual)*norm(reference)); unweighted, constant-phase maximization only, no time shift"
+  },
+  "results": [
+    {
+      "approximant": "IMRPhenomTP",
+      "method": "msa",
+      "backend": "jax",
+      "case": "baseline",
+      "sample_rate_hz": 2048,
+      "precession_version": 22310,
+      "final_spin_mod": 3,
+      "samples": 2935,
+      "epoch_seconds": -1.297896538,
+      "relative_l2": 0.0037901075569327157,
+      "mismatch": 7.18217368989027e-06,
+      "inspiral": {
+        "relative_l2": 0.001491101866632722,
+        "mismatch": 9.738983579588023e-07
+      },
+      "ringdown": {
+        "relative_l2": 0.022918845053809127,
+        "mismatch": 6.297379871567088e-06
+      }
+    },
+    {
+      "approximant": "IMRPhenomTPHM",
+      "method": "msa",
+      "backend": "jax",
+      "case": "baseline",
+      "sample_rate_hz": 2048,
+      "precession_version": 22310,
+      "final_spin_mod": 3,
+      "samples": 2935,
+      "epoch_seconds": -1.297896538,
+      "relative_l2": 0.0038841954242283846,
+      "mismatch": 7.5429072180499546e-06,
+      "inspiral": {
+        "relative_l2": 0.0014343803185819536,
+        "mismatch": 8.67401926951672e-07
+      },
+      "ringdown": {
+        "relative_l2": 0.023300086572164116,
+        "mismatch": 6.175068654190596e-06
+      }
+    },
+    {
+      "approximant": "IMRPhenomTP",
+      "method": "numerical",
+      "backend": "jax",
+      "case": "baseline",
+      "sample_rate_hz": 2048,
+      "precession_version": 300,
+      "final_spin_mod": 4,
+      "samples": 2935,
+      "epoch_seconds": -1.297896538,
+      "relative_l2": 0.023374402326240367,
+      "mismatch": 0.0002673527242531559,
+      "inspiral": {
+        "relative_l2": 0.023191271625115816,
+        "mismatch": 0.00026209729917836544
+      },
+      "ringdown": {
+        "relative_l2": 0.02890297406008557,
+        "mismatch": 0.00014066903264975394
+      }
+    },
+    {
+      "approximant": "IMRPhenomTPHM",
+      "method": "numerical",
+      "backend": "jax",
+      "case": "baseline",
+      "sample_rate_hz": 2048,
+      "precession_version": 300,
+      "final_spin_mod": 4,
+      "samples": 2935,
+      "epoch_seconds": -1.297896538,
+      "relative_l2": 0.023630134348664393,
+      "mismatch": 0.0002740043532276637,
+      "inspiral": {
+        "relative_l2": 0.02335529277980801,
+        "mismatch": 0.0002665427193783154
+      },
+      "ringdown": {
+        "relative_l2": 0.03177876066939623,
+        "mismatch": 0.00024277893208768386
+      }
+    },
+    {
+      "approximant": "IMRPhenomTP",
+      "method": "msa",
+      "backend": "jax",
+      "case": "high_mass_ratio",
+      "sample_rate_hz": 2048,
+      "precession_version": 22310,
+      "final_spin_mod": 3,
+      "samples": 5718,
+      "epoch_seconds": -2.629817046,
+      "relative_l2": 0.02023331571880994,
+      "mismatch": 0.00020027477944251082,
+      "inspiral": {
+        "relative_l2": 0.009590404892209414,
+        "mismatch": 4.560981155321553e-05
+      },
+      "ringdown": {
+        "relative_l2": 0.11720203323691435,
+        "mismatch": 0.0006566871789740469
+      }
+    },
+    {
+      "approximant": "IMRPhenomTPHM",
+      "method": "msa",
+      "backend": "jax",
+      "case": "high_mass_ratio",
+      "sample_rate_hz": 2048,
+      "precession_version": 22310,
+      "final_spin_mod": 3,
+      "samples": 5718,
+      "epoch_seconds": -2.629817046,
+      "relative_l2": 0.022516496486682854,
+      "mismatch": 0.0002487196604497033,
+      "inspiral": {
+        "relative_l2": 0.010398871193209014,
+        "mismatch": 5.375229115001101e-05
+      },
+      "ringdown": {
+        "relative_l2": 0.13179925585341987,
+        "mismatch": 0.0015622771075529673
+      }
+    },
+    {
+      "approximant": "IMRPhenomTP",
+      "method": "numerical",
+      "backend": "jax",
+      "case": "high_mass_ratio",
+      "sample_rate_hz": 2048,
+      "precession_version": 300,
+      "final_spin_mod": 4,
+      "samples": 5718,
+      "epoch_seconds": -2.629817046,
+      "relative_l2": 0.3084178895191092,
+      "mismatch": 0.04753252559984056,
+      "inspiral": {
+        "relative_l2": 0.30237064372021394,
+        "mismatch": 0.045594137218874176
+      },
+      "ringdown": {
+        "relative_l2": 0.49998591272695186,
+        "mismatch": 0.09919198199912216
+      }
+    },
+    {
+      "approximant": "IMRPhenomTPHM",
+      "method": "numerical",
+      "backend": "jax",
+      "case": "high_mass_ratio",
+      "sample_rate_hz": 2048,
+      "precession_version": 300,
+      "final_spin_mod": 4,
+      "samples": 5718,
+      "epoch_seconds": -2.629817046,
+      "relative_l2": 0.30710281743330653,
+      "mismatch": 0.046995454746778464,
+      "inspiral": {
+        "relative_l2": 0.298474266497037,
+        "mismatch": 0.04441398304902755
+      },
+      "ringdown": {
+        "relative_l2": 0.5112806089018386,
+        "mismatch": 0.08032959822882257
+      }
+    }
+  ]
+}

@@ -21,6 +21,12 @@ from torchwave.constants import PI, EULER_GAMMA
 from torchwave.approximants.imrphenomp import IMRPhenomP
 
 
+MSA_FINAL_SPIN_DOMAIN_ERROR = (
+    "MSA final_spin_mod=3 requires a valid nonaligned MSA remnant root; "
+    "use final_spin_mod=0 for equal-mass or coalescing-root rows."
+)
+
+
 def resolve_precession_version(method: str, version: Optional[int]) -> int:
     """An explicit version takes precedence; method chooses an omitted version."""
     method_l = method.lower()
@@ -506,6 +512,39 @@ def evaluate_msa_dynamics(v, v0, eta, delta, q_c, s1, s2, l_pn,
     return alpha,beta,-epsilon,valid
 
 
+def compute_msa_initialization_validity(v0, m1, m2, s1x, s1y, s1z,
+                                        s2x, s2y, s2z):
+    """Return the published two-spin MSA initialization-validity mask."""
+    (v0, m1, m2, s1x, s1y, s1z, s2x, s2y, s2z) = torch.broadcast_tensors(
+        v0, m1, m2, s1x, s1y, s1z, s2x, s2y, s2z
+    )
+    total_mass = m1 + m2
+    m1_norm, m2_norm = m1 / total_mass, m2 / total_mass
+    eta = m1_norm * m2_norm
+    delta = m1_norm - m2_norm
+    q_c = m2_norm / m1_norm
+    s1 = m1_norm.square().unsqueeze(-1) * torch.stack(
+        (s1x, s1y, s1z), dim=-1
+    )
+    s2 = m2_norm.square().unsqueeze(-1) * torch.stack(
+        (s2x, s2y, s2z), dim=-1
+    )
+    s1_sq = (s1 * s1).sum(dim=-1)
+    s2_sq = (s2 * s2).sum(dim=-1)
+    s0_sq = ((s1 + s2) ** 2).sum(dim=-1)
+    xi = (1 + q_c) * s1[..., 2] + (1 + 1 / q_c) * s2[..., 2]
+    l0 = eta / v0
+    j0_sq = l0 * l0 + 2 * l0 * (s1[..., 2] + s2[..., 2]) + s0_sq
+    _, sm_sq, sp_sq, roots_valid = solve_spin_roots(
+        l0, j0_sq, s1_sq, s2_sq, xi, q_c, eta, delta
+    )
+    sav0_sq = (sp_sq + sm_sq) / 2
+    c10 = v0 * (j0_sq - l0 * l0 - sav0_sq) / 2
+    cp0 = eta * eta * sp_sq - c10 * c10
+    cm0 = eta * eta * sm_sq - c10 * c10
+    return roots_valid & (s1_sq > 0) & (s2_sq > 0) & (cp0 > 0) & (cm0 > 0)
+
+
 def compute_msa_averaged_couplings(v0, m1, m2, s1x, s1y, s1z,
                                    s2x, s2y, s2z):
     """Return the MSA couplings needed by the precession-averaged remnant.
@@ -623,9 +662,21 @@ def compute_msa_final_spin(
         v0, m1, m2, s1x, s1y, s1z, s2x, s2y, s2z
     )
     unequal = m1 != m2
-    if not is_comp:
-        if bool(torch.any((~unequal) & (~aligned))):
-            raise ValueError("MSA final_spin_mod=3 is unsupported for nonaligned equal-mass rows.")
+    # Only machine-level root degeneracies are assigned the analytic aligned
+    # limit.  A genuinely failed nonaligned root is an unsupported point and
+    # must be surfaced before interpreting any surrogate coupling values.
+    inplane_sq = s1x.square() + s1y.square() + s2x.square() + s2y.square()
+    eps = torch.finfo(v0.dtype).eps
+    numerical_degeneracy = inplane_sq <= 10.0 * eps * (
+        1.0 + s1z.square() + s2z.square()
+    )
+    unsupported = ((~unequal) & (~aligned)) | (
+        (~valid) & (~numerical_degeneracy)
+    )
+    if is_comp:
+        torch._assert(~torch.any(unsupported), MSA_FINAL_SPIN_DOMAIN_ERROR)
+    elif bool(torch.any(unsupported)):
+        raise ValueError(MSA_FINAL_SPIN_DOMAIN_ERROR)
 
     a_parallel = a_aligned
     m_final = m_final_fit
@@ -641,16 +692,6 @@ def compute_msa_final_spin(
     if not is_comp:
         if bool(torch.any(~torch.isfinite(magnitude) | (magnitude > 1.0 + 1e-10))):
             raise ValueError("MSA final spin exceeds the physical Kerr bound.")
-    # Only machine-level root degeneracies are assigned the analytic aligned
-    # limit.  A genuinely failed nonaligned root is an unsupported point and
-    # must be surfaced rather than silently replacing the MSA result.
-    inplane_sq = s1x.square() + s1y.square() + s2x.square() + s2y.square()
-    eps = torch.finfo(v0.dtype).eps
-    numerical_degeneracy = inplane_sq <= 10.0 * eps * (1.0 + s1z.square() + s2z.square())
-    unsupported = (~valid) & (~numerical_degeneracy)
-    if not is_comp:
-        if bool(torch.any(unsupported)):
-            raise ValueError("MSA final spin has a nonaligned row outside the supported root domain.")
     return torch.where(numerical_degeneracy, a_aligned, signed)
 
 def evaluate_msa_precession(

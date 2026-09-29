@@ -10,6 +10,7 @@ Clean-room implementation based exclusively on published literature:
 
 from typing import Dict, List, Optional, Sequence, Tuple, Union
 import math
+from diffgw_core.phenomd_published_fits import validate_calibration
 import jax
 import jax.numpy as jnp
 
@@ -197,8 +198,12 @@ def _production_hhat(
     eta: jnp.ndarray,
     chi_s: jnp.ndarray,
     chi_a: jnp.ndarray,
+    *,
+    hm_21_pn_variant: str = "binary_compatible",
+    hm_32_pn_variant: str = "binary_compatible",
+    hm_43_pn_variant: str = "binary_compatible",
 ) -> jnp.ndarray:
-    """London Eq. (4) complex Arun-compatible multipole amplitude factors."""
+    """London Eq. (4) factors with selectable published PN terms."""
     if (l, m) == (2, 2):
         return -jnp.ones_like(v_m)
     if (l, m) == (3, 3):
@@ -218,7 +223,9 @@ def _production_hhat(
         ) * chi_s
         one = jnp.ones_like(v_m)
         c_tail = delta * (-PI * one + 1j * (-0.5 - 2.0 * math.log(2.0)) * one)
-        c = c_tail + c_spa - c_td
+        # The published Mishra Eq. (12b) polynomial is opt-in; the default
+        # retains the established binary-compatible HM carrier.
+        c = c_tail + c_spa + (c_td if hm_21_pn_variant == "mishra_eq12b" else -c_td)
         return -(math.sqrt(2.0) / 3.0) * (
             delta * v_m
             - 1.5 * (chi_a + delta * chi_s) * (v_m * v_m)
@@ -226,13 +233,15 @@ def _production_hhat(
             + c * (v_m ** 4.0)
         )
     if (l, m) == (3, 2):
-        return -(1.0 / 3.0) * math.sqrt(5.0 / 7.0) * (
-            (1.0 - 3.0 * eta) * (v_m * v_m)
-        )
+        p = (1.0 - 3.0 * eta) * (v_m * v_m)
+        if hm_32_pn_variant == "mishra_eq12d":
+            p = p + 4.0 * eta * chi_s * (v_m ** 3.0)
+        return -(1.0 / 3.0) * math.sqrt(5.0 / 7.0) * p
     if (l, m) == (4, 3):
-        return -(3.0 / 4.0) * math.sqrt(3.0 / 35.0) * (
-            delta * (1.0 - 2.0 * eta) * (v_m ** 3.0)
-        )
+        leading = delta * (1.0 - 2.0 * eta) * (v_m ** 3.0)
+        if hm_43_pn_variant == "mishra_eq12g":
+            leading = leading + 2.5 * eta * (chi_a - delta * chi_s) * (v_m ** 4.0)
+        return -(3.0 / 4.0) * math.sqrt(3.0 / 35.0) * leading
     raise ValueError(f"Mode ({l}, {m}) not supported.")
 
 
@@ -319,6 +328,8 @@ class IMRPhenomHM:
     Supports harmonics (l, m) in {(2, 2), (2, 1), (3, 3), (3, 2), (4, 4), (4, 3)}.
     """
 
+    definition_id = "IMRPhenomHM"
+
     SUPPORTED_MODES: Tuple[Tuple[int, int], ...] = (
         (2, 2),
         (2, 1),
@@ -356,6 +367,8 @@ class IMRPhenomHM:
         mass2: Union[float, jnp.ndarray],
         chi1: Union[float, jnp.ndarray] = 0.0,
         chi2: Union[float, jnp.ndarray] = 0.0,
+        *,
+        calibration: str = "inherited",
     ) -> Tuple[jnp.ndarray, jnp.ndarray]:
         """Compute fundamental QNM frequency f_RD and damping width f_damp for mode (l, m)."""
         dtype = jnp.float64
@@ -365,7 +378,7 @@ class IMRPhenomHM:
         s2 = as_array(chi2, dtype=dtype)
 
         total_mass = m1 + m2
-        m_final, a_final, _, _ = IMRPhenomD.remnant_properties(m1, m2, s1, s2)
+        m_final, a_final, _, _ = IMRPhenomD.remnant_properties(m1, m2, s1, s2, calibration=calibration)
         omega_real_final, omega_imag_final = evaluate_n61_qnm((l, m), a_final)
         m_ratio = total_mass / m_final
         scale = m_ratio / (2.0 * PI)
@@ -393,16 +406,77 @@ class IMRPhenomHM:
         reference_frame: Optional[str] = None,
         sample_frequencies: Optional[jnp.ndarray] = None,
         base_22=None,
+        hm_mapping_transitions: str = "phenomd_runtime",
+        hm_21_pn_variant: str = "binary_compatible",
+        hm_32_pn_variant: str = "binary_compatible",
+        hm_43_pn_variant: str = "binary_compatible",
+        *,
+        calibration: str = "inherited",
+        hm_reference_phase: str = "legacy",
+        hm_phase_convention: str = "legacy",
     ) -> Union[
         Tuple[jnp.ndarray, jnp.ndarray],
         Tuple[jnp.ndarray, jnp.ndarray, Dict[Tuple[int, int], Union[Tuple[jnp.ndarray, jnp.ndarray], jnp.ndarray]]],
     ]:
-        """Generate frequency-domain polarizations (h_plus, h_cross) including higher multipoles in JAX."""
+        """Generate frequency-domain polarizations with the selected HM options.
+
+        ``calibration="published"`` selects the paper-precision D fits
+        throughout the carrier and HM remnant/QNM chain. The mapping and
+        PN options remain separate.
+        ``hm_reference_phase="orbital"`` omits the legacy HM phase factor,
+        so a change of D reference phase maps to an orbital rotation. It
+        requires the native D carrier and leaves its phase convention and
+        the (2,2) mode unchanged. The default ``"legacy"`` preserves earlier
+        results, including with explicit carrier phase-convention aliases.
+        The orbital option requires an explicit ``f_ref`` when a reference-
+        frequency carrier convention is selected explicitly.
+        ``hm_phase_convention="spa_sxs_v1"`` independently multiplies each
+        positive-frequency intrinsic mode by exp[i(m/2-1)3*pi/4] before
+        projection. It requires native D, preserves m=2, and may be combined
+        with either reference-phase option. This source-derived leading-SPA
+        convention is not a physical-accuracy qualification. Its default
+        ``"legacy"`` leaves the existing waveform unchanged.
+        """
+        if hm_phase_convention not in ("legacy", "spa_sxs_v1"):
+            raise ValueError(f"Unknown HM phase convention: {hm_phase_convention}")
+        if hm_phase_convention == "spa_sxs_v1" and base_22 not in (None, IMRPhenomD):
+            raise ValueError("SPA/SXS HM phase convention requires the native D carrier")
+        if hm_reference_phase not in ("legacy", "orbital"):
+            raise ValueError(f"Unknown HM reference phase: {hm_reference_phase}")
+        if hm_reference_phase == "orbital" and base_22 not in (None, IMRPhenomD):
+            raise ValueError("orbital HM reference phase requires the native D carrier")
+        carrier_phase_convention = reference_frame if reference_frame is not None else phasing_convention
+        if (
+            hm_reference_phase == "orbital"
+            and f_ref is None
+            and carrier_phase_convention is not None
+            and carrier_phase_convention.lower() in ("reference_frequency", "reffreq", "ref")
+        ):
+            raise ValueError("orbital HM reference-frequency phasing requires an explicit f_ref")
+        validate_calibration(calibration)
+        if calibration == "published" and base_22 not in (None, IMRPhenomD):
+            raise ValueError("published calibration requires the native D carrier")
         if f is None:
             if sample_frequencies is not None:
                 f = sample_frequencies
             else:
                 raise ValueError("Must provide frequency grid via 'f' or 'sample_frequencies'")
+        if hm_mapping_transitions not in ("phenomd_runtime", "london_2018"):
+            raise ValueError(f"Unknown HM mapping transitions: {hm_mapping_transitions}")
+        if hm_21_pn_variant not in ("binary_compatible", "mishra_eq12b"):
+            raise ValueError(f"Unknown HM (2,1) PN variant: {hm_21_pn_variant}")
+        if hm_32_pn_variant not in ("binary_compatible", "mishra_eq12d"):
+            raise ValueError(f"Unknown HM (3,2) PN variant: {hm_32_pn_variant}")
+        if hm_43_pn_variant not in ("binary_compatible", "mishra_eq12g"):
+            raise ValueError(f"Unknown HM (4,3) PN variant: {hm_43_pn_variant}")
+        if hm_mapping_transitions == "london_2018" and base_22 not in (None, IMRPhenomD):
+            raise ValueError("london_2018 HM mapping transitions require the D carrier")
+        if hm_21_pn_variant == "mishra_eq12b" and base_22 not in (None, IMRPhenomD):
+            raise ValueError("mishra_eq12b HM (2,1) PN variant requires the D carrier")
+        if hm_32_pn_variant == "mishra_eq12d" and base_22 not in (None, IMRPhenomD):
+            raise ValueError("mishra_eq12d HM (3,2) PN variant requires the D carrier")
+        if hm_43_pn_variant == "mishra_eq12g" and base_22 not in (None, IMRPhenomD):
+            raise ValueError("mishra_eq12g HM (4,3) PN variant requires the D carrier")
 
         dtype = jnp.float64
         f_arr = as_array(f, dtype=dtype)
@@ -516,6 +590,7 @@ class IMRPhenomHM:
                 phasing_convention=phasing_convention,
                 reference_frame=reference_frame,
                 return_phase=need_phase,
+                **({"calibration": calibration} if carrier_cls is IMRPhenomD else {}),
             )
             if need_phase:
                 hp_raw, hc_raw, phase_raw = res
@@ -549,25 +624,25 @@ class IMRPhenomHM:
             )
             return phase_raw
 
-        m_final, a_final, base_fr22, base_fd22 = IMRPhenomD.remnant_properties(m1_batch, m2_batch, s1_batch, s2_batch)
+        m_final, a_final, base_fr22, base_fd22 = IMRPhenomD.remnant_properties(m1_batch, m2_batch, s1_batch, s2_batch, calibration=calibration)
         hm_qnm: Dict[Tuple[int, int], Tuple[jnp.ndarray, jnp.ndarray]] = {
-            lm: cls.mode_qnm_frequencies(lm[0], lm[1], m1_batch, m2_batch, s1_batch, s2_batch)
+            lm: cls.mode_qnm_frequencies(lm[0], lm[1], m1_batch, m2_batch, s1_batch, s2_batch, calibration=calibration)
             for lm in active_modes
         }
         if (2, 2) not in hm_qnm:
-            hm_qnm[(2, 2)] = cls.mode_qnm_frequencies(2, 2, m1_batch, m2_batch, s1_batch, s2_batch)
+            hm_qnm[(2, 2)] = cls.mode_qnm_frequencies(2, 2, m1_batch, m2_batch, s1_batch, s2_batch, calibration=calibration)
 
         hm_fr22 = expand_param(hm_qnm[(2, 2)][0])
         hm_fd22 = expand_param(hm_qnm[(2, 2)][1])
         base_fr22_eval = expand_param(base_fr22)
         base_fd22_eval = expand_param(base_fd22)
-        alpha4 = expand_param(IMRPhenomD.eval_table_v("alpha4", eta, chi_pn))
-        alpha5 = expand_param(IMRPhenomD.eval_table_v("alpha5", eta, chi_pn))
+        alpha4 = expand_param(IMRPhenomD.eval_table_v("alpha4", eta, chi_pn, calibration=calibration))
+        alpha5 = expand_param(IMRPhenomD.eval_table_v("alpha5", eta, chi_pn, calibration=calibration))
 
-        if f_ref is None:
+        if hm_reference_phase == "orbital" or f_ref is None:
             reference_gauge_base = jnp.zeros_like(f_eval)
         else:
-            slope_peak = expand_param(IMRPhenomD.compute_slope_peak(m1_batch, m2_batch, s1_batch, s2_batch))
+            slope_peak = expand_param(IMRPhenomD.compute_slope_peak(m1_batch, m2_batch, s1_batch, s2_batch, calibration=calibration))
             reference_gauge_base = slope_peak * m_sec_eval * fref_eval
 
         h_plus_total = jnp.zeros_like(f_eval, dtype=jnp.complex128)
@@ -578,8 +653,12 @@ class IMRPhenomHM:
             hm_fr_lm, hm_fd_lm = hm_qnm[(l, m)]
             hm_fr_lm = expand_param(hm_fr_lm)
             hm_fd_lm = expand_param(hm_fd_lm)
-            f0_amp = 0.014 * hm_fr_lm / hm_fr22
-            f0_phi = 0.018 * hm_fr_lm / hm_fr22
+            if hm_mapping_transitions == "london_2018":
+                f0_amp = 0.018 * hm_fr_lm / hm_fr22
+                f0_phi = 0.014 * hm_fr_lm / hm_fr22
+            else:
+                f0_amp = 0.014 * hm_fr_lm / hm_fr22
+                f0_phi = 0.018 * hm_fr_lm / hm_fr22
             f_map_amp = frequency_mapping_amplitude(
                 mf_eval, f0_amp, hm_fr_lm, hm_fr22, m
             )
@@ -594,14 +673,29 @@ class IMRPhenomHM:
                 ga_safe = f_map_amp_safe
                 v_ga = (2.0 * PI * ga_safe / float(m)) ** (1.0 / 3.0)
                 v_x = (2.0 * PI * x_safe / float(m)) ** (1.0 / 3.0)
-                hhat_ga = _production_hhat(l, m, v_ga, delta_eval, eta_eval, chi_s_eval, chi_a_eval)
-                hhat_x = _production_hhat(l, m, v_x, delta_eval, eta_eval, chi_s_eval, chi_a_eval)
+                hhat_ga = _production_hhat(
+                    l, m, v_ga, delta_eval, eta_eval, chi_s_eval, chi_a_eval,
+                    hm_21_pn_variant=hm_21_pn_variant,
+                    hm_32_pn_variant=hm_32_pn_variant,
+                    hm_43_pn_variant=hm_43_pn_variant,
+                )
+                hhat_x = _production_hhat(
+                    l, m, v_x, delta_eval, eta_eval, chi_s_eval, chi_a_eval,
+                    hm_21_pn_variant=hm_21_pn_variant,
+                    hm_32_pn_variant=hm_32_pn_variant,
+                    hm_43_pn_variant=hm_43_pn_variant,
+                )
                 hlm_ga = hhat_ga * (v_ga ** -3.5)
                 hlm_x = hhat_x * (v_x ** -3.5)
                 h22_ga = -((2.0 * PI * ga_safe / 2.0) ** (1.0 / 3.0)) ** -3.5
                 mode_at_22_x = 2.0 * x_safe / float(m)
                 v_22_x = (2.0 * PI * mode_at_22_x / float(m)) ** (1.0 / 3.0)
-                h22_at_x = _production_hhat(l, m, v_22_x, delta_eval, eta_eval, chi_s_eval, chi_a_eval) * (v_22_x ** -3.5)
+                h22_at_x = _production_hhat(
+                    l, m, v_22_x, delta_eval, eta_eval, chi_s_eval, chi_a_eval,
+                    hm_21_pn_variant=hm_21_pn_variant,
+                    hm_32_pn_variant=hm_32_pn_variant,
+                    hm_43_pn_variant=hm_43_pn_variant,
+                ) * (v_22_x ** -3.5)
                 tiny = jnp.finfo(dtype).tiny
                 nonzero = jnp.abs(h22_at_x) > tiny
                 safe_h22_at_x = jnp.where(nonzero, h22_at_x, 1.0)
@@ -648,12 +742,21 @@ class IMRPhenomHM:
                 carrier_lm,
             )
 
+            # Retain the historical extra factor only for the legacy option.
+            # The orbital option relies on the London map's m/2 scaling of
+            # a constant carrier-phase shift, for either D phase convention.
             reference_gauge = (float(m) / 2.0 - 1.0) * reference_gauge_base
             physical_phase = -mapped_phase + reference_gauge + float(m) * phic_eval
             phase_factor = jnp.cos(physical_phase) + 1j * jnp.sin(physical_phase)
             if (l, m) == (2, 2):
                 mode_factor = jnp.ones_like(ratio)
             h_mode = amp_22_mapped * ratio * mode_factor * phase_factor
+            if hm_phase_convention == "spa_sxs_v1" and m != 2:
+                # Source-derived leading-SPA convention; multiply once before
+                # projection, preserving the unmodified D-anchored m=2 modes.
+                angle = jnp.asarray((float(m) / 2.0 - 1.0) * 3.0 * PI / 4.0,
+                                    dtype=physical_phase.dtype)
+                h_mode = h_mode * (jnp.cos(angle) + 1j * jnp.sin(angle))
             h_mode = jnp.where(f_eval > 0.0, h_mode, jnp.zeros_like(h_mode))
 
             d_plus, d_cross = _swsh_projection_coefficients(l, m, inc_eval, phi0_eval)

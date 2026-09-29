@@ -54,6 +54,16 @@ d_\times={i\over2}\bigl(Y_{\ell,-m}-(-1)^\ell Y_{\ell m}^*\bigr),\qquad
 (h_+,h_\times)_{\ell m}=(d_+,d_\times)h_{\ell,-m}.
 $$
 
+This identification is not inferred from frontend agreement.
+[García-Quirós et al., Eqs. (2), (4)–(9)](https://arxiv.org/html/2001.10914)
+use $h=h_+-ih_\times$ and the LAL Fourier sign
+$\tilde h(f)=\int h(t)e^{-i2\pi ft}dt$, show that $m>0$ modes are
+concentrated at negative frequency, and define the positive-frequency object
+$\tilde h_{\ell,-m}=A_{\ell m}e^{-i\Phi_{\ell m}}$ before deriving the two
+projection factors above. The public mode dictionary retains positive
+$(\ell,m)$ labels for these paired polarization contributions; it does not
+expose raw positive-$m$ Fourier modes.
+
 The default native `spin_order=7` selects `SO3, SS4, SO5, SO6, SS6, SO7` in
 the [aligned-spin option map](taylorf2-aligned-spin.md#frontend-option-contract).
 The scalar formulas can also select other named term sets, including the full
@@ -80,6 +90,15 @@ h_{\ell,-m}=\sqrt{16\pi/5}\,A_0(f)R_{\ell m}(v,\delta)
  e^{-i\Psi_{\ell m}}.
 $$
 
+The phase adapter follows [García-Quirós et al., Eqs. (29),
+(34)](https://arxiv.org/html/2001.10914): the low-frequency SPA relation is
+$\Phi_{\ell m}\simeq(m/2)\Phi_{22}(2f/m)$ and its convention-dependent
+constant is $3\pi(1-m/2)/4$. Consequently $t_c$ remains a common
+$e^{-i2\pi f t_c}$ shift while $\phi_c\mapsto\phi_c+\Delta\phi_c$ multiplies
+the native carrier by $e^{im\Delta\phi_c}$. Eqs. (30)–(32) of that paper add
+a frequency-dependent phase for complex higher-PN amplitudes; omitting it is
+justified only for this declared leading real-amplitude slice.
+
 When `f_ref` is supplied, subtract $I((\pi Mq_m f_{\rm ref})^{1/3})$
 inside $\Psi_{22}^{(m)}$ and replace $-\pi/4$ by $+3\pi/4$.
 This is the inherited project phase origin and scales the reference frequency
@@ -101,15 +120,20 @@ printed $\mathcal H_{\ell m}(x)$ of Eq. (21) is evaluated at
 $x_m=(2/m)^{2/3}v^2$ and multiplied by $(m/2)^{2/3}$ after dividing Eq. (30)
 by its $(2,2)$ Newtonian amplitude. A fixed unit-complex factor for each mode
 converts the source's complex coefficient to the declared real-amplitude
-carrier convention. [Mezzasoma and Yunes, Eqs. (20)–(21), (23)–(30)](https://arxiv.org/html/2203.15934)
+carrier convention. [Mezzasoma and Yunes, Eqs. (20)–(21i), (23)–(30)](https://arxiv.org/html/2203.15934)
 provide an all-eight-mode leading-amplitude construction;
 [Mishra et al., Eqs. (9)–(12h)](https://arxiv.org/html/1601.05588) give a
-second all-eight-mode frequency-domain construction. Both use the opposite
+second all-eight-mode frequency-domain construction. Their arXiv v1 source
+bundle also contains the author-published Mathematica supplement
+`supl-mkaf16.m`, whose `H[l,m]` definitions cover every mode in this
+specification through 2PN amplitude order. Both papers use the opposite
 Fourier sign, so their printed complex modes cannot be compared directly with
-the stored negative-$m$ mode. [García-Quirós et al., Eqs. (2)–(9), Appendix E](https://arxiv.org/html/2001.10914)
-fix the native Fourier and mode convention for seven modes; the $(4,2)$ ratio
-uses the first two sources. García-Quirós et al. also report a 2PN amplitude
-disagreement with Mishra, beyond this leading-order slice.
+the stored negative-$m$ mode without the Fourier, tetrad, and per-mode phase
+adapter described above. García-Quirós et al. fix the native convention and
+give seven of the mode amplitudes in Appendix E; the $(4,2)$ ratio uses the
+first two all-eight sources. García-Quirós et al. also report a higher-PN
+amplitude disagreement with the earlier calculation, beyond this leading-order
+slice.
 
 For the optional Schwarzschild hard mask, mode $m$ has
 $f_{\rm cut,m}=m/(2\,6^{3/2}\pi M)$; the native carrier retains
@@ -137,7 +161,19 @@ reference.
 
 ## Evidence and limitations
 
-The maintained test compares all eight complex per-mode polarizations and
+The evidence is intentionally separated:
+
+| Evidence layer | Maintained check | Establishes | Does not establish |
+| --- | --- | --- | --- |
+| Author-supplement composition | `test_taylorf2_hm_author_supplement_math_reference.py` | Checksum-pinned leading $|h_{\ell m}/h_{22}|$, signed absolute raw modes, direct complex per-mode and eight-mode-summed polarizations, and sampled angular derivatives of both sums in Torch and JAX, for the nonspinning unwindowed `f_ref=None` slice | An independently published numerical series, aligned-spin composition, `f_ref` subtraction, cutoffs, or physical accuracy |
+| Paper fidelity | `test_taylorf2_hm_paper_math_reference.py` | All-eight native $h_{\ell,-m}$ reconstruction, Eqs. (8)–(9), the $2f/m$ map, SPA constant, and $t_c/\phi_c$ signs | An independent executable waveform |
+| Scalar-reference agreement | `test_taylorf2_hm_math_reference.py` | All-eight leading amplitudes, composed aligned-spin phase, complex polarizations, selected derivatives and hard cutoffs | External parity or physical accuracy |
+| Torch/JAX parity | `tests/parity/test_hm_parity.py` | Cross-backend values, individual modes, JIT and autodiff at sampled points | Independence from shared equations |
+| External angular/API boundary | `test_taylorf2_hm_external_api.py` | Public LAL spin-weighted harmonics for every supported $\pm m$; public TaylorF2 does not return resolved higher modes | Any higher-mode TaylorF2 waveform value |
+| External waveform parity | frozen `TaylorF2_HM_diagnostic` | Dominant $(2,2)$ carrier only | The other seven modes |
+| Physical validation | None | — | Accuracy against NR, EOB, or observations |
+
+The scalar-reference test compares all eight complex per-mode polarizations and
 their sum at two frequencies, two mass ratios, both zero and aligned spin, two
 orientations, and both phase origins, in FP64 CPU Torch and JAX against an
 80-digit scalar evaluator. It also checks each mode's azimuth derivative,
@@ -146,21 +182,111 @@ Schwarzschild hard-mask thresholds. The per-mode normalized complex tolerance
 is $4\times10^{-10}$ and the derivative tolerances are stated in the test.
 These are sampled implementation checks, not a uniform error bound.
 
-The strongest available **exact** external mathematical evidence is the
-published all-eight-mode leading-SPA construction above. Existing LAL
-TaylorF2 comparison checks only $(2,2)$, so it cannot verify the higher-mode
-inventory. `gwfast`'s TEOBResumSPA waveform can include all eight modes, but
-its EOB dynamics and amplitude corrections make it a low-frequency physical
-holdout rather than a binwise TaylorF2 oracle; no TEOB comparison is claimed
-here. Source transcription, native agreement, same-model external comparison,
-and physical validation are separate evidence categories. Higher-PN mode
+The author-supplement fixture is generated without native imports from the
+lowest nonspinning power of each pinned `H[l,m]`. At common observed frequency,
+its explicit adapter is
+$V_m=(2/m)^{1/3}v$ and
+$|h_{\ell m}/h_{22}|=|H_{\ell m}^{\rm LO}(V_m)|(V_m/v)^{-7/2}$.
+The source bundle SHA256 is
+`f0b6c6810da95f45141dbb9f0c5cccec0ba0742f60b836dba7698c90a25d5154`;
+the supplement SHA256 is
+`501ea53c29b77e061585540b9ccfd69a4cd0283e805ea1e9c24c38800e627a70`.
+The project stores only the generated fixture and provenance, not the author
+source asset. The fixture's normalized `TF28Phasing` is nevertheless a
+transformed author-supplement expression, not an independently authored
+numerical result; its downstream redistribution terms remain unresolved.
+
+The same pinned supplement contains `TF28Phasing`. Its nonspinning part is an
+orbital SPA phase with prefactor $3/(256\eta v^5)$; the factor of $m$ in
+Mishra et al. Eq. (11) makes it identical to the native $(m/2)I(V_m)$ phase.
+This also resolves the factor-of-two ambiguity introduced by the
+$3/(128\eta v^5)$ prefactor printed in the paper's Eq. (4): the maintained
+component gate follows the checksum-pinned author expression used in Eq. (11).
+The generator retains the normalized SymPy expression, and the test combines
+it with the signed leading $H_{\ell m}$ term and Eq. (11) normalization. The
+fixed raw-mode convention adapter is
+$h^{\rm native}_{\ell,-m}=e^{i\pi(m-3)/2}h^{\rm Mishra}_{\ell,m}$.
+The composition gate multiplies those author-derived modes by the independent
+Wigner-$d$ evaluation of García-Quirós et al. Eqs. (8)–(9), then sums all
+eight complex $h_+$ and $h_\times$ contributions. It checks native per-mode
+polarizations and both final polarizations directly, without using the native
+projection to construct its expectation or inverting native modes. Its
+per-mode errors divided by the raw mode magnitude and summed errors divided
+by the sum of projected-mode magnitudes are below $8\times10^{-10}$ at the
+three binaries, three frequencies each, and two orientations in FP64.
+This is a source-composed symbolic check restricted to positive-frequency,
+leading nonspinning, unwindowed modes with `f_ref=None`. The projection comes
+from García-Quirós et al., not from the author supplement.
+
+For each of the three binaries, at its predeclared middle frequency and both
+orientations, the same source-composed modes are multiplied by analytic
+inclination and azimuth derivatives of García-Quirós et al. Eqs. (8)–(9).
+The eight contributions are summed before comparison with Torch and JAX
+autodiff of the public complex $h_+$ and $h_\times$. Errors divided by the
+sum of the magnitudes of the derivative contributions are below
+$8\times10^{-10}$. These sampled angular derivatives do not qualify intrinsic
+parameter derivatives or the full aligned-spin option set.
+
+Exact all-mode external numerical parity remains unprovable from the available
+public sources. The supplement is symbolic author input parsed by this
+project, not an independently maintained executable or numerical series. It
+supplies full 2PN amplitudes and a phase expression while the maintained gate
+selects the leading nonspinning amplitudes and composes the projection from a
+second published source. Neither source fixes the native aligned-spin
+composition, `f_ref` subtraction, or per-mode cutoff as one independently
+evaluated series. No author-published numerical complex arrays fix that
+complete option set.
+The bounded independent-oracle search and its exact acceptance fields are
+recorded in the [2026-09-26 evidence receipt](../validation/taylorf2-hm-oracle-search-20260926.md).
+The [2026-09-27 minimal two-mode probe](../validation/taylorf2-hm-minimal-multimode-oracle-20260927.md)
+uses an unequal-mass `(2,2)+(3,3)` candidate and confirms that the public
+TaylorF2 mode-array API still returns the same single carrier. Even this
+smaller nonspinning multimode external gate remains open; the existing
+author-source composition already checks all eight modes more broadly within
+its stated, non-external evidence category.
+Public LAL TaylorF2 returns one frequency series and its public FD-mode
+dispatcher has no TaylorF2 generator. IMRPhenomXHM is a different full-IMR
+model and `gwfast`'s TEOBResumSPA uses different EOB dynamics and amplitude
+corrections, so neither is a binwise same-model oracle. Higher-PN mode
 amplitudes, spin-amplitude corrections, generic tidal matter, merger, Kerr
 cutoffs, taper derivatives, FP32, and full-domain accuracy remain unqualified.
+
+The dated [composed-oracle audit](../validation/taylorf2_hm_composed_oracle_20260925.json)
+also checked the public `WF4Py` and `gwfast` TaylorF2 implementations and exact
+code-search matches. Both external implementations are restricted dominant-mode
+models. The audit did not inspect or translate LAL implementation source.
+Extending the author supplement locally would not create the missing
+independence: its unmodified $v^7$ spin content matches neither native selector,
+it has no arbitrary $f_{\rm ref}$ input, and its harmonic `Theta` factors belong
+to a different full-PN polarization expansion. Selecting the native spin terms,
+adding reference-frequency subtraction, projecting the leading modes, and
+applying the native hard mask would reproduce the project-authored composition
+already checked by the scalar reference; freezing that recomposition would not
+turn it into an external numerical oracle.
+
+The exact next external-parity gate is an author-supplied numerical table or
+an independently maintained, checksum-pinned executable under suitable terms
+that exposes all eight complex $h_{\ell,-m}(f)$ values (or both complex
+polarizations for every mode contribution and their sum) for a fully specified
+binary. The release must state its Fourier, tetrad, mode-label, spin-term,
+$f_{\rm ref}$, and cutoff conventions and provide bins below, exactly at,
+and above each mode cutoff. Direct comparison must use no time, phase, amplitude,
+or frequency alignment, normalized complex FP64 error at most $4\times10^{-10}$
+for every unmasked mode and sum in both frontends, and exact zeros in masked
+bins. A dominant-mode series or angular basis alone cannot satisfy that gate.
 
 ## Reproduce the checks
 
 Install `python -m pip install -e '.[reference,torch,jax,dev]'`, then run
-`python -m pytest -q tests/test_taylorf2_hm_math_reference.py` for this slice.
+`python -m pytest -q tests/test_taylorf2_hm_author_supplement_math_reference.py tests/test_taylorf2_hm_math_reference.py tests/test_taylorf2_hm_paper_math_reference.py`
+for the mathematical slice. With pinned LALSuite 7.26.15 installed, run
+`python -m pytest -q tests/test_taylorf2_hm_external_api.py` for the public
+angular/API boundary.
+To regenerate the frozen supplement fixture, download
+`https://export.arxiv.org/e-print/1601.05588v1` and run
+`python tests/data/generate_taylorf2_hm_mishra2016_samples.py --archive PATH`;
+the generator rejects either source hash before parsing and imports no native
+waveform code.
 The complete CPU gate is `python -m pytest -q --require-math-reference`.
 That gate requires both frontends and reference dependencies and rejects
 skips, expected failures, and deselection. Run

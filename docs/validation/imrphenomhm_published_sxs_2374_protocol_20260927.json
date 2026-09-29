@@ -1,0 +1,116 @@
+{
+  "case": "SXS:BBH:2374v3.0",
+  "record": "r0wpw-4pq24",
+  "catalog_sha256": "132d38520b3562c8f254b3c9aaf8efd4678428f94dbbabfef4436bc50c1c87c6",
+  "reference_q": 4.999912483619435,
+  "reference_time_m": 570.5,
+  "reference_spin1": [
+    6.770245181977659e-07,
+    -9.656444589157222e-08,
+    -8.411333236463169e-05
+  ],
+  "reference_spin2": [
+    -8.971032766750444e-08,
+    2.0115870292120292e-07,
+    5.3343465614582244e-05
+  ],
+  "model_chi1": 0.0,
+  "model_chi2": 0.0,
+  "levels": [
+    "Lev3",
+    "Lev2"
+  ],
+  "files": {
+    "Lev2:Strain_N2.h5": {
+      "size": 3447793,
+      "md5": "2678d7d29d292a8f4e352a1824df37e6"
+    },
+    "Lev2:metadata.json": {
+      "size": 3330,
+      "md5": "1f7adf1c4b8c96821a86cc0fe20e41f3"
+    },
+    "Lev2:Strain_N2.json": {
+      "size": 2227,
+      "md5": "f849fd8cc439ec9271229c83ecb3ef2b"
+    },
+    "Lev3:metadata.json": {
+      "size": 3325,
+      "md5": "d8def54e883402ff230ffeb825448d31"
+    },
+    "Lev3:Strain_N2.h5": {
+      "size": 3233672,
+      "md5": "e2d6660be1e00eef370bd924b5db9d45"
+    },
+    "Lev3:Strain_N2.json": {
+      "size": 2230,
+      "md5": "f8d4a463218aaf163ab04bb9fa04bdbd"
+    }
+  },
+  "schema_version": "imrphenomhm-published-nr/v1",
+  "options": {
+    "calibration": "published",
+    "hm_21_pn_variant": "mishra_eq12b",
+    "hm_32_pn_variant": "mishra_eq12d",
+    "hm_43_pn_variant": "mishra_eq12g",
+    "hm_mapping_transitions": "london_2018"
+  },
+  "settings": {
+    "total_mass_msun": 100.0,
+    "distance_mpc": 500.0,
+    "f_ref_hz": 30.0,
+    "frequency_hz": [
+      30,
+      1024,
+      1
+    ],
+    "sample_rate_hz": 8192.0,
+    "start_ramp_m": 500.0,
+    "end_ramp_m": 100.0,
+    "angles_rad": [
+      [
+        0.7,
+        0.0
+      ],
+      [
+        1.2,
+        0.4
+      ]
+    ],
+    "nr_ell_range": [
+      2,
+      5
+    ],
+    "nr_phase_grid": 2048,
+    "optimizer_seeds": [
+      17,
+      23,
+      41,
+      67
+    ],
+    "time_indices": [
+      -819,
+      819
+    ],
+    "fft_length": 8192,
+    "resolution_match_floor": 0.995,
+    "resolution_norm_bounds": [
+      0.95,
+      1.05
+    ],
+    "model_match_floor": 0.98,
+    "model_norm_bounds": [
+      0.85,
+      1.15
+    ],
+    "optimizer_match_spread_max": 1e-05
+  },
+  "protocol": {
+    "path": "docs/validation/imrphenomhm_published_nr_protocol_20260927.md",
+    "sha256": "7ec2c9c105030e9b6473a93a699606c24d89aaff3c2ca8005657b872867d067c"
+  },
+  "source_hashes": {
+    "runner": "1cba5bb618c1994cf4851c6dbcf3a2a7c46b95d9ccc3706805432b5e297c6be2",
+    "base_runner": "89856b9b94af8cf546620d2f07928016a35f8ddafa4277e9c479b0638d18b2c0",
+    "src_python_tree": "15d843ade209bbd36a65b8c1b850a415182d4296ab3994dd1dcdd304a9cd446a"
+  }
+}

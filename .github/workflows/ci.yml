@@ -58,6 +58,9 @@ jobs:
       - name: Verify reference agreement without qualification skips
         run: >-
           python -m pytest tests/test_waveform_definitions.py tests/test_*math_reference*.py
+          tests/test_nsbh_*reference.py
+          tests/test_xphm_rotation_reference.py tests/test_xphm_nnlo_clean_room.py
+          tests/test_spintaylor_reference_angle.py
           --require-math-reference --reference-device=cpu -ra
 
   lal-oracles:
@@ -76,11 +79,11 @@ jobs:
         with:
           python-version: "3.11"
           cache: pip
-      - name: Install frontends and current binary oracles
+      - name: Install frontends and pinned binary oracles
         run: |
           python -m pip install --upgrade pip
           python -m pip install --index-url https://download.pytorch.org/whl/cpu torch
-          python -m pip install --upgrade -e '.[reference,all,dev]' lalsuite pycbc
+          python -m pip install --upgrade -e '.[reference,all,dev]' lalsuite==7.26.15 pycbc==2.11.0
       - name: Verify oracle dependencies
         run: |
           python -c "import lal, lalsimulation, pycbc, torch, jax, sympy; import importlib.metadata as m; print({name: m.version(name) for name in ('lalsuite', 'pycbc', 'numpy', 'scipy', 'sympy', 'torch', 'jax', 'jaxlib')})"
@@ -95,11 +98,22 @@ jobs:
         run: python -m scripts.run_oracle_ci
       - name: Check maintained binary oracles and gate semantics
         if: always()
+        env:
+          DIFFGW_REQUIRE_LAL_BINARY: "1"
         run: >-
           python -m pytest -q
           tests/test_imrphenomd_lal_gradients.py
+          tests/test_imrphenomhm_lal_modes_binary.py
+          tests/test_imrphenomhm_lal_polarizations_binary.py
+          tests/test_imrphenomxas_lal_binary.py
           tests/test_taylorf2_lal_quadrupole.py
           tests/test_taylorf2_lal_tidal.py
+          tests/test_taylorf2_eccentric_holdout.py
+          tests/test_taylorf2_hm_external_api.py
+          tests/test_nrtidalv1_phase_lal_binary.py
+          tests/test_nrtidalv1_taper_lal_binary.py
+          tests/test_nrtidalv2_phase_lal_binary.py
+          tests/test_nrtidalv2_composed_holdout_lal_binary.py
           tests/test_oracle_ci.py
           tests/test_parity_harness_controls.py::test_kerr_convergence_failure_is_not_accepted
           tests/parity/test_inference_parity.py::test_whittle_likelihood_parity
@@ -150,12 +164,14 @@ jobs:
         run: |
           pip install .[torch]
           pytest tests/test_diffgw.py tests/test_waveform_definitions.py
+          pytest --collect-only -q tests/test_xpnr_component_evidence.py
 
       - name: "Step 2: Verify JAX without PyTorch"
         run: |
           pip uninstall -y torch
           pip install .[jax]
           pytest tests/test_diffgw.py tests/test_waveform_definitions.py
+          pytest --collect-only -q tests/test_xpnr_component_evidence.py
 
       - name: "Step 3: Verify core suite with all and dev"
         run: |

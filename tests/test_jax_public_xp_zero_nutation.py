@@ -136,7 +136,7 @@ def test_public_one_spin_jit_batch_and_gradient():
     assert np.isfinite(float(jax.grad(amplitude)(jnp.asarray(.2))))
 
 
-def test_generic_row_retains_legacy_route():
+def test_generic_zero_azimuth_row_uses_distinct_root_route():
     f = jnp.asarray([25., 40., 80.])
     params = dict(mass1=40., mass2=20., spin1x=.2, spin1y=-.1,
                   spin1z=.4, spin2x=.1, spin2y=.05, spin2z=-.2,
@@ -145,7 +145,7 @@ def test_generic_row_retains_legacy_route():
     actual = JAXXP.evaluate(f, **params)
     legacy = JAXXP.evaluate(f, **dict(params, _force_legacy=True))
     for left, right in zip(actual, legacy):
-        np.testing.assert_allclose(np.asarray(left), np.asarray(right), rtol=1e-12, atol=0.)
+        assert _relative_l2(left, right) > 1e-4
 
 
 def test_default_reference_frequency_matches_torch():

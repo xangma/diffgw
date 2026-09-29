@@ -9,8 +9,9 @@ from torchwave.approximants.imrphenom_xas import XASParameterFits
 from torchwave.approximants.imrphenom_xp import IMRPhenomXP
 from torchwave.approximants.imrphenom_xphm import IMRPhenomXPHM, wigner_small_d_matrix
 from torchwave.approximants.precession_msa import (
-    evaluate_msa_precession, compute_l_3pn, compute_effective_chip,
+    evaluate_msa_precession, compute_l_3pn, compute_effective_chip, compute_msa_final_spin,
 )
+from torchwave.constants import MSUN_SEC, PI
 
 DTYPE = torch.float64
 
@@ -21,10 +22,15 @@ def carrier_with_same_remnant(model, f, params):
         return torch.as_tensor(value, dtype=f.dtype, device=f.device)
     m1, m2 = t(params['mass1']), t(params['mass2'])
     chi1, chi2 = t(params['spin1z']), t(params['spin2z'])
-    chip = compute_effective_chip(
-        m1, m2, *(t(params.get(key, 0.0)) for key in ('spin1x', 'spin1y', 'spin2x', 'spin2y')),
-    )
-    final_spin = XASParameterFits.fit_final_spin_nnlo(m1*m2/(m1+m2)**2, chi1, chi2, chip)
+    transverse = tuple(t(params.get(key, 0.0)) for key in ('spin1x', 'spin1y', 'spin2x', 'spin2y'))
+    if isinstance(model, IMRPhenomXPHM) and model.default_precession_method == "msa":
+        v0 = (PI * (m1 + m2) * MSUN_SEC * t(params['f_ref'])) ** (1 / 3)
+        final_spin = compute_msa_final_spin(
+            v0, m1, m2, transverse[0], transverse[1], chi1, transverse[2], transverse[3], chi2
+        )
+    else:
+        chip = compute_effective_chip(m1, m2, *transverse)
+        final_spin = XASParameterFits.fit_final_spin_nnlo(m1*m2/(m1+m2)**2, chi1, chi2, chip)
     options = dict(mass1=m1, mass2=m2, chi1=chi1, chi2=chi2,
                    inclination=params['inclination'], f_ref=params['f_ref'],
                    _final_spin_override=final_spin)
@@ -77,7 +83,11 @@ def test_one_spin_cone_is_vector_sum_at_reference(version):
     torch.testing.assert_close(rotation @ line, torch.stack((torch.sin(theta),t(0.),torch.cos(theta))), atol=2e-14, rtol=2e-14)
 
 
-@pytest.mark.parametrize('factory', [IMRPhenomP, IMRPhenomXP, lambda: IMRPhenomXPHM(modes=[(2,2)])])
+@pytest.mark.parametrize('factory', [
+    IMRPhenomP,
+    IMRPhenomXP,
+    lambda: IMRPhenomXPHM(modes=[(2, 2)], precession_method="nnlo", final_spin_mod=0),
+])
 def test_quadrupole_reference_closure_label_exchange_and_dc_gradients(factory):
     model = factory()
     f = torch.tensor([0., 25., 40., 80.], dtype=DTYPE)
@@ -108,7 +118,7 @@ def test_quadrupole_reference_closure_label_exchange_and_dc_gradients(factory):
 def test_each_mode_tends_continuously_to_aligned_projection(lm):
     # Spin-2 projection plus C4 azimuth needs i**m carrier conversion.
     f = torch.tensor([25., 40., 80.], dtype=DTYPE)
-    model = IMRPhenomXPHM(modes=[lm])
+    model = IMRPhenomXPHM(modes=[lm], precession_method="nnlo", final_spin_mod=0)
     params = dict(mass1=40.,mass2=20.,spin1z=.4,spin2z=-.2,phic=.3,f_ref=40.,inclination=.7)
     for h, h0 in zip(model(f, spin1x=1e-9, **params), model(f, **params)):
         assert torch.linalg.vector_norm(h-h0)/torch.linalg.vector_norm(h0) < 1e-7
@@ -128,7 +138,7 @@ def test_scalar_masses_with_batched_spins_match_scalar_calls():
 def test_each_mode_reference_rotation_uses_its_spa_orbital_frequency(lm):
     # E18/E19 identify f_orb=f/mp, hence f=mp*f_ref/2 at the initial frame.
     f = torch.tensor([lm[1]*40./2],dtype=DTYPE)
-    model = IMRPhenomXPHM(modes=[lm])
+    model = IMRPhenomXPHM(modes=[lm], precession_method="nnlo", final_spin_mod=0)
     params = dict(mass1=40.,mass2=20.,spin1z=.4,spin2z=-.2,phic=.3,f_ref=40.,inclination=.7)
     precessing_params = dict(params, spin1x=.3, spin1y=.2)
     for h, h0 in zip(model(f, **precessing_params),

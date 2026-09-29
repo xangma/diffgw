@@ -39,6 +39,8 @@ class TaylorF2_Eccentric(nn.Module):
     Eq. (6.26) of arXiv:1605.00304v2.
     """
 
+    definition_id = "TaylorF2_Eccentric"
+
     def __init__(self):
         super().__init__()
         self.base_model = TaylorF2()

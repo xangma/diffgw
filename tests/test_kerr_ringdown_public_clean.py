@@ -94,3 +94,13 @@ def test_optional_public_lal_fd_reference():
         def rel(x,y): return np.linalg.norm(x[mask]-y[mask])/np.linalg.norm(y[mask])
         assert rel(hp.detach().numpy(),hp_ref) < 1e-6
         assert rel(hc.detach().numpy(),hc_ref) < 1e-6
+
+
+def test_fixed_off_axis_energy_onset_holdout():
+    pytest.importorskip("lal")
+    pytest.importorskip("lalsimulation")
+    from tests.parity_harness import get_canonical_holdout_cases, run_oracle_comparison
+    case = next(c for c in get_canonical_holdout_cases()
+                if c["id"] == "KerrRingdown_holdout_off_axis_energy_onset")
+    result = run_oracle_comparison(case, strict=True)
+    assert result["status"] == "PASSED", result

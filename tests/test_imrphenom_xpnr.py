@@ -1,9 +1,10 @@
-"""Unit and integration tests for IMRPhenomXPNR approximant.
+"""Unit and integration tests for the provisional XPNR-labelled route.
 
-Tests sovereign pure PyTorch PNR (PhenomX Precession Numerical Relativity) angle engine,
+Tests the native PNR (PhenomX Precession Numerical Relativity) angle engine,
 Ansatz fits, non-precessing collapse to IMRPhenomXHM, batched execution,
 autograd differentiability, waveform dispatch aliases, and diagnostic parity
-against LALSimulation's IMRPhenomXPNR.
+against LALSimulation's IMRPhenomXPNR.  The latter are acceptance gates, not
+observed domain bounds or qualification of the published full model.
 """
 
 import pytest
@@ -16,8 +17,6 @@ from torchwave.approximants.precession_pnr import (
     compute_pnr_single_spin,
     compute_pnr_alpha_coefficients,
     compute_pnr_beta_coefficients,
-    eval_pnr_alpha_mr,
-    eval_pnr_beta_mr,
     pnr_angles_window,
     evaluate_pnr_precession,
 )
@@ -245,8 +244,24 @@ def test_imrphenom_xpnr_autograd():
         assert param.grad.abs().item() > 0.0, f"Gradient for {name} is zero"
 
 
-def test_imrphenom_xpnr_lal_parity():
-    """Verify match >= min_match against LALSimulation IMRPhenomXPNR."""
+@pytest.mark.parametrize(
+    "m1,m2,s1x,s1y,s1z,s2x,s2y,s2z,inc,min_match",
+    [
+        (30.0, 20.0, 0.2, 0.0, 0.3, 0.1, 0.0, -0.2, 0.5, 0.99),
+        (35.0, 25.0, 0.1, 0.2, -0.1, 0.0, 0.1, 0.3, 0.8, 0.99),
+        (40.0, 30.0, 0.2, 0.0, 0.3, 0.1, 0.0, -0.2, 0.5, 0.99),
+        (50.0, 30.0, 0.2, -0.1, 0.4, 0.2, 0.1, -0.3, 0.3, 0.99),
+    ],
+    ids=("q1p5", "q1p4", "q1p33", "q1p67"),
+)
+def test_imrphenom_xpnr_lal_parity(
+    request, m1, m2, s1x, s1y, s1z, s2x, s2y, s2z, inc, min_match
+):
+    """Apply the declared black-box match gate to one configuration.
+
+    Parametrization keeps every failed configuration visible.  The threshold
+    is not an observed domain bound or a full-model qualification.
+    """
     try:
         import lal
         import lalsimulation as lalsim
@@ -255,47 +270,44 @@ def test_imrphenom_xpnr_lal_parity():
     except ImportError:
         pytest.skip("LALSimulation or PyCBC not installed in environment")
 
-    test_cases = [
-        # (m1, m2, s1x, s1y, s1z, s2x, s2y, s2z, inc, min_match)
-        (30.0, 20.0, 0.2, 0.0, 0.3, 0.1, 0.0, -0.2, 0.5, 0.99),
-        (35.0, 25.0, 0.1, 0.2, -0.1, 0.0, 0.1, 0.3, 0.8, 0.99),
-        (40.0, 30.0, 0.2, 0.0, 0.3, 0.1, 0.0, -0.2, 0.5, 0.99),
-        (50.0, 30.0, 0.2, -0.1, 0.4, 0.2, 0.1, -0.3, 0.3, 0.99),
-    ]
-
     df, f_min, f_max, f_ref = 0.25, 20.0, 400.0, 20.0
-    for m1, m2, s1x, s1y, s1z, s2x, s2y, s2z, inc, min_match in test_cases:
-        p = lal.CreateDict()
-        hp_lal, _ = lalsim.SimInspiralChooseFDWaveform(
-            m1 * lal.MSUN_SI,
-            m2 * lal.MSUN_SI,
-            s1x, s1y, s1z,
-            s2x, s2y, s2z,
-            100.0 * 1e6 * lal.PC_SI,
-            inc, 0.0, 0.0, 0.0, 0.0,
-            df, f_min, f_max, f_ref,
-            p,
-            lalsim.IMRPhenomXPNR,
-        )
-        s_hp_lal = FrequencySeries(hp_lal.data.data, delta_f=df)
-        freqs = torch.arange(len(s_hp_lal), dtype=torch.float64) * df
+    p = lal.CreateDict()
+    hp_lal, _ = lalsim.SimInspiralChooseFDWaveform(
+        m1 * lal.MSUN_SI,
+        m2 * lal.MSUN_SI,
+        s1x, s1y, s1z,
+        s2x, s2y, s2z,
+        100.0 * 1e6 * lal.PC_SI,
+        inc, 0.0, 0.0, 0.0, 0.0,
+        df, f_min, f_max, f_ref,
+        p,
+        lalsim.IMRPhenomXPNR,
+    )
+    s_hp_lal = FrequencySeries(hp_lal.data.data, delta_f=df)
+    freqs = torch.arange(len(s_hp_lal), dtype=torch.float64) * df
 
-        hp_tw, _ = get_fd_waveform(
-            "IMRPhenomXPNR",
-            mass1=m1,
-            mass2=m2,
-            spin1x=s1x,
-            spin1y=s1y,
-            spin1z=s1z,
-            spin2x=s2x,
-            spin2y=s2y,
-            spin2z=s2z,
-            distance=100.0,
-            inclination=inc,
-            f_ref=f_ref,
-            sample_frequencies=freqs,
-        )
+    hp_tw, _ = get_fd_waveform(
+        "IMRPhenomXPNR",
+        mass1=m1,
+        mass2=m2,
+        spin1x=s1x,
+        spin1y=s1y,
+        spin1z=s1z,
+        spin2x=s2x,
+        spin2y=s2y,
+        spin2z=s2z,
+        distance=100.0,
+        inclination=inc,
+        f_ref=f_ref,
+        sample_frequencies=freqs,
+    )
 
-        s_hp_tw = FrequencySeries(hp_tw.detach().cpu().numpy(), delta_f=df)
-        overlap, _ = match(s_hp_lal, s_hp_tw, low_frequency_cutoff=f_min, high_frequency_cutoff=f_max)
-        assert overlap >= min_match, f"Match {overlap:.5f} below {min_match} for m=({m1},{m2}) s1=({s1x},{s1y},{s1z})"
+    s_hp_tw = FrequencySeries(hp_tw.detach().cpu().numpy(), delta_f=df)
+    overlap, _ = match(s_hp_lal, s_hp_tw, low_frequency_cutoff=f_min, high_frequency_cutoff=f_max)
+    request.node.user_properties.extend(
+        (("observed_match", f"{overlap:.12f}"), ("acceptance_threshold", f"{min_match:.2f}"))
+    )
+    assert overlap >= min_match, (
+        f"Match {overlap:.8f} below {min_match} for m=({m1},{m2}) "
+        f"s1=({s1x},{s1y},{s1z})"
+    )

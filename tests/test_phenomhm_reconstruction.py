@@ -185,7 +185,7 @@ def test_phase_continuity_across_boundaries():
 
 
 def test_phase_derivative_relation():
-    """Verify the mapped phase derivative, including London's Eq. (9)."""
+    """Verify the mapped phase derivative, including London's Eq. (14)."""
     model = IMRPhenomHM()
     m1 = torch.tensor(35.0, dtype=torch.float64)
     m2 = torch.tensor(20.0, dtype=torch.float64)
@@ -223,7 +223,7 @@ def test_phase_derivative_relation():
     _, _, phi22_pts = model.base_22(f=f22_pts, mass1=m1, mass2=m2, chi1=s1, chi2=s2, phic=0.0, tc=0.0, return_phase=True)
     dphi22_df22 = (phi22_pts[1] - phi22_pts[0]) / (2.0 * df)
 
-    # Eq. (9) changes the arctangent derivative, and C1 matching subtracts
+    # London Eq. (14) changes the arctangent derivative, and C1 matching subtracts
     # that derivative change at D's merger-ringdown join.
     eta = m1 * m2 / (m1 + m2).square()
     chi_pn = 0.5 * (s1 + s2) * (1.0 - 76.0 * eta / 113.0) + (m1 - m2) / (m1 + m2) * 0.5 * (s1 - s2)

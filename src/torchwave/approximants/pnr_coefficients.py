@@ -1,5 +1,9 @@
-"""NR calibration fit coefficient tensors for PNR precession angles.
-Derived from the NR fits in Hamilton et al. (2021), arXiv:2107.08876.
+"""Inherited NR calibration tensors for the PNR precession-angle fits.
+
+The published equations are in Thompson et al., arXiv:2312.10025v1,
+Eqs. (25)--(35), but the numerical tensors are not printed there. Their
+independent source and redistribution terms remain unresolved; see the XPNR
+research ledger and THIRD_PARTY_NOTICES.md.
 """
 
 import numpy as np

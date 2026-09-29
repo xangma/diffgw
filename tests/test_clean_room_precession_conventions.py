@@ -361,9 +361,7 @@ def test_xhm_positive_frequency_observer_azimuth(mode):
 
 
 @pytest.mark.parametrize('convention',[0,1,5,6,7])
-@pytest.mark.parametrize('method,version,remnant',[
-    ('nnlo',102,0),('msa',223,3),
-])
+@pytest.mark.parametrize('method,version,remnant',[('msa',223,3)])
 def test_xp_xphm22_agree_for_batched_observer_azimuth(convention,method,version,remnant):
     f = t([25.,40.,80.])
     phi0 = t([-.4,.3]).requires_grad_()
@@ -372,7 +370,9 @@ def test_xp_xphm22_agree_for_batched_observer_azimuth(convention,method,version,
              convention=convention,precession_method=method,prec_version=version,
              final_spin_mod=remnant)
     # The published 22-only identity compares the same angle/remnant model.
-    # XP defaults to MSA v223/remnant 3; XPHM defaults to NNLO v102/remnant 0.
+    # Both public defaults are MSA v223/remnant 3. XPHM NNLO-102 deliberately
+    # uses its paper-derived frequency-domain geometry and is instead checked
+    # against the independent scalar reference in test_xphm_nnlo_clean_room.
     for hp,hpm in zip(IMRPhenomXP()(f,**p,phi0=phi0),IMRPhenomXPHM(modes=[(2,2)])(f,**p,phi0=phi0)):
         torch.testing.assert_close(hp,hpm,atol=1e-34,rtol=2e-11)
         gp = torch.autograd.grad(1e22*hp.real.sum(),phi0,retain_graph=True)[0]
@@ -382,21 +382,32 @@ def test_xp_xphm22_agree_for_batched_observer_azimuth(convention,method,version,
 
 @pytest.mark.parametrize('model',[IMRPhenomXP,IMRPhenomXPHM])
 @pytest.mark.parametrize('version',[102,223])
-def test_opposed_j_rejects_secular_twist_preserves_exact_default_carrier(model,version):
+def test_opposed_j_domain_preserves_exact_default_carrier(model,version):
     waveform = model()
     f = t([25.,40.,80.])
     p = dict(mass1=100.,mass2=5.,spin1z=-.95,inclination=.7,phic=.3,f_ref=40.,prec_version=version)
     aligned = waveform(f,**p)
     assert all(torch.isfinite(h).all() for h in aligned)
     for convention in (0,1,5,6,7):
-        with pytest.raises(ValueError,match='L \\+ S_parallel <= 0'):
-            waveform(f,**p,spin1x=1e-9,convention=convention)
-        if convention != 1:
+        if model is IMRPhenomXPHM and version == 102:
+            # The frequency-domain NNLO helper uses NaN as its tensor-safe
+            # unsupported-domain marker in Torch eager/compile and JAX JIT.
+            unsupported = waveform(f,**p,spin1x=1e-9,convention=convention)
+            assert all(torch.isnan(h).all() for h in unsupported)
+            if convention != 1:
+                unsupported = waveform(f,**p,convention=convention)
+                assert all(torch.isnan(h).all() for h in unsupported)
+        else:
             with pytest.raises(ValueError,match='L \\+ S_parallel <= 0'):
-                waveform(f,**p,convention=convention)
+                waveform(f,**p,spin1x=1e-9,convention=convention)
+            if convention != 1:
+                with pytest.raises(ValueError,match='L \\+ S_parallel <= 0'):
+                    waveform(f,**p,convention=convention)
     # Mixed batches preserve the same exact aligned row as the scalar path.
-    mixed = waveform(f,mass1=t([100.,40.]),mass2=t([5.,20.]),spin1z=t([-.95,.4]),
-                     spin1x=t([0.,.3]),inclination=.7,phic=.3,f_ref=40.,prec_version=version)
+    mixed = waveform(f,mass1=t([100.,35.]),mass2=t([5.,25.]),
+                     spin1x=t([0.,.2]),spin1y=t([0.,.1]),spin1z=t([-.95,.2]),
+                     spin2x=t([0.,-.1]),spin2y=t([0.,.15]),spin2z=t([0.,-.1]),
+                     inclination=.7,phic=.3,f_ref=40.,prec_version=version)
     for hb,hs in zip(mixed,aligned):
         torch.testing.assert_close(hb[0],hs,atol=1e-34,rtol=2e-11)
 

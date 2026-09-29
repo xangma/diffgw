@@ -1,0 +1,221 @@
+# SPDX-License-Identifier: MIT
+"""Paper-era XHM (3,2) phase join and spherical/spheroidal mixing.
+
+Only the algebra printed in Garcia-Quiros et al., arXiv:2001.10914v2,
+Eqs. (38), (40), (46)--(50), Table 7, and (A1)--(A3) is implemented. All
+collocation targets, QNM frequencies, amplitudes, and mixing coefficients
+are caller data.  In particular, this is not a release-122022 fit provider.
+"""
+
+from __future__ import annotations
+
+import mpmath as mp
+
+
+SPEC_VERSION = "imrphenomxhm-transition-mixing/v1"
+COMPONENT_IDS = {
+    "intermediate_phase_join": "xhm.phase.32.intermediate-ringdown-join.v1",
+    "spherical_spheroidal_mixing": "xhm.mixing.32.spherical-spheroidal.v1",
+    "spheroidal_ringdown_phase_shape": "xhm.phase.32.spheroidal-ringdown-shape.v1",
+    "spheroidal_ringdown_alignment": "xhm.phase.32.spheroidal-alignment.v1",
+    "spheroidal_four_target_solve": "xhm.phase.32.spheroidal-four-target-solve.v1",
+}
+
+
+def spherical_32_from_spheroidal(h22, h32_s, alpha222, alpha232, alpha322, alpha332):
+    """Eliminate spheroidal 22 from the two-mode projection, Eq. (A3)."""
+
+    a222 = mp.mpc(alpha222)
+    if not a222:
+        raise ValueError("alpha222 must be nonzero")
+    ratio = mp.mpc(alpha322) / a222
+    return ratio * mp.mpc(h22) + (mp.mpc(alpha332) - ratio * mp.mpc(alpha232)) * mp.mpc(h32_s)
+
+
+def mixed_phase_derivatives(frequency, h22, h32_s, coefficients):
+    """Return local ``(phase, dphase/df, d2phase/df2)`` of mixed ``h32``.
+
+    ``h22`` and ``h32_s`` are scalar complex callables of frequency.  With
+    ``h=A exp(-i phase)``, logarithmic differentiation avoids unwrapping the
+    principal value of ``arg(h)`` and remains valid for any nonzero amplitude.
+    """
+
+    f = mp.mpf(frequency)
+    if f <= 0:
+        raise ValueError("frequency must be positive")
+    if len(coefficients) != 4:
+        raise ValueError("four mixing coefficients are required")
+
+    def mixed(x):
+        return spherical_32_from_spheroidal(h22(x), h32_s(x), *coefficients)
+
+    value = mixed(f)
+    if not value:
+        raise ValueError("mixed mode must be nonzero at the evaluation frequency")
+    first = mp.diff(mixed, f) / value
+    second = mp.diff(mixed, f, 2) / value - first**2
+    return -mp.arg(value), -mp.im(first), -mp.im(second)
+
+
+def ringdown_spheroidal_phase(frequency, f_ring32, f_damp32, coefficients, *, offset=0):
+    """Spheroidal ringdown phase of Eqs. (46)-(47), with caller coefficients."""
+
+    f, ring, damp = map(mp.mpf, (frequency, f_ring32, f_damp32))
+    if min(f, ring, damp) <= 0:
+        raise ValueError("frequencies must be positive")
+    a2, a4, alam, dphi = map(mp.mpf, coefficients)
+    return -a2 / f - a4 / (3 * f**3) + alam * mp.atan((f - ring) / damp) + dphi * f + mp.mpf(offset)
+
+
+def ringdown_spheroidal_phase_derivative(frequency, f_ring32, f_damp32, coefficients):
+    """Derivative of the spheroidal ringdown phase in Eqs. (46)-(47)."""
+
+    f, ring, damp = map(mp.mpf, (frequency, f_ring32, f_damp32))
+    if min(f, ring, damp) <= 0:
+        raise ValueError("frequencies must be positive")
+    a2, a4, alam, dphi = map(mp.mpf, coefficients)
+    return a2 / f**2 + a4 / f**4 + alam * damp / (damp**2 + (f - ring)**2) + dphi
+
+
+def ringdown_spheroidal_four_target_system(f_ring22, f_ring32, f_damp32):
+    """Return Table-9 nodes and the dimensionless Eq. (48) matrix.
+
+    Columns multiply ``(alpha2/r32², alpha4/r32⁴, alpha_lambda/r32,
+    dphi_RD)``. All fitted right-hand-side values remain caller data.
+    """
+
+    ring22, ring32, damp32 = map(mp.mpf, (f_ring22, f_ring32, f_damp32))
+    if not all(map(mp.isfinite, (ring22, ring32, damp32))) or min(ring22, ring32, damp32) <= 0:
+        raise ValueError("finite positive QNM frequencies required")
+    nodes = (ring22, ring32 - mp.mpf("1.5") * damp32,
+             ring32 - damp32 / 2, ring32 + damp32 / 2)
+    if min(nodes) <= 0:
+        raise ValueError("all four collocation frequencies must be positive")
+    if len(set(nodes)) != 4:
+        raise ValueError("the four collocation frequencies must be distinct")
+    delta = damp32 / ring32
+    matrix = mp.matrix([
+        [(frequency / ring32)**-2, (frequency / ring32)**-4,
+         delta / (delta**2 + (frequency / ring32 - 1)**2), mp.mpf(1)]
+        for frequency in nodes
+    ])
+    return nodes, matrix
+
+
+def ringdown_spheroidal_four_target_coefficients(
+    f_ring22, f_ring32, f_damp32, derivative_targets,
+):
+    """Solve published Eq. (48) for supplied four derivative targets."""
+
+    if len(derivative_targets) != 4:
+        raise ValueError("four derivative targets are required")
+    targets = tuple(map(mp.mpf, derivative_targets))
+    if not all(map(mp.isfinite, targets)):
+        raise ValueError("finite derivative targets are required")
+    _, matrix = ringdown_spheroidal_four_target_system(f_ring22, f_ring32, f_damp32)
+    if mp.det(matrix) == 0:
+        raise ValueError("the four-target matrix is rank-deficient")
+    scaled = mp.lu_solve(matrix, mp.matrix(targets))
+    ring32 = mp.mpf(f_ring32)
+    return (scaled[0] * ring32**2, scaled[1] * ring32**4,
+            scaled[2] * ring32, scaled[3])
+
+
+def ringdown_spheroidal_alignment(
+    f_ring22, f_damp22, f_ring32, f_damp32,
+    a2, a4, a_lambda, base_time, carrier_slope, carrier_phase, delta_t, delta_phi,
+):
+    """Eqs. (49)-(50) offsets at the author notebook's reference frequencies.
+
+    All fitted quantities and carrier values are caller-supplied; this does
+    not evaluate or redistribute the ancillary parameter-space surfaces.
+    """
+
+    r22, d22, r32, d32 = map(mp.mpf, (f_ring22, f_damp22, f_ring32, f_damp32))
+    a2, a4, alam, time = map(mp.mpf, (a2, a4, a_lambda, base_time))
+    slope, phase, dt, dphi = map(mp.mpf, (carrier_slope, carrier_phase, delta_t, delta_phi))
+    if min(r22, d22, r32, d32) <= 0:
+        raise ValueError("QNM frequencies must be positive")
+    f0 = r22 + d22
+    f1 = r22
+    unaligned_slope = ringdown_spheroidal_phase_derivative(f0, r32, d32, (a2, a4, alam, time))
+    final_time = time + slope + dt - unaligned_slope
+    unaligned_phase = ringdown_spheroidal_phase(f1, r32, d32, (a2, a4, alam, final_time))
+    final_phase = phase + dphi - unaligned_phase
+    return final_time, final_phase
+
+
+def _intermediate_row(f, ring, damp):
+    lorentz = damp / (damp**2 + (f - ring)**2)
+    return [lorentz, mp.mpf(1), *[f**-k for k in range(1, 5)]]
+
+
+def default_intermediate_32_nodes(eta, f_ins32, f_ring22, f_damp22):
+    """First four Table-7 nodes, with the paper's (3,2) end frequency."""
+    eta, f_ins, ring22, damp22 = map(mp.mpf, (eta, f_ins32, f_ring22, f_damp22))
+    if not 0 < eta <= mp.mpf("0.25") or min(f_ins, ring22, damp22) <= 0:
+        raise ValueError("physical eta and positive frequencies required")
+    start = (1 + mp.mpf("0.001") * (mp.mpf("0.25") / eta - 1)) * f_ins
+    end = ring22 - damp22 / 2
+    if end <= start:
+        raise ValueError("the Table-7 interval must have positive width")
+    return (
+        start,
+        ((mp.sqrt(3) + 2) * start - (mp.sqrt(3) - 2) * end) / 4,
+        (end + 3 * start) / 4,
+        (end + start) / 2,
+    )
+
+
+def intermediate_phase_coefficients(nodes, targets, f_join, dphi_join, d2phi_join, f_ring32, f_damp32):
+    """Solve the six Eq. (40) collocation and ringdown-join conditions.
+
+    Coefficients follow Eq. (38): ``(a_lambda, a0, a1, a2, a3, a4)``.
+    ``dphi_join`` and ``d2phi_join`` belong to the *spherical* ringdown
+    phase, after the Appendix-A basis transform.
+    """
+
+    if len(nodes) != 4 or len(targets) != 4:
+        raise ValueError("four intermediate nodes and targets are required")
+    fs = tuple(map(mp.mpf, nodes))
+    values = tuple(map(mp.mpf, targets))
+    join, ring, damp = map(mp.mpf, (f_join, f_ring32, f_damp32))
+    if min(*fs, join, ring, damp) <= 0 or len(set(fs + (join,))) != 5:
+        raise ValueError("positive, distinct nodes and join are required")
+    rows = [_intermediate_row(f, ring, damp) for f in (*fs, join)]
+    derivative_lorentz = -2 * damp * (join - ring) / (damp**2 + (join - ring)**2)**2
+    rows.append([derivative_lorentz, mp.mpf(0), *[-k * join**(-k - 1) for k in range(1, 5)]])
+    right = mp.matrix((*values, mp.mpf(dphi_join), mp.mpf(d2phi_join)))
+    solution = mp.lu_solve(mp.matrix(rows), right)
+    return tuple(solution)
+
+
+def intermediate_phase_derivative(frequency, f_ring32, f_damp32, coefficients):
+    """Evaluate Eq. (38), with its terms ordered as above."""
+
+    f, ring, damp = map(mp.mpf, (frequency, f_ring32, f_damp32))
+    if min(f, ring, damp) <= 0:
+        raise ValueError("frequencies must be positive")
+    alam, a0, a1, a2, a3, a4 = map(mp.mpf, coefficients)
+    return alam * damp / (damp**2 + (f - ring)**2) + a0 + a1 / f + a2 / f**2 + a3 / f**3 + a4 / f**4
+
+
+def intermediate_phase_second_derivative(frequency, f_ring32, f_damp32, coefficients):
+    """Differentiate Eq. (38) for the sixth Eq. (40) condition."""
+    f, ring, damp = map(mp.mpf, (frequency, f_ring32, f_damp32))
+    if min(f, ring, damp) <= 0:
+        raise ValueError("frequencies must be positive")
+    alam, _, a1, a2, a3, a4 = map(mp.mpf, coefficients)
+    return (-2 * alam * damp * (f - ring) / (damp**2 + (f - ring)**2)**2
+            - a1 / f**2 - 2 * a2 / f**3 - 3 * a3 / f**4 - 4 * a4 / f**5)
+
+
+def intermediate_phase(frequency, f_ring32, f_damp32, coefficients, *, offset=0):
+    """Primitive of Eq. (38); choose ``offset`` for value continuity."""
+
+    f, ring, damp = map(mp.mpf, (frequency, f_ring32, f_damp32))
+    if min(f, ring, damp) <= 0:
+        raise ValueError("frequencies must be positive")
+    alam, a0, a1, a2, a3, a4 = map(mp.mpf, coefficients)
+    return (alam * mp.atan((f - ring) / damp) + a0 * f + a1 * mp.log(f)
+            - a2 / f - a3 / (2 * f**2) - a4 / (3 * f**3) + mp.mpf(offset))
