@@ -1,0 +1,198 @@
+{
+  "cases": {
+    "grid_1": {
+      "match_time_M": 310.4267986637539,
+      "mode_sha256": "611106b8fff04b92c58a9826f334da41cc74f89a52f43155312b68ba549d0a1a",
+      "nqc_coefficients": {
+        "amplitude": [
+          4.123370187650779,
+          -47.13329104148797,
+          56.940637076941016
+        ],
+        "phase": [
+          4.1368163192259395,
+          -21.977242020438858
+        ]
+      },
+      "peak_time_M": 314.7991714477539,
+      "restart_time_M": 165.0,
+      "seconds": 243.0508495629765,
+      "stages": {
+        "coarse": {
+          "accepted": 579,
+          "evaluations": 3625,
+          "event_time_M": 314.8242358556655,
+          "rejected": 30,
+          "termination": [
+            "event"
+          ]
+        },
+        "fine": {
+          "accepted": 404,
+          "evaluations": 2570,
+          "event_time_M": 149.9576105784883,
+          "rejected": 29,
+          "termination": [
+            "event"
+          ]
+        }
+      }
+    },
+    "grid_2_default": {
+      "match_time_M": 310.4267986637539,
+      "mode_sha256": "e6ed05dd36f6328969146ccec2d2909b7ebe03fa9b4141e8734bf77c0db18b12",
+      "nqc_coefficients": {
+        "amplitude": [
+          4.1231778024197965,
+          -47.13162075622208,
+          56.93874277946648
+        ],
+        "phase": [
+          4.136773640616716,
+          -21.976828861054916
+        ]
+      },
+      "peak_time_M": 314.7991714477539,
+      "restart_time_M": 164.875,
+      "seconds": 241.24085916113108,
+      "stages": {
+        "coarse": {
+          "accepted": 579,
+          "evaluations": 3625,
+          "event_time_M": 314.82971840459714,
+          "rejected": 30,
+          "termination": [
+            "event"
+          ]
+        },
+        "fine": {
+          "accepted": 404,
+          "evaluations": 2570,
+          "event_time_M": 150.09281167897734,
+          "rejected": 29,
+          "termination": [
+            "event"
+          ]
+        }
+      }
+    },
+    "grid_2_fixed": {
+      "match_time_M": 310.4267986637539,
+      "mode_sha256": "1eb56ed79482f6ec082f3c57817b67cebb5bb8e9a437ea42fe6ff809ca3f38dc",
+      "nqc_coefficients": {
+        "amplitude": [
+          4.12337589246146,
+          -47.13334056880777,
+          56.9406932456698
+        ],
+        "phase": [
+          4.136817594947775,
+          -21.977254366425818
+        ]
+      },
+      "peak_time_M": 314.7991714477539,
+      "restart_time_M": 165.0,
+      "seconds": 241.2212802232243,
+      "stages": {
+        "coarse": {
+          "accepted": 579,
+          "evaluations": 3625,
+          "event_time_M": 314.82971840459714,
+          "rejected": 30,
+          "termination": [
+            "event"
+          ]
+        },
+        "fine": {
+          "accepted": 404,
+          "evaluations": 2570,
+          "event_time_M": 149.9577615243028,
+          "rejected": 29,
+          "termination": [
+            "event"
+          ]
+        }
+      }
+    }
+  },
+  "comparisons": {
+    "grid_2_default": {
+      "amplitude_relative_l2": 2.6143129771799576e-07,
+      "boundary_time_M_abs_difference": 0.0,
+      "candidate_samples": 1842,
+      "common_samples": 1842,
+      "complex_relative_l2": 6.149854319439281e-06,
+      "grid_step_M": 0.25,
+      "match_time_M_abs_difference": 0.0,
+      "peak_time_M_abs_difference": 0.0,
+      "phase_max_abs_rad": 1.2124152391523352e-05,
+      "phase_rms_rad": 6.9610732146903e-06,
+      "phase_samples": 1708,
+      "reference_samples": 1842,
+      "relative_norm_error": 1.8871788509677856e-07,
+      "samples": 1842,
+      "support_end_difference_M": 0.125,
+      "unmaximized_real_overlap": 0.999999999981108
+    },
+    "grid_2_fixed": {
+      "amplitude_relative_l2": 7.743538009110842e-09,
+      "boundary_time_M_abs_difference": 0.0,
+      "candidate_samples": 1842,
+      "common_samples": 1842,
+      "complex_relative_l2": 1.8363124029134652e-07,
+      "grid_step_M": 0.25,
+      "match_time_M_abs_difference": 0.0,
+      "peak_time_M_abs_difference": 0.0,
+      "phase_max_abs_rad": 3.6204698976132076e-07,
+      "phase_rms_rad": 2.079070281420973e-07,
+      "phase_samples": 1708,
+      "reference_samples": 1842,
+      "relative_norm_error": 5.589823270923944e-09,
+      "samples": 1842,
+      "support_end_difference_M": 0.125,
+      "unmaximized_real_overlap": 0.9999999999999835
+    }
+  },
+  "process": {
+    "argv": [
+      "grid_probe.py"
+    ],
+    "cwd": "/home/xangma/tmp/diffgw-seobnr-ode-gate-aa1f365f",
+    "host": "len",
+    "pid": 2249195
+  },
+  "row": {
+    "chi1": 0.0,
+    "chi2": 0.0,
+    "mass1": 30.0,
+    "mass2": 20.0,
+    "omega_start": 0.04
+  },
+  "schema": "diffgw.seobnrv4.grid-restart-control.v1",
+  "settings": {
+    "atol_levels": [
+      1e-12,
+      1e-13,
+      1e-14
+    ],
+    "dt_levels_M": [
+      0.5,
+      0.25,
+      0.125
+    ],
+    "event_time_limit_M": 0.05,
+    "max_accepted_steps": 20000,
+    "max_evaluations": 200000,
+    "max_rejected_steps": 10000,
+    "max_run_seconds": 600.0,
+    "relative_l2_limit": 1e-06,
+    "ringdown_duration_M": 150.0,
+    "rtol_levels": [
+      1e-11,
+      1e-12,
+      1e-13
+    ]
+  },
+  "source_manifest_sha256": "ba2c668401077505afd7b095eff1b81e2f13d03aba5bcf4a6e16df52383b8427",
+  "sources_unchanged": true
+}
