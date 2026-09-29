@@ -42,7 +42,7 @@ It does not add catalog claims or expand any validated domain.
 | [TaylorF2 and extensions](../math/taylorf2.md), [eccentric](../math/taylorf2-eccentric.md), [HM inspiral](../math/taylorf2-hm.md) | Versioned base and extension references with their own sampled claims | Additional physics, general parameter coverage, and independent external eight-mode HM comparison are separate claims. |
 | [D](../math/imrphenomd-intrinsic.md) and [XAS](../math/imrphenomxas.md) | Versioned carrier compositions and scoped reference/binary comparisons | Supplied fit/QNM inputs do not establish every upstream calibration or whole-domain error bound. |
 | [XP](research/xp-v223-reference-closure.md) | Scoped v223 geometry, selected generic chart and nonzero-azimuth composition; internal near-aligned continuity now passes | Generic equal-mass remnant and coalescing-root continuation, other versions and binary boundary cases remain open. |
-| [XHM/XPHM](research/phenom-higher-modes.md) | Independent amplitude, supplied-target phase and projection components; [precession reference scopes](research/xphm-precession-reference-closure.md); [ordinary intermediate-amplitude algebra](research/xhm-xphm-qualification-20260929.md) passes on both backends | Full mixed-mode carrier, calibrated release-122022 surfaces and asset mapping remain incomplete. The four strict frozen binary cases fail; these are compatibility checks, not NR results. |
+| [XHM/XPHM](research/phenom-higher-modes.md) | Independent amplitude, supplied-target phase and projection components; [precession reference scopes](research/xphm-precession-reference-closure.md); [ordinary intermediate-amplitude algebra](research/xhm-xphm-qualification-20260929.md) passes on both backends. An [isolated (2,1) fit candidate](research/xhm-21-carrier-boundary-20260929.md) reproduces paper-era `122019` inspiral nodes. | Full mixed-mode carrier, calibrated release-122022 surfaces and asset mapping remain incomplete. The candidate worsens two default-release full-waveform cases and is not in production. The four strict frozen binary cases fail; these are compatibility checks, not NR results. |
 | [P/Pv2 and SpinTaylor](research/phenom-precessing.md) | Native routes and bounded component/comparison evidence; the [clean-room SpinTaylor reference-angle qualification](../validation/spintaylor_reference_angle_20260929.md) checks the paper-derived frame gauge, grid invariance and Torch/JAX gradients | The [binary residual diagnosis](../validation/spintaylor_residual_20260929.md) separates carrier and angle differences without a unique public-source correction. Direct complex LAL errors of about 25% fail the whole-waveform gate. |
 | [XPNR](research/imrphenomxpnr.md) | [37 versioned published-form expressions](../math/imrphenomxpnr-components.md) with SymPy/mpmath and isolated Torch/JAX checks; four option-pinned, phase-optimized binary diagnostics pass their declared threshold | Terminal-state, full attachment/carrier composition and calibrated asset provenance remain incomplete. The diagnostics do not establish strict whole-waveform or physical accuracy. |
 | [T/THM/TP/TPHM](research/imrphenomt-family.md) | Selected inspiral, [supplied-input dominant merger](../validation/phenomt_merger_20260929.md), ringdown, rotations, angle/RHS and trajectory components | Full calibrated amplitude/mode composition and fit provenance; four q=10 precession binary gates still fail. |
@@ -62,13 +62,21 @@ has its own external-asset contract.
 ## Recovered native SEOBNR development state
 
 The separate native branch is at
-[`fd721937`](https://github.com/xangma/diffgw/tree/fd721937/dev/native_rom).
+[`1f17173e`](https://github.com/xangma/diffgw/tree/1f17173e/dev/native_rom).
 Its [tabulated-option follow-up](https://github.com/xangma/diffgw/blob/aa1f365f/dev/native_rom/evidence/2026-09-29/tabulated_qualification_followup.md)
 and [historical-fidelity decision](https://github.com/xangma/diffgw/blob/aa1f365f/dev/native_rom/evidence/2026-09-27/historical_fidelity_release.json)
 give the current bounded status.
 The [frozen numerical-gate diagnosis](https://github.com/xangma/diffgw/blob/fd721937/dev/native_rom/evidence/2026-09-29/ode_gate_slice/README.md)
 attributes the dominant ODE discrepancy to sampled NQC matching derivatives;
 its diagnostic controls do not pass the frozen gate or justify a production rule.
+The [continuous NQC derivative diagnostic](https://github.com/xangma/diffgw/blob/1f17173e/dev/native_rom/evidence/2026-09-29/ode_chain_derivatives/README.md)
+derives matching derivatives along the published ODE and checks them against
+an independently integrated dense trajectory. Behind an opt-in development
+flag, it passes both frozen numerical gates for the spinning row. The
+nonspinning ODE complex error improves to `2.614471e-6` but still exceeds
+`1e-6`; its grid errors are below the budget but fail the unchanged decreasing
+error check (`6.220681e-9` to `8.178640e-9`). The two-row generator therefore
+remains unqualified, and the default generator is unchanged.
 The frozen whole-path gradient check passes: eager/JIT complex relative L2 is
 `3.4370e-11` against `1e-10`. This is one initial-radius derivative with fixed
 mesh and attachment decisions, not general physical-parameter autodiff.
@@ -77,7 +85,8 @@ The old NQC coefficient sensitivity is not thereby declared repaired.
 Four release gates remain unmet: source completeness, numerical convergence,
 whole-waveform fidelity and independent ROM holdout. The selected
 `spin_truncation="tabulated"` option now flows into the native CLI and its
-receipts. Both completed, option-recorded numerical campaigns fail the frozen
+receipts. On the unchanged default path, both completed, option-recorded
+numerical campaigns fail the frozen
 `1e-6` ODE complex-L2 budget: `9.079206e-6` nonspinning and `4.938449e-5`
 spinning. The nonspinning grid also fails its complex budget and decreasing
 error check (`6.149855e-6` final); the spinning grid passes but its final ODE
