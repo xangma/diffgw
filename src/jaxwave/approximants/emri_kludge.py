@@ -1,8 +1,8 @@
-"""Short-time eccentric harmonic EMRI prototype with a static LISA projection.
+"""Scoped Newtonian eccentric strain and a separate provisional EMRI prototype.
 
-Only the leading orbit-averaged Peters (1964) p/e flux has an independent
-mathematical reference. The frequency, harmonic, and detector approximations
-are not a complete analytic or numerical kludge. See docs/math/emri-kludge.md.
+The NewtonianEccentricEMRI source strain has a paper-derived scalar reference.
+The older EMRIKludge retains only a checked leading Peters flux component.
+See docs/math/emri-kludge.md for their separate scopes.
 """
 
 from typing import Dict, Optional, Sequence, Tuple, Union
@@ -19,6 +19,113 @@ from diffgw_core.constants import (
 )
 from jaxwave.conversions import as_array
 from jaxwave.detectors.lisa import LISANetwork
+
+
+def _integer_bessel_j(order: int, x: jnp.ndarray) -> jnp.ndarray:
+    """Integer J series through k=20, for |order|<=10 and |x|<=4.8."""
+    sign = -1 if order < 0 and (-order) % 2 else 1
+    m = abs(order)
+    term = (x / 2) ** m / math.factorial(m)
+    result = term
+    for k in range(1, 21):
+        term = term * (-(x / 2) ** 2 / (k * (m + k)))
+        result = result + term
+    return sign * result
+
+
+class NewtonianEccentricEMRI:
+    """Weak-field, adiabatic Peters–Mathews strain at a fixed observer.
+
+    This is not a generic Kerr EMRI, the Barack–Cutler analytic kludge, or a
+    LISA/TDI response. See docs/math/emri-kludge.md for the exact domain.
+    """
+
+    definition_id = "emri.newtonian_eccentric_quadrupole.v1"
+
+    def __init__(self, n_harmonics: int = 5):
+        if not isinstance(n_harmonics, int) or isinstance(n_harmonics, bool) or not 2 <= n_harmonics <= 8:
+            raise ValueError("n_harmonics must be an integer in [2, 8]")
+        self.n_harmonics = n_harmonics
+
+    def trajectory(self, t, total_mass, secondary_mass, p0, e0, phase0=0.0):
+        """RK4 solution for dimensionless p, eccentricity, and mean anomaly."""
+        t = as_array(t, dtype=jnp.float64)
+        if t.dtype != jnp.float64:
+            raise ValueError("enable jax_enable_x64 for NewtonianEccentricEMRI")
+        if t.ndim != 1 or t.size < 2:
+            raise ValueError("t must be a 1D array with at least two samples")
+        m, mu, p, e, phase = jnp.broadcast_arrays(
+            as_array(total_mass, dtype=t.dtype), as_array(secondary_mass, dtype=t.dtype),
+            as_array(p0, dtype=t.dtype), as_array(e0, dtype=t.dtype),
+            as_array(phase0, dtype=t.dtype),
+        )
+        if not any(isinstance(x, jax.core.Tracer) for x in (t, m, mu, p, e, phase)):
+            period = 2 * math.pi * m * MSUN_SEC * (p / (1-e*e)) ** 1.5
+            if (not bool(jnp.all(t[1:] > t[:-1])) or
+                not bool(jnp.all(jnp.isfinite(m) & jnp.isfinite(mu) &
+                                 jnp.isfinite(p) & jnp.isfinite(e) &
+                                 jnp.isfinite(phase) & (m > 0) & (mu > 0) &
+                                 (mu/m <= 1e-3) & (p >= 12) &
+                                 (e >= 0) & (e <= 0.6))) or
+                bool(jnp.max(t[1:]-t[:-1]) > jnp.min(period) / 4)):
+                raise ValueError("outside Newtonian EMRI initial/grid domain")
+
+        def rhs(state):
+            pp, ee, _ = state
+            dp, de = peters_mathews_radiation_reaction(m, mu, pp, ee)
+            omega = (1-ee*ee) ** 1.5 / (m * MSUN_SEC * pp ** 1.5)
+            return dp, de, omega
+
+        def step(state, dt):
+            k1 = rhs(state)
+            k2 = rhs(tuple(v + dt*k/2 for v, k in zip(state, k1)))
+            k3 = rhs(tuple(v + dt*k/2 for v, k in zip(state, k2)))
+            k4 = rhs(tuple(v + dt*k for v, k in zip(state, k3)))
+            next_state = tuple(v + dt*(a + 2*b + 2*c + d)/6
+                               for v, a, b, c, d in zip(state, k1, k2, k3, k4))
+            return next_state, next_state
+
+        initial = (p, e, phase)
+        _, samples = jax.lax.scan(step, initial, t[1:] - t[:-1])
+        out = tuple(jnp.moveaxis(jnp.concatenate((v[None, ...], s), axis=0), 0, -1)
+                    for v, s in zip(initial, samples))
+        if not any(isinstance(x, jax.core.Tracer) for x in out):
+            if not bool(jnp.all((out[0] >= 12) & (out[1] >= 0) & (out[1] <= 0.6))):
+                raise ValueError("trajectory left p>=12, 0<=e<=0.6 domain")
+        return out
+
+    def polarizations(self, t, total_mass=1e6, secondary_mass=10.0,
+                      p0=16.0, e0=0.2, inclination=0.7, periapsis=0.0,
+                      phase0=0.0, distance=1000.0):
+        """Return source-frame h_plus and h_cross; distance is in Mpc."""
+        t = as_array(t, dtype=jnp.float64)
+        p, e, phase = self.trajectory(t, total_mass, secondary_mass, p0, e0, phase0)
+        mu = as_array(secondary_mass, dtype=t.dtype)
+        dist = as_array(distance, dtype=t.dtype)
+        inc = as_array(inclination, dtype=t.dtype)
+        gamma = as_array(periapsis, dtype=t.dtype)
+        if not any(isinstance(x, jax.core.Tracer) for x in (dist, inc, gamma)):
+            if not bool(jnp.all(jnp.isfinite(dist) & jnp.isfinite(inc) &
+                                jnp.isfinite(gamma) & (dist > 0))):
+                raise ValueError("distance must be positive and observer angles finite")
+        amp = mu[..., None] * MSUN_SEC * (1-e*e) / p
+        u = jnp.cos(inc)[..., None]
+        cos2g, sin2g = jnp.cos(2*gamma)[..., None], jnp.sin(2*gamma)[..., None]
+        plus, cross = jnp.zeros_like(phase), jnp.zeros_like(phase)
+        for n in range(1, self.n_harmonics + 1):
+            x = n*e
+            jm2, jm1, j0, jp1, jp2 = (
+                _integer_bessel_j(n + shift, x) for shift in (-2, -1, 0, 1, 2)
+            )
+            aa = -n*amp*(jm2 - 2*e*jm1 + (2/n)*j0 + 2*e*jp1 - jp2)*jnp.cos(n*phase)
+            bb = -n*amp*jnp.sqrt(1-e*e)*(jm2 - 2*j0 + jp2)*jnp.sin(n*phase)
+            cc = 2*amp*j0*jnp.cos(n*phase)
+            plus = plus - (1+u*u)*(aa*cos2g - bb*sin2g) + (1-u*u)*cc
+            cross = cross + 2*u*(bb*cos2g + aa*sin2g)
+        scale = dist[..., None] * MPC_SI / C_SI
+        return plus/scale, cross/scale
+
+    __call__ = polarizations
 
 
 def kerr_geodesic_frequencies(

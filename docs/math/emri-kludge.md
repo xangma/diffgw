@@ -1,52 +1,78 @@
-# EMRIKludge: provisional component qualification
+# EMRI research specifications
 
-This research specification is outside the public waveform catalog. The class is a short-time harmonic prototype. Only its leading secular `p,e` flux has an independent source-derived reference; no whole-waveform EMRI claim follows.
+This file separates the checked Newtonian eccentric source strain from the older provisional `EMRIKludge`. Both remain outside the public waveform catalog. The checked model is a weak-field, leading-quadrupole, fixed-observer limit; it is not a generic Kerr EMRI, the complete Barack–Cutler analytic kludge (AK), a numerical kludge (NK), or a LISA response.
 
 ## Scope and status
 
-The Torch and JAX classes produce time-domain `h_plus,h_cross` from a finite sum of hand-set eccentric sidebands, optionally multiplied by static LISA antenna patterns labeled `A,E,T`. There is no generic Kerr-geodesic orbit, self-force inspiral, source-faithful analytic-kludge (AK) evolution, numerical-kludge (NK) geodesic trajectory, or demonstrated time-delay-interferometry (TDI) transfer. The leading orbit-averaged Peters flux component is **executable and checked** on CPU float64. Orbit, harmonics, and detector response are **red qualification gates**. No coefficient table, trained model, or external asset is used.
+`NewtonianEccentricEMRI` implements adiabatic Peters evolution of Keplerian `p,e`, a mean anomaly, the finite Peters–Mathews eccentric Bessel sum written in [Barack and Cutler (2004), Sec. III B, Eqs. (2)–(10), (27)](https://arxiv.org/pdf/gr-qc/0310125), and source-frame polarizations at a fixed observer. A separate SymPy/mpmath specification and numerical comparisons check this bounded model. Its definition is `emri.newtonian_eccentric_quadrupole.v1`.
+
+The pre-existing `EMRIKludge` uses a frozen initial flux, hand-set sidebands, approximate frequencies, and static LISA antenna multiplication. Its only independently checked component is the leading Peters `p,e` flux. It has no whole-waveform qualification and remains provisional. The new class does not call that class or its detector projection.
 
 ## Inputs, conventions, and options
 
-Central mass `M` and secondary mass `mu` are solar masses; `p` is dimensionless semilatus rectum in units of `M`, `e` is in `[0,1)`, dimensionless spin and angles use radians, input times use seconds, and distance uses Mpc. `n_harmonics=5` and the sum uses positive `n=1,...,N`. The scalar reference requires `M,mu,p>0` and `0<=e<1`; native flux clamps `p>=1`, `0<=e<=0.9999` and `1-e²>=1e-8`, so the reference checks only the unclamped interior. The reference has no interpolation or external data. The classes use initial fluxes in `p(t)=p0+dot(p0,e0)t`, `e(t)=e0+dot(e0,p0)t`, then clamp them; phase sums use a rectangular step based on the first time spacing. This is not an integrated inspiral ODE or an accuracy-controlled evolution. Phases, inclinations and sky frames are not yet source-qualified. Clamp boundaries are not differentiability claims.
+`M` (central mass) and `mu` (secondary mass) are in solar masses; `p=a(1-e²)/M` is dimensionless; `e` is eccentricity; `t` is an increasing one-dimensional array of seconds; `phase0`, observer inclination `iota`, and periapsis angle `gamma` are radians; `D` is in Mpc. Inclination is the angle between fixed orbital angular momentum and line of sight. The return is source-frame `(h_plus,h_cross)` on the supplied time grid, with the polarization convention of Barack–Cutler Eq. (10). `phase0` is the mean anomaly at the first sample. No sky position or detector frame is accepted.
+
+The native option has integer `2 <= n_harmonics <= 8`, default 5, and sums positive harmonics `1,...,N`. It requires positive `M,mu,D`, `mu/M <= 10^-3`, `p >= 12`, and `0 <= e <= 0.6` for the whole trajectory. The maximum time step is at most a quarter of the initial Kepler period `2π M_sec [p/(1-e²)]^(3/2)`. Executable comparisons use CPU float64; JAX requires `jax_enable_x64=True`. Eager calls reject out-of-domain parameters and grids. Under JAX `jit`, traced numeric inputs bypass Python validation, so callers must check the same domain before execution. No accuracy promise is made for longer grids or parameter regions beyond the tested cases. No spin, precession, generic Kerr frequencies, higher-PN corrections, LISA response, interpolation table, or external asset enters this definition.
+
+The older `EMRIKludge` has different parameters and behavior. Its native flux clamps `p>=1`, `0<=e<=0.9999`, and `1-e²>=1e-8`; the flux reference checks its unclamped interior only. The old class uses first-order initial-flux extrapolation and a rectangular phase sum, not an integrated inspiral.
 
 ## Mathematics and components
 
-The primary source for the checked component is [Peters 1964, Eqs. (5.6)-(5.7)](https://doi.org/10.1103/PhysRev.136.B1224). Let `A=a_orbit/M` be the dimensionless semimajor axis, `p=A(1-e²)`, and `q=mu/M²`, with both masses expressed as geometric seconds. Peters gives
+[Peters (1964), Eqs. (5.6)–(5.7)](https://doi.org/10.1103/PhysRev.136.B1224) gives the leading orbit-averaged rates. With `A=a/M`, `p=A(1-e²)`, `q=mu_sec/M_sec²`, and masses in geometric seconds,
 
 \[
 \dot A=-\frac{64}{5}q A^{-3}(1-e^2)^{-7/2}
- \left(1+\frac{73}{24}e^2+\frac{37}{96}e^4\right),\qquad
+ \left(1+\frac{73}{24}e^2+\frac{37}{96}e^4\right),\quad
 \dot e=-\frac{304}{15}q e A^{-4}(1-e^2)^{-5/2}
  \left(1+\frac{121}{304}e^2\right).
 \]
 
-Apply the chain rule **before** substituting `A=p/(1-e²)`: `dot p=(1-e²)dot A-2Ae dot e`. Exact simplification gives
+The exact chain rule `dot p=(1-e²)dot A-2Ae dot e` gives
 
 \[
 \dot p=-\frac{64}{5}q p^{-3}(1-e^2)^{3/2}
- \left(1+\frac78e^2\right),\qquad
+ \left(1+\frac78e^2\right),\quad
 \dot e=-\frac{304}{15}q e p^{-4}(1-e^2)^{3/2}
- \left(1+\frac{121}{304}e^2\right).
+ \left(1+\frac{121}{304}e^2\right),\quad
+\dot\Phi=\frac{(1-e^2)^{3/2}}{M_{\rm sec}p^{3/2}}.
 \]
 
-The `304/15` coefficient survives the change to `p`; the previous carrier value `604/48` was incorrect. These Newtonian, orbit-averaged two-body expressions become leading EMRI fluxes in the extreme mass-ratio limit. They do not supply Kerr-geodesic frequencies or higher-order self-force evolution.
+For each `n`, let `J_k=J_k(ne)`, `A_h=mu_sec(1-e²)/p`, and `u=cos(iota)`. The [Barack–Cutler quadrupole convention](https://arxiv.org/pdf/gr-qc/0310125) is
 
-| Component ID/version | Source / variant | Status | Scalar reference | Torch / JAX | Gate |
-| --- | --- | --- | --- | --- | --- |
-| `emri.flux.peters_leading.v1` | Peters 1964 Eqs. (5.6)-(5.7), exact `A` to `p` conversion | Executable, scoped check | `diffgw_reference.emri_peters_flux` | `peters_mathews_radiation_reaction` | CPU float64 values and derivatives; unclamped `p,e` only |
-| `emri.orbit.v0` | [Barack–Cutler 2004 Eqs. (27)-(31)](https://arxiv.org/pdf/gr-qc/0310125) AK versus [Babak et al. 2007](https://arxiv.org/pdf/gr-qc/0607007) NK | Pending | None | `kerr_geodesic_frequencies`, `orbital_trajectory` | Choose a model, its variables, generic frequencies, evolution and convergence |
-| `emri.harmonics.v0` | Barack–Cutler 2004 Eqs. (7)-(10), Bessel coefficients | Diagnostic | None | `polarizations` | Replace or bound hand-set powers of `e`, projection and phase |
-| `emri.lisa.v0` | TDI transfer convention not chosen | Pending | None | `project_to_lisa` | Independent time-delay response and frame check |
+\[
+a_n=-n A_h\left[J_{n-2}-2eJ_{n-1}+\frac{2}{n}J_n+2eJ_{n+1}-J_{n+2}\right]\cos(n\Phi),
+\]
+\[
+b_n=-n A_h\sqrt{1-e^2}\left[J_{n-2}-2J_n+J_{n+2}\right]\sin(n\Phi),\qquad
+c_n=2A_h J_n\cos(n\Phi),
+\]
+\[
+h_+=\frac{\sum_n[-(1+u^2)(a_n\cos2\gamma-b_n\sin2\gamma)+(1-u^2)c_n]}{D_{\rm sec}},\quad
+h_\times=\frac{\sum_n 2u(b_n\cos2\gamma+a_n\sin2\gamma)}{D_{\rm sec}}.
+\]
 
-## Implementation mapping
+Here `D_sec=D_Mpc × Mpc_SI/c`. The circular limit has only `n=2`: `h_+=2A_h(1+u²)cos[2(Φ+γ)]/D_sec`, `h_cross=-4A_h u sin[2(Φ+γ)]/D_sec`. This is the [Peters–Mathews (1963)](https://doi.org/10.1103/PhysRev.131.435) leading quadrupole sector. The finite `N` sum truncates eccentric power; it is not an all-harmonic model. The native Bessel implementation evaluates the convergent integer-order series through `k=20` (21 terms) for `ne<=4.8`; the reference uses mpmath Bessel functions.
 
-The source-derived scalar reference constructs Peters' `dot A`, `dot e` and the chain-rule expression symbolically with exact rational coefficients, then evaluates values and derivatives with mpmath. It imports neither native backend nor native constants. The Torch and JAX carrier functions now use `304/15` for `dot e`. The reference is **not** called by either frontend. Their frozen initial-flux trajectory does not solve Barack–Cutler's five coupled AK evolution equations, and their `kerr_geodesic_frequencies` ignores `e`; the circular-equatorial-looking `1/(p^{3/2}+a)` expression cannot represent generic eccentric, inclined Kerr frequencies. The emitted `n phi+2 gamma` phase omits the computed nodal phase. The sideband amplitudes are powers of `e`, not the paper's Bessel coefficients. Static antenna multiplication is not a measured TDI delay operator. Babak et al.'s NK instead follows Kerr geodesics and constructs radiation from multipole moments; that algorithm is absent.
+| Component ID/version | Paper source and option | Independent specification | Native Torch/JAX | Evidence status |
+| --- | --- | --- | --- | --- |
+| `emri.flux.peters_leading.v1` | Peters 1964, Eqs. (5.6)–(5.7), exact `a` to `p` change | `diffgw_reference.emri_peters_flux` | `peters_mathews_radiation_reaction` | Exact symbolic conversion; sampled float64 value/derivative checks |
+| `emri.orbit.peters_kepler_rk4.v1` | Peters rates and Barack–Cutler Eq. (27) Newtonian mean anomaly; fixed-grid RK4 | `diffgw_reference.emri_newtonian_quadrupole.trajectory` | `NewtonianEccentricEMRI.trajectory` | Sampled waveform and grid stability checks; no adaptive/global error bound |
+| `emri.harmonics.peters_mathews.v1` | Barack–Cutler Eqs. (7)–(9), finite `N=2,...,8` | SymPy expressions and mpmath Bessel evaluation | Native integer-Bessel series | Symbolic circular limit; sampled scalar/native checks, including `N=8,e=0.6` |
+| `emri.observer.fixed_polarizations.v1` | Barack–Cutler Eq. (10), fixed `u,γ,D` | SymPy expressions, mpmath evaluation | Native source-frame `polarizations` | Sampled value and parameter-gradient checks |
+| `emri.ak_kerr.v0`, `emri.nk_kerr.v0`, `emri.lisa.v0` | Complete AK/NK/Kerr and TDI models | None | None in new class | Open; no such capability claim |
+
+## Implementation mapping and public-code comparison
+
+The reference file `src/diffgw_reference/emri_newtonian_quadrupole.py` records `SPEC_VERSION=emri-newtonian-eccentric-quadrupole/v1` and the three new component IDs. It builds harmonic and observer expressions in SymPy, evaluates them with mpmath Bessel functions, and integrates paper-derived rates at high precision. It imports neither native frontend nor native constants; the existing symbolic flux reference supplies only Peters' rates. Both native frontends independently run RK4 on the requested grid and differentiate through native tensor operations. Torch uses autograd; JAX supports `grad`, batch broadcasting, `jit`, and `lax.scan`. This comparison checks implementation agreement with the bounded specification; a common fixed-grid RK4 method can share numerical truncation error.
+
+For capability context, [FastEMRIWaveforms (FEW) v2.1.1 waveform documentation](https://fastemriwaveforms.readthedocs.io/en/v2.1.1/user/main.html) lists distinct `FastSchwarzschildEccentricFlux`, `FastKerrEccentricEquatorialFlux`, and `Pn5AAKWaveform` options. Its [trajectory documentation](https://fastemriwaveforms.readthedocs.io/en/v2.1.1/tutorial/Trajectory_tutorial.html) identifies Schwarzschild eccentric flux, Kerr eccentric equatorial flux, and PN5 spinning inclined trajectories. These include relativistic or higher-PN dynamics absent from this Newtonian fixed-observer option. None is an equation-identical oracle for this finite Peters–Mathews quadrupole model; no FEW output is used as a numerical comparison here. The fuller [Barack–Cutler AK](https://arxiv.org/pdf/gr-qc/0310125) evolves precession and higher-order terms, while the [Babak et al. NK](https://arxiv.org/pdf/gr-qc/0607007) follows Kerr geodesics and multipole radiation. The provisional legacy `EMRIKludge` does not implement either model despite its name.
 
 ## Evidence and limitations
 
-`tests/test_emri_peters_flux_math_reference.py` proves the exact `A` to `p` conversion and independently checks each frontend's `dot p`, `dot e` and `p` derivatives at `(p,e)=(8,0),(8,0.3),(14,0.7)`, plus an `e` derivative at `(11,0.2)`. The domain is `M=10^6` solar masses, `mu=10` solar masses, CPU float64, with relative thresholds `2e-13` for values and `3e-13` for derivatives (absolute `1e-28`). This checks a flux component and one mass scale, not an inspiral or waveform. It does not test behavior at native clamps. No same-model external comparison or physical EMRI validation has been made. The unresolved orbit, harmonic, and detector gates above explicitly block promotion into the public catalog.
+`tests/test_emri_newtonian_quadrupole_reference.py` checks the exact circular limit and absence of non-2 harmonics at `e=0`; both native strains against the scalar reference at `e=0,0.2,0.55`, several observer angles and times; independent five-point high-precision derivatives for `p0,e0,iota,gamma`; batch values and JAX `jit`; grid stability; and `N=8,e=0.6` near the bounded edge. Value tolerances are relative `3e-12` and absolute `2e-34`; derivative tolerance is relative `4e-10` and absolute `1e-34`. The tests do not establish physical accuracy against a relativistic EMRI, long-time phase accuracy, a rigorous RK4 error bound, uniform accuracy across the full parameter box, JIT runtime domain rejection, or a detector response. The full harmonic sum beyond `N=8` and generic inclination/precession remain open. See the dated EMRI evidence receipt in `docs/validation/` for the executed environment and results.
+
+The existing `tests/test_emri_peters_flux_math_reference.py` also proves the exact `A` to `p` conversion and checks native `dot p,dot e` and derivatives at `(p,e)=(8,0),(8,0.3),(14,0.7)` and another `e` derivative at `(11,0.2)`, for `M=10^6`, `mu=10` solar masses on CPU float64. It checks only the unclamped flux interior. The wrong historical `604/48` eccentricity coefficient was corrected to `304/15` in that component; this new model inherits the checked expression.
 
 ## Reproduce the checks
 
-With `sympy`, `mpmath`, `torch`, `jax`, and pytest installed, run `PYTHONPATH=src python -m pytest -q tests/test_emri_peters_flux_math_reference.py`; the ordinary EMRI and cross-backend tests can be run separately. The maintained `--require-math-reference` CI gate discovers this file in a full reference-suite invocation and rejects skips/xfails. A change to the source equation, variable convention, coefficient, or numerical policy requires a component version increment and renewed exact symbolic, scalar-to-native and derivative evidence. Whole-waveform promotion additionally requires independent AK or NK equations, harmonic and TDI references and their own tests.
+With SymPy, mpmath, PyTorch, JAX (x64 enabled), NumPy, and pytest available, run `PYTHONPATH=src python -m pytest -q tests/test_emri_newtonian_quadrupole_reference.py tests/test_emri_peters_flux_math_reference.py`. The reference file is not called by either native implementation. Any change to the source equations, finite harmonic policy, variables, or numerical method requires a version review and renewed exact, scalar, and derivative checks. Promoting a generic EMRI, AK/NK, or LISA waveform requires separate paper-derived reference components and external or independently implemented waveform evidence.
