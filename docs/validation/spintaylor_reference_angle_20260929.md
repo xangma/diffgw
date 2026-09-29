@@ -48,7 +48,7 @@ Torch and JAX give zero observed common-frequency difference for all three
 angles on these two grids (at float64 output precision). Their results agree
 within `3e-13` on this case. An independent 60-digit mpmath vector-projection
 calculation, saved in
-[`scripts/qualification/spintaylor_reference_geometry.py`](../../scripts/qualification/spintaylor_reference_geometry.py),
+`scripts/qualification/spintaylor_reference_geometry.py`,
 gives `L_ref=0.88950649216544358283`, `alpha_ref=1.57439644503303349055`,
 `beta_ref=0.12616479751384345551`, and
 `gamma_ref=2.95148672230356904348`. The native reference angles agree within

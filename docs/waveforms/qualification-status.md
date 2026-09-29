@@ -22,10 +22,11 @@ fidelity, numerical convergence, differentiability and physical accuracy as
 distinct claims. Failed gates remain visible; neither a newly chosen tolerance
 nor a match to one sampled binary case silently widens a qualified domain.
 
-The current family reviews are being developed in separate worktrees. Their
-family-specific math, reference, backend, test and evidence changes will be
-integrated here only after review. Shared dispatch, coverage and release claims
-are owned by this integration branch so parallel work cannot overwrite them.
+The bounded family reviews were developed in separate worktrees and their
+reviewed math, reference, backend, test and evidence changes are integrated
+here. The SpinTaylor reference-angle change was independently rederived under
+the clean-room provenance rule. Shared dispatch, coverage and release claims
+remain owned by this integration branch.
 
 This 29 September 2026 review separates implemented mathematical scopes from
 remaining implementation, provenance and physical-accuracy questions. It
@@ -42,7 +43,7 @@ It does not add catalog claims or expand any validated domain.
 | [D](../math/imrphenomd-intrinsic.md) and [XAS](../math/imrphenomxas.md) | Versioned carrier compositions and scoped reference/binary comparisons | Supplied fit/QNM inputs do not establish every upstream calibration or whole-domain error bound. |
 | [XP](research/xp-v223-reference-closure.md) | Scoped v223 geometry, selected generic chart and nonzero-azimuth composition; internal near-aligned continuity now passes | Generic equal-mass remnant and coalescing-root continuation, other versions and binary boundary cases remain open. |
 | [XHM/XPHM](research/phenom-higher-modes.md) | Independent amplitude, supplied-target phase and projection components; [precession reference scopes](research/xphm-precession-reference-closure.md); [ordinary intermediate-amplitude algebra](research/xhm-xphm-qualification-20260929.md) passes on both backends | Full mixed-mode carrier, calibrated release-122022 surfaces and asset mapping remain incomplete. The four strict frozen binary cases fail; these are compatibility checks, not NR results. |
-| [P/Pv2 and SpinTaylor](research/phenom-precessing.md) | Native routes and bounded component/comparison evidence | Complete independent frame/angle/carrier composition; SpinTaylor RHS, integration and gradient contract. |
+| [P/Pv2 and SpinTaylor](research/phenom-precessing.md) | Native routes and bounded component/comparison evidence; the [clean-room SpinTaylor reference-angle qualification](../validation/spintaylor_reference_angle_20260929.md) checks the paper-derived frame gauge, grid invariance and Torch/JAX gradients | Independent qualification of the full SpinTaylor RHS and carrier composition remains open. Direct complex LAL errors of about 25% for the documented case fail the whole-waveform gate. |
 | [XPNR](research/imrphenomxpnr.md) | [37 versioned published-form expressions](../math/imrphenomxpnr-components.md) with SymPy/mpmath and isolated Torch/JAX checks; four option-pinned, phase-optimized binary diagnostics pass their declared threshold | Terminal-state, full attachment/carrier composition and calibrated asset provenance remain incomplete. The diagnostics do not establish strict whole-waveform or physical accuracy. |
 | [T/THM/TP/TPHM](research/imrphenomt-family.md) | Selected inspiral, [supplied-input dominant merger](../validation/phenomt_merger_20260929.md), ringdown, rotations, angle/RHS and trajectory components | Full calibrated amplitude/mode composition and fit provenance; four q=10 precession binary gates still fail. |
 | [NRTidal v1](../math/nrtidalv1-merger-taper.md) | Printed nonspinning tidal factor/taper, bounded premerger carrier checks and [versioned source-revision audit](../validation/nrtidal_family_qualification_20260929.md) | The historical taper convention retains its documented bounds; broader spinning/full-carrier scopes remain separate. |
@@ -103,8 +104,8 @@ coupling formula. This does not change catalog claims or physical gates.
 2. Preserve SEOBNR's passed frozen gradient gate. Resolve one explicit public
    source/provenance blocker before commissioning more historical-port work;
    do not restart old diagnostics from stale chat messages.
-3. For the next independent composition, prefer a bounded NRTidal printed-D
-   scope: explicitly choose a tidal quotient or a full independently evaluated
-   carrier. The existing quotient result does not already certify the latter.
+3. For NRTidal, separate the independently checked printed-D tidal quotient
+   from the still-failing nonzero-tide taper binary gates and the unqualified
+   full precessing Pv2 assembly. Do not infer a carrier claim from the quotient.
 4. Keep missing calibration assets and source definitions visible. New physics,
    refits and broader NR accuracy need separately agreed models and holdouts.
