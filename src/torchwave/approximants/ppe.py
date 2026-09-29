@@ -217,14 +217,25 @@ class ParameterizedPostEinstein(nn.Module):
         m2 = as_tensor(mass2, device=f.device, dtype=f.dtype if f.is_floating_point() else torch.float64)
         chirp_m = (m1 * m2) ** (3.0 / 5.0) / (m1 + m2) ** (1.0 / 5.0)
 
+        # The carrier identifies the batch axes. A (B,) parameter must act on
+        # every frequency of its waveform, even when B happens to equal N.
+        batch_shape = hp_gr.shape[:-1]
+
+        def align(value):
+            tensor = as_tensor(value, device=f.device, dtype=m1.dtype)
+            return tensor.unsqueeze(-1) if batch_shape and tensor.shape == batch_shape else tensor
+
+        chirp_m = align(chirp_m)
+
         # 2. Compute non-GR phase shifts
-        delta_psi_ppe = ppe_phase_shift(f, chirp_m, beta_ppe=beta_ppe, b_ppe=b_ppe)
+        delta_psi_ppe = ppe_phase_shift(f, chirp_m, beta_ppe=align(beta_ppe), b_ppe=align(b_ppe))
         delta_psi_disp = modified_dispersion_phase_shift(
-            f, distance=distance, lambda_g=lambda_g, z=redshift, d_alpha=d_alpha
+            f, distance=align(distance), lambda_g=align(lambda_g), z=align(redshift),
+            d_alpha=None if d_alpha is None else align(d_alpha)
         )
 
         total_shift = delta_psi_ppe + delta_psi_disp
-        amplitude_factor = ppe_amplitude_factor(f, chirp_m, alpha_ppe, a_ppe)
+        amplitude_factor = ppe_amplitude_factor(f, chirp_m, align(alpha_ppe), align(a_ppe))
 
         # 3. Apply stationary phase deformation: exp(-i * delta_Psi)
         # Match tensor dimensions if hp_gr is batched

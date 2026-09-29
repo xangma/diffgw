@@ -223,14 +223,25 @@ class ParameterizedPostEinstein:
         m2 = as_array(mass2, dtype=f_t.dtype)
         chirp_m = (m1 * m2) ** (3.0 / 5.0) / (m1 + m2) ** (1.0 / 5.0)
 
+        # Use the carrier's batch axes to disambiguate (B,) from (N,), even
+        # when batch and frequency dimensions have the same length.
+        batch_shape = hp_gr.shape[:-1]
+
+        def align(value):
+            array = as_array(value, dtype=f_t.dtype)
+            return jnp.expand_dims(array, -1) if batch_shape and array.shape == batch_shape else array
+
+        chirp_m = align(chirp_m)
+
         # 2. Compute non-GR phase shifts
-        delta_psi_ppe = ppe_phase_shift(f_t, chirp_m, beta_ppe=beta_ppe, b_ppe=b_ppe)
+        delta_psi_ppe = ppe_phase_shift(f_t, chirp_m, beta_ppe=align(beta_ppe), b_ppe=align(b_ppe))
         delta_psi_disp = modified_dispersion_phase_shift(
-            f_t, distance=distance, lambda_g=lambda_g, z=redshift, d_alpha=d_alpha
+            f_t, distance=align(distance), lambda_g=align(lambda_g), z=align(redshift),
+            d_alpha=None if d_alpha is None else align(d_alpha)
         )
 
         total_shift = delta_psi_ppe + delta_psi_disp
-        amplitude_factor = ppe_amplitude_factor(f_t, chirp_m, alpha_ppe, a_ppe)
+        amplitude_factor = ppe_amplitude_factor(f_t, chirp_m, align(alpha_ppe), align(a_ppe))
 
         # 3. Apply stationary phase deformation: exp(-i * delta_Psi)
         if hp_gr.ndim > total_shift.ndim:
