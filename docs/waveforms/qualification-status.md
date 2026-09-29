@@ -60,25 +60,28 @@ has its own external-asset contract.
 
 ## Recovered native SEOBNR development state
 
-The separate branch was recovered at
-[`093f44d`](https://github.com/xangma/diffgw/tree/093f44d3b2706e2f1c3224d523eedc69ea24ed2b/dev/native_rom).
-Its current
-[historical-fidelity decision](https://github.com/xangma/diffgw/blob/093f44d3b2706e2f1c3224d523eedc69ea24ed2b/dev/native_rom/evidence/2026-09-27/historical_fidelity_release.json)
-supersedes the interrupted chat's earlier JAX failure as the status source.
+The separate native branch is at
+[`aa1f365f`](https://github.com/xangma/diffgw/tree/aa1f365f/dev/native_rom).
+Its [tabulated-option follow-up](https://github.com/xangma/diffgw/blob/aa1f365f/dev/native_rom/evidence/2026-09-29/tabulated_qualification_followup.md)
+and [historical-fidelity decision](https://github.com/xangma/diffgw/blob/aa1f365f/dev/native_rom/evidence/2026-09-27/historical_fidelity_release.json)
+give the current bounded status.
 The frozen whole-path gradient check passes: eager/JIT complex relative L2 is
 `3.4370e-11` against `1e-10`. This is one initial-radius derivative with fixed
 mesh and attachment decisions, not general physical-parameter autodiff.
 The old NQC coefficient sensitivity is not thereby declared repaired.
 
 Four release gates remain unmet: source completeness, numerical convergence,
-whole-waveform fidelity and independent ROM holdout. The saved numerical
-receipt misses its `1e-6` complex-L2 budget: ODE medium-to-fine is `8.7485e-6`
-and output-grid medium-to-fine is `6.0815e-6`, with nonmonotonic grid refinement.
-The latest flux audit has 31 of 35 eligible source rows; four even-m ell=8
-rows still need eligible source/reuse evidence, and historical runtime
-selection is a separate unresolved contract. Hamiltonian, QNM and initial-data
-source questions also remain. These are concrete blockers, not requests for
-another NR campaign.
+whole-waveform fidelity and independent ROM holdout. The selected
+`spin_truncation="tabulated"` option now flows into the native CLI and its
+receipts. Both completed, option-recorded numerical campaigns fail the frozen
+`1e-6` ODE complex-L2 budget: `9.079206e-6` nonspinning and `4.938449e-5`
+spinning. The nonspinning grid also fails its complex budget and decreasing
+error check (`6.149855e-6` final); the spinning grid passes but its final ODE
+amplitude L2 (`1.470160e-6`) fails. Both cases completed five solves without
+runtime errors. The flux source audit remains 31 of 35 eligible rows, and
+Hamiltonian, QNM and initial-data source questions remain. No whole-waveform
+comparison was rerun at this exact tabulated revision; older comparisons
+cannot establish parity for it.
 
 The recorded SXS:BBH:2569 overlap near `0.98914` remains below `0.99`, including
 for the pinned historical public model. That physical result must be disclosed
