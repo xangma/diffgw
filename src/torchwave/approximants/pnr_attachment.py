@@ -73,6 +73,20 @@ def tapered_opening_angle(mf, connection, two_spin_angle, single_spin_angle):
     )
 
 
+def bounded_opening_angle(beta):
+    """Final Twist Eq. (62), XO4a arctangent bound, with p=0.002."""
+    center = torch.pi / 2
+    p = 0.002
+    scale = center ** (1 - p)
+    offset = beta - center
+    x = torch.abs(offset) / scale
+    log_t = torch.log(torch.clamp(x, min=torch.finfo(beta.dtype).tiny)) / p
+    t = torch.exp(torch.clamp(log_t, min=-35.0, max=35.0))
+    small = offset * (torch.atan(t) / t) ** p
+    large = torch.sign(offset) * scale * torch.atan(t) ** p
+    return center + torch.where(log_t <= 0, small, large)
+
+
 def optimal_emission_direction_beta(v, iota, eta, delta, chi_perpendicular, chi_parallel):
     """Final Twist Eqs. (41)--(43), including XO4a's denominator correction."""
     sin_iota = torch.sin(iota)

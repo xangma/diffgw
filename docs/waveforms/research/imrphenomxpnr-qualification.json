@@ -1,9 +1,20 @@
 {
   "schema_version": 1,
   "model": "IMRPhenomXPNR",
-  "recorded_at": "2026-09-26",
+  "recorded_at": "2026-09-29",
   "verdict": "provisional_component_evidence_full_waveform_failed",
   "qualified_full_waveform": false,
+  "qualification_pass_2026_09_29": {
+    "scope": "Published-form component math only; no full-waveform promotion, calibration inference, code translation, or change to strict gates.",
+    "implemented": "Versioned independent SymPy/mpmath specification of 37 printed expressions, plus an isolated Final Twist Eq. 62 opening-angle bound in scalar, Torch, and JAX; the public beta-clipping route is unchanged.",
+    "focused_run": {
+      "host": "len",
+      "cwd": "/tmp/diffgw-xpnr-qualification-332f",
+      "command": "PYTHONPATH=src JAX_ENABLE_X64=1 JAX_PLATFORMS=cpu OMP_NUM_THREADS=1 /tmp/diffgw-xpnr-portability-0172-pypi-clean/.venv/bin/python -m pytest -q tests/test_xpnr_symbolic_reference.py tests/test_xpnr_attachment_math_reference.py tests/test_xpnr_component_evidence.py tests/test_xpnr_attachment_gate.py tests/test_xpnr_coefficient_provenance.py tests/test_imrphenom_xpnr.py",
+      "result": "164 passed, 1 Torch deprecation warning in 27.13s"
+    },
+    "remaining_gate": "Transition spin-state event and evolution, beta input tracks/landmarks/fallbacks, licensed 80-waveform angle tensors and XHM-CP u_k mapping, carrier/asymmetry composition, strict complex-waveform parity, and NR physical validation remain unresolved."
+  },
   "qualification_pass_2026_09_26": {
     "scope": "One bounded primary-source pass over terminal SpinTaylor state, beta boundary selection, and calibration provenance; no LAL source or coefficients inspected or copied.",
     "implemented": "Standalone scalar/Torch/JAX lower beta connection selection from caller-supplied merger-ringdown landmarks using Final Twist Eqs. 56-58, XO4a's corrected 25e-4 factor, and XO4a Eq. 37.",
@@ -20,6 +31,7 @@
       "XPNR Eqs. 15-16 merger-ringdown angle ansatzes",
       "Final Twist Eqs. 41-45 two-spin beta taper and optimal-emission-direction map with the XO4a denominator correction",
       "Final Twist Eqs. 56-58 lower beta connection construction and XO4a Eq. 37 morphology branch with the corrected 25e-4 gradient factor, when supplied merger-ringdown landmarks",
+      "Final Twist Eq. 62 arctangent opening-angle bound with p=0.002 as an isolated reference/Torch/JAX component",
       "XPNR Eqs. 17-21 standalone analytic continuation, angle-connection, and quadratic beta-rescaling forms with supplied boundary data",
       "XPNR Eqs. 7-8 standalone carrier deformation and effective-ringdown relations",
       "XO4a Eqs. 50-52 higher-mode frequency map"
@@ -27,7 +39,7 @@
     "failed_or_missing_components": [
       "exact terminal-state evolution and spin-sampling procedure; public route instead supplies reference-frequency spins",
       "source-qualified taper input tracks, merger-ringdown landmark/root construction, upper-connection and invalid-attachment fallback decisions, and composition of the standalone preprocessing and Eqs. 17-21 into the public angle route",
-      "published arctangent beta bounding prescription",
+      "composition of the published arctangent beta bound into the public waveform",
       "XHM-CP carrier deviations and their unprinted u_k assets",
       "effective-ringdown relation in waveform composition",
       "XPNR Eqs. 10-13 dominant-mode asymmetry",
@@ -89,8 +101,8 @@
   },
   "angle_join_components": {
     "status": "standalone_beta_preprocessing_lower_connection_selection_and_equations_17_to_21_pass_public_composition_open",
-    "source": "Hamilton et al., arXiv:2107.08876v1, Eqs. 41-45 and 56-58; Thompson et al., arXiv:2312.10025v1 correction and Eq. 37; Hamilton et al., arXiv:2507.02604v1, Eqs. 17-21",
-    "scope": "Caller-supplied PN/MR boundary values, derivatives, and merger-ringdown beta landmarks; synthetic coefficients in the published forms, independent of inherited calibration tensors and LAL source.",
+    "source": "Hamilton et al., arXiv:2107.08876v1, Eqs. 41-45, 56-58, and 62; Thompson et al., arXiv:2312.10025v1 correction and Eq. 37; Hamilton et al., arXiv:2507.02604v1, Eqs. 17-21",
+    "scope": "Caller-supplied PN/MR boundary values, derivatives, merger-ringdown beta landmarks, and unbounded beta for the isolated Eq. 62 map; synthetic coefficients in the published forms, independent of inherited calibration tensors and LAL source.",
     "reference": "src/diffgw_reference/xpnr_angles.py",
     "torch": "src/torchwave/approximants/pnr_attachment.py",
     "jax": "src/jaxwave/approximants/pnr_attachment.py",
@@ -106,8 +118,8 @@
     ]
   },
   "beta_preprocessing_components": {
-    "status": "standalone_equations_and_landmark_based_lower_connection_pass_not_routed",
-    "scope": "Caller-supplied two-spin and mapped-single-spin opening angles, connection frequency, effective-single-spin components, and merger-ringdown beta landmarks; no terminal event, landmark/root construction, fallback policy, or public routing is inferred.",
+    "status": "standalone_equations_beta_bound_and_landmark_based_lower_connection_pass_not_routed",
+    "scope": "Caller-supplied two-spin and mapped-single-spin opening angles, connection frequency, effective-single-spin components, unbounded beta for the Eq. 62 map, and merger-ringdown beta landmarks; no terminal event, landmark/root construction, fallback policy, or public routing is inferred.",
     "correction": "The optimal-emission-direction map includes the factor of two in the denominator identified by XO4a and accepts chi_perpendicular and chi_parallel directly for finite zero-spin derivatives; the turnover connection uses XO4a's corrected 25e-4 gradient factor.",
     "reference": "src/diffgw_reference/xpnr_angles.py",
     "torch": "src/torchwave/approximants/pnr_attachment.py",
@@ -119,8 +131,23 @@
     "command": "JAX_ENABLE_X64=1 JAX_PLATFORMS=cpu OMP_NUM_THREADS=1 pytest -q tests/test_xpnr_component_evidence.py",
     "result": "46 passed",
     "reference_module": "src/diffgw_reference/xpnr_angles.py",
-    "reference_module_sha256": "0a646d4747d49e8fa5c6345fecba40e7f33d192d1da525eb43a0f8312b0c44d0",
-    "result_note": "The recorded two-frontend result predates the added pure-stdlib terminal-state geometry case; the current len result is recorded under spin_at_attachment."
+    "reference_module_sha256": "f5d08fc32ea7692e81531b4486814e08a22da58e55f8963f2a872d32fda2fa5c",
+    "result_note": "The older 46-case run remains historical; the current complete focused result is recorded under qualification_pass_2026_09_29."
+  },
+  "symbolic_reference": {
+    "version": "xpnr-published-components-sympy-1.0.0",
+    "source": "src/diffgw_reference/xpnr_symbolic.py",
+    "source_sha256": "f6b63144c9d8fccaaf1c414320ae85cd790ffed4e8051a8fff0dda47ec104e0e",
+    "spec_page": "docs/math/imrphenomxpnr-components.md",
+    "expression_count": 37,
+    "evaluation": "SymPy 1.14.0 differentiation and mpmath 1.3.0 configurable decimal precision; caller-supplied transition state, fit coefficients, joins, and carrier inputs",
+    "native_attachment_sources_sha256": {
+      "torch": "2c58fbdc6d2a561dbfa698500b108febfb8b4d32b7e2629712dfcb8c65e1ad60",
+      "jax": "178bff6762cfa940573043967784a2972cf266c17f2148913e5c84cacfbb63d6"
+    },
+    "test": "tests/test_xpnr_symbolic_reference.py",
+    "focused_result": "76 passed in 6.71s on len CPU float64; 37 symbolic/scalar cases, exact coefficient and join/precision checks, eleven Torch/JAX native value/gradient comparisons, JAX JIT/vmap, and Torch batching",
+    "status": "pass_for_published_forms_only"
   },
   "torch_jax_parity": {
     "status": "pass_for_scoped_components",
@@ -164,8 +191,21 @@
       "lalsuite_distribution": "7.26.15",
       "lal": "7.7.1",
       "lalsimulation": "6.2.1",
-      "lalsimulation_extension_sha256": "7024d54b1d3f2c0c01976c8730f564bece28828ffab4619ccba2bdc92a0ca96c",
-      "pycbc": "0.0a9304"
+      "lalsimulation_extension_sha256": "e816879d23e652e8b3928496d6fd261de0832b5c3781c50e33a458042495b42e",
+      "pycbc": "2.11.0"
+    },
+    "latest_run": {
+      "host": "len",
+      "cwd": "/tmp/diffgw-xpnr-qualification-332f",
+      "command": "PYTHONPATH=src JAX_ENABLE_X64=1 JAX_PLATFORMS=cpu OMP_NUM_THREADS=1 /tmp/diffgw-xpnr-portability-0172-pypi-clean/.venv/bin/python -m pytest -q tests/test_imrphenom_xpnr.py -k lal_parity --junitxml=/tmp/diffgw-xpnr-qualification-332f/lal-parity.xml",
+      "result": "4 passed, 6 deselected in 7.18s",
+      "binary_options": "LALSuite IMRPhenomXPNR default option dictionary; no optional flag override",
+      "observed_matches": {
+        "q1p5": 0.995136056147,
+        "q1p4": 0.991092740764,
+        "q1p33": 0.994351323744,
+        "q1p67": 0.991789368762
+      }
     },
     "command": "OMP_NUM_THREADS=1 pytest -q tests/test_imrphenom_xpnr.py -k lal_parity --junitxml=/tmp/xpnr-lal.xml",
     "metric": "PyCBC time/phase-optimized plus-polarization match, 20-400 Hz",
@@ -173,28 +213,28 @@
       {
         "id": "q1p5",
         "masses_msun": [30.0, 20.0],
-        "observed_match": 0.995136069452,
+        "observed_match": 0.995136056147,
         "acceptance_threshold": 0.99,
         "passed": true
       },
       {
         "id": "q1p4",
         "masses_msun": [35.0, 25.0],
-        "observed_match": 0.991092679051,
+        "observed_match": 0.991092740764,
         "acceptance_threshold": 0.99,
         "passed": true
       },
       {
         "id": "q1p33",
         "masses_msun": [40.0, 30.0],
-        "observed_match": 0.994351007028,
+        "observed_match": 0.994351323744,
         "acceptance_threshold": 0.99,
         "passed": true
       },
       {
         "id": "q1p67",
         "masses_msun": [50.0, 30.0],
-        "observed_match": 0.991789177998,
+        "observed_match": 0.991789368762,
         "acceptance_threshold": 0.99,
         "passed": true
       }

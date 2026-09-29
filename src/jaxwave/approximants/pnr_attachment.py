@@ -73,6 +73,20 @@ def tapered_opening_angle(mf, connection, two_spin_angle, single_spin_angle):
     )
 
 
+def bounded_opening_angle(beta):
+    """Final Twist Eq. (62), XO4a arctangent bound, with p=0.002."""
+    center = jnp.pi / 2
+    p = 0.002
+    scale = center ** (1 - p)
+    offset = beta - center
+    x = jnp.abs(offset) / scale
+    log_t = jnp.log(jnp.maximum(x, jnp.finfo(beta.dtype).tiny)) / p
+    t = jnp.exp(jnp.clip(log_t, -35.0, 35.0))
+    small = offset * (jnp.arctan(t) / t) ** p
+    large = jnp.sign(offset) * scale * jnp.arctan(t) ** p
+    return center + jnp.where(log_t <= 0, small, large)
+
+
 def optimal_emission_direction_beta(v, iota, eta, delta, chi_perpendicular, chi_parallel):
     """Final Twist Eqs. (41)--(43), including XO4a's denominator correction."""
     sin_iota = jnp.sin(iota)

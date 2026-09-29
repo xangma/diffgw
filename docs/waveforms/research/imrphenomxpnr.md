@@ -11,8 +11,9 @@ stdlib scalar reference and agree with both Torch and JAX.  During this audit,
 the implemented `B3` transform was corrected from `B2 * Lambda_B3` to the
 published `chi sin(theta) [exp(Lambda_B3) - 200]` relation.
 The printed alpha/beta connection, exterior-continuation, final quadratic
-beta-rescaling, two-spin beta taper, and optimal-emission-direction map now
-also have isolated scalar/Torch/JAX kernels. The source-published lower beta
+beta-rescaling, two-spin beta taper, arctangent opening-angle bound, and
+optimal-emission-direction map now also have isolated scalar/Torch/JAX kernels.
+The source-published lower beta
 connection selector is implemented for caller-supplied merger-ringdown
 landmarks, including XO4a's correction to the earlier gradient factor. These
 components are not wired into the public waveform because the landmark/root
@@ -26,6 +27,11 @@ continuations, and combines its angles with the native symmetric XHM carrier
 rather than the paper's tuned XHM-CP carrier, effective ringdown prescription,
 and dominant-mode asymmetry.  The inherited numeric calibration tensors also
 lack an independently established source and redistribution record.
+
+The [versioned SymPy/mpmath component specification](../../math/imrphenomxpnr-components.md)
+is independently executable for 37 published-form expressions. Its
+caller-supplied inputs expose the still-missing physical and calibration
+construction instead of substituting inherited tensors.
 
 The sources pinned for this ledger are:
 
@@ -69,7 +75,7 @@ composition.
 | `XPNR-MAP` | XPNR Eqs. (3)–(6), evaluated with spins evolved to the SpinTaylor stopping/transition frequency and projected relative to instantaneous `Lhat` | Scalar terminal-state map is rotation-invariant; Torch/JAX component algebra agrees when supplied the same aligned-frame spins | Geometry pass; public caller supplies the wrong epoch and no terminal state |
 | `XPNR-FIT` | XO4a Eq. (35), `Lambda = sum lambda_pqr eta^p chi^q cos(theta)^r`, plus XPNR Eq. (22) freezing | Scalar/Torch/JAX values agree; tensor duplication is not independent provenance | Equation pass; assets unresolved |
 | `XPNR-ANGLES-MR` | XO4a Eqs. (25)–(34), XPNR Eqs. (15)–(16), including stated guards | Scalar values and frequency derivatives agree in Torch/JAX | Component pass after `B3` correction |
-| `XPNR-ATTACH` | Final Twist Eqs. (41)–(45), (56)–(58), XO4a Eq. (37), and XPNR Eqs. (19)–(21) | Standalone kernels reproduce the joins, XO4a corrections, and landmark-based lower beta connection selection; landmark/root construction, fallbacks, input tracks, and public composition remain absent | Component forms and lower selector pass; full route fail |
+| `XPNR-ATTACH` | Final Twist Eqs. (41)–(45), (56)–(58), (62), XO4a Eq. (37), and XPNR Eqs. (19)–(21) | Standalone kernels reproduce the joins, arctangent bound, XO4a corrections, and landmark-based lower beta connection selection; landmark/root construction, fallbacks, input tracks, and public composition remain absent | Component forms and lower selector pass; full route fail |
 | `XPNR-CONT` | XPNR Eqs. (17)–(18) analytic exterior continuations and Eq. (22) fit-coordinate freeze | Standalone Eq. (17)–(18) kernels reproduce synthetic published-form functions and derivatives; current public route still window-blends the angle tracks | Component pass; public route fail |
 | `XPNR-CARRIER` | XPNR Eqs. (7)–(8): tuned XHM-CP deviations and effective ringdown frequencies | Independent scalar equations exist; neither is wired into the waveform | Fail |
 | `XPNR-ASYM22` | XPNR Eqs. (10)–(13), unequal `m=+2` and `m=-2` coprecessing modes | Native XHM carrier generates negative-m content by symmetry | Fail |
@@ -147,9 +153,10 @@ alpha(f) = -[A1/f + A2 sqrt(A3)/(A3 + (f-A4)^2)] + alpha_bar
 beta(f)  = B0 + (B1 + B2 f + B3 f^2)/(1 + B4 (f+B5)^2) .
 ```
 
-The XO4a text bounds beta with an arctangent construction.  The native route
-instead clips beta to `[0, pi]`; therefore bounded output is not evidence for
-the paper's bounding prescription.  Likewise, XO4a Eq. (38) prints
+The Final Twist Eq. (62) arctangent bound with `p=0.002` now has a versioned
+SymPy/mpmath expression and isolated scalar/Torch/JAX kernels, including
+gradient and limiting-value checks. The public route still clips beta to
+`[0, pi]` rather than composing this kernel. Likewise, XO4a Eq. (38) prints
 `cos((x-x_b)/x_w)` without the factor of pi required to reach zero at the outer
 endpoint.  Both native backends use the endpoint-completing shifted cosine,
 equivalent to `cos(pi (x-x_b)/(2 x_w))^2`, for `q: 8.5 -> 12` and
@@ -343,11 +350,11 @@ history from which to establish their origin or terms.
 
 | Evidence class | Result | What it establishes |
 | --- | --- | --- |
-| Paper fidelity | Partial pass | Map, polynomial, guarded transforms, MR ansatzes, standalone Final Twist Eqs. (41)–(45), (56)–(58), XO4a Eq. (37), and XPNR Eqs. (17)–(21), carrier-deformation equation, effective ringdown equation, and HM map have scalar encodings; public angle composition, beta bound, and carrier/asymmetry composition remain open |
-| Scalar-reference agreement | Pass for scoped components | Focused published-form cases cover fit values, transforms, ansatz values/derivatives, terminal-state geometry, beta preprocessing, map, window interpretation, HM joins and reductions |
-| Torch/JAX parity | Pass for scoped components | Both backends agree with scalar values and derivatives; a dense JAX grid is recorded in the qualification JSON |
+| Paper fidelity | Partial pass | Map, polynomial, guarded transforms, MR ansatzes, standalone Final Twist Eqs. (41)–(45), (56)–(58), (62), XO4a Eq. (37), and XPNR Eqs. (17)–(21), carrier-deformation equation, effective ringdown equation, and HM map have symbolic/float encodings; public angle and carrier/asymmetry composition remain open |
+| Scalar-reference agreement | Pass for scoped components | Versioned SymPy/mpmath spec covers 37 published-form expressions; focused cases cover fit values, transforms, ansatz values/derivatives, terminal-state geometry, beta preprocessing and bound, map, window interpretation, HM joins and reductions |
+| Torch/JAX parity | Pass for scoped components | Both backends agree on eleven isolated attachment values and derivatives against the symbolic reference; JAX JIT/vmap and Torch batching pass; a prior dense JAX grid is recorded in the qualification JSON |
 | Calibration asset provenance | Provisional gate retained | Published equations, a partial historical procedure, raw CC BY inputs, and an MIT fitting tool are distinguished from the unsupported inherited tensors; a two-case manifest test pins that classification and the unchanged payload |
-| External parity | Not qualified | The four optional LAL/PyCBC cases are black-box acceptance gates only; their `0.99` threshold is not an observed lower bound or domain claim |
+| External parity | Four diagnostic cases pass; full waveform not qualified | Pinned LALSuite 7.26.15 default-option binary/PyCBC comparisons pass the four declared optimized plus-polarization cases over 20–400 Hz; their `0.99` threshold is not an observed lower bound or domain claim |
 | Physical validation | Not reproduced | The papers report BAM/NRSur comparisons; this change does not compare DiffGW waveforms with those NR data |
 | Full waveform | Fail | Missing published components plus inherited XHM's recorded strict catalog `0/1` and holdout `0/1` failures prevent promotion |
 
@@ -370,8 +377,8 @@ Promotion requires all of the following without relaxing existing thresholds:
    `chi_i = S_i/m_i^2`, then feed that state into Eqs. (3)–(6).
 3. Source the taper inputs and merger-ringdown landmark/root construction;
    implement the published upper-boundary and invalid-attachment fallbacks;
-   compose the checked alpha/beta attachments and exterior continuations, then
-   implement the beta bound and minimal-rotation convention with value and
+   compose the checked alpha/beta attachments, exterior continuations, and
+   isolated beta bound, then implement the minimal-rotation convention with value and
    derivative checks at every join.
 4. Implement and separately test XHM-CP deformation coefficients, effective
    ringdown frequencies, dominant-mode asymmetry, and their nonprecessing and

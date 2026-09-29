@@ -390,6 +390,30 @@ def tapered_opening_angle(
     return single_spin_angle + taper * (two_spin_angle - single_spin_angle)
 
 
+def bounded_opening_angle(beta: float) -> float:
+    """Final Twist Eq. (62), used by XO4a, with its published ``p=0.002``.
+
+    Evaluate the arctangent map by its equivalent small/large-argument forms
+    to avoid underflow of the power ``1/p=500``. The middle branch is the
+    equation directly; the limiting branches differ below float64 precision.
+    """
+    _finite(beta)
+    center = math.pi / 2.0
+    offset = beta - center
+    if offset == 0.0:
+        return center
+    power = 0.002
+    scale = center ** (1.0 - power)
+    log_argument = math.log(abs(offset) / scale) / power
+    if log_argument < -35.0:
+        return beta
+    if log_argument > 35.0:
+        return center + math.copysign(center, offset)
+    argument = math.exp(log_argument)
+    correction = scale * math.atan(argument) ** power
+    return center + math.copysign(correction, offset)
+
+
 def optimal_emission_direction_beta(
     v: float,
     iota: float,
@@ -589,6 +613,7 @@ __all__ = [
     "beta_final_rescaling",
     "beta_parameters",
     "beta_ringdown",
+    "bounded_opening_angle",
     "deformed_carrier_coefficient",
     "effective_ringdown_angular_frequency",
     "evaluate_calibration_polynomial",
