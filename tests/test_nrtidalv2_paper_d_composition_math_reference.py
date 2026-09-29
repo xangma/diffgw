@@ -44,6 +44,24 @@ def _paper_quotient(case, frequency, merger):
         return complex(window * mp.exp(-mp.j * (tidal + spin)))
 
 
+def _paper_phase_derivative(case, frequency):
+    """Differentiate the printed tidal phase and 2PN+3PN spin terms."""
+    _, m1, m2, chi1, chi2, lam1, lam2 = case
+    m_sec = (m1 + m2) * MSUN_SEC
+    with mp.workdps(80):
+        tidal = nrtidalv2_phase.evaluate(
+            frequency, m_sec, (m1 - m2) / (m1 + m2), lam1, lam2,
+            derivative=True)
+        mass = mp.mpf(str(m_sec))
+        spin = mp.diff(
+            lambda f: nrtidalv2_self_spin.d_phase(
+                (mp.pi * mass * f) ** (mp.mpf(2) / 3),
+                str(m1), str(m2), str(chi1), str(chi2),
+                str(lam1), str(lam2)),
+            mp.mpf(str(frequency)))
+        return float(tidal + spin)
+
+
 def _native_quotients(backend, case, frequencies, *, taper=True):
     _, m1, m2, chi1, chi2, lam1, lam2 = case
     options = dict(
@@ -109,3 +127,48 @@ def test_spinning_paper_d_complex_quotient_through_taper(backend, case):
     assert abs(cross[-2]) <= QUOTIENT_ATOL
     assert plus[-1] == 0.0
     assert cross[-1] == 0.0
+
+
+@pytest.mark.parametrize("backend", ("torch", "jax"))
+def test_spinning_paper_d_frequency_derivative_and_jax_jit(backend):
+    case = CASES[1]
+    _, m1, m2, chi1, chi2, lam1, lam2 = case
+    options = dict(mass1=m1, mass2=m2, chi1=chi1, chi2=chi2,
+                   distance=100.0, inclination=0.4, phic=0.0, tc=0.0,
+                   phasing_convention="coalescence")
+    expected = _paper_phase_derivative(case, 300.0)
+    if backend == "torch":
+        torch = require_module("torch")
+        from torchwave.approximants.imrphenomd import IMRPhenomD
+        from torchwave.approximants.imrphenomd_nrtidal import IMRPhenomD_NRTidalv2
+
+        f = torch.tensor(300.0, dtype=torch.float64, requires_grad=True)
+        bbh, _ = IMRPhenomD()(f=f, **options)
+        bns, _ = IMRPhenomD_NRTidalv2(amplitude_variant="paper_2019")(
+            f=f, lambda1=lam1, lambda2=lam2,
+            apply_merger_taper=False, **options)
+        actual = float(torch.autograd.grad(-torch.angle(bns / bbh), f)[0])
+    else:
+        jax = require_module("jax")
+        jax.config.update("jax_enable_x64", True)
+        import jax.numpy as jnp
+        from jaxwave.approximants.imrphenomd import IMRPhenomD
+        from jaxwave.approximants.imrphenomd_nrtidal import IMRPhenomD_NRTidalv2
+
+        def quotient(f):
+            bbh, _ = IMRPhenomD.evaluate(f=f, **options)
+            bns, _ = IMRPhenomD_NRTidalv2.evaluate(
+                f=f, lambda1=lam1, lambda2=lam2,
+                apply_merger_taper=False, amplitude_variant="paper_2019",
+                **options)
+            return bns / bbh
+
+        frequency = jnp.float64(300.0)
+        actual = float(jax.jit(jax.grad(
+            lambda f: -jnp.angle(quotient(f))))(frequency))
+        grid = jnp.asarray([100.0, 300.0, 800.0])
+        reference = np.asarray([_paper_quotient(case, float(f), _merger(case))
+                                for f in grid])
+        assert np.max(np.abs(np.asarray(jax.jit(quotient)(grid)) - reference)) <= 1e-10
+
+    assert math.isclose(actual, expected, rel_tol=1e-8, abs_tol=1e-10)

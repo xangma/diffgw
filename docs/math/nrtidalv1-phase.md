@@ -33,6 +33,14 @@ with `apply_merger_taper=False` to isolate the phase.
 
 [Dietrich, Bernuzzi and Tichy (2017), Eq. (2) and Eq. (7)](https://arxiv.org/pdf/1706.02969v2)
 give the effective quadrupolar coupling and frequency-domain Padé phase.
+This specification pins **arXiv revision v2**. [The original v1 revision](https://arxiv.org/html/1706.02969v1)
+prints $\kappa_2^T$ in Eqs. (2) and (7), with an $X_A/X_B$ factor in the
+first term of Eq. (2). The later [standard $\kappa_2^T$ definition,
+Eq. (10)](https://arxiv.org/html/1804.02235) prints $X_B/X_A$ there.
+The original printed relation is retained as a source-revision diagnostic;
+its mass-ratio weighting is not substituted into the revised carrier or
+treated as a canonical implementation rule. The revisions agree at equal
+mass but give different unequal-mass phases.
 With $X_A=m_A/M$ and $X_B=m_B/M$, substituting
 $\Lambda_A=2k^A_2/(3C_A^5)$ into Eq. (2) gives
 
@@ -65,6 +73,7 @@ phase by up to $1.91\times10^{-5}$ rad.
 | Component ID/version | Source | Variant | Status | Scalar reference | Torch/JAX | Check |
 | --- | --- | --- | --- | --- | --- | --- |
 | `nrtidalv1.phase.kappa_eff.v1` | Dietrich Eq. (2); Wade Eq. (5) | paper | executable | `kappa_eff_expr` | `tidal_combinations`, $3\widetilde\Lambda/16$ | symbolic mass/body exchange |
+| `nrtidalv1.phase.kappa2_original_printed.v1` | Dietrich arXiv v1 Eq. (2) | source-revision diagnostic | executable | `kappa2_original_printed_expr` | no native option | equal/unequal mass distinction |
 | `nrtidalv1.phase.pade.v1` | Dietrich Eq. (7) | paper literal and rounded carrier | executable | `pade_expr` | `IMRPhenomD_NRTidal` v1 phase branch | PN expansion, coefficient difference |
 | `nrtidalv1.phase.tidal.v1` | Dietrich Eq. (7) | additive phase | executable | `phase_expr`, `evaluate` | Torch/JAX v1 phase branch | unit-complex quotient |
 | `nrtidalv1.phase.frequency_derivative.v1` | differentiated Eq. (7) | fixed masses/tides | executable | SymPy derivative | Torch/JAX autodiff | 300 Hz derivative |

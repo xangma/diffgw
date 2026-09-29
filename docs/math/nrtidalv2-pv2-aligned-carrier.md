@@ -68,6 +68,12 @@ assembled carrier has the same `1e-10` scale limit against the scalar
 projector. This test is conditional on the separately qualified BBH
 carrier and supplied rotation angles; it is not an independent test of
 their generation.
+An additional gate supplies the fixed complex128 carrier
+`1e-22(1+0.3i)` at 100, 300 and 800 Hz. It checks Torch/JAX values against
+the scalar assembly at the same normalized `1e-10` limit. At 300 Hz,
+autodiff of the normalized real component is compared to a five-point
+derivative of the independent scalar formula (`1e-6` relative,
+`1e-8` absolute). The JAX value and gradient are JIT compiled.
 
 The 2019 paper specifies insertion before rotation, but does not by itself
 fix the native BNS angle dynamics, remnant and spline-time conventions, or

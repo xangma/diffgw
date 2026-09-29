@@ -65,6 +65,11 @@ polarizations; the two native polarization quotients must also agree within
 that limit. The strictly post-endpoint quotient must be exactly zero.
 An ulp-sized mismatch between independently rounded merger frequencies is
 allowed at the nominal `1.2 f_mrg` endpoint under the same limit.
+At 300 Hz for the unequal spinning case, the frequency derivative of the
+unwrapped local quotient phase is checked against the differentiated
+printed tidal phase plus a high-precision derivative of the 2PN+3PN
+self-spin phase, with `1e-8` relative and `1e-10` rad/Hz absolute limits.
+The JAX value and derivative paths are JIT compiled on CPU FP64.
 
 ### Interpretation and open conflicts
 

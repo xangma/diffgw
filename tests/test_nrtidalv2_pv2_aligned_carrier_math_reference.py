@@ -1,5 +1,7 @@
 """Published Pv2 aligned BNS carrier, conditional on a supplied BBH carrier."""
 
+import math
+
 import numpy as np
 import pytest
 
@@ -108,3 +110,62 @@ def test_pv2_bns_carrier_is_assembled_before_rotation(backend, case):
     # The correction changes the complete BBH carrier, including its phase;
     # the gate would fail if the native path returned the bare BBH input.
     assert np.max(np.abs(actual[:2] - bbh[:2]) / np.abs(bbh[:2])) > 1e-4
+
+
+@pytest.mark.parametrize("backend", ("torch", "jax"))
+def test_supplied_carrier_frequency_gradient_and_jax_jit(backend):
+    _, m1, m2, chi1, chi2, lam1, lam2 = CASES[1]
+    m_sec = (m1 + m2) * MSUN_SEC
+    d_sec = DISTANCE_MPC * MPC_SI / C_SI
+    merger = float(nrtidalv2_amplitude.merger_frequency(
+        m_sec, (m1 - m2) / (m1 + m2), lam1, lam2))
+    bbh = 1e-22 * (1 + 0.3j)
+    scale = abs(bbh)
+
+    def reference(f):
+        return nrtidalv2_pv2_terms.assembled_carrier_from_bbh(
+            f, bbh, m1, m2, chi1, chi2, lam1, lam2,
+            m_sec, d_sec, merger).real / scale
+
+    frequency = 300.0
+    step = 0.01
+    expected_grad = (-reference(frequency + 2*step)
+                     + 8*reference(frequency + step)
+                     - 8*reference(frequency - step)
+                     + reference(frequency - 2*step)) / (12*step)
+    grid = np.array([100.0, frequency, 800.0])
+    expected_values = np.array([nrtidalv2_pv2_terms.assembled_carrier_from_bbh(
+        f, bbh, m1, m2, chi1, chi2, lam1, lam2,
+        m_sec, d_sec, merger) for f in grid])
+
+    if backend == "torch":
+        torch = require_module("torch")
+        from torchwave.approximants.imrphenomd_nrtidal import (
+            assemble_nrtidalv2_pv2_aligned_carrier,
+        )
+        bbh_native = torch.tensor(bbh, dtype=torch.complex128)
+        f = torch.tensor(frequency, dtype=torch.float64, requires_grad=True)
+        actual = assemble_nrtidalv2_pv2_aligned_carrier(
+            f, bbh_native, m1, m2, chi1, chi2, lam1, lam2, DISTANCE_MPC)
+        actual_grad = float(torch.autograd.grad(actual.real / scale, f)[0])
+        values = np.asarray(assemble_nrtidalv2_pv2_aligned_carrier(
+            torch.as_tensor(grid, dtype=torch.float64), bbh_native,
+            m1, m2, chi1, chi2, lam1, lam2, DISTANCE_MPC))
+    else:
+        jax = require_module("jax")
+        jax.config.update("jax_enable_x64", True)
+        import jax.numpy as jnp
+        from jaxwave.approximants.imrphenomd_nrtidal import (
+            assemble_nrtidalv2_pv2_aligned_carrier,
+        )
+
+        def carrier(f):
+            return assemble_nrtidalv2_pv2_aligned_carrier(
+                f, bbh, m1, m2, chi1, chi2, lam1, lam2, DISTANCE_MPC)
+
+        actual_grad = float(jax.jit(jax.grad(
+            lambda f: jnp.real(carrier(f)) / scale))(jnp.float64(frequency)))
+        values = np.asarray(jax.jit(carrier)(jnp.asarray(grid)))
+
+    assert np.max(np.abs(values - expected_values)) / scale <= LIMIT
+    assert math.isclose(actual_grad, expected_grad, rel_tol=1e-6, abs_tol=1e-8)

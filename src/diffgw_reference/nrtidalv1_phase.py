@@ -19,6 +19,7 @@ COMPONENT_IDS = {
     "frequency_derivative": "nrtidalv1.phase.frequency_derivative.v1",
 }
 SOURCE = "https://arxiv.org/pdf/1706.02969v2"
+ORIGINAL_SOURCE = "https://arxiv.org/html/1706.02969v1"
 
 F, M_SEC, DELTA, LAMBDA1, LAMBDA2 = sp.symbols(
     "f M_sec delta Lambda1 Lambda2", real=True
@@ -41,6 +42,18 @@ def kappa_eff_expr(delta=DELTA, lambda1=LAMBDA1, lambda2=LAMBDA2):
         (xa + 12 * xb) * xa**4 * lambda1
         + (xb + 12 * xa) * xb**4 * lambda2
     )
+
+
+def kappa2_original_printed_expr(delta=DELTA, lambda1=LAMBDA1,
+                                 lambda2=LAMBDA2):
+    """Literal arXiv:1706.02969v1 Eq. (2), for source-revision audit only.
+
+    Its A term prints X_A/X_B, unlike the revised effective coupling and
+    the later standard kappa_2^T definition. It is not a native carrier option.
+    """
+    xa = (1 + delta) / 2
+    xb = (1 - delta) / 2
+    return 3 * (xa**6 * lambda1 / xb + xb**6 * lambda2 / xa)
 
 
 def pade_expr(x=X, *, carrier_rounded=False):

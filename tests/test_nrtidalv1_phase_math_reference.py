@@ -87,6 +87,25 @@ def test_paper_mass_weighting_and_exact_low_frequency_limit():
     assert ref.D1 != sp.Rational("-19.924")
 
 
+def test_original_and_revised_paper_couplings_are_distinct_for_unequal_mass():
+    # arXiv v1 Eq. (2) prints kappa_2^T, while v2 Eq. (2) replaces it
+    # with kappa_eff^T. Their equal-mass agreement hides this distinction.
+    original = ref.kappa2_original_printed_expr()
+    revised = ref.kappa_eff_expr()
+    substitutions = {ref.LAMBDA1: 200, ref.LAMBDA2: 800}
+    assert sp.simplify((original - revised).subs(ref.DELTA, 0)) == 0
+    unequal = {ref.DELTA: sp.Rational(1, 7), **substitutions}
+    xa, xb = sp.Rational(4, 7), sp.Rational(3, 7)
+    standard_kappa2 = 3 * (xb * xa**4 * 200 + xa * xb**4 * 800)
+    assert original.subs(unequal) == 3 * (xa**6 * 200 / xb
+                                           + xb**6 * 800 / xa)
+    assert original.subs(unequal) != standard_kappa2
+    assert original.subs(unequal) != revised.subs(unequal)
+    assert sp.simplify(original - original.xreplace({
+        ref.DELTA: -ref.DELTA, ref.LAMBDA1: ref.LAMBDA2,
+        ref.LAMBDA2: ref.LAMBDA1})) == 0
+
+
 def test_paper_body_exchange_and_zero_tides():
     for frequency in FREQUENCIES:
         assert abs(_phase(CASES[1], frequency)
