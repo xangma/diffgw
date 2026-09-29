@@ -6,8 +6,12 @@ The prototypes are not registered runtime models, qualified SEOBNRv4 generators,
 or replacements for the official ROM data. No trained asset is promoted here.
 
 The [ell=8 source disposition](evidence/2026-09-29/ell8_source_disposition.md)
-separates the remaining mathematical and historical-selector questions,
-provides an unsent author clarification, and states when to resume that gate.
+selects the existing explicit `spin_truncation="tabulated"` option for subsequent
+compatibility assessments against the checked LAL/pySEOBNR versions. It separates
+that limited term-selection agreement from the unresolved historical source
+gate (31/35) and full-waveform qualification. Frozen campaigns retain their
+original choices and outcomes; further source searching is paused pending new
+eligible evidence, and no author contact is planned.
 
 The [first frozen qualification run](evidence/2026-09-22/README.md) failed the ODE
 convergence budget. The generator is not qualified for independent ROM training.
