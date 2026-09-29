@@ -533,6 +533,20 @@ def nsbh_amplitude_window_sum(
     return a_pn * w_ins + a_pm * w_pm + a_rd * w_rd
 
 
+def nsbh_polarizations_from_amplitude(full_amp, total_phase, inclination):
+    """Project a supplied positive-frequency NSBH amplitude and phase."""
+    cosine = torch.cos(inclination)
+    plus_factor = 0.5 * (1.0 + cosine * cosine)
+    h_plus = -plus_factor * full_amp * torch.complex(
+        torch.cos(total_phase), -torch.sin(total_phase),
+    )
+    h_cross = torch.complex(
+        cosine * full_amp * torch.sin(total_phase),
+        cosine * full_amp * torch.cos(total_phase),
+    )
+    return h_plus, h_cross
+
+
 def _legacy_phase_offsets(m1, m2, s1, s2, mf_ref, mf_anchor, remnant_mass, remnant_spin):
     """Retain the inherited NSBH affine gauge, not a published prescription.
 
@@ -939,14 +953,8 @@ class IMRPhenomNSBH(nn.Module):
         # -------------------------------------------------------------
         # 8c. Polarizations Projection onto -2Y_2,\pm 2
         # -------------------------------------------------------------
-        cos_inc = torch.cos(unsqueeze_param(inc))
-        plus_factor = 0.5 * (1.0 + cos_inc * cos_inc)
-        cross_factor = cos_inc
-
-        h_plus = - plus_factor * full_amp * torch.complex(torch.cos(total_phase), -torch.sin(total_phase))
-        h_cross = torch.complex(
-            cross_factor * full_amp * torch.sin(total_phase),
-            cross_factor * full_amp * torch.cos(total_phase),
+        h_plus, h_cross = nsbh_polarizations_from_amplitude(
+            full_amp, total_phase, unsqueeze_param(inc),
         )
 
         # Enforce exact finite zeros for DC and non-positive frequency bins

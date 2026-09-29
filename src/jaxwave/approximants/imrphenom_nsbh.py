@@ -567,6 +567,16 @@ def nsbh_amplitude_window_sum(
     return a_pn * w_ins + a_pm * w_pm + a_rd * w_rd
 
 
+def nsbh_polarizations_from_amplitude(full_amp, total_phase, inclination):
+    """Project a supplied positive-frequency NSBH amplitude and phase."""
+    cosine = jnp.cos(inclination)
+    plus_factor = 0.5 * (1.0 + cosine * cosine)
+    phase_factor = jnp.cos(total_phase) - 1j * jnp.sin(total_phase)
+    h_plus = -plus_factor * full_amp * phase_factor
+    h_cross = cosine * full_amp * (jnp.sin(total_phase) + 1j * jnp.cos(total_phase))
+    return h_plus, h_cross
+
+
 def _legacy_phase_offsets(
     m1: jnp.ndarray,
     m2: jnp.ndarray,
@@ -975,13 +985,9 @@ class IMRPhenomNSBH:
         # -------------------------------------------------------------
         # 8c. Polarizations Projection onto -2Y_2,\pm 2
         # -------------------------------------------------------------
-        cos_inc = jnp.cos(unsqueeze_param(inc))
-        plus_factor = 0.5 * (1.0 + cos_inc * cos_inc)
-        cross_factor = cos_inc
-
-        phase_factor = jnp.cos(total_phase) - 1j * jnp.sin(total_phase)
-        h_plus = - plus_factor * full_amp * phase_factor
-        h_cross = cross_factor * full_amp * (jnp.sin(total_phase) + 1j * jnp.cos(total_phase))
+        h_plus, h_cross = nsbh_polarizations_from_amplitude(
+            full_amp, total_phase, unsqueeze_param(inc),
+        )
 
         h_plus = jnp.where(f_eval > 0.0, h_plus, 0.0)
         h_cross = jnp.where(f_eval > 0.0, h_cross, 0.0)
