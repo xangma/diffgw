@@ -472,9 +472,10 @@ def evaluate_spintaylor_precession(
     f_trans = 0.98 * f_meco
     v_trans = (PI * m_sec * f_trans) ** (1.0 / 3.0)
 
-    # Use a fixed low-frequency anchor so angles at a shared frequency do not
-    # depend on which other frequencies were requested.
-    f_min_eval = jnp.minimum(f_ref_t, jnp.full_like(f_ref_t, 15.0))
+    # Target frequency bounds (physical integration down to seismic band)
+    f_min_grid = jnp.min(jnp.where(f_eval > 0.0, f_eval, 1e9))
+    f_min_grid = jnp.where(jnp.any(f_eval > 0.0), f_min_grid, f_ref_t)
+    f_min_eval = jnp.minimum(f_ref_t, jnp.clip(f_min_grid, 15.0, None))
     v_min = (PI * m_sec * f_min_eval) ** (1.0 / 3.0)
 
     # Integrate ODE on velocity grid
@@ -499,9 +500,10 @@ def evaluate_spintaylor_precession(
     def step_derivs(v_in, l_in, s1_in, s2_in):
         return SpinTaylorT4Engine.derivatives(v_in, l_in, s1_in, s2_in, m1_exp, m2_exp, eta_exp)
 
-    def scan_step(state, v_cur_val, h):
+    def scan_step(state, v_cur_val):
         lnh_c, s1_c, s2_c = state
         v_cur = v_cur_val[..., None]
+        h = h_exp
 
         _, k1_l, k1_s1, k1_s2 = step_derivs(v_cur, lnh_c, s1_c, s2_c)
 
@@ -537,25 +539,10 @@ def evaluate_spintaylor_precession(
 
         return (lnh_next, s1_next, s2_next), lnh_next
 
-    # Spins and L are specified at f_ref. Evolve backward to the fixed
-    # low-frequency anchor before starting the forward trajectory.
-    v_backward = v0[..., None] + v_grid * (v_min - v0)[..., None]
-    v_backward_t = jnp.moveaxis(v_backward, -1, 0)
-    h_back_exp = ((v_min - v0) / float(n_nodes - 1))[..., None]
     init_state = (lnh_curr, s1_curr, s2_curr)
-    start_state = jax.lax.cond(
-        jnp.any(v_min < v0),
-        lambda state: jax.lax.scan(
-            lambda current, v: scan_step(current, v, h_back_exp), state, v_backward_t[:-1]
-        )[0],
-        lambda state: state,
-        init_state,
-    )
-    _, lnh_steps = jax.lax.scan(
-        lambda state, v: scan_step(state, v, h_exp), start_state, v_nodes_t[:-1]
-    )
+    _, lnh_steps = jax.lax.scan(scan_step, init_state, v_nodes_t[:-1])
 
-    lnh_all_t = jnp.concatenate([start_state[0][None, ...], lnh_steps], axis=0)
+    lnh_all_t = jnp.concatenate([lnh_curr[None, ...], lnh_steps], axis=0)
     lnh_all = jnp.moveaxis(lnh_all_t, 0, -2)
 
     # Rotate to J-frame
@@ -644,10 +631,8 @@ def evaluate_spintaylor_precession(
     beta_out = jnp.arccos(jnp.clip(cosb_out, -1.0, 1.0))
 
     # Reference value offset alignment at f_ref
-    u_ref = jnp.clip((v0 - v_min) / jnp.maximum(v_trans - v_min, 1e-12), 0.0, 1.0)
-    idx_ref_float = u_ref * float(n_nodes - 1)
-    idx_ref = jnp.clip(idx_ref_float.astype(jnp.int64), 0, n_nodes - 2)
-    t_ref = jnp.clip(idx_ref_float - idx_ref.astype(dtype), 0.0, 1.0)
+    u_ref = (v0 - v_min) / jnp.maximum(v_trans - v_min, 1e-12)
+    idx_ref = jnp.clip((u_ref * float(n_nodes - 1)).astype(jnp.int64), 0, n_nodes - 2)
 
     idx_g = idx_ref[..., None]
     if alpha_nodes.ndim > 1 and alpha_nodes.shape[:-1] != idx_g.shape[:-1]:
@@ -657,14 +642,8 @@ def evaluate_spintaylor_precession(
         alpha_nodes_exp = alpha_nodes
         gamma_nodes_exp = gamma_nodes
 
-    alpha_ref_val = (
-        jnp.take_along_axis(alpha_nodes_exp, idx_g, axis=-1)[..., 0] * (1.0 - t_ref)
-        + jnp.take_along_axis(alpha_nodes_exp, idx_g + 1, axis=-1)[..., 0] * t_ref
-    )
-    gamma_ref_val = (
-        jnp.take_along_axis(gamma_nodes_exp, idx_g, axis=-1)[..., 0] * (1.0 - t_ref)
-        + jnp.take_along_axis(gamma_nodes_exp, idx_g + 1, axis=-1)[..., 0] * t_ref
-    )
+    alpha_ref_val = jnp.take_along_axis(alpha_nodes_exp, idx_g, axis=-1)[..., 0]
+    gamma_ref_val = jnp.take_along_axis(gamma_nodes_exp, idx_g, axis=-1)[..., 0]
 
     # In LAL, alpha(f_ref) = 0 for SpinTaylor
     alpha_offset = -alpha_ref_val
