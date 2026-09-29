@@ -454,78 +454,80 @@ def evaluate_spintaylor_precession(
     f_trans = 0.98 * f_meco
     v_trans = (PI * m_sec * f_trans).pow(1.0 / 3.0)
 
-    # Target frequency bounds (physical integration down to seismic band)
+    # The spin state is specified at f_ref. A fixed lower endpoint makes the
+    # trajectory independent of the frequencies requested by the caller.
     f_eval = f if f.dim() > 0 else f.unsqueeze(0)
     if is_batched and f_eval.dim() == 1:
         f_eval = f_eval.unsqueeze(0)
 
-    pos_f_min = torch.where(f_eval > 0, f_eval, torch.full_like(f_eval, float("inf"))).amin()
-    f_min_grid = torch.where(torch.isfinite(pos_f_min), pos_f_min, f_ref_t)
-    # Clamp minimum physical frequency for ODE stability in PN band
-    f_min_eval = torch.minimum(f_ref_t, torch.clamp(f_min_grid, min=15.0))
+    f_min_eval = torch.minimum(f_ref_t, torch.full_like(f_ref_t, 15.0))
     v_min = (PI * m_sec * f_min_eval).pow(1.0 / 3.0)
 
-    # Integrate ODE on velocity grid
-    n_nodes = 200
-    v_grid = torch.linspace(0.0, 1.0, n_nodes, dtype=f.dtype, device=f.device)
-    v_nodes = v_min.unsqueeze(-1) + v_grid * (v_trans - v_min).unsqueeze(-1)
+    # Integrate in both directions from the reference state.
+    n_low, n_high = 100, 200
 
     s1_norm_0 = torch.linalg.vector_norm(s1_0, dim=-1, keepdim=True)
     s2_norm_0 = torch.linalg.vector_norm(s2_0, dim=-1, keepdim=True)
 
-    lnh_curr = lnh_0
-    s1_curr = s1_0.clone()
-    s2_curr = s2_0.clone()
-
-    lnh_traj = [lnh_curr]
-    h_step = (v_trans - v_min) / float(n_nodes - 1)
     m1_exp = m1_m.unsqueeze(-1) if m1_m.dim() > 0 else m1_m
     m2_exp = m2_m.unsqueeze(-1) if m2_m.dim() > 0 else m2_m
     eta_exp = eta.unsqueeze(-1) if eta.dim() > 0 else eta
 
-    for i in range(n_nodes - 1):
-        v_cur = v_nodes[..., i].unsqueeze(-1)
-        h = h_step.unsqueeze(-1)
+    def integrate_segment(v_start, v_end, num_nodes):
+        v_grid = torch.linspace(0.0, 1.0, num_nodes, dtype=f.dtype, device=f.device)
+        segment_nodes = v_start.unsqueeze(-1) + v_grid * (v_end - v_start).unsqueeze(-1)
+        v_nodes = segment_nodes
+        h_step = (v_end - v_start) / float(num_nodes - 1)
+        lnh_curr, s1_curr, s2_curr = lnh_0, s1_0.clone(), s2_0.clone()
+        lnh_traj = [lnh_curr]
+        for i in range(num_nodes - 1):
+            v_cur = v_nodes[..., i].unsqueeze(-1)
+            h = h_step.unsqueeze(-1)
 
-        def step_derivs(v_in, l_in, s1_in, s2_in):
-            return SpinTaylorT4Engine.derivatives(v_in, l_in, s1_in, s2_in, m1_exp, m2_exp, eta_exp)
+            def step_derivs(v_in, l_in, s1_in, s2_in):
+                return SpinTaylorT4Engine.derivatives(v_in, l_in, s1_in, s2_in, m1_exp, m2_exp, eta_exp)
 
-        _, k1_l, k1_s1, k1_s2 = step_derivs(v_cur, lnh_curr, s1_curr, s2_curr)
+            _, k1_l, k1_s1, k1_s2 = step_derivs(v_cur, lnh_curr, s1_curr, s2_curr)
 
-        v_half = v_cur + 0.5 * h
-        l2 = lnh_curr + 0.5 * h * k1_l
-        l2 = l2 / torch.linalg.vector_norm(l2, dim=-1, keepdim=True).clamp_min(1e-24)
-        s1_2 = s1_curr + 0.5 * h * k1_s1
-        s2_2 = s2_curr + 0.5 * h * k1_s2
-        _, k2_l, k2_s1, k2_s2 = step_derivs(v_half, l2, s1_2, s2_2)
+            v_half = v_cur + 0.5 * h
+            l2 = lnh_curr + 0.5 * h * k1_l
+            l2 = l2 / torch.linalg.vector_norm(l2, dim=-1, keepdim=True).clamp_min(1e-24)
+            s1_2 = s1_curr + 0.5 * h * k1_s1
+            s2_2 = s2_curr + 0.5 * h * k1_s2
+            _, k2_l, k2_s1, k2_s2 = step_derivs(v_half, l2, s1_2, s2_2)
 
-        l3 = lnh_curr + 0.5 * h * k2_l
-        l3 = l3 / torch.linalg.vector_norm(l3, dim=-1, keepdim=True).clamp_min(1e-24)
-        s1_3 = s1_curr + 0.5 * h * k2_s1
-        s2_3 = s2_curr + 0.5 * h * k2_s2
-        _, k3_l, k3_s1, k3_s2 = step_derivs(v_half, l3, s1_3, s2_3)
+            l3 = lnh_curr + 0.5 * h * k2_l
+            l3 = l3 / torch.linalg.vector_norm(l3, dim=-1, keepdim=True).clamp_min(1e-24)
+            s1_3 = s1_curr + 0.5 * h * k2_s1
+            s2_3 = s2_curr + 0.5 * h * k2_s2
+            _, k3_l, k3_s1, k3_s2 = step_derivs(v_half, l3, s1_3, s2_3)
 
-        v_full = v_cur + h
-        l4 = lnh_curr + h * k3_l
-        l4 = l4 / torch.linalg.vector_norm(l4, dim=-1, keepdim=True).clamp_min(1e-24)
-        s1_4 = s1_curr + h * k3_s1
-        s2_4 = s2_curr + h * k3_s2
-        _, k4_l, k4_s1, k4_s2 = step_derivs(v_full, l4, s1_4, s2_4)
+            v_full = v_cur + h
+            l4 = lnh_curr + h * k3_l
+            l4 = l4 / torch.linalg.vector_norm(l4, dim=-1, keepdim=True).clamp_min(1e-24)
+            s1_4 = s1_curr + h * k3_s1
+            s2_4 = s2_curr + h * k3_s2
+            _, k4_l, k4_s1, k4_s2 = step_derivs(v_full, l4, s1_4, s2_4)
 
-        lnh_curr = lnh_curr + (h / 6.0) * (k1_l + 2.0 * k2_l + 2.0 * k3_l + k4_l)
-        lnh_curr = lnh_curr / torch.linalg.vector_norm(lnh_curr, dim=-1, keepdim=True).clamp_min(1e-24)
-        s1_curr = s1_curr + (h / 6.0) * (k1_s1 + 2.0 * k2_s1 + 2.0 * k3_s1 + k4_s1)
-        s2_curr = s2_curr + (h / 6.0) * (k1_s2 + 2.0 * k2_s2 + 2.0 * k3_s2 + k4_s2)
+            lnh_curr = lnh_curr + (h / 6.0) * (k1_l + 2.0 * k2_l + 2.0 * k3_l + k4_l)
+            lnh_curr = lnh_curr / torch.linalg.vector_norm(lnh_curr, dim=-1, keepdim=True).clamp_min(1e-24)
+            s1_curr = s1_curr + (h / 6.0) * (k1_s1 + 2.0 * k2_s1 + 2.0 * k3_s1 + k4_s1)
+            s2_curr = s2_curr + (h / 6.0) * (k1_s2 + 2.0 * k2_s2 + 2.0 * k3_s2 + k4_s2)
 
-        s1_norm = torch.linalg.vector_norm(s1_curr, dim=-1, keepdim=True).clamp_min(1e-24)
-        s2_norm = torch.linalg.vector_norm(s2_curr, dim=-1, keepdim=True).clamp_min(1e-24)
-        s1_curr = s1_curr * (s1_norm_0 / s1_norm)
-        s2_curr = s2_curr * (s2_norm_0 / s2_norm)
+            s1_norm = torch.linalg.vector_norm(s1_curr, dim=-1, keepdim=True).clamp_min(1e-24)
+            s2_norm = torch.linalg.vector_norm(s2_curr, dim=-1, keepdim=True).clamp_min(1e-24)
+            s1_curr = s1_curr * (s1_norm_0 / s1_norm)
+            s2_curr = s2_curr * (s2_norm_0 / s2_norm)
 
-        lnh_traj.append(lnh_curr)
+            lnh_traj.append(lnh_curr)
 
-    lnh_all = torch.stack(lnh_traj, dim=-2)
-    f_nodes = (v_nodes ** 3) / (PI * m_sec.unsqueeze(-1) if m_sec.dim() > 0 else PI * m_sec)
+        return segment_nodes, torch.stack(lnh_traj, dim=-2)
+
+    v_low_desc, lnh_low_desc = integrate_segment(v0, v_min, n_low)
+    v_high, lnh_high = integrate_segment(v0, v_trans, n_high)
+    v_nodes = torch.cat([v_low_desc.flip(-1)[..., :-1], v_high], dim=-1)
+    lnh_all = torch.cat([lnh_low_desc.flip(-2)[..., :-1, :], lnh_high], dim=-2)
+    n_nodes = n_low + n_high - 1
 
     # Rotate to J-frame
     lnh_j_nodes = rotate_to_j(lnh_all)
@@ -553,13 +555,14 @@ def evaluate_spintaylor_precession(
     f_trans_exp = f_trans.unsqueeze(-1) if is_batched or f_trans.dim() < f_eval.dim() else f_trans
     m_sec_exp = m_sec.unsqueeze(-1) if is_batched or m_sec.dim() < f_eval.dim() else m_sec
     v_min_exp = v_min.unsqueeze(-1) if is_batched or v_min.dim() < f_eval.dim() else v_min
+    v_ref_exp = v0.unsqueeze(-1) if is_batched or v0.dim() < f_eval.dim() else v0
     v_trans_exp = v_trans.unsqueeze(-1) if is_batched or v_trans.dim() < f_eval.dim() else v_trans
 
-    # Interpolation indices in v-space (v varies linearly on nodes)
+    # Each side of the reference frequency has its own uniform v grid.
     v_eval = (PI * m_sec_exp * torch.clamp(f_eval, min=1e-12)).pow(1.0 / 3.0)
-    u_v = (v_eval - v_min_exp) / torch.clamp(v_trans_exp - v_min_exp, min=1e-12)
-    u_v = torch.clamp(u_v, 0.0, 1.0)
-    idx_float = u_v * float(n_nodes - 1)
+    u_low = ((v_eval - v_min_exp) / torch.clamp(v_ref_exp - v_min_exp, min=1e-12)).clamp(0.0, 1.0)
+    u_high = ((v_eval - v_ref_exp) / torch.clamp(v_trans_exp - v_ref_exp, min=1e-12)).clamp(0.0, 1.0)
+    idx_float = torch.where(v_eval < v_ref_exp, u_low * (n_low - 1), (n_low - 1) + u_high * (n_high - 1))
     idx_low = torch.clamp(idx_float.to(torch.int64), 0, n_nodes - 2)
     t_frac = (idx_float - idx_low.to(f.dtype)).clamp(0.0, 1.0)
 
@@ -581,8 +584,8 @@ def evaluate_spintaylor_precession(
 
     # MRD analytical continuation for f >= f_trans
     mf_nodes = (v_nodes ** 3) / PI
-    idx1 = int(0.97 * (n_nodes - 1))
-    idx2 = int(0.99 * (n_nodes - 1))
+    idx1 = (n_low - 1) + int(0.97 * (n_high - 1))
+    idx2 = (n_low - 1) + int(0.99 * (n_high - 1))
     f1 = mf_nodes[..., idx1]
     f2 = mf_nodes[..., idx2]
     a1 = -alpha_nodes[..., idx1]
@@ -615,15 +618,11 @@ def evaluate_spintaylor_precession(
     gamma_out = torch.where(is_mrd, gamma_mrd, gamma_insp)
     beta_out = torch.acos(torch.clamp(cosb_out, -1.0, 1.0))
 
-    # Reference value offset alignment at f_ref
-    u_ref = (v0 - v_min) / torch.clamp(v_trans - v_min, min=1e-12)
-    idx_ref = torch.clamp((u_ref * float(n_nodes - 1)).to(torch.int64), 0, n_nodes - 2)
-    idx_g = idx_ref.unsqueeze(-1)
-    alpha_ref_val = torch.gather(alpha_nodes, -1, idx_g).squeeze(-1)
-    gamma_ref_val = torch.gather(gamma_nodes, -1, idx_g).squeeze(-1)
-
-    # In LAL, alpha(f_ref) = 0 for SpinTaylor
-    alpha_offset = -alpha_ref_val
+    # Pratten et al. (2021), Appendix C, fixes the reference gauge:
+    # alpha_0 = pi - kappa and gamma_0 = -epsilon_0 (convention 1).
+    alpha_ref_val = alpha_nodes[..., n_low - 1]
+    gamma_ref_val = gamma_nodes[..., n_low - 1]
+    alpha_offset = alpha_0 - alpha_ref_val
     alpha_offset_u = alpha_offset.unsqueeze(-1) if is_batched or alpha_offset.dim() < alpha_out.dim() else alpha_offset
     alpha_final = alpha_out + alpha_offset_u
 

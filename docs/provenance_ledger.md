@@ -245,6 +245,7 @@ not validation of the retained official ROM or surviving equation components.
   - Fixed-grid 4th-order Runge-Kutta (RK4) in $v$-space is expressed in PyTorch tensor operations. The model tests exercise batching and gradients for their declared parameters.
 - **Verification Result**:
   The optional [LAL comparison test](https://github.com/xangma/diffgw/blob/main/tests/test_imrphenom_xphm_spintaylor.py) defines three configurations with `prec_version=320`, `final_spin_mod=2` and a minimum PyCBC time/phase-optimized plus-polarization match of $0.98$ over 20–300 Hz. This is a test gate, not an observed lower bound across the parameter domain or a direct complex-waveform error.
+  The [2026-09-29 reference-angle qualification](validation/spintaylor_reference_angle_20260929.md) verifies the native Torch/JAX grid invariant and reference gauge at `f_ref=37.3 Hz`; direct complex LAL waveform error remains about 25% for that configuration, so this is a component result only.
 
 ### 2.14 IMRPhenomXPNR (PhenomPNR Numerical Relativity Precession Angles)
 - **Primary References**:
