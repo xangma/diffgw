@@ -11,6 +11,9 @@ with their actual thresholds and results. The reference must not be inferred
 solely from the implementation being checked. A passing internal parity test
 does not establish agreement with a paper, an independent code, or numerical
 relativity.
+Any claim that a family matches another code's offering also needs a
+versioned, option-specific comparison of supported modes, parameters and
+assets; matching a model name alone is insufficient.
 
 If a complete public construction, calibration asset, or convention cannot be
 identified, record the exact missing input and close only the components that
