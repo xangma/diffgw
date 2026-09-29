@@ -46,7 +46,7 @@ observed shift, not that the binary uses a particular unprinted value.
 
 On `len`, the checked-out `fcff4626` tree was copied to
 `/home/xangma/tmp/diffgw-nrtidalv2-d-pv2-20260929`. The diagnostic
-[`scripts/diagnose_nrtidalv2_d_taper_binary.py`](../../scripts/diagnose_nrtidalv2_d_taper_binary.py)
+`scripts/diagnose_nrtidalv2_d_taper_binary.py`
 samples 151 frequencies from `0.9` to `1.2` times each *printed-paper*
 merger frequency. It queries only the LAL binary API for
 `|h_plus(D_NRTidalv2)|/|h_plus(D)|`, divides by the native **untapered**

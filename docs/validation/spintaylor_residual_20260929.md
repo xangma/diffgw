@@ -8,8 +8,8 @@ SpinTaylor commit was consulted.
 
 ## Reproduction
 
-Run [`spintaylor_residual_probe.py`](../../scripts/qualification/spintaylor_residual_probe.py)
-and [`spintaylor_angle_binary_probe.py`](../../scripts/qualification/spintaylor_angle_binary_probe.py)
+Run `scripts/qualification/spintaylor_residual_probe.py`
+and `scripts/qualification/spintaylor_angle_binary_probe.py`
 from the repository root with `PYTHONPATH=src` in the len PyCBC environment.
 The first script accepts `--isolation`, `--modes`, `--mode-sum`, and
 `--alpha-shift`. Host: `len`; checkout:
