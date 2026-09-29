@@ -1,0 +1,1686 @@
+{
+  "baseline_checks": {
+    "ode_tolerance": {
+      "coarse_to_medium": {
+        "amplitude_relative_l2": 8.173011269460993e-07,
+        "boundary_time_M_abs_difference": 0.0,
+        "candidate_samples": 921,
+        "common_samples": 921,
+        "complex_relative_l2": 2.1359883684400753e-05,
+        "grid_step_M": 0.5,
+        "match_time_M_abs_difference": 3.0517578125e-05,
+        "peak_time_M_abs_difference": 3.0517578125e-05,
+        "phase_max_abs_rad": 4.5154098174380255e-05,
+        "phase_rms_rad": 2.537905237762963e-05,
+        "phase_samples": 854,
+        "reference_samples": 921,
+        "relative_norm_error": 5.864636682950675e-07,
+        "samples": 921,
+        "support_end_difference_M": 0.0,
+        "unmaximized_real_overlap": 0.9999999997720498
+      },
+      "gates": {
+        "amplitude_error_budget": true,
+        "boundary_time_M": true,
+        "complex_error_budget": false,
+        "error_decreased": true,
+        "match_time_M": true,
+        "peak_time_M": true
+      },
+      "medium_to_fine": {
+        "amplitude_relative_l2": 3.4717694919773975e-07,
+        "boundary_time_M_abs_difference": 0.0,
+        "candidate_samples": 921,
+        "common_samples": 921,
+        "complex_relative_l2": 9.079205866631182e-06,
+        "grid_step_M": 0.5,
+        "match_time_M_abs_difference": 1.52587890625e-05,
+        "peak_time_M_abs_difference": 1.52587890625e-05,
+        "phase_max_abs_rad": 1.928051918303675e-05,
+        "phase_rms_rad": 1.082419419695151e-05,
+        "phase_samples": 854,
+        "reference_samples": 921,
+        "relative_norm_error": 2.4965174338920093e-07,
+        "samples": 921,
+        "support_end_difference_M": 0.0,
+        "unmaximized_real_overlap": 0.9999999999588148
+      },
+      "numerical_check_passed": false
+    },
+    "output_grid": {
+      "coarse_to_medium": {
+        "amplitude_relative_l2": 5.714632953574714e-09,
+        "boundary_time_M_abs_difference": 0.0,
+        "candidate_samples": 921,
+        "common_samples": 921,
+        "complex_relative_l2": 1.3333963887868187e-07,
+        "grid_step_M": 0.5,
+        "match_time_M_abs_difference": 0.0,
+        "peak_time_M_abs_difference": 0.0,
+        "phase_max_abs_rad": 2.6267494501365475e-07,
+        "phase_rms_rad": 1.5093306138737578e-07,
+        "phase_samples": 854,
+        "reference_samples": 921,
+        "relative_norm_error": 4.124264041394099e-09,
+        "samples": 921,
+        "support_end_difference_M": -0.25,
+        "unmaximized_real_overlap": 0.9999999999999908
+      },
+      "gates": {
+        "amplitude_error_budget": true,
+        "boundary_time_M": true,
+        "complex_error_budget": false,
+        "error_decreased": false,
+        "match_time_M": true,
+        "peak_time_M": true
+      },
+      "medium_to_fine": {
+        "amplitude_relative_l2": 2.6143134705476666e-07,
+        "boundary_time_M_abs_difference": 0.0,
+        "candidate_samples": 1842,
+        "common_samples": 1842,
+        "complex_relative_l2": 6.1498554800270005e-06,
+        "grid_step_M": 0.25,
+        "match_time_M_abs_difference": 0.0,
+        "peak_time_M_abs_difference": 0.0,
+        "phase_max_abs_rad": 1.2124152391559493e-05,
+        "phase_rms_rad": 6.961073214690138e-06,
+        "phase_samples": 1708,
+        "reference_samples": 1842,
+        "relative_norm_error": 1.8871792062391535e-07,
+        "samples": 1842,
+        "support_end_difference_M": -0.125,
+        "unmaximized_real_overlap": 0.999999999981108
+      },
+      "numerical_check_passed": false
+    }
+  },
+  "baseline_runs": {
+    "grid_1": {
+      "array_dtype": {
+        "mode": "complex128",
+        "time": "float64"
+      },
+      "array_sha256": {
+        "mode": "611106b8fff04b92c58a9826f334da41cc74f89a52f43155312b68ba549d0a1a",
+        "time": "6d2b4a193e4bd619bec715d0fa66a5aeab52079e79107f0ed67b3ba5f5e25cda"
+      },
+      "atol": 1e-14,
+      "boundary_time_M": 310.421875,
+      "dt_geom": 0.25,
+      "elapsed_seconds": 237.00378881487995,
+      "final_mass_fraction": 0.9550166356939277,
+      "final_spin": 0.6638743502317226,
+      "internal_step_M": 0.015625,
+      "match_time_M": 310.4267986637539,
+      "name": "grid_1",
+      "peak_time_M": 314.7991714477539,
+      "restart_time_M": 165.0,
+      "rtol": 1e-13,
+      "samples": 1842,
+      "stages": {
+        "coarse": {
+          "accepted": 579,
+          "evaluations": 3625,
+          "event_time_M": 314.8242358556655,
+          "rejected": 30,
+          "termination": [
+            "event"
+          ]
+        },
+        "fine": {
+          "accepted": 404,
+          "evaluations": 2570,
+          "event_time_M": 149.9576105784883,
+          "rejected": 29,
+          "termination": [
+            "event"
+          ]
+        }
+      },
+      "support_M": [
+        0.0,
+        460.25
+      ]
+    },
+    "grid_2": {
+      "array_dtype": {
+        "mode": "complex128",
+        "time": "float64"
+      },
+      "array_sha256": {
+        "mode": "e6ed05dd36f6328969146ccec2d2909b7ebe03fa9b4141e8734bf77c0db18b12",
+        "time": "ad84514950a2d29dbfa1da9062d275d092e4f98a9937e3d403d4c27f7323cde6"
+      },
+      "atol": 1e-14,
+      "boundary_time_M": 310.421875,
+      "dt_geom": 0.125,
+      "elapsed_seconds": 237.61469853576273,
+      "final_mass_fraction": 0.9550166356939277,
+      "final_spin": 0.6638743502317226,
+      "internal_step_M": 0.015625,
+      "match_time_M": 310.4267986637539,
+      "name": "grid_2",
+      "peak_time_M": 314.7991714477539,
+      "restart_time_M": 164.875,
+      "rtol": 1e-13,
+      "samples": 3684,
+      "stages": {
+        "coarse": {
+          "accepted": 579,
+          "evaluations": 3625,
+          "event_time_M": 314.82971840459714,
+          "rejected": 30,
+          "termination": [
+            "event"
+          ]
+        },
+        "fine": {
+          "accepted": 404,
+          "evaluations": 2570,
+          "event_time_M": 150.09281167897734,
+          "rejected": 29,
+          "termination": [
+            "event"
+          ]
+        }
+      },
+      "support_M": [
+        0.0,
+        460.375
+      ]
+    },
+    "ode_0": {
+      "array_dtype": {
+        "mode": "complex128",
+        "time": "float64"
+      },
+      "array_sha256": {
+        "mode": "bf77bc3b95e64a784f85f674f95ac4bf991d2452f80439eb88d28d4215c4c7d0",
+        "time": "94e34c1277eacf6c66cdb95b29babaa1d4a2bad2156f6b7a793e78c0e775aac6"
+      },
+      "atol": 1e-12,
+      "boundary_time_M": 310.421875,
+      "dt_geom": 0.5,
+      "elapsed_seconds": 106.83215551869944,
+      "final_mass_fraction": 0.9550166356939277,
+      "final_spin": 0.6638743502317226,
+      "internal_step_M": 0.015625,
+      "match_time_M": 310.42678340496485,
+      "name": "ode_0",
+      "peak_time_M": 314.79915618896484,
+      "restart_time_M": 165.0,
+      "rtol": 1e-11,
+      "samples": 921,
+      "stages": {
+        "coarse": {
+          "accepted": 232,
+          "evaluations": 1528,
+          "event_time_M": 314.86955483354086,
+          "rejected": 27,
+          "termination": [
+            "event"
+          ]
+        },
+        "fine": {
+          "accepted": 166,
+          "evaluations": 1127,
+          "event_time_M": 150.2105592409488,
+          "rejected": 26,
+          "termination": [
+            "event"
+          ]
+        }
+      },
+      "support_M": [
+        0.0,
+        460.0
+      ]
+    },
+    "ode_1": {
+      "array_dtype": {
+        "mode": "complex128",
+        "time": "float64"
+      },
+      "array_sha256": {
+        "mode": "aefe494b9c9a077f8a3308ec62f579dfbe03adcaa9d5a84603c99664649195cd",
+        "time": "94e34c1277eacf6c66cdb95b29babaa1d4a2bad2156f6b7a793e78c0e775aac6"
+      },
+      "atol": 1e-13,
+      "boundary_time_M": 310.421875,
+      "dt_geom": 0.5,
+      "elapsed_seconds": 156.33348690578714,
+      "final_mass_fraction": 0.9550166356939277,
+      "final_spin": 0.6638743502317226,
+      "internal_step_M": 0.015625,
+      "match_time_M": 310.426813922543,
+      "name": "ode_1",
+      "peak_time_M": 314.79918670654297,
+      "restart_time_M": 165.0,
+      "rtol": 1e-12,
+      "samples": 921,
+      "stages": {
+        "coarse": {
+          "accepted": 366,
+          "evaluations": 2342,
+          "event_time_M": 314.83394479174444,
+          "rejected": 29,
+          "termination": [
+            "event"
+          ]
+        },
+        "fine": {
+          "accepted": 259,
+          "evaluations": 1695,
+          "event_time_M": 150.09101630704257,
+          "rejected": 28,
+          "termination": [
+            "event"
+          ]
+        }
+      },
+      "support_M": [
+        0.0,
+        460.0
+      ]
+    },
+    "ode_2": {
+      "array_dtype": {
+        "mode": "complex128",
+        "time": "float64"
+      },
+      "array_sha256": {
+        "mode": "5a5f9fa81f3612404d1b8ce51c53604e07fbb06067bce3a83203408db0906855",
+        "time": "94e34c1277eacf6c66cdb95b29babaa1d4a2bad2156f6b7a793e78c0e775aac6"
+      },
+      "atol": 1e-14,
+      "boundary_time_M": 310.421875,
+      "dt_geom": 0.5,
+      "elapsed_seconds": 237.3126849536784,
+      "final_mass_fraction": 0.9550166356939277,
+      "final_spin": 0.6638743502317226,
+      "internal_step_M": 0.015625,
+      "match_time_M": 310.4267986637539,
+      "name": "ode_2",
+      "peak_time_M": 314.7991714477539,
+      "restart_time_M": 165.0,
+      "rtol": 1e-13,
+      "samples": 921,
+      "stages": {
+        "coarse": {
+          "accepted": 578,
+          "evaluations": 3619,
+          "event_time_M": 314.82685473921913,
+          "rejected": 30,
+          "termination": [
+            "event"
+          ]
+        },
+        "fine": {
+          "accepted": 404,
+          "evaluations": 2570,
+          "event_time_M": 149.95772112988266,
+          "rejected": 29,
+          "termination": [
+            "event"
+          ]
+        }
+      },
+      "support_M": [
+        0.0,
+        460.0
+      ]
+    }
+  },
+  "candidate_checks": {
+    "grid": {
+      "coarse_to_medium": {
+        "amplitude_relative_l2": 5.1509807356173164e-11,
+        "boundary_time_M_abs_difference": 0.0,
+        "candidate_samples": 921,
+        "common_samples": 921,
+        "complex_relative_l2": 6.220681283284825e-09,
+        "grid_step_M": 0.5,
+        "match_time_M_abs_difference": 0.0,
+        "peak_time_M_abs_difference": 0.0,
+        "phase_max_abs_rad": 1.7601106262558483e-07,
+        "phase_rms_rad": 7.412431919561944e-09,
+        "phase_samples": 854,
+        "reference_samples": 921,
+        "relative_norm_error": 1.0524914273446484e-12,
+        "samples": 921,
+        "support_end_difference_M": -0.25,
+        "unmaximized_real_overlap": 1.0000000000000002
+      },
+      "gates": {
+        "amplitude_error_budget": true,
+        "boundary_time_M": true,
+        "complex_error_budget": true,
+        "error_decreased": false,
+        "match_time_M": true,
+        "peak_time_M": true
+      },
+      "medium_to_fine": {
+        "amplitude_relative_l2": 3.610875052958973e-11,
+        "boundary_time_M_abs_difference": 0.0,
+        "candidate_samples": 1842,
+        "common_samples": 1842,
+        "complex_relative_l2": 8.17864033897492e-09,
+        "grid_step_M": 0.25,
+        "match_time_M_abs_difference": 0.0,
+        "peak_time_M_abs_difference": 0.0,
+        "phase_max_abs_rad": 1.519189007371261e-07,
+        "phase_rms_rad": 1.7385603170587688e-08,
+        "phase_samples": 1708,
+        "reference_samples": 1842,
+        "relative_norm_error": 5.465627950229646e-13,
+        "samples": 1842,
+        "support_end_difference_M": -0.125,
+        "unmaximized_real_overlap": 0.9999999999999998
+      },
+      "numerical_check_passed": false
+    },
+    "ode": {
+      "coarse_to_medium": {
+        "amplitude_relative_l2": 1.367599567514389e-07,
+        "boundary_time_M_abs_difference": 0.0,
+        "candidate_samples": 921,
+        "common_samples": 921,
+        "complex_relative_l2": 5.100139018188284e-06,
+        "grid_step_M": 0.5,
+        "match_time_M_abs_difference": 3.0517578125e-05,
+        "peak_time_M_abs_difference": 3.0517578125e-05,
+        "phase_max_abs_rad": 1.2524972262910488e-05,
+        "phase_rms_rad": 6.775859744621491e-06,
+        "phase_samples": 854,
+        "reference_samples": 921,
+        "relative_norm_error": 9.474196582814898e-08,
+        "samples": 921,
+        "support_end_difference_M": 0.0,
+        "unmaximized_real_overlap": 0.9999999999869986
+      },
+      "gates": {
+        "amplitude_error_budget": true,
+        "boundary_time_M": true,
+        "complex_error_budget": false,
+        "error_decreased": true,
+        "match_time_M": true,
+        "peak_time_M": true
+      },
+      "medium_to_fine": {
+        "amplitude_relative_l2": 6.866631905699549e-08,
+        "boundary_time_M_abs_difference": 0.0,
+        "candidate_samples": 921,
+        "common_samples": 921,
+        "complex_relative_l2": 2.614471228362189e-06,
+        "grid_step_M": 0.5,
+        "match_time_M_abs_difference": 1.52587890625e-05,
+        "peak_time_M_abs_difference": 1.52587890625e-05,
+        "phase_max_abs_rad": 6.667594220818168e-06,
+        "phase_rms_rad": 3.5786938569238397e-06,
+        "phase_samples": 854,
+        "reference_samples": 921,
+        "relative_norm_error": 4.766049943594197e-08,
+        "samples": 921,
+        "support_end_difference_M": 0.0,
+        "unmaximized_real_overlap": 0.9999999999965834
+      },
+      "numerical_check_passed": false
+    }
+  },
+  "candidate_numerical_checks_passed": false,
+  "diagnostic_sha256": "891ecd1ae5ab1d1e950db36e0480433b3322c489b2128ff4908effab4d226182",
+  "frozen_receipt_sha256": "53399b0b98b7f0883d91909b9de43dc82714f52c81be7ca036d0c6317d1ff682",
+  "plan_sha256": "0843da44b4fd657121ee84cf21c9f8da651c5896fbd63b168b2e9f66d76b37b9",
+  "process": {
+    "argv": [
+      "dev/native_rom/evidence/2026-09-29/ode_chain_derivatives/gate_candidate.py",
+      "--row",
+      "nonspin",
+      "--json-out",
+      "dev/native_rom/evidence/2026-09-29/ode_chain_derivatives/gate_nonspin.json"
+    ],
+    "cwd": "/home/xangma/tmp/diffgw-seobnr-ode-gate-aa1f365f",
+    "host": "len",
+    "pid": 129837
+  },
+  "row": {
+    "chi1": 0.0,
+    "chi2": 0.0,
+    "mass1": 30.0,
+    "mass2": 20.0,
+    "omega_start": 0.04
+  },
+  "rule": "ODE chain-rule first and second derivatives at continuous match state; spline values retained",
+  "runs": [
+    {
+      "accepted_array_sha256": {
+        "coarse": {
+          "derivative": "f3035446bae26b295b16c3447743871962a206bb5f8389620c545ae1bb63d3a9",
+          "state": "6cea2ebd1d5073b22ffcf3f9a5de299e826800358888fab309684b16c9d39cd8",
+          "time": "9a28185a8166e338ba48606cb9b4fb11067847cb8284007744f947e733c2a23e",
+          "valid": "4b614acdfbc2bf6b01dcbb3db718cbc1b48ad4268d9dbc074f59225e6b15301a"
+        },
+        "fine": {
+          "derivative": "089ae68d896f48028c42939808e10705e6136d61298972c6cefafd6f96d6f2fa",
+          "state": "2ef7cd49e4cd9f1e8d5964b49b88409968d51b587f2d26a81345957075c8cf52",
+          "time": "02655e78ecad7340b4973f99cf585b61e637944bafd856e4c449cbc2c8d85485",
+          "valid": "902977f7d95ba07770428ec9f3413939a119dcf1b4fb1bac2f29f7a033aaa929"
+        }
+      },
+      "array_dtype": {
+        "mode": "complex128",
+        "time": "float64"
+      },
+      "array_sha256": {
+        "mode": "ba8542263f87df674a6f857a52e957417974eb5a29323f2d13d473aad4fded1b",
+        "time": "94e34c1277eacf6c66cdb95b29babaa1d4a2bad2156f6b7a793e78c0e775aac6"
+      },
+      "atol": 1e-14,
+      "baseline_array_sha256": {
+        "mode": "5a5f9fa81f3612404d1b8ce51c53604e07fbb06067bce3a83203408db0906855",
+        "time": "94e34c1277eacf6c66cdb95b29babaa1d4a2bad2156f6b7a793e78c0e775aac6"
+      },
+      "baseline_nqc_coefficients": {
+        "amplitude": [
+          4.123374398002514,
+          -47.13332759435617,
+          56.94067853137367
+        ],
+        "phase": [
+          4.1368172447103655,
+          -21.97725097639304
+        ]
+      },
+      "boundary_time_M": 310.421875,
+      "candidate_seconds": 239.77069892780855,
+      "dt_geom": 0.5,
+      "final_mass_fraction": 0.9550166356939277,
+      "final_spin": 0.6638743502317226,
+      "internal_step_M": 0.015625,
+      "match_time_M": 310.4267986637539,
+      "name": "ode_2",
+      "nqc_coefficients": {
+        "amplitude": [
+          4.1232089944612005,
+          -47.13189014513539,
+          56.93904749201568
+        ],
+        "phase": [
+          4.136782450745492,
+          -21.976912910574317
+        ]
+      },
+      "nqc_full_spline_phase_matrix": [
+        [
+          -0.03704046087447127,
+          -0.0038193527847517157
+        ],
+        [
+          -0.008118401647429989,
+          -0.0013375576511145016
+        ]
+      ],
+      "nqc_matching_matrices": {
+        "amplitude": [
+          [
+            0.08403209995561357,
+            0.02902217202713729,
+            0.01705580647888948
+          ],
+          [
+            0.015172015372681022,
+            0.006299028563401974,
+            0.004013023096393592
+          ],
+          [
+            0.00446269889945664,
+            0.0020519748607843646,
+            0.0013730050851892986
+          ]
+        ],
+        "phase": [
+          [
+            -0.037040459468546776,
+            -0.003819352639363102
+          ],
+          [
+            -0.008118277645030038,
+            -0.0013375427034315428
+          ]
+        ]
+      },
+      "peak_time_M": 314.7991714477539,
+      "restart_time_M": 165.0,
+      "rtol": 1e-13,
+      "samples": 921,
+      "stages": {
+        "coarse": {
+          "accepted": 578,
+          "evaluations": 3619,
+          "event_time_M": 314.82685473921913,
+          "rejected": 30,
+          "termination": [
+            "event"
+          ]
+        },
+        "fine": {
+          "accepted": 404,
+          "evaluations": 2570,
+          "event_time_M": 149.95772112988266,
+          "rejected": 29,
+          "termination": [
+            "event"
+          ]
+        }
+      },
+      "support_M": [
+        0.0,
+        460.0
+      ]
+    },
+    {
+      "accepted_array_sha256": {
+        "coarse": {
+          "derivative": "aa590745dfac62b46c9f6bfa3f506f074ca430898713d924da391fa69daf686c",
+          "state": "ffdef0d00ed77a7a64abe7413455121a1a963d81c850d832adffc483b864b7f5",
+          "time": "ebc34ad5de8f5608d4b505ed89e8bb6b12b808d0df674e594000548806fd0a0d",
+          "valid": "c9159d253082e16ad5fc07152465125cbd7507455f83c26a52ea692d2502fa36"
+        },
+        "fine": {
+          "derivative": "4a4d39c0bf97af00c520ad3c497f4c49def7154632631a12d99332152469e2bb",
+          "state": "8c081cd73150b8bd47a7eae1bdc5d83ccea2af37fcfa0d3304a7f1448ee1e55f",
+          "time": "904fe53ae59087d3fa331d8960fed4a52febd072b46d849678a92c27af598a0b",
+          "valid": "03411d2fcd4550fbd2b01a33a236472f53da2f31f4d0a4ddf8f871eb0aaddf68"
+        }
+      },
+      "array_dtype": {
+        "mode": "complex128",
+        "time": "float64"
+      },
+      "array_sha256": {
+        "mode": "0b855a54c4a1c2e459cf499410c1bbf5e6b27c94d1c325a38a94c3d44658ba48",
+        "time": "94e34c1277eacf6c66cdb95b29babaa1d4a2bad2156f6b7a793e78c0e775aac6"
+      },
+      "atol": 1e-12,
+      "baseline_array_sha256": {
+        "mode": "bf77bc3b95e64a784f85f674f95ac4bf991d2452f80439eb88d28d4215c4c7d0",
+        "time": "94e34c1277eacf6c66cdb95b29babaa1d4a2bad2156f6b7a793e78c0e775aac6"
+      },
+      "baseline_nqc_coefficients": {
+        "amplitude": [
+          4.123695263179052,
+          -47.13606413599405,
+          56.94375414330556
+        ],
+        "phase": [
+          4.136898727840722,
+          -21.977977019919287
+        ]
+      },
+      "boundary_time_M": 310.421875,
+      "candidate_seconds": 108.43663334893063,
+      "dt_geom": 0.5,
+      "final_mass_fraction": 0.9550166356939277,
+      "final_spin": 0.6638743502317226,
+      "internal_step_M": 0.015625,
+      "match_time_M": 310.42678340496485,
+      "name": "ode_0",
+      "nqc_coefficients": {
+        "amplitude": [
+          4.12324449791094,
+          -47.13217078144802,
+          56.939350079900834
+        ],
+        "phase": [
+          4.136797256110324,
+          -21.97701253847814
+        ]
+      },
+      "nqc_full_spline_phase_matrix": [
+        [
+          -0.03704028924983753,
+          -0.003819327191312244
+        ],
+        [
+          -0.008118517683448168,
+          -0.001337563805645898
+        ]
+      ],
+      "nqc_matching_matrices": {
+        "amplitude": [
+          [
+            0.0840318676689697,
+            0.029022075622029596,
+            0.01705574506892884
+          ],
+          [
+            0.015171947138559396,
+            0.006298997186073803,
+            0.004013002100978298
+          ],
+          [
+            0.004462668669259493,
+            0.002051960373932148,
+            0.0013729951516163622
+          ]
+        ],
+        "phase": [
+          [
+            -0.0370403354327709,
+            -0.003819332183664333
+          ],
+          [
+            -0.008118227669369591,
+            -0.0013375323545898128
+          ]
+        ]
+      },
+      "peak_time_M": 314.79915618896484,
+      "restart_time_M": 165.0,
+      "rtol": 1e-11,
+      "samples": 921,
+      "stages": {
+        "coarse": {
+          "accepted": 232,
+          "evaluations": 1528,
+          "event_time_M": 314.86955483354086,
+          "rejected": 27,
+          "termination": [
+            "event"
+          ]
+        },
+        "fine": {
+          "accepted": 166,
+          "evaluations": 1127,
+          "event_time_M": 150.2105592409488,
+          "rejected": 26,
+          "termination": [
+            "event"
+          ]
+        }
+      },
+      "support_M": [
+        0.0,
+        460.0
+      ]
+    },
+    {
+      "accepted_array_sha256": {
+        "coarse": {
+          "derivative": "b776d81c5ec44a85371c10e7fc0bff2028eedf4ceb87814312efec77e1ab1646",
+          "state": "0d3bcde3e34a889adafdcfec073aa7029c219003041058c5913284338423d9f6",
+          "time": "59b3b5c48f63b1b4ecdaaef3ce69cf13d835c11cd52dd1e03c1aea81c48a5bfc",
+          "valid": "508318bc99b77301b5e8fc7a87e790629cb5729e9478dd524cda8bbd45606001"
+        },
+        "fine": {
+          "derivative": "8308f2314d1c14fe4d5bd7d94a3029b479d88b8348257a25f4551585862e949d",
+          "state": "8daff2df058b2e9d2b633cc7a4a004821e4134dc28bd067c8122da8f1e8c3589",
+          "time": "b4a8778cac20209e2719fecfeac0744d5f4874dfb982ec3dcc56f84f108b4c89",
+          "valid": "7353e79b3e597ef53cb67ac9a94a31d3ad4ecc81d174d12c3b7436cf3fbfe7f9"
+        }
+      },
+      "array_dtype": {
+        "mode": "complex128",
+        "time": "float64"
+      },
+      "array_sha256": {
+        "mode": "6b415339304eaa10dae73fb3df8bbe9f2fd4a275a09488598177a9f748383d66",
+        "time": "94e34c1277eacf6c66cdb95b29babaa1d4a2bad2156f6b7a793e78c0e775aac6"
+      },
+      "atol": 1e-13,
+      "baseline_array_sha256": {
+        "mode": "aefe494b9c9a077f8a3308ec62f579dfbe03adcaa9d5a84603c99664649195cd",
+        "time": "94e34c1277eacf6c66cdb95b29babaa1d4a2bad2156f6b7a793e78c0e775aac6"
+      },
+      "baseline_nqc_coefficients": {
+        "amplitude": [
+          4.123129622667025,
+          -47.13122321508508,
+          56.93830369746128
+        ],
+        "phase": [
+          4.136757005520289,
+          -21.976705362879493
+        ]
+      },
+      "boundary_time_M": 310.421875,
+      "candidate_seconds": 159.9202462369576,
+      "dt_geom": 0.5,
+      "final_mass_fraction": 0.9550166356939277,
+      "final_spin": 0.6638743502317226,
+      "internal_step_M": 0.015625,
+      "match_time_M": 310.426813922543,
+      "name": "ode_1",
+      "nqc_coefficients": {
+        "amplitude": [
+          4.1231734285344075,
+          -47.13160910824614,
+          56.938744506791735
+        ],
+        "phase": [
+          4.136767653912007,
+          -21.97681339349564
+        ]
+      },
+      "nqc_full_spline_phase_matrix": [
+        [
+          -0.03704057187307681,
+          -0.0038193717913974183
+        ],
+        [
+          -0.008118306866218963,
+          -0.0013375519857648534
+        ]
+      ],
+      "nqc_matching_matrices": {
+        "amplitude": [
+          [
+            0.08403233106701287,
+            0.029022267981928685,
+            0.017055867611158314
+          ],
+          [
+            0.015172083360498132,
+            0.006299059824332591,
+            0.004013044013484834
+          ],
+          [
+            0.004462729026211072,
+            0.00205198929715889,
+            0.001373014983920452
+          ]
+        ],
+        "phase": [
+          [
+            -0.03704058315660665,
+            -0.003819373015947434
+          ],
+          [
+            -0.008118327456371342,
+            -0.001337553015645569
+          ]
+        ]
+      },
+      "peak_time_M": 314.79918670654297,
+      "restart_time_M": 165.0,
+      "rtol": 1e-12,
+      "samples": 921,
+      "stages": {
+        "coarse": {
+          "accepted": 366,
+          "evaluations": 2342,
+          "event_time_M": 314.83394479174444,
+          "rejected": 29,
+          "termination": [
+            "event"
+          ]
+        },
+        "fine": {
+          "accepted": 259,
+          "evaluations": 1695,
+          "event_time_M": 150.09101630704257,
+          "rejected": 28,
+          "termination": [
+            "event"
+          ]
+        }
+      },
+      "support_M": [
+        0.0,
+        460.0
+      ]
+    },
+    {
+      "accepted_array_sha256": {
+        "coarse": {
+          "derivative": "54a5e009708983861c9e40f5b4630c80ae703f741a9dae62811d2d4c114659df",
+          "state": "d350504225e8015fc36f06c7895249006a212649bbdf2985547e999f1d4cf9ac",
+          "time": "1e667da27e998cfb138ef0717d38c8497a642fc37fcf03342f6e568b3c6c55a3",
+          "valid": "d1d02d8bd5290385d5f7644494211e24d72bfddc3eb078d18b11a5ef54963db7"
+        },
+        "fine": {
+          "derivative": "bcdc872542aa38bf903ae2f0dfa5fc0e56e64f2899639ebef5a97ff2de9cd024",
+          "state": "e2b4fe013636799ad1205abd4105ae5fd9e968004c4d946e2590feb1e14b4474",
+          "time": "d27dc7246696948e3e3b4bffd1b8fc320bc7ece39b75e6acb5c656d1ed409e6c",
+          "valid": "902977f7d95ba07770428ec9f3413939a119dcf1b4fb1bac2f29f7a033aaa929"
+        }
+      },
+      "array_dtype": {
+        "mode": "complex128",
+        "time": "float64"
+      },
+      "array_sha256": {
+        "mode": "ba5eb26ef3c6396b711f69e1d3779ef1c5987bd78f0e5de93c873d07a6ea37d6",
+        "time": "6d2b4a193e4bd619bec715d0fa66a5aeab52079e79107f0ed67b3ba5f5e25cda"
+      },
+      "atol": 1e-14,
+      "baseline_array_sha256": {
+        "mode": "611106b8fff04b92c58a9826f334da41cc74f89a52f43155312b68ba549d0a1a",
+        "time": "6d2b4a193e4bd619bec715d0fa66a5aeab52079e79107f0ed67b3ba5f5e25cda"
+      },
+      "baseline_nqc_coefficients": {
+        "amplitude": [
+          4.123370187650779,
+          -47.13329104148797,
+          56.940637076941016
+        ],
+        "phase": [
+          4.1368163192259395,
+          -21.977242020438858
+        ]
+      },
+      "boundary_time_M": 310.421875,
+      "candidate_seconds": 239.6710641719401,
+      "dt_geom": 0.25,
+      "final_mass_fraction": 0.9550166356939277,
+      "final_spin": 0.6638743502317226,
+      "internal_step_M": 0.015625,
+      "match_time_M": 310.4267986637539,
+      "name": "grid_1",
+      "nqc_coefficients": {
+        "amplitude": [
+          4.123208991005133,
+          -47.131890117783314,
+          56.93904746250986
+        ],
+        "phase": [
+          4.1367824492976295,
+          -21.976912900816206
+        ]
+      },
+      "nqc_full_spline_phase_matrix": [
+        [
+          -0.037040460921677856,
+          -0.0038193527905428524
+        ],
+        [
+          -0.008118398863187659,
+          -0.0013375573515946558
+        ]
+      ],
+      "nqc_matching_matrices": {
+        "amplitude": [
+          [
+            0.08403209997842538,
+            0.029022172036598997,
+            0.017055806484915156
+          ],
+          [
+            0.015172015379373769,
+            0.006299028566479371,
+            0.00401302309845265
+          ],
+          [
+            0.004462698902419299,
+            0.002051974862204305,
+            0.0013730050861629915
+          ]
+        ],
+        "phase": [
+          [
+            -0.03704045948070569,
+            -0.003819352641370592
+          ],
+          [
+            -0.008118277649925098,
+            -0.0013375427044461609
+          ]
+        ]
+      },
+      "peak_time_M": 314.7991714477539,
+      "restart_time_M": 165.0,
+      "rtol": 1e-13,
+      "samples": 1842,
+      "stages": {
+        "coarse": {
+          "accepted": 579,
+          "evaluations": 3625,
+          "event_time_M": 314.8242358556655,
+          "rejected": 30,
+          "termination": [
+            "event"
+          ]
+        },
+        "fine": {
+          "accepted": 404,
+          "evaluations": 2570,
+          "event_time_M": 149.9576105784883,
+          "rejected": 29,
+          "termination": [
+            "event"
+          ]
+        }
+      },
+      "support_M": [
+        0.0,
+        460.25
+      ]
+    },
+    {
+      "accepted_array_sha256": {
+        "coarse": {
+          "derivative": "625521dbf14b3ad32f165383becb177e054389d68455ca398da8dcb3fc1ab589",
+          "state": "ded4ddc61f80ba399fccd2af9811cd5fc1e13fb1224adb7272e024ac06a1690a",
+          "time": "9ffa7259363308dc018fef634f0d928b7d0aab3526da9d1a7912739bf1fc7997",
+          "valid": "d1d02d8bd5290385d5f7644494211e24d72bfddc3eb078d18b11a5ef54963db7"
+        },
+        "fine": {
+          "derivative": "3a57289bef928315601c258874c7097e8424ffd0a065fe5b362f4faea2a4fad7",
+          "state": "633531b54cffbdc9839cd4241dac4959e67119c5e85fec060764d2af6895d780",
+          "time": "f9637c28593e87f2793441c5b25f65450242f649ead2f29a70b222d2933c8530",
+          "valid": "902977f7d95ba07770428ec9f3413939a119dcf1b4fb1bac2f29f7a033aaa929"
+        }
+      },
+      "array_dtype": {
+        "mode": "complex128",
+        "time": "float64"
+      },
+      "array_sha256": {
+        "mode": "a82699fb321e2238a83f943fa086b4b09d138dd603d97ff20e755476ef10103a",
+        "time": "ad84514950a2d29dbfa1da9062d275d092e4f98a9937e3d403d4c27f7323cde6"
+      },
+      "atol": 1e-14,
+      "baseline_array_sha256": {
+        "mode": "e6ed05dd36f6328969146ccec2d2909b7ebe03fa9b4141e8734bf77c0db18b12",
+        "time": "ad84514950a2d29dbfa1da9062d275d092e4f98a9937e3d403d4c27f7323cde6"
+      },
+      "baseline_nqc_coefficients": {
+        "amplitude": [
+          4.1231778024197965,
+          -47.13162075622208,
+          56.93874277946648
+        ],
+        "phase": [
+          4.136773640616716,
+          -21.976828861054916
+        ]
+      },
+      "boundary_time_M": 310.421875,
+      "candidate_seconds": 240.0091144121252,
+      "dt_geom": 0.125,
+      "final_mass_fraction": 0.9550166356939277,
+      "final_spin": 0.6638743502317226,
+      "internal_step_M": 0.015625,
+      "match_time_M": 310.4267986637539,
+      "name": "grid_2",
+      "nqc_coefficients": {
+        "amplitude": [
+          4.123208995293715,
+          -47.13189015163135,
+          56.939047498989346
+        ],
+        "phase": [
+          4.136782451057757,
+          -21.97691291262522
+        ]
+      },
+      "nqc_full_spline_phase_matrix": [
+        [
+          -0.03704046266459715,
+          -0.003819352977971857
+        ],
+        [
+          -0.008118272318834082,
+          -0.0013375437257460501
+        ]
+      ],
+      "nqc_matching_matrices": {
+        "amplitude": [
+          [
+            0.08403209995176143,
+            0.029022172025501846,
+            0.017055806477838727
+          ],
+          [
+            0.0151720153714497,
+            0.006299028562839064,
+            0.0040130230960174285
+          ],
+          [
+            0.004462698898906099,
+            0.0020519748605214157,
+            0.0013730050850092135
+          ]
+        ],
+        "phase": [
+          [
+            -0.0370404594662075,
+            -0.0038193526389990987
+          ],
+          [
+            -0.008118277644113811,
+            -0.0013375427032442178
+          ]
+        ]
+      },
+      "peak_time_M": 314.7991714477539,
+      "restart_time_M": 164.875,
+      "rtol": 1e-13,
+      "samples": 3684,
+      "stages": {
+        "coarse": {
+          "accepted": 579,
+          "evaluations": 3625,
+          "event_time_M": 314.82971840459714,
+          "rejected": 30,
+          "termination": [
+            "event"
+          ]
+        },
+        "fine": {
+          "accepted": 404,
+          "evaluations": 2570,
+          "event_time_M": 150.09281167897734,
+          "rejected": 29,
+          "termination": [
+            "event"
+          ]
+        }
+      },
+      "support_M": [
+        0.0,
+        460.375
+      ]
+    }
+  ],
+  "schema": "diffgw.seobnrv4.ode-chain-gate.v1",
+  "scope": {
+    "description": "Scalar CPU float64 numerical stability evidence only; no training or promotion.",
+    "development_only": true,
+    "known_limitations": [
+      "Convergence cannot establish correctness of the equations or published model fidelity.",
+      "The adaptive prototype uses a diagnostic QNM spline with independently generated values and black-box-inferred knot metadata; this is not wholly literature-specified provenance.",
+      "Changing dt also changes the adaptive initial step and coarse/fine restart sampling; the grid check measures the complete generator's grid sensitivity.",
+      "No time, phase, amplitude, or coefficient fitting is performed.",
+      "No derivatives, batched execution, accelerators, or JAX are qualified here."
+    ],
+    "physics_validated": false,
+    "production_asset": false,
+    "production_promotion_allowed": false,
+    "training_generator_qualified": false
+  },
+  "source_manifest_sha256": "2caa5b4a3bb20e01cd6e0b0e8891e76b5d49345e3a254c9cc2395d7304d06a13",
+  "source_sha256_after": {
+    "dev/native_rom/eob/__init__.py": "7c5a5d5d2192dd2a87a6b459150b90ffa6be6f35399d97433218573aa0e47016",
+    "dev/native_rom/eob/dispatch.py": "8efe28a4cae4ffd8ea1d3c633722d593bb08db8a3cc4b367417f313dbc3cc850",
+    "dev/native_rom/eob/jax/__init__.py": "7c5a5d5d2192dd2a87a6b459150b90ffa6be6f35399d97433218573aa0e47016",
+    "dev/native_rom/eob/jax/adaptive_driver_clean.py": "41691a243f3b1bf248443f679f8fd405eaeeb3de2d3e8d6800b03ba4b4c64ecf",
+    "dev/native_rom/eob/jax/hamiltonian.py": "dca178c4bcf2d6e4cf33b4d65a6b1f3d75415600d6edb3fd28589b5634134bef",
+    "dev/native_rom/eob/jax/historical_hamiltonian.py": "cd287c911161200deadd3af34cf17bc04331f96e8054031f0b1e2111e2bc64a7",
+    "dev/native_rom/eob/jax/initial_conditions_clean.py": "0ccc2251f72e6af696a8c35e08a0cc872dcac74b8904774dafdf8e416f21f382",
+    "dev/native_rom/eob/jax/numerical_attachment_clean.py": "fcc74bd7130f76ae9abab2c8e0214a640d7d1bdef3dbefc2dac459da471edc4c",
+    "dev/native_rom/eob/jax/published_waveform.py": "db20cef7c82a482d6b86c38f18ad4c2eb51bf92478947c5fe0aaa9e3d5b2a775",
+    "dev/native_rom/eob/jax/radiation_reaction.py": "8d977db1a5cf952c062c053704c4f8646e808a535392f1657a4645df3652b730",
+    "dev/native_rom/eob/jax/source_calibration_hamiltonian.py": "8b5584002625479e667337076df59cb6a820e1cffc88a282071843e6d4e4c8a9",
+    "dev/native_rom/eob/jax/two_stage_trajectory.py": "5671c29f62fb4e5f3177afe6b8048a9464884565e2a99a8b26848a1ec66f347e",
+    "dev/native_rom/eob/jax/waveform.py": "232cf11ca0662488e90661381fd200cee103e048ded9636db11e8852352bea53",
+    "dev/native_rom/eob/tests/parity/test_eob_parity.py": "f95351a30ccff29e1f2d22dd027b1ffdfb13e92f387bfbac499fd2d7fe92a45e",
+    "dev/native_rom/eob/tests/parity/test_eob_prototype_components.py": "f6aa0380765aa443882adcfe475d792193e102214a8e23a845f67814057c92eb",
+    "dev/native_rom/eob/tests/test_clean_room_eob_factorized_integration.py": "bfa2d92d9a069889dac8f5f4ae28c4898e458b86feb8378f3ba2a3be843207f3",
+    "dev/native_rom/eob/tests/test_clean_room_eob_published_driver.py": "7ba9bb41fe1432d5c019e58c20fde8d39608287cc587d3f5f2a140ad37e3d2d6",
+    "dev/native_rom/eob/tests/test_clean_room_eob_waveform.py": "47b4592c2e541bd36ecc1d80ad7325889981e8bf23540238b444da389c516116",
+    "dev/native_rom/eob/tests/test_eob_adaptive_driver_clean.py": "954f7e7855811a4654eb799b9b0251c935780468d57b322a7975ea95efcabba4",
+    "dev/native_rom/eob/tests/test_eob_conditioned_waveform_clean.py": "4bdfd24660cb629126f6cd8cf180748d5426ea7aa955a4105f6b1b6537d38e7d",
+    "dev/native_rom/eob/tests/test_eob_dynamics.py": "9ce026314ca8048dc236e6c90198fda4c042de8c0ee1fd684e049b0885bb6379",
+    "dev/native_rom/eob/tests/test_eob_prototype_dynamics.py": "2cf7a2a28602b22b5ab43bd02944c1701fe733fb63e24431d5f32fe0736d5194",
+    "dev/native_rom/eob/tests/test_eob_prototype_torque.py": "bdbeccd6a263323bffc8a2f2f4ac56aeb1ae3bafba50c8fbd6cd97847dbdaa75",
+    "dev/native_rom/eob/tests/test_pass21_eob_attachment.py": "c77f4310736c43c9ed26c2b0592266ea9072c01557a63498157d73e276501e50",
+    "dev/native_rom/eob/tests/test_teob_continuous_matching.py": "79270fa7072556b553182bebd61287d8255ad81afd79363b8f43f3e0118a8762",
+    "dev/native_rom/eob/torch/__init__.py": "7c5a5d5d2192dd2a87a6b459150b90ffa6be6f35399d97433218573aa0e47016",
+    "dev/native_rom/eob/torch/adaptive_driver_clean.py": "28e156876d570e778f4f31e4b91ef1344bb3a4dd096b1cc94c882a76ce74811d",
+    "dev/native_rom/eob/torch/conditioned_waveform_clean.py": "45023e71cf23589b14c1e8cc65f0290b15b909eb3fe4be84a60961d361ba9a88",
+    "dev/native_rom/eob/torch/hamiltonian.py": "a05e51d959f078144a7e6d51d7a3245c048e6d6878232070d08451a8d9bc90b3",
+    "dev/native_rom/eob/torch/historical_hamiltonian.py": "f93beaa5172dd1fff43eb676848f60caa8d2795dfd7ed21c842827dd53141066",
+    "dev/native_rom/eob/torch/local_nqc_control.py": "1a613e1cf2e8414cc5ba3cd031aed9f5e5c49d3d2bbfc0c01fbdaf1e7a290b26",
+    "dev/native_rom/eob/torch/published_waveform.py": "94660f94dc9d558935f3c4083162a0d09f86a5f8da89796c012c0f5163805e61",
+    "dev/native_rom/eob/torch/radiation_reaction.py": "99250a22d14d5799d309cf6cc4cdd88c019e4ecd7f387da2206bca07c64766d3",
+    "dev/native_rom/eob/torch/source_calibration_hamiltonian.py": "2b0ddccf6ba99d0157c0b624cf0c4e926713c96a736e22e1b6fe55bdbde1cdc2",
+    "dev/native_rom/eob/torch/warm_start.py": "a9818350b18ed04ca645edbf6af4c22760fc51eae540c12f38d171d99a675a20",
+    "dev/native_rom/eob/torch/waveform.py": "b04bcff81e76d7facd1f11af517d29827d38b2f6d6bb6473b6d1ae153edc9643",
+    "dev/native_rom/qualify_generator.py": "c7c61dc5d8dc60004b351ea3026977833b127749f19d06f63937b6a339f8afa7",
+    "scripts/verify_eob_published_waveforms.py": "f879086b1bb23b11e84a757f2b40ba8c8ac40b4f7984744e9b707fa1f2868c14",
+    "src/diffgw/__init__.py": "c115a91f123790911aa0e6ef60d86f81a8d1d9aa8b6e689a9ead85bd060601ac",
+    "src/diffgw_core/__init__.py": "1ca0a6eb7909e21fe165b19c1e3cda93fe8aee06c6e7d7203a78e32d95410f81",
+    "src/diffgw_core/catalog.py": "877eaba08bc9fd14cb39b930d5222a5d22054a5340712bf304f25c4a23e9ce1b",
+    "src/diffgw_core/constants.py": "6476c438213819c8a840825bc13c8cff95e98659383a04b839a2affbe59a7b8f",
+    "src/diffgw_core/conversions.py": "3674bf1d61d0fe2c1bc8f712e3c1b2415f92f0e5bf096d7fd8bdc7f50f16c0df",
+    "src/diffgw_core/fits.py": "a32843e13321bcfef2089acdefbdb6251cf1400f5b13b6780209f9370c1b2288",
+    "src/diffgw_core/kerr_qnm_220_data.py": "51b13ae3649ec332b45d4c538a669334ec31f4244105e3b4c2b0c24197f4c5e4",
+    "src/diffgw_core/kerr_qnm_data.py": "56a07dfe32ad6fdcc7c764725d75fa93d9cbc7efbcf6462604cfe134026909c6",
+    "src/diffgw_core/kerr_qnm_table_convention_data.py": "c7843319af70b560650b5bb0a6ff3aab3e6b35cf3ca92562567de0734b3c2850",
+    "src/diffgw_core/nrtidal_fits.py": "95bb4aafbe932e2b84b56cc89f9964a840cb4f65d69e194019dc81294c391fe7",
+    "src/diffgw_core/phenomt_fits.py": "b4ad28c76359f6c4dac3d6349c539eb1c2896fe4c2e0c083393f03f10524907e",
+    "src/diffgw_core/phenomt_options.py": "e6b910aa5d08319147bb562ad087ade53045885c29560921ae2736ad7d9ed7b3",
+    "src/diffgw_core/qnm_data.py": "3d1f9e8c5959dc75d3a25480b794e2b733c2076b8b292b66edca7b980ac02efc",
+    "src/diffgw_core/remnant.py": "d30b1cec03ebe993f4eff2beb37d83f1d5f9bc591c8f89a51e34e3f3f95b7e0e",
+    "src/jaxwave/__init__.py": "05d52c9c55276e1c298900669d6e76da3422b70ec31379792fd5c55f5bcf27b6",
+    "src/jaxwave/_phenomt_td.py": "f7dcc483d0957a849a0da0a75deb288abff7d4c4fb04254afe9f27278e9268be",
+    "src/jaxwave/approximants/__init__.py": "06857b087a7005eca8b32608a5be066bf4e09cc1a041108d03cc8716d217f25c",
+    "src/jaxwave/approximants/_phenomt_amplitude.py": "9adef12a3acaf262c6d00c5a6d8890d970e6a011f3059e883fc3bc3f59c73ff8",
+    "src/jaxwave/approximants/_phenomt_angle_options.py": "bf5c8475bfcc1135b9b07b2226d87e7f9a2f78958da8379aaca20943182d2918",
+    "src/jaxwave/approximants/_phenomt_dispatch.py": "6c6d7aed33d48ab601a7bb4062768949ffd1a76478ccb53294e7786875bef79a",
+    "src/jaxwave/approximants/_phenomt_msa.py": "8cf791e3836e21bbc299d07e6fc3a6b827bcf83f36b904f4579ae9a27162ce47",
+    "src/jaxwave/approximants/_phenomt_numerical.py": "198a5ce86614b351541b33808e37e1ec9e3b23f5c4f145faecc023bbdb661f87",
+    "src/jaxwave/approximants/_phenomt_precession.py": "3f3770ea58af67112d2b3719eb688dd3eac696404494357059dc79d04bcfa02a",
+    "src/jaxwave/approximants/_phenomt_spin_evolution.py": "3044b21ee3d545fa5f570bf2049e59783acfa175024b8981374d5c2c879d9ac6",
+    "src/jaxwave/approximants/continuous_wave.py": "ee47a5c8bc39bc5e0ae1faad4bf29a2005d2e53ac448e30bec8211f7fafac16f",
+    "src/jaxwave/approximants/emri_kludge.py": "902856ef7b67e23ea9590a5efe396769aca533a9b8405172deb7f8bd94b78106",
+    "src/jaxwave/approximants/eob/__init__.py": "6f0498c0b4ae48d121365042b0b0faac023221699b15cc11b7ba6911b0c63a08",
+    "src/jaxwave/approximants/eob/attachment.py": "3c9fd67b76da5b8e5a2fdcde8f4a8bcbe7814bfc6de758896f28ab7640d87088",
+    "src/jaxwave/approximants/eob/continuous_matching.py": "a0299194e57379cf2c46b175a8f81c301c15cf01a484c4830d5acf9139648a91",
+    "src/jaxwave/approximants/eob/events.py": "5c3e484653ee75d54a35652a7c74cb6fd24a69ab17221da7a3baf3645481a15b",
+    "src/jaxwave/approximants/eob/hamiltonian.py": "5bdcb51b0dccb5b91352d7e8697d1533e6f49ae2dba09526731cd9e4747a2118",
+    "src/jaxwave/approximants/eob/initial_conditions.py": "9833ecc03877432d3bf60d64a1e93408af2ea86b77a86158cb99c62a6d05b42f",
+    "src/jaxwave/approximants/eob/integrator.py": "f0e842e518cd05c94361038602a993c0ee9025b218490945fdb4021da9b64e46",
+    "src/jaxwave/approximants/eob/merger_ringdown.py": "dbc14ce4ac5c2fefd4608b706e4cc44844b371fecf178e75a5427abc053b696c",
+    "src/jaxwave/approximants/eob/nqc.py": "e6e25920ded887a650e04fcf64380f65f32e45d42be81b95fc26291af7b70757",
+    "src/jaxwave/approximants/eob/numerical_attachment.py": "e98d77355f5a5e2538d0c0c91df6a5eb65e8f0d3e13c4e534c047d0938582447",
+    "src/jaxwave/approximants/eob/published_waveform.py": "8b0a727caceb432ba501a93712ffa3c9c547566b94ca86b8ac9f97d43b31afee",
+    "src/jaxwave/approximants/eob/radiation_reaction.py": "55bda3d69e5eeee089e3c23a82ca31b40df9edd781ebd2127dfcc4960bf324ba",
+    "src/jaxwave/approximants/eob/remnant.py": "d13e2e46afeaaac6beacd3f5998ec7dc450c5d55f403316eb12560b3705a9c0e",
+    "src/jaxwave/approximants/eob/seobnrv4_amplitude22.py": "af575ddd8efc123527378236b36e96d1a060961a3ddc3242fb7e8d83efba6ecc",
+    "src/jaxwave/approximants/eob/seobnrv4_amplitude32.py": "5f2123a842dbedb5a8d00cbceddfbbed484c058b9135b8af491485b5efc1d1be",
+    "src/jaxwave/approximants/eob/seobnrv4_amplitude42.py": "f77beb7e7f9c1298792cdb9b5d61e8f3f890e1749a1ca12d6e4382d03a3cdf4b",
+    "src/jaxwave/approximants/eob/seobnrv4_amplitude43.py": "f9a7997629c4850baab67dabdb6769ba6ebb0314e42240eb8e2ed3b5a094c533",
+    "src/jaxwave/approximants/eob/seobnrv4_amplitudes33_44.py": "3aaad589b52acd29c61df995ff726cb511430448bac99ab9561c6c3d192f8adb",
+    "src/jaxwave/approximants/eob/seobnrv4_flux.py": "47f9be36e6494708643afcdeb487a425c3e607a4c2f1ba730cbcf71ccba64287",
+    "src/jaxwave/approximants/eob/seobnrv4_hamiltonian.py": "83aa25f002ea5c3132524574043615ac5522d7e7c27a7bc19d975ca6bc2faa8a",
+    "src/jaxwave/approximants/eob/seobnrv4_mode22.py": "02861ac3eea27342084469b0d8e941ee28e6f1bfc8c5a335ef617a87d80ea8eb",
+    "src/jaxwave/approximants/eob/waveform.py": "12c310c1814fabfc83a42c7babeb1d0d9e05185ec00258bc916d64650f626f7e",
+    "src/jaxwave/approximants/imrphenom_hm.py": "d62f88aa18408871826572aa643ec466c5af9978c24f31b3e05b04613788cd05",
+    "src/jaxwave/approximants/imrphenom_hm_qnm_n61.py": "f3c3c471a5ef38694981fec0e5271e87cd65a43b38d720f7025c3b751f6dc896",
+    "src/jaxwave/approximants/imrphenom_nsbh.py": "ac027b37aaa36be461a9d5fda8c445ed016f6a51afeb87c1063e7ed2f1277449",
+    "src/jaxwave/approximants/imrphenom_xas.py": "ea97cadbf248d63db84f3c530e1cbd0d291c457848bb0ab699672670df425563",
+    "src/jaxwave/approximants/imrphenom_xhm.py": "f9208edd401ee6a46cecddd3f49e90859bea1bcd36d3dca0b606457dfb461b9e",
+    "src/jaxwave/approximants/imrphenom_xp.py": "d3dc9a9ce4a49f7c184610bb1310627789a0e07a7047265ec5ec4eb8eff8a82d",
+    "src/jaxwave/approximants/imrphenom_xphm.py": "7b6a3f48451fc42a2ec858cd3863437c2ef17b8300097d4d9bd2f00efb2ef8ab",
+    "src/jaxwave/approximants/imrphenomd.py": "325077c8107b20dc39735529bc9a70f1b2da5f0d80d70b65f314485b0ab9e0b0",
+    "src/jaxwave/approximants/imrphenomd_nrtidal.py": "0a43b2b829a19ff01280cd9875fa4218c74cb9bb154cb93ee0ce843fbe449fc0",
+    "src/jaxwave/approximants/imrphenomp.py": "6a7a2e9037791fd77392259eee6ce805f9cf503ca08966b26e4aa949e25fecb7",
+    "src/jaxwave/approximants/imrphenomt.py": "be00869d5a4f1946e503fe6fbda038dc9028b93309de924ed3d44c8e59b3ffba",
+    "src/jaxwave/approximants/imrphenomthm.py": "5c617fe664ab41b4d3132d404ccafd638c3a900f91962127d7005eda0eed6ad8",
+    "src/jaxwave/approximants/imrphenomtp.py": "7db5a976cd7e7d40b15257375ac1b050b5b9cfa0d58655cdb54059ff839528dc",
+    "src/jaxwave/approximants/imrphenomtphm.py": "307a1043cd916955f2fdf963bf48182824140e8ce44787623e43839f83d01ab0",
+    "src/jaxwave/approximants/kerr_qnm_interp.py": "1de5fbab1757b90ea0a37927c3432cf72ceafd5faeaef024b2baeb5b445fabe4",
+    "src/jaxwave/approximants/kerr_qnm_table_convention.py": "2c8da7b2cc7c89caf7bf700357c27de6019ca01a7d22b56d4a0714a2ef0ebe19",
+    "src/jaxwave/approximants/kerr_ringdown.py": "54227f6091c5347f8b18063fc65fb6a13912819a9b36b41f4008a36e50885210",
+    "src/jaxwave/approximants/kerr_ringdown_energy.py": "46cc531478f07b073b8ae76cd1a58ab26cbe3b64ce952670c5dcbf4d24b26957",
+    "src/jaxwave/approximants/kerr_ringdown_public_clean.py": "76cc1087848187b63846ea2aaac25196c4825df241c309208f9beb142a614bae",
+    "src/jaxwave/approximants/memory.py": "be168ff91f29c0e1398537ec89b20ca0156cb9a1bf54c931b3ada552e87d87fe",
+    "src/jaxwave/approximants/phenom_meco.py": "76f2b70df804ca9dda4d672bbd74fce4376c193781fca9bf9a722e82d2048491",
+    "src/jaxwave/approximants/phenompv2_waveform.py": "2a4375220f65f093177de57a0822c92bdabd6d033c6c942c87bbb7fd6f94cc33",
+    "src/jaxwave/approximants/pnr_coefficients.py": "133ee2f51eb0e4b7f753b44c1cdc098698408ac59db087c204abdc7b7ae7fe57",
+    "src/jaxwave/approximants/polynomial_interval.py": "33be37b9c346fdf841ddcfbd36abfb9f116bc0222f1744810c567d3d1a2082ae",
+    "src/jaxwave/approximants/ppe.py": "7b110349e59741957972820c691e735ca602b9960ccfceaea47b597729598cd6",
+    "src/jaxwave/approximants/precession_msa.py": "7aff73b50811d783e46d75133e48179d38c9f9e2b2d62553b9d08357f239441e",
+    "src/jaxwave/approximants/precession_pnr.py": "5fc7b07f04f2a28818945749727a4e3605d61f3e94e2c15e938c125b209d1f57",
+    "src/jaxwave/approximants/precession_spintaylor.py": "f08af664ec98ee991fa384bce52d41e6c82f7fd90d6027592ddd3f381e4d9adb",
+    "src/jaxwave/approximants/rom/__init__.py": "49ba24f7f147140c94c7f58a45cb071ebbee8365feb783f6eb4477fe9fca400f",
+    "src/jaxwave/approximants/rom/bspline.py": "5b312379f807bc7ee6c1924648b72830f7151e0bda863299933a5e28d0d9759d",
+    "src/jaxwave/approximants/rom/glue.py": "7a1cd7c6f5c852a3d8f74d1c86cf1670994f6dfbe62e46e794afe6f507c1cb91",
+    "src/jaxwave/approximants/rom/official.py": "6b910b855514ecc08785f1d71e7d83645c0a2dd85f969c889f0d203cd37720f2",
+    "src/jaxwave/approximants/rom/official_wrapper.py": "380c2a8df68e280e78d650e7978cc33841daa1c605ad20900cf92dbf91f1f6d3",
+    "src/jaxwave/approximants/taylorf2.py": "ca4f77af732d55506d36f74eb1215c9c45b428078c754b28e09292f65b9117e9",
+    "src/jaxwave/approximants/taylorf2_eccentric.py": "9b9eb413361160a84d9e16e7839fb0e253e7af4bb0e3e0b70ae45311381a2580",
+    "src/jaxwave/approximants/taylorf2_hm.py": "d8bc1302b7894a4675c23a9ef893a264cb5de3e48931cd1edb8073ab26c14d15",
+    "src/jaxwave/approximants/teobresums.py": "fc34c61da4199d28d2c5e0dfcb1e9f788b70945654c7b86c5cbb24e799c8edb7",
+    "src/jaxwave/approximants/xhm_fits.py": "9349bea136d9e088f2a1708b5b911cb4e83ebc246a0f4313c30d5842624d1145",
+    "src/jaxwave/approximants/xhm_native_fits.py": "129a9f9ba41b4d4939c47fac79b0050a122fc59e5b3ba019c03c3fc2d6251ef4",
+    "src/jaxwave/conversions.py": "433af4e0d69b64ab792c1771a78613883feddfb90e537d548b83aacd32b0603a",
+    "src/jaxwave/detectors/__init__.py": "abbf981d12cdb98d5dc6b9e12fceab452283d735197202e30e02a9ad9890a5ac",
+    "src/jaxwave/detectors/lisa.py": "cd26a00f6a198daf2b6bde81bea65eae4fd3c5202850d5fd086a3ce7cdaf722f",
+    "src/jaxwave/detectors/network.py": "00948af8cb58c0fe797e5a51607a8552c0a4d81cea571d294b0ddd8864ef601c",
+    "src/jaxwave/detectors/psd.py": "6026d1a06884f58a0ffc9a789bb503797676d40c5c4ebd233498a17d0557c086",
+    "src/jaxwave/detectors/pta.py": "7d9de2ce1e6ae1f36f05a173eaeaa88ea1f188b10677f46dfd0315b2300eee2a",
+    "src/jaxwave/inference/__init__.py": "993210cd8685d9805b5065a3b59df5be4b5a15baaf3edcae86c22c555a70a617",
+    "src/jaxwave/inference/bucketing.py": "753ea682cf627588ca9fa98b3d294ea5dd1ef3ae5f3e182707766d617b8d6554",
+    "src/jaxwave/inference/fisher.py": "57f884047300d4c76b06b1915db73f9d98e2294400a96dc38044f2e255796e64",
+    "src/jaxwave/inference/likelihood.py": "1710515cb8ce6d3c6e060de0e4ddc6aa495999b3fc78496fb69068630e7eb441",
+    "src/jaxwave/inference/relative_binning.py": "9569395924fcba5c7785521a9ad00105cfa04e744bcb00ec8118f1f147300464",
+    "src/jaxwave/waveforms.py": "3d19a8599d7fa59017e4980741dea4f75fb830c4115b52b58e1ebe3a8f7350c9",
+    "src/torchwave/__init__.py": "841f905e20c4570e7c123a9be465e263b976149126594941a310134087a95bbc",
+    "src/torchwave/_phenomt_td.py": "f8119995e2bba2785931197bd518781c12e7b3a24fab50f2286e07880ca52aa4",
+    "src/torchwave/approximants/__init__.py": "ce4d96a5f3b3a059ded52780c2efb9e2597a0f1d061b3aa8abe0d53d23107499",
+    "src/torchwave/approximants/_phenomt_amplitude.py": "cc4e6bc295d590ec0d0ecf645045277a45a04c9e2c46832bde0163eaa58019db",
+    "src/torchwave/approximants/_phenomt_angle_options.py": "04a6bc9fd9a03ebde79f6055c4f41b65ac144f257ee4f86eb286134111799f5b",
+    "src/torchwave/approximants/_phenomt_dispatch.py": "edbc13d813d916330d4e6fddc265984cd84ae09023cdc9d1fb9dd174eb43ec62",
+    "src/torchwave/approximants/_phenomt_msa.py": "fc04e1b14770dfe19d026edc44406f1e5090a72a63f5d4c5487c9e5dc7b83f06",
+    "src/torchwave/approximants/_phenomt_numerical.py": "2f51923576e3a0c3cd4803cf5876be63055141d76de312f1d0ff2677d8d0cc14",
+    "src/torchwave/approximants/_phenomt_precession.py": "21362d52867cb81527292dd25d3379260890020950fd864a46555c233bb8f4e6",
+    "src/torchwave/approximants/_phenomt_spin_evolution.py": "449a30037b9d5a677b4351b41bb76238cee4502fb01524a5e35e09c6f9305925",
+    "src/torchwave/approximants/continuous_wave.py": "3d38063738e437742fbe76144900fe367647feba32327b174039a535e3edd00f",
+    "src/torchwave/approximants/emri_kludge.py": "0bbfd934d35d2dc561eefad8b605289a173ba6f347336d013e5c3d28c76526e1",
+    "src/torchwave/approximants/eob/__init__.py": "49dce558c5094b033aca53be5fed6325f82cf974c2ab2719e60bddded9487d0e",
+    "src/torchwave/approximants/eob/adaptive_driver_clean.py": "2f5e1c3b8766b92340a6aafcdfbdc5fe6856a3e4390551abefda1e22b90dda7b",
+    "src/torchwave/approximants/eob/attachment.py": "3d2972ee1d3adb01bb8374af55240b48060cf5092c77f03f14aab11cd381cc54",
+    "src/torchwave/approximants/eob/conditioned_waveform_clean.py": "e9dad2aaa6bf133390b4b6886e98fa8b27f85a64169f0cd0f4eff49ae5df10cb",
+    "src/torchwave/approximants/eob/continuous_matching.py": "5db6aefa91cfdade8bb709381efe31144efc34054672263eec1c707a70cd1a06",
+    "src/torchwave/approximants/eob/events.py": "c1ae1182e4c2f9cf5f8a2857ea5d73802dbbb68b59739709849f973503bdfd5d",
+    "src/torchwave/approximants/eob/factorized_modes.py": "d4b10cbcbbecc4de84329a13cdca43d90d4fa5aa168248fc2e874211d29f8315",
+    "src/torchwave/approximants/eob/hamiltonian.py": "96febd6b3e0722802425f0e7490079d62869f2e63ac92c8db32e9063b5bc4b5b",
+    "src/torchwave/approximants/eob/initial_conditions.py": "520641e8c3037ea1aa6e947c7d9dd92c759333396103cb1d1fffc8aa5019137b",
+    "src/torchwave/approximants/eob/integrator.py": "4c643493086a06accfe7f8f5ff679e77a1015aeb03659b395b48cac09de91c65",
+    "src/torchwave/approximants/eob/merger_ringdown.py": "098bb9e6f5328ceb291a5bed02a91d8fa95cc54bbcc7ff45d996e6985d995410",
+    "src/torchwave/approximants/eob/nqc.py": "c8683181f7cf911df1e1b85cd6999cdb03e7c594e867315359040e9eb03ca552",
+    "src/torchwave/approximants/eob/nqc_analytic_clean.py": "28161546b97d0e182a7d7557b7d132f92a1d705a5f3120b1b0c51c06d31b8b99",
+    "src/torchwave/approximants/eob/numerical_attachment.py": "8c7a149b76c529a255a4caa4b0ca76317b5306c8967db84047f299ccf51be7fc",
+    "src/torchwave/approximants/eob/numerical_derivative_clean.py": "2400ef464b292a0887f1eed68ced5579ab55ae6afe1f0f859226f9aaba180152",
+    "src/torchwave/approximants/eob/published_waveform.py": "7dde2eefb4d99b7fe5fc3570203222dc02c1cb05d59d8f7392e25fc946cb32dc",
+    "src/torchwave/approximants/eob/radiation_reaction.py": "ea7aee7ef13e5e689dde48255437bee673f5a4de8335f532073af376c5997613",
+    "src/torchwave/approximants/eob/remnant.py": "e7690cd5df1bcde2f579954762116beb20db606dae809835b148dae73c4cb007",
+    "src/torchwave/approximants/eob/seobnrv4_amplitude22.py": "941a7e6c4a3e92dc7860b91076958b09aa9a934e6799c33936409a5d09178eca",
+    "src/torchwave/approximants/eob/seobnrv4_flux.py": "3136bb016cce21cdd9d636008fee1fa5472757fed4446dc899e0d31e70124c83",
+    "src/torchwave/approximants/eob/seobnrv4_hamiltonian.py": "40f063046e30b9fb5824b8d95980ff9deaa73f231dfe987e453094210b87cf3d",
+    "src/torchwave/approximants/eob/seobnrv4_mode22.py": "3e2b97c175d2c6d3720f04529b400d455104e963b54f0b885e4a1fda59f90e4b",
+    "src/torchwave/approximants/eob/td_fd_conditioning_clean.py": "d8a9ad936a0e6fb8e0c59a35428a7e2c70e372dca0b8d87f6d890d38dcd30a8a",
+    "src/torchwave/approximants/eob/teob_adaptive_continuation_clean.py": "7b8722ecc28af74eeb2fe29d2e7c1782123106d63fbeba60c82ca81f6b70b869",
+    "src/torchwave/approximants/eob/teob_healy2014_remnant_clean.py": "ff65443236f379b3d1f4aebec5482833c43edd36b90418955ee3bfcea67f3dd2",
+    "src/torchwave/approximants/eob/teob_merger_nqc_clean.py": "a3902d99a6578714cd11c36ea4da0c2a83cfe7993aaa66c5ec95b48f2d1e3788",
+    "src/torchwave/approximants/eob/teob_nqc_clean.py": "8ec2d77a57b96e8246bdae3ca8c62c4e2a17cabf1c5554aa1e47fe25b1ea8f46",
+    "src/torchwave/approximants/eob/teob_orbital_potential_closed_clean.py": "b6c8b2ba574234145c2dd254553ae0cc5abe20616ea2571d17732e27cdbf19b3",
+    "src/torchwave/approximants/eob/teob_postadiabatic_clean.py": "06d0620283798a28c477e6e70b3a3720e337c53a8d8af8a78be17646a7be7550",
+    "src/torchwave/approximants/eob/teob_postmerger.py": "7324ff72dc1fd36149f137b9f8eafa68f354fd897ff5d56478ce5a6cf2f8c5f6",
+    "src/torchwave/approximants/eob/teob_published_driver.py": "58376bbd318f5b5f33922759416fc3b1d2531cb7edafb0e9d8d5c1edadfa8845",
+    "src/torchwave/approximants/eob/teob_radial_acceleration_clean.py": "6e16681eae0daade84bc540f12ee6fe40b3ad08929444273faf03123b7bbc3f9",
+    "src/torchwave/approximants/eob/teob_radiation_clean.py": "dca2c9791403467d85572f25a062cbc995d8228743d33b6b2e5dc28c13336bd6",
+    "src/torchwave/approximants/eob/teob_ringdown_assembly_clean.py": "bb6bc86986cbcd52c360c98ae3358baa7e6e03223b19485eaf24617cddbee7ff",
+    "src/torchwave/approximants/eob/teob_trajectory.py": "6728419dd6b7c6f2a7a340f017f52b5dd54bc399d212884f9975643cd58db785",
+    "src/torchwave/approximants/eob/teob_uib2016_postmerger.py": "2a560838c801820540a9ec585a8291b7ad316ab6765a928bf06de882681db3a5",
+    "src/torchwave/approximants/eob/teob_uib2016_remnant.py": "9ea727ec726f82c62c2ad6e399ee084e02daf275c145a3503e0666271010e755",
+    "src/torchwave/approximants/eob/teob_vacuum_driver_clean.py": "5188f9161c793cf79b1992abe562fd9ae58925319a44c730d6eb079050e43e41",
+    "src/torchwave/approximants/eob/teob_waveform_state_clean.py": "b247c91659b18341301356eca2def7cde270b0aaa7a9e16c85f8ba40f1861552",
+    "src/torchwave/approximants/eob/waveform.py": "38f3df65c78101aaeec67d878ea8042a89dc2324125c67f3f0cb0c2570f44b58",
+    "src/torchwave/approximants/hm_21_pn_clean.py": "8a69dd0d6435674b9c3f78dddf7356dbaea85ef105a820c81d7a8a6a155b5c95",
+    "src/torchwave/approximants/hm_assembly_clean.py": "8b985c5fcbf778fb8d43e626beaf89d5d3080fd3210342e1e56eea858a715d6c",
+    "src/torchwave/approximants/imrphenom_hm.py": "edcff12f2c9a8689f642da996c5e6e10e593458ec213c108682623acb9f4234f",
+    "src/torchwave/approximants/imrphenom_hm_clean.py": "cbf474aa50241a06608bbfc69a9682f05b00ab3044fb507eb17c2f96921f0887",
+    "src/torchwave/approximants/imrphenom_hm_phase_clean.py": "59b67127968bb76a327e0bfac58f6e4d7f7c53e73387045f7b17f5777e30cc38",
+    "src/torchwave/approximants/imrphenom_hm_qnm_n61.py": "350c958aef4e1554d5c2d6a6bc22f8b9bf3513c2a000f08dc3cb3de1cde05b06",
+    "src/torchwave/approximants/imrphenom_nsbh.py": "eb98d8f5f60fcf3a8b9b9874655f4b69e8e563b1c79d045d9845f532ca60b1e5",
+    "src/torchwave/approximants/imrphenom_xas.py": "045836092ce64b64ba9f4e8d69b2709e1517bec5da24cbf124c6b125bb15c37d",
+    "src/torchwave/approximants/imrphenom_xhm.py": "348e9b10cfcec758243c3bc5694089a9f7d0c34a9a1311edb2b1ee723aeff2a0",
+    "src/torchwave/approximants/imrphenom_xp.py": "27f460bbbae4126bfccd7d2cf2185256945813aafc3082e9692628c0b62e300f",
+    "src/torchwave/approximants/imrphenom_xphm.py": "996ceecb7466976665ba2c19c0a3d855d63cc78080264035fb47bf0f117e34a3",
+    "src/torchwave/approximants/imrphenomd.py": "88a433d535d4ff41a082092cf7cbace4490e8a2dc84dc6c97303e83c2e9ea5fc",
+    "src/torchwave/approximants/imrphenomd_nrtidal.py": "9f55eeb0ef05ce9a11a64b9aa268d35e07ea09d38d2d21554e4bce9adef731af",
+    "src/torchwave/approximants/imrphenomp.py": "fe5d3ee5b889b942801237d7708dc772d383858e0131ed3997d24d1180d49830",
+    "src/torchwave/approximants/imrphenomt.py": "faffed53a80f722465de44862dbc9594bedb709c1f6e3bc08713d2875ac394d2",
+    "src/torchwave/approximants/imrphenomthm.py": "31fbb9c4593b36462a16a8b21c04ff1ab903a31431c792c5e98d6e0368efa4c5",
+    "src/torchwave/approximants/imrphenomtp.py": "8598633b054fc9d91b890924c7e9c8d9a30817de5ba79e6b17e7559f603277dc",
+    "src/torchwave/approximants/imrphenomtphm.py": "814de9e371f469c6478eef38cd23ba1225b4105ad308c9451341d9edf92e6914",
+    "src/torchwave/approximants/kerr_angular.py": "e65c9c71d38db40576ee9b9ee2ccc954a420964813949b2d7faf165389061e7c",
+    "src/torchwave/approximants/kerr_angular_table_convention.py": "ad41926955ad989f592372d079f91aa96d006a3b4ad3f6c5414861b46d91176a",
+    "src/torchwave/approximants/kerr_qnm_author.py": "292f0a74f055800d0af12b95f839fac16f84ded3d91fc99e086206fa3ded7911",
+    "src/torchwave/approximants/kerr_qnm_d_sampling_clean.py": "049871477e3a1bdff0a1b13ecd5f303a9c14395476664a6d065f931a4d7f5525",
+    "src/torchwave/approximants/kerr_qnm_generated.py": "82da71c19c50defeab4c32b6950141d845214909e9f52342e3f1cf3b46f08326",
+    "src/torchwave/approximants/kerr_qnm_interp.py": "a75c959cacf6c0f1413f9e8eeb427e1fb6f214e2d77c44941b28868b0d2d0679",
+    "src/torchwave/approximants/kerr_qnm_london_published.py": "74dc85b21585392bfe0bf2339064eefd2dc026e8b85eb8163ea7548fc653177e",
+    "src/torchwave/approximants/kerr_qnm_table_convention.py": "c4c85d17b079306df73c74f4bb755b7f4256fbdf49fef6a85cd9810367d800f6",
+    "src/torchwave/approximants/kerr_ringdown.py": "952fd6c40a263e4d3727f683a354e746908142b473a71c92c30171802db8f4ac",
+    "src/torchwave/approximants/kerr_ringdown_energy.py": "35e21efb131d3f3faceac9d5da02f72ce94183e2f17040d381aa7f3dc5266c0e",
+    "src/torchwave/approximants/kerr_ringdown_public_clean.py": "133ceb09259e4b7c53d293c8d8594a48cdc3292def7210e08499fcc7039c7015",
+    "src/torchwave/approximants/memory.py": "33374f62c2f4e134ea1a338782173d864539379c1eedd8078ddca5fc52045470",
+    "src/torchwave/approximants/nrtidal_published_fits.py": "033e5c2d1bdb9f3b038ac33ff21837e4f28b4c3663075e17d031b0c4209fa4f7",
+    "src/torchwave/approximants/nsbh_clean_amplitude.py": "dbd8d551ccbefdbbdf5a216b3793803ba1818feb53c57a84e92d6f7329cb5774",
+    "src/torchwave/approximants/nsbh_clean_phase.py": "c629daf6c237633dd1c0bb92909d9ea7f7f189f44f31da0d9e48ddf7cf7f634e",
+    "src/torchwave/approximants/nsbh_phase_baseline.py": "74e13c9abe4172dc38e2ddf3f96593e57d7922dfbdbf153b2f096d5a3e84e156",
+    "src/torchwave/approximants/phenom_meco.py": "fb33a9ebfdc530111e56a0e560c53163bfa788706838e158d6d13a98fb103e49",
+    "src/torchwave/approximants/phenomd_unrounded_fits.py": "ef8f96b777c9888344bd74853e6fb5d4ff59c508938dbb89c7bcf7b12594ec32",
+    "src/torchwave/approximants/phenompv2_waveform_clean.py": "7f4695429c2464938e74dbc985ecdd920feaa2be525d3e21684eefb50e1701a5",
+    "src/torchwave/approximants/pnr_coefficients.py": "e15b3fef15512d48873fa1728ffb446068bb38245ac2378d0eb8cb20d4e27355",
+    "src/torchwave/approximants/polynomial_interval.py": "9b3e525cb146f13762abfcd51b5e65c1a3d21e43dc6c54191ab2c2d29f43eafc",
+    "src/torchwave/approximants/ppe.py": "04bade0e334f9f9bf8d55792efab1fa0b8ff17edc6106c9c19d8fd1aa4a5e6ad",
+    "src/torchwave/approximants/precession_beta_clean.py": "13eb469547bd648f3b6effbe4cef66d81ba0740240c5ba1fd86bb2c3d913f2d2",
+    "src/torchwave/approximants/precession_msa.py": "861d0500075e6f56111a75931b83e1ec90deb86add959aa910fa6e0e9fa47034",
+    "src/torchwave/approximants/precession_msa_angles_clean.py": "dd2ec5ab8560ad3936c6b79ada8fb49524cd8ed2e3c89aba0448af2b7cd95289",
+    "src/torchwave/approximants/precession_msa_initial_clean.py": "1829ede78e8f677ed9498d65e1e32caf0e043154c8c782e9410279adc4ca6710",
+    "src/torchwave/approximants/precession_msa_oscillatory_clean.py": "a0e3e5e56cbbc295036c0fce42436ae30e4d9704e40ad1e2d59d327d5e49649a",
+    "src/torchwave/approximants/precession_msa_pn_clean.py": "12e9fabcb181828283829aab20beb73ec52fc0ad0b9a5b6c47cc808fdf23f8eb",
+    "src/torchwave/approximants/precession_msa_reference_l_clean.py": "2ee1059e626c0d7076c7e205100803b05c01a3ee40f87b2b3fb392cf7fd124c0",
+    "src/torchwave/approximants/precession_msa_secular_clean.py": "d40d1b2253305ba563bac248480e28b51daa9af94b9f1b6b92716e98f6afbddb",
+    "src/torchwave/approximants/precession_msa_waveform_clean.py": "e58f1303ddf67d782e1c576410e0e303b5c4310697328f98b5d2cd3280aa3fff",
+    "src/torchwave/approximants/precession_nnlo_clean.py": "6d1b5a713fd19e96ee0f2214936f2ffa731eea2a9e28a254f32d6e22f77f3ea9",
+    "src/torchwave/approximants/precession_nnlo_waveform_clean.py": "838742009880e5d9affb77b01ecda775ea3b7a33a1c0a754668551cb8bb7b774",
+    "src/torchwave/approximants/precession_pnr.py": "d88a55183965ad3b2b5dfd321f780131b1cf038b524078b9449a22c2d6308adf",
+    "src/torchwave/approximants/precession_source_frame_clean.py": "abb7c6d891febc67c07078b0fc3d9a553b038031df5f7f79f7d24cffcde9ee18",
+    "src/torchwave/approximants/precession_spintaylor.py": "d80ffe1818c011438f57c4b3212558dc26616bc962c0883ff7afe25f9ccba665",
+    "src/torchwave/approximants/precession_twisting_clean.py": "9864de67e329c80e838b255f0bfbe052b76d8484c560633a11bfa2ceb8e141a8",
+    "src/torchwave/approximants/rom/__init__.py": "96087ecfd7e1154e955e7bbede705bad9ebe67396d6f33ce220ccbc112ba3398",
+    "src/torchwave/approximants/rom/bspline.py": "45184b2cc3d857fdba8844d1c86245d7a696cb1c302bf4179420cd87a6f712a9",
+    "src/torchwave/approximants/rom/glue.py": "011fefed60c32f8d06ae026302320f4bdd694eb2e1bc54c5752e0ba2a56ee8ac",
+    "src/torchwave/approximants/rom/official.py": "b0af35a773c5cea5573b04746bcf84b5a789e1727ee927546902a5c1ee7ff76b",
+    "src/torchwave/approximants/rom/official_wrapper.py": "a5e45364dc24355e153e12bc3e30c4e8798c66c8f71e66c1cd6427070803fe3f",
+    "src/torchwave/approximants/taylorf2.py": "1890555161f6b3c99d3f1b05d02affc57988aef72612cb582e77d22f32305fcc",
+    "src/torchwave/approximants/taylorf2_eccentric.py": "bd3e9e79e69d61c2ddf61129fff2ef40b8fd32f003584c5092b34b1bfa159fca",
+    "src/torchwave/approximants/taylorf2_hm.py": "fd30750e0fa8795120cba61ef98fc3df68d1644e2b7f442578079758f9a1a711",
+    "src/torchwave/approximants/teobresums.py": "a9c84a24a43a8baa05e8f482bf1c9b6e90ac05e7476787a206efa0388e3d0557",
+    "src/torchwave/approximants/xhm_amplitude_clean.py": "d10bf39f21d58a31b5bdfd56242d9c73ba82e0db61e662ed73e4290cef0db5e4",
+    "src/torchwave/approximants/xhm_fits.py": "6704f0c59a1e1527f5c31063d1bac8ab84f7349207acc3f1c24532c370167548",
+    "src/torchwave/approximants/xhm_inspiral_assembly_clean.py": "c68dda9efd5abdad9938ed33d35bc1d534221af7e80afa37b3d6ec6506cc5e45",
+    "src/torchwave/approximants/xhm_inspiral_assembly_release122022_clean.py": "3a8ec52088ab24d0f618b5e2a6a6f4e5d04b10717c2f01706fad597234ff4bd1",
+    "src/torchwave/approximants/xhm_intermediate_amplitude_clean.py": "613d4d5ebf131db3d72160b81e41edbc23c66a33c7588954a985f74e1d6b8338",
+    "src/torchwave/approximants/xhm_native_fits.py": "65f6f2802f02892d42dac2a54c5bc10e53750f5e92cdd53fb430188bccc24d60",
+    "src/torchwave/approximants/xhm_phase_clean.py": "7b1c201f4c8744fdd60a684cea46ff366dc7c000991d6b0aa8d48b63c322483f",
+    "src/torchwave/approximants/xhm_spa_clean.py": "00b0f2775d605a33b6e74c0a673138b900b1f015420f9ffbf42476bdf4f0d9ed",
+    "src/torchwave/benchmark.py": "4b7b5e3b099ce8616b81e7c5462a6e5722e7e1fdbdc5c5a8ef981f386f260fa4",
+    "src/torchwave/constants.py": "7e7449a1a4b308a932e18c84e858a6e10eb2619192247cb820fd14393ca9e801",
+    "src/torchwave/conversions.py": "29e6e29ae784433002c84ad93eaa37fdfd3bdae37b846f61b79c268c09356b8f",
+    "src/torchwave/detectors/__init__.py": "4e445658bcb157530ffafcf588f349473c1f28dea6478b484c08200023ea3764",
+    "src/torchwave/detectors/lisa.py": "d1351340229c67db751bccde5cae51be9b6bb9a95bcd03895c07261bcea55ea6",
+    "src/torchwave/detectors/network.py": "634b179fcd05834e27f80981141d56db8ca56d05d17acd30853944eef05d5777",
+    "src/torchwave/detectors/psd.py": "7b88a6eedd9ea25ff34f83e66f00ae1c68ea405c99f24b88ff738250eb4a8449",
+    "src/torchwave/detectors/pta.py": "891d613c25fef397674f3fcb5d1834c21aa3eb17044e389a0af6ee1240a4a2d2",
+    "src/torchwave/external_data.py": "2e77a3ec77f59f91c7ae765d763b4b444e77add0e59c4f02f097303bd42e89d8",
+    "src/torchwave/inference/__init__.py": "ddb9cea34efe3ffa995806bd8c529419a03ac03ec5d6aa08f31901332f0ba006",
+    "src/torchwave/inference/f_statistic.py": "3806ee5770180fab38235d6072b051291b470c08fbba9022a7df2c9943175b38",
+    "src/torchwave/inference/fisher.py": "44de33fcdbe99f968b8c740ae3af4bcb00f10aad167616d62f850cadaeec3bed",
+    "src/torchwave/inference/likelihood.py": "dfe1a38096306065eeba60c535685378c34e8d9ae41f246aa8c1fc478d316853",
+    "src/torchwave/inference/mcmc.py": "4d42f756d72610676cf5b8266a43c852847b1f2f3a408aee06797657577213b4",
+    "src/torchwave/inference/relative_binning.py": "0f493a66d8ed9f8bfc23a00b95adc6d8bd38b8bf317071df48aab187fe36db28",
+    "src/torchwave/inference/wavelet_glitch.py": "ca823a53a896de3b8067dcc031cac87dab2d1f291b50f6adcee5bf458eff29c4",
+    "src/torchwave/interfaces/__init__.py": "1ca85c4d5089b11fdf6e787ca12a9f000b7466aba6fe35d6f388e08f882330bf",
+    "src/torchwave/interfaces/pycbc.py": "f1bcd8522213a21da72da7e026537266fd18bc3ebf1787ff5fb00543f18f6f93",
+    "src/torchwave/phenomd_published_fits.py": "55992c5c6d46e1430d2c86915dcedf44741beaddf039ff95faea944531bde2dd",
+    "src/torchwave/profile.py": "edbd9e76bae0477f7afbb130ee06c2b36f657aa73fbf845b613ca8994298f3d7",
+    "src/torchwave/protocol.py": "15f17ce79d99f624391074ce0fc64c193391763b0d9470701091ff9f3c8f5831",
+    "src/torchwave/provenance.py": "ab4397670b6e3075904f12c3d37cd68fad0f923b2538eed88742be6135e48320",
+    "src/torchwave/qnm/__init__.py": "64a8a6c2982d1305362f652214b3226e9f0b82a468a2765aebf972d198a7a280",
+    "src/torchwave/qnm/generate.py": "e6f16e5830bb40f91bc24215791cadaad0154f22daaa7f07ebb2daa44064d8ce",
+    "src/torchwave/qnm/london.py": "574bd7397d69d6dee6c1da52e00a0a6e74c896bae7f7e2574c7640c5d9d513e5",
+    "src/torchwave/qnm/solver.py": "36792fc5ad7201cfd5e4cac5221d48ca0db70f38b9d6fec4c3232caf60f84717",
+    "src/torchwave/waveforms.py": "29dc86a2e3e9dc449b77b4b34eb8a3b3d0a4ae16fb3befa9a7973476caa90d61"
+  },
+  "source_sha256_before": {
+    "dev/native_rom/eob/__init__.py": "7c5a5d5d2192dd2a87a6b459150b90ffa6be6f35399d97433218573aa0e47016",
+    "dev/native_rom/eob/dispatch.py": "8efe28a4cae4ffd8ea1d3c633722d593bb08db8a3cc4b367417f313dbc3cc850",
+    "dev/native_rom/eob/jax/__init__.py": "7c5a5d5d2192dd2a87a6b459150b90ffa6be6f35399d97433218573aa0e47016",
+    "dev/native_rom/eob/jax/adaptive_driver_clean.py": "41691a243f3b1bf248443f679f8fd405eaeeb3de2d3e8d6800b03ba4b4c64ecf",
+    "dev/native_rom/eob/jax/hamiltonian.py": "dca178c4bcf2d6e4cf33b4d65a6b1f3d75415600d6edb3fd28589b5634134bef",
+    "dev/native_rom/eob/jax/historical_hamiltonian.py": "cd287c911161200deadd3af34cf17bc04331f96e8054031f0b1e2111e2bc64a7",
+    "dev/native_rom/eob/jax/initial_conditions_clean.py": "0ccc2251f72e6af696a8c35e08a0cc872dcac74b8904774dafdf8e416f21f382",
+    "dev/native_rom/eob/jax/numerical_attachment_clean.py": "fcc74bd7130f76ae9abab2c8e0214a640d7d1bdef3dbefc2dac459da471edc4c",
+    "dev/native_rom/eob/jax/published_waveform.py": "db20cef7c82a482d6b86c38f18ad4c2eb51bf92478947c5fe0aaa9e3d5b2a775",
+    "dev/native_rom/eob/jax/radiation_reaction.py": "8d977db1a5cf952c062c053704c4f8646e808a535392f1657a4645df3652b730",
+    "dev/native_rom/eob/jax/source_calibration_hamiltonian.py": "8b5584002625479e667337076df59cb6a820e1cffc88a282071843e6d4e4c8a9",
+    "dev/native_rom/eob/jax/two_stage_trajectory.py": "5671c29f62fb4e5f3177afe6b8048a9464884565e2a99a8b26848a1ec66f347e",
+    "dev/native_rom/eob/jax/waveform.py": "232cf11ca0662488e90661381fd200cee103e048ded9636db11e8852352bea53",
+    "dev/native_rom/eob/tests/parity/test_eob_parity.py": "f95351a30ccff29e1f2d22dd027b1ffdfb13e92f387bfbac499fd2d7fe92a45e",
+    "dev/native_rom/eob/tests/parity/test_eob_prototype_components.py": "f6aa0380765aa443882adcfe475d792193e102214a8e23a845f67814057c92eb",
+    "dev/native_rom/eob/tests/test_clean_room_eob_factorized_integration.py": "bfa2d92d9a069889dac8f5f4ae28c4898e458b86feb8378f3ba2a3be843207f3",
+    "dev/native_rom/eob/tests/test_clean_room_eob_published_driver.py": "7ba9bb41fe1432d5c019e58c20fde8d39608287cc587d3f5f2a140ad37e3d2d6",
+    "dev/native_rom/eob/tests/test_clean_room_eob_waveform.py": "47b4592c2e541bd36ecc1d80ad7325889981e8bf23540238b444da389c516116",
+    "dev/native_rom/eob/tests/test_eob_adaptive_driver_clean.py": "954f7e7855811a4654eb799b9b0251c935780468d57b322a7975ea95efcabba4",
+    "dev/native_rom/eob/tests/test_eob_conditioned_waveform_clean.py": "4bdfd24660cb629126f6cd8cf180748d5426ea7aa955a4105f6b1b6537d38e7d",
+    "dev/native_rom/eob/tests/test_eob_dynamics.py": "9ce026314ca8048dc236e6c90198fda4c042de8c0ee1fd684e049b0885bb6379",
+    "dev/native_rom/eob/tests/test_eob_prototype_dynamics.py": "2cf7a2a28602b22b5ab43bd02944c1701fe733fb63e24431d5f32fe0736d5194",
+    "dev/native_rom/eob/tests/test_eob_prototype_torque.py": "bdbeccd6a263323bffc8a2f2f4ac56aeb1ae3bafba50c8fbd6cd97847dbdaa75",
+    "dev/native_rom/eob/tests/test_pass21_eob_attachment.py": "c77f4310736c43c9ed26c2b0592266ea9072c01557a63498157d73e276501e50",
+    "dev/native_rom/eob/tests/test_teob_continuous_matching.py": "79270fa7072556b553182bebd61287d8255ad81afd79363b8f43f3e0118a8762",
+    "dev/native_rom/eob/torch/__init__.py": "7c5a5d5d2192dd2a87a6b459150b90ffa6be6f35399d97433218573aa0e47016",
+    "dev/native_rom/eob/torch/adaptive_driver_clean.py": "28e156876d570e778f4f31e4b91ef1344bb3a4dd096b1cc94c882a76ce74811d",
+    "dev/native_rom/eob/torch/conditioned_waveform_clean.py": "45023e71cf23589b14c1e8cc65f0290b15b909eb3fe4be84a60961d361ba9a88",
+    "dev/native_rom/eob/torch/hamiltonian.py": "a05e51d959f078144a7e6d51d7a3245c048e6d6878232070d08451a8d9bc90b3",
+    "dev/native_rom/eob/torch/historical_hamiltonian.py": "f93beaa5172dd1fff43eb676848f60caa8d2795dfd7ed21c842827dd53141066",
+    "dev/native_rom/eob/torch/local_nqc_control.py": "1a613e1cf2e8414cc5ba3cd031aed9f5e5c49d3d2bbfc0c01fbdaf1e7a290b26",
+    "dev/native_rom/eob/torch/published_waveform.py": "94660f94dc9d558935f3c4083162a0d09f86a5f8da89796c012c0f5163805e61",
+    "dev/native_rom/eob/torch/radiation_reaction.py": "99250a22d14d5799d309cf6cc4cdd88c019e4ecd7f387da2206bca07c64766d3",
+    "dev/native_rom/eob/torch/source_calibration_hamiltonian.py": "2b0ddccf6ba99d0157c0b624cf0c4e926713c96a736e22e1b6fe55bdbde1cdc2",
+    "dev/native_rom/eob/torch/warm_start.py": "a9818350b18ed04ca645edbf6af4c22760fc51eae540c12f38d171d99a675a20",
+    "dev/native_rom/eob/torch/waveform.py": "b04bcff81e76d7facd1f11af517d29827d38b2f6d6bb6473b6d1ae153edc9643",
+    "dev/native_rom/qualify_generator.py": "c7c61dc5d8dc60004b351ea3026977833b127749f19d06f63937b6a339f8afa7",
+    "scripts/verify_eob_published_waveforms.py": "f879086b1bb23b11e84a757f2b40ba8c8ac40b4f7984744e9b707fa1f2868c14",
+    "src/diffgw/__init__.py": "c115a91f123790911aa0e6ef60d86f81a8d1d9aa8b6e689a9ead85bd060601ac",
+    "src/diffgw_core/__init__.py": "1ca0a6eb7909e21fe165b19c1e3cda93fe8aee06c6e7d7203a78e32d95410f81",
+    "src/diffgw_core/catalog.py": "877eaba08bc9fd14cb39b930d5222a5d22054a5340712bf304f25c4a23e9ce1b",
+    "src/diffgw_core/constants.py": "6476c438213819c8a840825bc13c8cff95e98659383a04b839a2affbe59a7b8f",
+    "src/diffgw_core/conversions.py": "3674bf1d61d0fe2c1bc8f712e3c1b2415f92f0e5bf096d7fd8bdc7f50f16c0df",
+    "src/diffgw_core/fits.py": "a32843e13321bcfef2089acdefbdb6251cf1400f5b13b6780209f9370c1b2288",
+    "src/diffgw_core/kerr_qnm_220_data.py": "51b13ae3649ec332b45d4c538a669334ec31f4244105e3b4c2b0c24197f4c5e4",
+    "src/diffgw_core/kerr_qnm_data.py": "56a07dfe32ad6fdcc7c764725d75fa93d9cbc7efbcf6462604cfe134026909c6",
+    "src/diffgw_core/kerr_qnm_table_convention_data.py": "c7843319af70b560650b5bb0a6ff3aab3e6b35cf3ca92562567de0734b3c2850",
+    "src/diffgw_core/nrtidal_fits.py": "95bb4aafbe932e2b84b56cc89f9964a840cb4f65d69e194019dc81294c391fe7",
+    "src/diffgw_core/phenomt_fits.py": "b4ad28c76359f6c4dac3d6349c539eb1c2896fe4c2e0c083393f03f10524907e",
+    "src/diffgw_core/phenomt_options.py": "e6b910aa5d08319147bb562ad087ade53045885c29560921ae2736ad7d9ed7b3",
+    "src/diffgw_core/qnm_data.py": "3d1f9e8c5959dc75d3a25480b794e2b733c2076b8b292b66edca7b980ac02efc",
+    "src/diffgw_core/remnant.py": "d30b1cec03ebe993f4eff2beb37d83f1d5f9bc591c8f89a51e34e3f3f95b7e0e",
+    "src/jaxwave/__init__.py": "05d52c9c55276e1c298900669d6e76da3422b70ec31379792fd5c55f5bcf27b6",
+    "src/jaxwave/_phenomt_td.py": "f7dcc483d0957a849a0da0a75deb288abff7d4c4fb04254afe9f27278e9268be",
+    "src/jaxwave/approximants/__init__.py": "06857b087a7005eca8b32608a5be066bf4e09cc1a041108d03cc8716d217f25c",
+    "src/jaxwave/approximants/_phenomt_amplitude.py": "9adef12a3acaf262c6d00c5a6d8890d970e6a011f3059e883fc3bc3f59c73ff8",
+    "src/jaxwave/approximants/_phenomt_angle_options.py": "bf5c8475bfcc1135b9b07b2226d87e7f9a2f78958da8379aaca20943182d2918",
+    "src/jaxwave/approximants/_phenomt_dispatch.py": "6c6d7aed33d48ab601a7bb4062768949ffd1a76478ccb53294e7786875bef79a",
+    "src/jaxwave/approximants/_phenomt_msa.py": "8cf791e3836e21bbc299d07e6fc3a6b827bcf83f36b904f4579ae9a27162ce47",
+    "src/jaxwave/approximants/_phenomt_numerical.py": "198a5ce86614b351541b33808e37e1ec9e3b23f5c4f145faecc023bbdb661f87",
+    "src/jaxwave/approximants/_phenomt_precession.py": "3f3770ea58af67112d2b3719eb688dd3eac696404494357059dc79d04bcfa02a",
+    "src/jaxwave/approximants/_phenomt_spin_evolution.py": "3044b21ee3d545fa5f570bf2049e59783acfa175024b8981374d5c2c879d9ac6",
+    "src/jaxwave/approximants/continuous_wave.py": "ee47a5c8bc39bc5e0ae1faad4bf29a2005d2e53ac448e30bec8211f7fafac16f",
+    "src/jaxwave/approximants/emri_kludge.py": "902856ef7b67e23ea9590a5efe396769aca533a9b8405172deb7f8bd94b78106",
+    "src/jaxwave/approximants/eob/__init__.py": "6f0498c0b4ae48d121365042b0b0faac023221699b15cc11b7ba6911b0c63a08",
+    "src/jaxwave/approximants/eob/attachment.py": "3c9fd67b76da5b8e5a2fdcde8f4a8bcbe7814bfc6de758896f28ab7640d87088",
+    "src/jaxwave/approximants/eob/continuous_matching.py": "a0299194e57379cf2c46b175a8f81c301c15cf01a484c4830d5acf9139648a91",
+    "src/jaxwave/approximants/eob/events.py": "5c3e484653ee75d54a35652a7c74cb6fd24a69ab17221da7a3baf3645481a15b",
+    "src/jaxwave/approximants/eob/hamiltonian.py": "5bdcb51b0dccb5b91352d7e8697d1533e6f49ae2dba09526731cd9e4747a2118",
+    "src/jaxwave/approximants/eob/initial_conditions.py": "9833ecc03877432d3bf60d64a1e93408af2ea86b77a86158cb99c62a6d05b42f",
+    "src/jaxwave/approximants/eob/integrator.py": "f0e842e518cd05c94361038602a993c0ee9025b218490945fdb4021da9b64e46",
+    "src/jaxwave/approximants/eob/merger_ringdown.py": "dbc14ce4ac5c2fefd4608b706e4cc44844b371fecf178e75a5427abc053b696c",
+    "src/jaxwave/approximants/eob/nqc.py": "e6e25920ded887a650e04fcf64380f65f32e45d42be81b95fc26291af7b70757",
+    "src/jaxwave/approximants/eob/numerical_attachment.py": "e98d77355f5a5e2538d0c0c91df6a5eb65e8f0d3e13c4e534c047d0938582447",
+    "src/jaxwave/approximants/eob/published_waveform.py": "8b0a727caceb432ba501a93712ffa3c9c547566b94ca86b8ac9f97d43b31afee",
+    "src/jaxwave/approximants/eob/radiation_reaction.py": "55bda3d69e5eeee089e3c23a82ca31b40df9edd781ebd2127dfcc4960bf324ba",
+    "src/jaxwave/approximants/eob/remnant.py": "d13e2e46afeaaac6beacd3f5998ec7dc450c5d55f403316eb12560b3705a9c0e",
+    "src/jaxwave/approximants/eob/seobnrv4_amplitude22.py": "af575ddd8efc123527378236b36e96d1a060961a3ddc3242fb7e8d83efba6ecc",
+    "src/jaxwave/approximants/eob/seobnrv4_amplitude32.py": "5f2123a842dbedb5a8d00cbceddfbbed484c058b9135b8af491485b5efc1d1be",
+    "src/jaxwave/approximants/eob/seobnrv4_amplitude42.py": "f77beb7e7f9c1298792cdb9b5d61e8f3f890e1749a1ca12d6e4382d03a3cdf4b",
+    "src/jaxwave/approximants/eob/seobnrv4_amplitude43.py": "f9a7997629c4850baab67dabdb6769ba6ebb0314e42240eb8e2ed3b5a094c533",
+    "src/jaxwave/approximants/eob/seobnrv4_amplitudes33_44.py": "3aaad589b52acd29c61df995ff726cb511430448bac99ab9561c6c3d192f8adb",
+    "src/jaxwave/approximants/eob/seobnrv4_flux.py": "47f9be36e6494708643afcdeb487a425c3e607a4c2f1ba730cbcf71ccba64287",
+    "src/jaxwave/approximants/eob/seobnrv4_hamiltonian.py": "83aa25f002ea5c3132524574043615ac5522d7e7c27a7bc19d975ca6bc2faa8a",
+    "src/jaxwave/approximants/eob/seobnrv4_mode22.py": "02861ac3eea27342084469b0d8e941ee28e6f1bfc8c5a335ef617a87d80ea8eb",
+    "src/jaxwave/approximants/eob/waveform.py": "12c310c1814fabfc83a42c7babeb1d0d9e05185ec00258bc916d64650f626f7e",
+    "src/jaxwave/approximants/imrphenom_hm.py": "d62f88aa18408871826572aa643ec466c5af9978c24f31b3e05b04613788cd05",
+    "src/jaxwave/approximants/imrphenom_hm_qnm_n61.py": "f3c3c471a5ef38694981fec0e5271e87cd65a43b38d720f7025c3b751f6dc896",
+    "src/jaxwave/approximants/imrphenom_nsbh.py": "ac027b37aaa36be461a9d5fda8c445ed016f6a51afeb87c1063e7ed2f1277449",
+    "src/jaxwave/approximants/imrphenom_xas.py": "ea97cadbf248d63db84f3c530e1cbd0d291c457848bb0ab699672670df425563",
+    "src/jaxwave/approximants/imrphenom_xhm.py": "f9208edd401ee6a46cecddd3f49e90859bea1bcd36d3dca0b606457dfb461b9e",
+    "src/jaxwave/approximants/imrphenom_xp.py": "d3dc9a9ce4a49f7c184610bb1310627789a0e07a7047265ec5ec4eb8eff8a82d",
+    "src/jaxwave/approximants/imrphenom_xphm.py": "7b6a3f48451fc42a2ec858cd3863437c2ef17b8300097d4d9bd2f00efb2ef8ab",
+    "src/jaxwave/approximants/imrphenomd.py": "325077c8107b20dc39735529bc9a70f1b2da5f0d80d70b65f314485b0ab9e0b0",
+    "src/jaxwave/approximants/imrphenomd_nrtidal.py": "0a43b2b829a19ff01280cd9875fa4218c74cb9bb154cb93ee0ce843fbe449fc0",
+    "src/jaxwave/approximants/imrphenomp.py": "6a7a2e9037791fd77392259eee6ce805f9cf503ca08966b26e4aa949e25fecb7",
+    "src/jaxwave/approximants/imrphenomt.py": "be00869d5a4f1946e503fe6fbda038dc9028b93309de924ed3d44c8e59b3ffba",
+    "src/jaxwave/approximants/imrphenomthm.py": "5c617fe664ab41b4d3132d404ccafd638c3a900f91962127d7005eda0eed6ad8",
+    "src/jaxwave/approximants/imrphenomtp.py": "7db5a976cd7e7d40b15257375ac1b050b5b9cfa0d58655cdb54059ff839528dc",
+    "src/jaxwave/approximants/imrphenomtphm.py": "307a1043cd916955f2fdf963bf48182824140e8ce44787623e43839f83d01ab0",
+    "src/jaxwave/approximants/kerr_qnm_interp.py": "1de5fbab1757b90ea0a37927c3432cf72ceafd5faeaef024b2baeb5b445fabe4",
+    "src/jaxwave/approximants/kerr_qnm_table_convention.py": "2c8da7b2cc7c89caf7bf700357c27de6019ca01a7d22b56d4a0714a2ef0ebe19",
+    "src/jaxwave/approximants/kerr_ringdown.py": "54227f6091c5347f8b18063fc65fb6a13912819a9b36b41f4008a36e50885210",
+    "src/jaxwave/approximants/kerr_ringdown_energy.py": "46cc531478f07b073b8ae76cd1a58ab26cbe3b64ce952670c5dcbf4d24b26957",
+    "src/jaxwave/approximants/kerr_ringdown_public_clean.py": "76cc1087848187b63846ea2aaac25196c4825df241c309208f9beb142a614bae",
+    "src/jaxwave/approximants/memory.py": "be168ff91f29c0e1398537ec89b20ca0156cb9a1bf54c931b3ada552e87d87fe",
+    "src/jaxwave/approximants/phenom_meco.py": "76f2b70df804ca9dda4d672bbd74fce4376c193781fca9bf9a722e82d2048491",
+    "src/jaxwave/approximants/phenompv2_waveform.py": "2a4375220f65f093177de57a0822c92bdabd6d033c6c942c87bbb7fd6f94cc33",
+    "src/jaxwave/approximants/pnr_coefficients.py": "133ee2f51eb0e4b7f753b44c1cdc098698408ac59db087c204abdc7b7ae7fe57",
+    "src/jaxwave/approximants/polynomial_interval.py": "33be37b9c346fdf841ddcfbd36abfb9f116bc0222f1744810c567d3d1a2082ae",
+    "src/jaxwave/approximants/ppe.py": "7b110349e59741957972820c691e735ca602b9960ccfceaea47b597729598cd6",
+    "src/jaxwave/approximants/precession_msa.py": "7aff73b50811d783e46d75133e48179d38c9f9e2b2d62553b9d08357f239441e",
+    "src/jaxwave/approximants/precession_pnr.py": "5fc7b07f04f2a28818945749727a4e3605d61f3e94e2c15e938c125b209d1f57",
+    "src/jaxwave/approximants/precession_spintaylor.py": "f08af664ec98ee991fa384bce52d41e6c82f7fd90d6027592ddd3f381e4d9adb",
+    "src/jaxwave/approximants/rom/__init__.py": "49ba24f7f147140c94c7f58a45cb071ebbee8365feb783f6eb4477fe9fca400f",
+    "src/jaxwave/approximants/rom/bspline.py": "5b312379f807bc7ee6c1924648b72830f7151e0bda863299933a5e28d0d9759d",
+    "src/jaxwave/approximants/rom/glue.py": "7a1cd7c6f5c852a3d8f74d1c86cf1670994f6dfbe62e46e794afe6f507c1cb91",
+    "src/jaxwave/approximants/rom/official.py": "6b910b855514ecc08785f1d71e7d83645c0a2dd85f969c889f0d203cd37720f2",
+    "src/jaxwave/approximants/rom/official_wrapper.py": "380c2a8df68e280e78d650e7978cc33841daa1c605ad20900cf92dbf91f1f6d3",
+    "src/jaxwave/approximants/taylorf2.py": "ca4f77af732d55506d36f74eb1215c9c45b428078c754b28e09292f65b9117e9",
+    "src/jaxwave/approximants/taylorf2_eccentric.py": "9b9eb413361160a84d9e16e7839fb0e253e7af4bb0e3e0b70ae45311381a2580",
+    "src/jaxwave/approximants/taylorf2_hm.py": "d8bc1302b7894a4675c23a9ef893a264cb5de3e48931cd1edb8073ab26c14d15",
+    "src/jaxwave/approximants/teobresums.py": "fc34c61da4199d28d2c5e0dfcb1e9f788b70945654c7b86c5cbb24e799c8edb7",
+    "src/jaxwave/approximants/xhm_fits.py": "9349bea136d9e088f2a1708b5b911cb4e83ebc246a0f4313c30d5842624d1145",
+    "src/jaxwave/approximants/xhm_native_fits.py": "129a9f9ba41b4d4939c47fac79b0050a122fc59e5b3ba019c03c3fc2d6251ef4",
+    "src/jaxwave/conversions.py": "433af4e0d69b64ab792c1771a78613883feddfb90e537d548b83aacd32b0603a",
+    "src/jaxwave/detectors/__init__.py": "abbf981d12cdb98d5dc6b9e12fceab452283d735197202e30e02a9ad9890a5ac",
+    "src/jaxwave/detectors/lisa.py": "cd26a00f6a198daf2b6bde81bea65eae4fd3c5202850d5fd086a3ce7cdaf722f",
+    "src/jaxwave/detectors/network.py": "00948af8cb58c0fe797e5a51607a8552c0a4d81cea571d294b0ddd8864ef601c",
+    "src/jaxwave/detectors/psd.py": "6026d1a06884f58a0ffc9a789bb503797676d40c5c4ebd233498a17d0557c086",
+    "src/jaxwave/detectors/pta.py": "7d9de2ce1e6ae1f36f05a173eaeaa88ea1f188b10677f46dfd0315b2300eee2a",
+    "src/jaxwave/inference/__init__.py": "993210cd8685d9805b5065a3b59df5be4b5a15baaf3edcae86c22c555a70a617",
+    "src/jaxwave/inference/bucketing.py": "753ea682cf627588ca9fa98b3d294ea5dd1ef3ae5f3e182707766d617b8d6554",
+    "src/jaxwave/inference/fisher.py": "57f884047300d4c76b06b1915db73f9d98e2294400a96dc38044f2e255796e64",
+    "src/jaxwave/inference/likelihood.py": "1710515cb8ce6d3c6e060de0e4ddc6aa495999b3fc78496fb69068630e7eb441",
+    "src/jaxwave/inference/relative_binning.py": "9569395924fcba5c7785521a9ad00105cfa04e744bcb00ec8118f1f147300464",
+    "src/jaxwave/waveforms.py": "3d19a8599d7fa59017e4980741dea4f75fb830c4115b52b58e1ebe3a8f7350c9",
+    "src/torchwave/__init__.py": "841f905e20c4570e7c123a9be465e263b976149126594941a310134087a95bbc",
+    "src/torchwave/_phenomt_td.py": "f8119995e2bba2785931197bd518781c12e7b3a24fab50f2286e07880ca52aa4",
+    "src/torchwave/approximants/__init__.py": "ce4d96a5f3b3a059ded52780c2efb9e2597a0f1d061b3aa8abe0d53d23107499",
+    "src/torchwave/approximants/_phenomt_amplitude.py": "cc4e6bc295d590ec0d0ecf645045277a45a04c9e2c46832bde0163eaa58019db",
+    "src/torchwave/approximants/_phenomt_angle_options.py": "04a6bc9fd9a03ebde79f6055c4f41b65ac144f257ee4f86eb286134111799f5b",
+    "src/torchwave/approximants/_phenomt_dispatch.py": "edbc13d813d916330d4e6fddc265984cd84ae09023cdc9d1fb9dd174eb43ec62",
+    "src/torchwave/approximants/_phenomt_msa.py": "fc04e1b14770dfe19d026edc44406f1e5090a72a63f5d4c5487c9e5dc7b83f06",
+    "src/torchwave/approximants/_phenomt_numerical.py": "2f51923576e3a0c3cd4803cf5876be63055141d76de312f1d0ff2677d8d0cc14",
+    "src/torchwave/approximants/_phenomt_precession.py": "21362d52867cb81527292dd25d3379260890020950fd864a46555c233bb8f4e6",
+    "src/torchwave/approximants/_phenomt_spin_evolution.py": "449a30037b9d5a677b4351b41bb76238cee4502fb01524a5e35e09c6f9305925",
+    "src/torchwave/approximants/continuous_wave.py": "3d38063738e437742fbe76144900fe367647feba32327b174039a535e3edd00f",
+    "src/torchwave/approximants/emri_kludge.py": "0bbfd934d35d2dc561eefad8b605289a173ba6f347336d013e5c3d28c76526e1",
+    "src/torchwave/approximants/eob/__init__.py": "49dce558c5094b033aca53be5fed6325f82cf974c2ab2719e60bddded9487d0e",
+    "src/torchwave/approximants/eob/adaptive_driver_clean.py": "2f5e1c3b8766b92340a6aafcdfbdc5fe6856a3e4390551abefda1e22b90dda7b",
+    "src/torchwave/approximants/eob/attachment.py": "3d2972ee1d3adb01bb8374af55240b48060cf5092c77f03f14aab11cd381cc54",
+    "src/torchwave/approximants/eob/conditioned_waveform_clean.py": "e9dad2aaa6bf133390b4b6886e98fa8b27f85a64169f0cd0f4eff49ae5df10cb",
+    "src/torchwave/approximants/eob/continuous_matching.py": "5db6aefa91cfdade8bb709381efe31144efc34054672263eec1c707a70cd1a06",
+    "src/torchwave/approximants/eob/events.py": "c1ae1182e4c2f9cf5f8a2857ea5d73802dbbb68b59739709849f973503bdfd5d",
+    "src/torchwave/approximants/eob/factorized_modes.py": "d4b10cbcbbecc4de84329a13cdca43d90d4fa5aa168248fc2e874211d29f8315",
+    "src/torchwave/approximants/eob/hamiltonian.py": "96febd6b3e0722802425f0e7490079d62869f2e63ac92c8db32e9063b5bc4b5b",
+    "src/torchwave/approximants/eob/initial_conditions.py": "520641e8c3037ea1aa6e947c7d9dd92c759333396103cb1d1fffc8aa5019137b",
+    "src/torchwave/approximants/eob/integrator.py": "4c643493086a06accfe7f8f5ff679e77a1015aeb03659b395b48cac09de91c65",
+    "src/torchwave/approximants/eob/merger_ringdown.py": "098bb9e6f5328ceb291a5bed02a91d8fa95cc54bbcc7ff45d996e6985d995410",
+    "src/torchwave/approximants/eob/nqc.py": "c8683181f7cf911df1e1b85cd6999cdb03e7c594e867315359040e9eb03ca552",
+    "src/torchwave/approximants/eob/nqc_analytic_clean.py": "28161546b97d0e182a7d7557b7d132f92a1d705a5f3120b1b0c51c06d31b8b99",
+    "src/torchwave/approximants/eob/numerical_attachment.py": "8c7a149b76c529a255a4caa4b0ca76317b5306c8967db84047f299ccf51be7fc",
+    "src/torchwave/approximants/eob/numerical_derivative_clean.py": "2400ef464b292a0887f1eed68ced5579ab55ae6afe1f0f859226f9aaba180152",
+    "src/torchwave/approximants/eob/published_waveform.py": "7dde2eefb4d99b7fe5fc3570203222dc02c1cb05d59d8f7392e25fc946cb32dc",
+    "src/torchwave/approximants/eob/radiation_reaction.py": "ea7aee7ef13e5e689dde48255437bee673f5a4de8335f532073af376c5997613",
+    "src/torchwave/approximants/eob/remnant.py": "e7690cd5df1bcde2f579954762116beb20db606dae809835b148dae73c4cb007",
+    "src/torchwave/approximants/eob/seobnrv4_amplitude22.py": "941a7e6c4a3e92dc7860b91076958b09aa9a934e6799c33936409a5d09178eca",
+    "src/torchwave/approximants/eob/seobnrv4_flux.py": "3136bb016cce21cdd9d636008fee1fa5472757fed4446dc899e0d31e70124c83",
+    "src/torchwave/approximants/eob/seobnrv4_hamiltonian.py": "40f063046e30b9fb5824b8d95980ff9deaa73f231dfe987e453094210b87cf3d",
+    "src/torchwave/approximants/eob/seobnrv4_mode22.py": "3e2b97c175d2c6d3720f04529b400d455104e963b54f0b885e4a1fda59f90e4b",
+    "src/torchwave/approximants/eob/td_fd_conditioning_clean.py": "d8a9ad936a0e6fb8e0c59a35428a7e2c70e372dca0b8d87f6d890d38dcd30a8a",
+    "src/torchwave/approximants/eob/teob_adaptive_continuation_clean.py": "7b8722ecc28af74eeb2fe29d2e7c1782123106d63fbeba60c82ca81f6b70b869",
+    "src/torchwave/approximants/eob/teob_healy2014_remnant_clean.py": "ff65443236f379b3d1f4aebec5482833c43edd36b90418955ee3bfcea67f3dd2",
+    "src/torchwave/approximants/eob/teob_merger_nqc_clean.py": "a3902d99a6578714cd11c36ea4da0c2a83cfe7993aaa66c5ec95b48f2d1e3788",
+    "src/torchwave/approximants/eob/teob_nqc_clean.py": "8ec2d77a57b96e8246bdae3ca8c62c4e2a17cabf1c5554aa1e47fe25b1ea8f46",
+    "src/torchwave/approximants/eob/teob_orbital_potential_closed_clean.py": "b6c8b2ba574234145c2dd254553ae0cc5abe20616ea2571d17732e27cdbf19b3",
+    "src/torchwave/approximants/eob/teob_postadiabatic_clean.py": "06d0620283798a28c477e6e70b3a3720e337c53a8d8af8a78be17646a7be7550",
+    "src/torchwave/approximants/eob/teob_postmerger.py": "7324ff72dc1fd36149f137b9f8eafa68f354fd897ff5d56478ce5a6cf2f8c5f6",
+    "src/torchwave/approximants/eob/teob_published_driver.py": "58376bbd318f5b5f33922759416fc3b1d2531cb7edafb0e9d8d5c1edadfa8845",
+    "src/torchwave/approximants/eob/teob_radial_acceleration_clean.py": "6e16681eae0daade84bc540f12ee6fe40b3ad08929444273faf03123b7bbc3f9",
+    "src/torchwave/approximants/eob/teob_radiation_clean.py": "dca2c9791403467d85572f25a062cbc995d8228743d33b6b2e5dc28c13336bd6",
+    "src/torchwave/approximants/eob/teob_ringdown_assembly_clean.py": "bb6bc86986cbcd52c360c98ae3358baa7e6e03223b19485eaf24617cddbee7ff",
+    "src/torchwave/approximants/eob/teob_trajectory.py": "6728419dd6b7c6f2a7a340f017f52b5dd54bc399d212884f9975643cd58db785",
+    "src/torchwave/approximants/eob/teob_uib2016_postmerger.py": "2a560838c801820540a9ec585a8291b7ad316ab6765a928bf06de882681db3a5",
+    "src/torchwave/approximants/eob/teob_uib2016_remnant.py": "9ea727ec726f82c62c2ad6e399ee084e02daf275c145a3503e0666271010e755",
+    "src/torchwave/approximants/eob/teob_vacuum_driver_clean.py": "5188f9161c793cf79b1992abe562fd9ae58925319a44c730d6eb079050e43e41",
+    "src/torchwave/approximants/eob/teob_waveform_state_clean.py": "b247c91659b18341301356eca2def7cde270b0aaa7a9e16c85f8ba40f1861552",
+    "src/torchwave/approximants/eob/waveform.py": "38f3df65c78101aaeec67d878ea8042a89dc2324125c67f3f0cb0c2570f44b58",
+    "src/torchwave/approximants/hm_21_pn_clean.py": "8a69dd0d6435674b9c3f78dddf7356dbaea85ef105a820c81d7a8a6a155b5c95",
+    "src/torchwave/approximants/hm_assembly_clean.py": "8b985c5fcbf778fb8d43e626beaf89d5d3080fd3210342e1e56eea858a715d6c",
+    "src/torchwave/approximants/imrphenom_hm.py": "edcff12f2c9a8689f642da996c5e6e10e593458ec213c108682623acb9f4234f",
+    "src/torchwave/approximants/imrphenom_hm_clean.py": "cbf474aa50241a06608bbfc69a9682f05b00ab3044fb507eb17c2f96921f0887",
+    "src/torchwave/approximants/imrphenom_hm_phase_clean.py": "59b67127968bb76a327e0bfac58f6e4d7f7c53e73387045f7b17f5777e30cc38",
+    "src/torchwave/approximants/imrphenom_hm_qnm_n61.py": "350c958aef4e1554d5c2d6a6bc22f8b9bf3513c2a000f08dc3cb3de1cde05b06",
+    "src/torchwave/approximants/imrphenom_nsbh.py": "eb98d8f5f60fcf3a8b9b9874655f4b69e8e563b1c79d045d9845f532ca60b1e5",
+    "src/torchwave/approximants/imrphenom_xas.py": "045836092ce64b64ba9f4e8d69b2709e1517bec5da24cbf124c6b125bb15c37d",
+    "src/torchwave/approximants/imrphenom_xhm.py": "348e9b10cfcec758243c3bc5694089a9f7d0c34a9a1311edb2b1ee723aeff2a0",
+    "src/torchwave/approximants/imrphenom_xp.py": "27f460bbbae4126bfccd7d2cf2185256945813aafc3082e9692628c0b62e300f",
+    "src/torchwave/approximants/imrphenom_xphm.py": "996ceecb7466976665ba2c19c0a3d855d63cc78080264035fb47bf0f117e34a3",
+    "src/torchwave/approximants/imrphenomd.py": "88a433d535d4ff41a082092cf7cbace4490e8a2dc84dc6c97303e83c2e9ea5fc",
+    "src/torchwave/approximants/imrphenomd_nrtidal.py": "9f55eeb0ef05ce9a11a64b9aa268d35e07ea09d38d2d21554e4bce9adef731af",
+    "src/torchwave/approximants/imrphenomp.py": "fe5d3ee5b889b942801237d7708dc772d383858e0131ed3997d24d1180d49830",
+    "src/torchwave/approximants/imrphenomt.py": "faffed53a80f722465de44862dbc9594bedb709c1f6e3bc08713d2875ac394d2",
+    "src/torchwave/approximants/imrphenomthm.py": "31fbb9c4593b36462a16a8b21c04ff1ab903a31431c792c5e98d6e0368efa4c5",
+    "src/torchwave/approximants/imrphenomtp.py": "8598633b054fc9d91b890924c7e9c8d9a30817de5ba79e6b17e7559f603277dc",
+    "src/torchwave/approximants/imrphenomtphm.py": "814de9e371f469c6478eef38cd23ba1225b4105ad308c9451341d9edf92e6914",
+    "src/torchwave/approximants/kerr_angular.py": "e65c9c71d38db40576ee9b9ee2ccc954a420964813949b2d7faf165389061e7c",
+    "src/torchwave/approximants/kerr_angular_table_convention.py": "ad41926955ad989f592372d079f91aa96d006a3b4ad3f6c5414861b46d91176a",
+    "src/torchwave/approximants/kerr_qnm_author.py": "292f0a74f055800d0af12b95f839fac16f84ded3d91fc99e086206fa3ded7911",
+    "src/torchwave/approximants/kerr_qnm_d_sampling_clean.py": "049871477e3a1bdff0a1b13ecd5f303a9c14395476664a6d065f931a4d7f5525",
+    "src/torchwave/approximants/kerr_qnm_generated.py": "82da71c19c50defeab4c32b6950141d845214909e9f52342e3f1cf3b46f08326",
+    "src/torchwave/approximants/kerr_qnm_interp.py": "a75c959cacf6c0f1413f9e8eeb427e1fb6f214e2d77c44941b28868b0d2d0679",
+    "src/torchwave/approximants/kerr_qnm_london_published.py": "74dc85b21585392bfe0bf2339064eefd2dc026e8b85eb8163ea7548fc653177e",
+    "src/torchwave/approximants/kerr_qnm_table_convention.py": "c4c85d17b079306df73c74f4bb755b7f4256fbdf49fef6a85cd9810367d800f6",
+    "src/torchwave/approximants/kerr_ringdown.py": "952fd6c40a263e4d3727f683a354e746908142b473a71c92c30171802db8f4ac",
+    "src/torchwave/approximants/kerr_ringdown_energy.py": "35e21efb131d3f3faceac9d5da02f72ce94183e2f17040d381aa7f3dc5266c0e",
+    "src/torchwave/approximants/kerr_ringdown_public_clean.py": "133ceb09259e4b7c53d293c8d8594a48cdc3292def7210e08499fcc7039c7015",
+    "src/torchwave/approximants/memory.py": "33374f62c2f4e134ea1a338782173d864539379c1eedd8078ddca5fc52045470",
+    "src/torchwave/approximants/nrtidal_published_fits.py": "033e5c2d1bdb9f3b038ac33ff21837e4f28b4c3663075e17d031b0c4209fa4f7",
+    "src/torchwave/approximants/nsbh_clean_amplitude.py": "dbd8d551ccbefdbbdf5a216b3793803ba1818feb53c57a84e92d6f7329cb5774",
+    "src/torchwave/approximants/nsbh_clean_phase.py": "c629daf6c237633dd1c0bb92909d9ea7f7f189f44f31da0d9e48ddf7cf7f634e",
+    "src/torchwave/approximants/nsbh_phase_baseline.py": "74e13c9abe4172dc38e2ddf3f96593e57d7922dfbdbf153b2f096d5a3e84e156",
+    "src/torchwave/approximants/phenom_meco.py": "fb33a9ebfdc530111e56a0e560c53163bfa788706838e158d6d13a98fb103e49",
+    "src/torchwave/approximants/phenomd_unrounded_fits.py": "ef8f96b777c9888344bd74853e6fb5d4ff59c508938dbb89c7bcf7b12594ec32",
+    "src/torchwave/approximants/phenompv2_waveform_clean.py": "7f4695429c2464938e74dbc985ecdd920feaa2be525d3e21684eefb50e1701a5",
+    "src/torchwave/approximants/pnr_coefficients.py": "e15b3fef15512d48873fa1728ffb446068bb38245ac2378d0eb8cb20d4e27355",
+    "src/torchwave/approximants/polynomial_interval.py": "9b3e525cb146f13762abfcd51b5e65c1a3d21e43dc6c54191ab2c2d29f43eafc",
+    "src/torchwave/approximants/ppe.py": "04bade0e334f9f9bf8d55792efab1fa0b8ff17edc6106c9c19d8fd1aa4a5e6ad",
+    "src/torchwave/approximants/precession_beta_clean.py": "13eb469547bd648f3b6effbe4cef66d81ba0740240c5ba1fd86bb2c3d913f2d2",
+    "src/torchwave/approximants/precession_msa.py": "861d0500075e6f56111a75931b83e1ec90deb86add959aa910fa6e0e9fa47034",
+    "src/torchwave/approximants/precession_msa_angles_clean.py": "dd2ec5ab8560ad3936c6b79ada8fb49524cd8ed2e3c89aba0448af2b7cd95289",
+    "src/torchwave/approximants/precession_msa_initial_clean.py": "1829ede78e8f677ed9498d65e1e32caf0e043154c8c782e9410279adc4ca6710",
+    "src/torchwave/approximants/precession_msa_oscillatory_clean.py": "a0e3e5e56cbbc295036c0fce42436ae30e4d9704e40ad1e2d59d327d5e49649a",
+    "src/torchwave/approximants/precession_msa_pn_clean.py": "12e9fabcb181828283829aab20beb73ec52fc0ad0b9a5b6c47cc808fdf23f8eb",
+    "src/torchwave/approximants/precession_msa_reference_l_clean.py": "2ee1059e626c0d7076c7e205100803b05c01a3ee40f87b2b3fb392cf7fd124c0",
+    "src/torchwave/approximants/precession_msa_secular_clean.py": "d40d1b2253305ba563bac248480e28b51daa9af94b9f1b6b92716e98f6afbddb",
+    "src/torchwave/approximants/precession_msa_waveform_clean.py": "e58f1303ddf67d782e1c576410e0e303b5c4310697328f98b5d2cd3280aa3fff",
+    "src/torchwave/approximants/precession_nnlo_clean.py": "6d1b5a713fd19e96ee0f2214936f2ffa731eea2a9e28a254f32d6e22f77f3ea9",
+    "src/torchwave/approximants/precession_nnlo_waveform_clean.py": "838742009880e5d9affb77b01ecda775ea3b7a33a1c0a754668551cb8bb7b774",
+    "src/torchwave/approximants/precession_pnr.py": "d88a55183965ad3b2b5dfd321f780131b1cf038b524078b9449a22c2d6308adf",
+    "src/torchwave/approximants/precession_source_frame_clean.py": "abb7c6d891febc67c07078b0fc3d9a553b038031df5f7f79f7d24cffcde9ee18",
+    "src/torchwave/approximants/precession_spintaylor.py": "d80ffe1818c011438f57c4b3212558dc26616bc962c0883ff7afe25f9ccba665",
+    "src/torchwave/approximants/precession_twisting_clean.py": "9864de67e329c80e838b255f0bfbe052b76d8484c560633a11bfa2ceb8e141a8",
+    "src/torchwave/approximants/rom/__init__.py": "96087ecfd7e1154e955e7bbede705bad9ebe67396d6f33ce220ccbc112ba3398",
+    "src/torchwave/approximants/rom/bspline.py": "45184b2cc3d857fdba8844d1c86245d7a696cb1c302bf4179420cd87a6f712a9",
+    "src/torchwave/approximants/rom/glue.py": "011fefed60c32f8d06ae026302320f4bdd694eb2e1bc54c5752e0ba2a56ee8ac",
+    "src/torchwave/approximants/rom/official.py": "b0af35a773c5cea5573b04746bcf84b5a789e1727ee927546902a5c1ee7ff76b",
+    "src/torchwave/approximants/rom/official_wrapper.py": "a5e45364dc24355e153e12bc3e30c4e8798c66c8f71e66c1cd6427070803fe3f",
+    "src/torchwave/approximants/taylorf2.py": "1890555161f6b3c99d3f1b05d02affc57988aef72612cb582e77d22f32305fcc",
+    "src/torchwave/approximants/taylorf2_eccentric.py": "bd3e9e79e69d61c2ddf61129fff2ef40b8fd32f003584c5092b34b1bfa159fca",
+    "src/torchwave/approximants/taylorf2_hm.py": "fd30750e0fa8795120cba61ef98fc3df68d1644e2b7f442578079758f9a1a711",
+    "src/torchwave/approximants/teobresums.py": "a9c84a24a43a8baa05e8f482bf1c9b6e90ac05e7476787a206efa0388e3d0557",
+    "src/torchwave/approximants/xhm_amplitude_clean.py": "d10bf39f21d58a31b5bdfd56242d9c73ba82e0db61e662ed73e4290cef0db5e4",
+    "src/torchwave/approximants/xhm_fits.py": "6704f0c59a1e1527f5c31063d1bac8ab84f7349207acc3f1c24532c370167548",
+    "src/torchwave/approximants/xhm_inspiral_assembly_clean.py": "c68dda9efd5abdad9938ed33d35bc1d534221af7e80afa37b3d6ec6506cc5e45",
+    "src/torchwave/approximants/xhm_inspiral_assembly_release122022_clean.py": "3a8ec52088ab24d0f618b5e2a6a6f4e5d04b10717c2f01706fad597234ff4bd1",
+    "src/torchwave/approximants/xhm_intermediate_amplitude_clean.py": "613d4d5ebf131db3d72160b81e41edbc23c66a33c7588954a985f74e1d6b8338",
+    "src/torchwave/approximants/xhm_native_fits.py": "65f6f2802f02892d42dac2a54c5bc10e53750f5e92cdd53fb430188bccc24d60",
+    "src/torchwave/approximants/xhm_phase_clean.py": "7b1c201f4c8744fdd60a684cea46ff366dc7c000991d6b0aa8d48b63c322483f",
+    "src/torchwave/approximants/xhm_spa_clean.py": "00b0f2775d605a33b6e74c0a673138b900b1f015420f9ffbf42476bdf4f0d9ed",
+    "src/torchwave/benchmark.py": "4b7b5e3b099ce8616b81e7c5462a6e5722e7e1fdbdc5c5a8ef981f386f260fa4",
+    "src/torchwave/constants.py": "7e7449a1a4b308a932e18c84e858a6e10eb2619192247cb820fd14393ca9e801",
+    "src/torchwave/conversions.py": "29e6e29ae784433002c84ad93eaa37fdfd3bdae37b846f61b79c268c09356b8f",
+    "src/torchwave/detectors/__init__.py": "4e445658bcb157530ffafcf588f349473c1f28dea6478b484c08200023ea3764",
+    "src/torchwave/detectors/lisa.py": "d1351340229c67db751bccde5cae51be9b6bb9a95bcd03895c07261bcea55ea6",
+    "src/torchwave/detectors/network.py": "634b179fcd05834e27f80981141d56db8ca56d05d17acd30853944eef05d5777",
+    "src/torchwave/detectors/psd.py": "7b88a6eedd9ea25ff34f83e66f00ae1c68ea405c99f24b88ff738250eb4a8449",
+    "src/torchwave/detectors/pta.py": "891d613c25fef397674f3fcb5d1834c21aa3eb17044e389a0af6ee1240a4a2d2",
+    "src/torchwave/external_data.py": "2e77a3ec77f59f91c7ae765d763b4b444e77add0e59c4f02f097303bd42e89d8",
+    "src/torchwave/inference/__init__.py": "ddb9cea34efe3ffa995806bd8c529419a03ac03ec5d6aa08f31901332f0ba006",
+    "src/torchwave/inference/f_statistic.py": "3806ee5770180fab38235d6072b051291b470c08fbba9022a7df2c9943175b38",
+    "src/torchwave/inference/fisher.py": "44de33fcdbe99f968b8c740ae3af4bcb00f10aad167616d62f850cadaeec3bed",
+    "src/torchwave/inference/likelihood.py": "dfe1a38096306065eeba60c535685378c34e8d9ae41f246aa8c1fc478d316853",
+    "src/torchwave/inference/mcmc.py": "4d42f756d72610676cf5b8266a43c852847b1f2f3a408aee06797657577213b4",
+    "src/torchwave/inference/relative_binning.py": "0f493a66d8ed9f8bfc23a00b95adc6d8bd38b8bf317071df48aab187fe36db28",
+    "src/torchwave/inference/wavelet_glitch.py": "ca823a53a896de3b8067dcc031cac87dab2d1f291b50f6adcee5bf458eff29c4",
+    "src/torchwave/interfaces/__init__.py": "1ca85c4d5089b11fdf6e787ca12a9f000b7466aba6fe35d6f388e08f882330bf",
+    "src/torchwave/interfaces/pycbc.py": "f1bcd8522213a21da72da7e026537266fd18bc3ebf1787ff5fb00543f18f6f93",
+    "src/torchwave/phenomd_published_fits.py": "55992c5c6d46e1430d2c86915dcedf44741beaddf039ff95faea944531bde2dd",
+    "src/torchwave/profile.py": "edbd9e76bae0477f7afbb130ee06c2b36f657aa73fbf845b613ca8994298f3d7",
+    "src/torchwave/protocol.py": "15f17ce79d99f624391074ce0fc64c193391763b0d9470701091ff9f3c8f5831",
+    "src/torchwave/provenance.py": "ab4397670b6e3075904f12c3d37cd68fad0f923b2538eed88742be6135e48320",
+    "src/torchwave/qnm/__init__.py": "64a8a6c2982d1305362f652214b3226e9f0b82a468a2765aebf972d198a7a280",
+    "src/torchwave/qnm/generate.py": "e6f16e5830bb40f91bc24215791cadaad0154f22daaa7f07ebb2daa44064d8ce",
+    "src/torchwave/qnm/london.py": "574bd7397d69d6dee6c1da52e00a0a6e74c896bae7f7e2574c7640c5d9d513e5",
+    "src/torchwave/qnm/solver.py": "36792fc5ad7201cfd5e4cac5221d48ca0db70f38b9d6fec4c3232caf60f84717",
+    "src/torchwave/waveforms.py": "29dc86a2e3e9dc449b77b4b34eb8a3b3d0a4ae16fb3befa9a7973476caa90d61"
+  },
+  "sources_unchanged": true,
+  "status": "diagnostic_complete"
+}
