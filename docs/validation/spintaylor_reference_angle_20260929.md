@@ -10,14 +10,20 @@ full IMRPhenomXPHM-SpinTaylor waveform fidelity.
 define the SpinTaylor initial state in the source frame at `f_ref`, evolve the
 spin and orbital-direction ODEs, then obtain Euler angles from the evolved
 orbital direction in a J frame. [Pratten et al. (2021), Appendix C,
-Eqs. (C4)–(C17)](https://arxiv.org/pdf/2004.06503) fixes the J frame and its
-reference gauge for XPHM convention 1:
+Eqs. (C4)–(C17)](https://arxiv.org/pdf/2004.06503) fixes the J frame and the
+XP geometric reference angles used by this component calculation:
 
 - `z_J = J_ref/|J_ref|`; `x_J` is the normalized projection of the line of
   sight onto the plane orthogonal to `z_J`; `y_J = z_J × x_J`.
 - `alpha_ref = atan2(L_ref · y_J, L_ref · x_J) = pi - kappa` modulo `2 pi`,
   `beta_ref = acos(L_ref · z_J)`, and `gamma_ref = pi - phi_J`.
 - Minimal rotation gives `d gamma = -cos(beta) d alpha`.
+
+This geometric check does not establish the binary's convention-1 alpha
+offset. Pratten et al., Appendix F Table IV, instead assigns that convention
+the PhenomPv2 offset, whose formula is not given in the permitted public
+papers. The [residual qualification](spintaylor_residual_20260929.md) tests
+the distinction against binary outputs.
 
 The ODE must start at the state defined at `f_ref`. Changing the requested
 output grid while holding `f_ref` and the state fixed cannot change the
