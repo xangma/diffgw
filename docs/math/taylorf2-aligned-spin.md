@@ -1,5 +1,24 @@
 # Aligned-spin TaylorF2 mathematical specification
 
+<!-- BEGIN GENERATED WAVEFORM DEFINITION -->
+
+| Definition field | Catalog value |
+| --- | --- |
+| Model ID | `taylorf2-aligned-bh-spin-3.5pn/v1` |
+| Reference composition | `taylorf2-aligned-bh-spin-3.5pn/v1` |
+| Scope | Aligned black-hole spin phase corrections through 3.5PN conservative dynamics and flux to infinity with restricted quadrupole amplitude. |
+| Domain and modes | `frequency`; `(2, 2)` |
+| Native backends | `torch`, `jax` |
+| Scoped verification claims | 0 |
+
+| Option | Default | Native choices | Reference-only choices |
+| --- | --- | --- | --- |
+| `spin_order` | `7` | `-1`, `0`, `1`, `2`, `3`, `4`, `5`, `6`, `7`, `8` | None |
+| `phasing_convention` | `coalescence` | `coalescence`, `reference_frequency` | None |
+| `phenom_d_calibration` | `false` | `false`, `true` | None |
+
+<!-- END GENERATED WAVEFORM DEFINITION -->
+
 ## Scope and status
 
 Specification: `taylorf2-aligned-bh-spin-3.5pn/v1`.
@@ -347,7 +366,13 @@ python -m pip install -e '.[reference,torch,jax,dev]'
 python -m diffgw_reference.artifacts --check
 python -m diffgw_reference.aligned_spin_artifacts --check
 python -m diffgw_reference.aligned_spin_traceability --check
-JAX_ENABLE_X64=1 JAX_PLATFORMS=cpu python -m pytest tests/test_*math_reference*.py --require-math-reference --reference-device=cpu -ra
+JAX_ENABLE_X64=1 JAX_PLATFORMS=cpu python -m pytest \
+  tests/test_waveform_definitions.py tests/test_*math_reference*.py \
+  tests/test_nsbh_*reference.py tests/test_emri_*reference.py \
+  tests/test_xp_msa_remnant_boundary_policy.py \
+  tests/test_xphm_rotation_reference.py tests/test_xphm_nnlo_clean_room.py \
+  tests/test_spintaylor_reference_angle.py \
+  --require-math-reference --reference-device=cpu -ra
 ```
 
 The required mode fails on missing dependencies, missing or deselected test

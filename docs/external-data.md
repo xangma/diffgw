@@ -48,3 +48,33 @@ no dataset is downloaded during installation or normal waveform evaluation.
 No complete standalone XHM 122022 supplementary dataset is registered, so this
 workflow cannot yet supply its missing calibration data. Download support does
 not change the numerical parity results or replace missing waveform drivers.
+The paper-era arXiv v2 archive inventory and the absence of an authoritative
+`122022` release mapping are recorded in the
+[XHM/XPHM release-qualification receipt](validation/xhm_xphm_release_qualification_20260925.json).
+
+The optional independent IMRPhenomHM physical holdout uses the official
+[SXS:BBH:2265v3.0 record](https://doi.org/10.26138/SXS:BBH:2265v3.0).
+Its six exact source-file identities, conditioning, and fixed gates are in the
+[precommitted protocol](validation/imrphenomhm_sxs_2265_protocol_20260927.md).
+The `scripts/prepare_imrphenomhm_sxs_nr_holdout.py` script downloads
+and verifies Lev3/Lev2 N2 strain to a user-selected directory outside the
+repository, then writes a derived fixture beside the raw files. It is not a
+runtime dependency and no SXS waveform array is packaged with diffgw.
+The independent second case uses
+[SXS:BBH:3631v3.0](https://doi.org/10.26138/SXS:BBH:3631v3.0), with its own
+[precommitted protocol](validation/imrphenomhm_sxs_3631_protocol_20260927.md),
+[red receipt](validation/imrphenomhm_sxs_3631_receipt_20260927.md),
+`scripts/prepare_imrphenomhm_sxs_3631_nr_holdout.py`, and strict external-data
+test. Both cases currently fail physical six-mode gates.
+The separate [SXS:BBH:3619v3.0](https://doi.org/10.26138/SXS:BBH:3619v3.0)
+projected-strain holdout has a [frozen protocol](validation/imrphenomhm_sxs_3619_projection_protocol_20260927.md),
+[red receipt](validation/imrphenomhm_sxs_3619_projection_receipt_20260927.md),
+external-data preparation script, and strict test. Its model matches pass, but
+its predeclared Lev2–Lev3 resolution screen fails, so it supplies no physical
+qualification. Its raw and derived SXS arrays also remain outside Git.
+The later [SXS:BBH:3630v3.0](https://doi.org/10.26138/SXS:BBH:3630v3.0)
+projection holdout has its own [frozen protocol](validation/imrphenomhm_sxs_3630_projection_protocol_20260927.md),
+[red receipt](validation/imrphenomhm_sxs_3630_projection_receipt_20260927.md),
+preparation script, and strict test. Its predeclared common time/orbital-phase
+Lev2–Lev3 screen passes, but one model/NR amplitude gate fails. Its raw and
+derived arrays also remain outside Git.

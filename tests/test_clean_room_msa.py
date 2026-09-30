@@ -1,10 +1,15 @@
 """Checks of the published MSA defining equations; no waveform oracle."""
 import math
+import mpmath as mp
 import pytest
 import torch
 from torchwave.approximants.precession_msa import (
     elliptic_f, jacobi_sn_cn_dn, msa_phase_primitives, msa_oscillatory_angles,
     msa_nutation_phase, msa_opening_angle, solve_spin_roots, evaluate_msa_precession,
+    evaluate_msa_dynamics, compute_l_3pn,
+)
+from torchwave.approximants.precession_msa_angles_clean import (
+    assemble_precession_msa_angles,
 )
 
 
@@ -103,6 +108,181 @@ def test_msa_reference_geometry_gradient_and_grid_independence():
     torch.testing.assert_close(newtonian,supplied,rtol=1e-12,atol=1e-13)
 
 
+def test_q10_msa_matches_clean_published_equations_before_compatibility_split():
+    """The failing full-waveform holdout is not a native MSA transcription error."""
+    f = torch.linspace(20., 220., 401, dtype=torch.float64)
+    m1, m2 = t(60.), t(6.)
+    chi1, chi2 = t([.2, .1, .8]), t([.1, 0., .1])
+    total = m1 + m2
+    q = m2 / m1
+    eta = m1 * m2 / total.square()
+    delta = (m1 - m2) / total
+    n1, n2 = m1 / total, m2 / total
+    spin1, spin2 = n1.square() * chi1, n2.square() * chi2
+    v = (math.pi * total * 4.925490947641267e-6 * f).pow(1 / 3)
+    v0 = v[0]
+    s_ell = spin1[2] + spin2[2]
+    sigma_ell = n2 * chi2[2] - n1 * chi1[2]
+    l_pn = compute_l_3pn(v, eta, delta, s_ell, sigma_ell)
+
+    alpha, beta, gamma, valid = evaluate_msa_dynamics(
+        v, v0, eta, delta, q, spin1, spin2, l_pn,
+    )
+    equation = assemble_precession_msa_angles(
+        f, m1, m2, chi1, chi2, f_ref=20., compatibility="equation",
+        beta_pn=True, beta_pn_version=102,
+    )
+    torch.testing.assert_close(alpha, equation["alpha"], rtol=0, atol=3e-10)
+    torch.testing.assert_close(gamma, equation["gamma"], rtol=0, atol=3e-10)
+    torch.testing.assert_close(beta.cos(), equation["cos_beta_pn"], rtol=0, atol=1e-10)
+    assert bool(valid)
+
+    # The separately audited v223 compatibility path first makes a material choice
+    # after the common roots/c1/<S^2>: it uses initial-reference rather than
+    # precession-averaged spin contractions in the published flux polynomial.
+    compatibility = assemble_precession_msa_angles(
+        f, m1, m2, chi1, chi2, f_ref=20., compatibility="v223",
+    )
+    for key in ("roots_reference", "c1", "sav"):
+        torch.testing.assert_close(equation[key], compatibility[key], rtol=0, atol=0)
+    for key in (
+        "mean_s1_l", "mean_s2_l", "mean_s1_l2", "mean_s2_l2",
+        "mean_s1ls2l",
+    ):
+        torch.testing.assert_close(
+            equation[key], compatibility[key], rtol=1e-14, atol=1e-18,
+        )
+    flux_delta = abs(
+        equation["flux_couplings"]["s1l"]
+        - compatibility["flux_couplings"]["s1l"]
+    )
+    assert flux_delta > 5e-4
+    assert abs(equation["psi2"] - compatibility["psi2"]) > 2
+
+
+def test_q10_msa_flux_spin_couplings_obey_published_scalar_averages():
+    """Appendix A (90)--(95) fixes the flux inputs independently of Torch.
+
+    The MSA roots and c1 are upstream inputs to this isolated scalar gate;
+    their separate defining-equation checks live above.  In particular,
+    initial spin projections cannot replace the averaged flux projections.
+    """
+    m1, m2 = 60., 6.
+    chi1, chi2 = (.2, .1, .8), (.1, 0., .1)
+    f_ref = 20.
+    equation = assemble_precession_msa_angles(
+        t([f_ref]), t(m1), t(m2), t(chi1), t(chi2),
+        f_ref=f_ref, compatibility="equation",
+    )
+    compatibility = assemble_precession_msa_angles(
+        t([f_ref]), t(m1), t(m2), t(chi1), t(chi2),
+        f_ref=f_ref, compatibility="v223",
+    )
+
+    with mp.workdps(50):
+        def scalar(value):
+            return mp.mpf(float(value))
+        q = mp.mpf(1) / 10
+        eta = q / (1 + q)**2
+        n1, n2 = 1 / (1 + q), q / (1 + q)
+        s1 = [n1**2 * scalar(component) for component in chi1]
+        s2 = [n2**2 * scalar(component) for component in chi2]
+        s1sq = sum(component**2 for component in s1)
+        s2sq = sum(component**2 for component in s2)
+        xi = (1 + q) * s1[2] + (1 + 1/q) * s2[2]
+        c1 = scalar(equation["c1"])
+        roots = equation["roots_reference"]
+        sminus2, splus2 = scalar(roots[1]), scalar(roots[2])
+        sav = (sminus2 + splus2) / 2
+        v0 = (mp.pi * (m1 + m2) * mp.mpf("4.925490947641267e-6") * f_ref)**(mp.mpf(1)/3)
+
+        mean1 = (c1 * (1 + q) - q * eta * xi) / (eta * (1 - q**2))
+        mean2 = -q * (c1 * (1 + q) - eta * xi) / (eta * (1 - q**2))
+        variance = (splus2 - sminus2)**2 * v0**2 / (32 * eta**2 * (1 - q)**2)
+        published = {
+            "s1l": mean1,
+            "s2l": mean2,
+            "s12": (sav - s1sq - s2sq) / 2,
+            "s1l2": mean1**2 + variance,
+            "s2l2": mean2**2 + q**2 * variance,
+            "s1ls2l": mean1 * mean2 - q * variance,
+        }
+        for key, expected in published.items():
+            assert math.isclose(float(equation["flux_couplings"][key]),
+                                float(expected), rel_tol=2e-12, abs_tol=2e-15), key
+
+        # The initial-reference compatibility recipe makes a materially
+        # different choice at this first flux boundary for the frozen case.
+        assert abs(float(compatibility["flux_couplings"]["s1l"])
+                   - float(published["s1l"])) > 5e-4
+
+
+def test_q10_msa_appendix_c_quadratic_phase_diagnostic():
+    """The printed Appendix C (118) differs from the cubic discriminant.
+
+    This is a diagnostic of the frozen q=10 case, not a waveform acceptance
+    threshold. The independently checked roots and c1 are common inputs. The
+    inferred second-bracket correction is not an author-published erratum.
+    """
+    m1, m2 = 60., 6.
+    chi1, chi2 = (.2, .1, .8), (.1, 0., .1)
+    args = (t([20.]), t(m1), t(m2), t(chi1), t(chi2))
+    equation = assemble_precession_msa_angles(
+        *args, f_ref=20., compatibility="equation",
+    )
+    compatibility = assemble_precession_msa_angles(
+        *args, f_ref=20., compatibility="v223",
+    )
+
+    # Chatziioannou et al., arXiv:1703.03967v3, Appendix C (116)--(118).
+    with mp.workdps(50):
+        def scalar(value):
+            return mp.mpf(float(value))
+        q = mp.mpf(1) / 10
+        eta = q / (1 + q)**2
+        delta_m = (1 - q) / (1 + q)
+        n1, n2 = 1 / (1 + q), q / (1 + q)
+        s1 = [n1**2 * scalar(component) for component in chi1]
+        s2 = [n2**2 * scalar(component) for component in chi2]
+        s1sq = sum(component**2 for component in s1)
+        s2sq = sum(component**2 for component in s2)
+        xi = (1 + q) * s1[2] + (1 + 1/q) * s2[2]
+        c1, sav = scalar(equation["c1"]), scalar(equation["sav"])
+        psi1 = 3 * (2 * xi * eta**2 - c1) / (eta * delta_m**2)
+        first = (c1**2 * eta / (q * delta_m**4)
+                 - 2 * c1 * eta**3 * (1 + q) * xi / (q * delta_m**4)
+                 - eta**2 * (delta_m**2 * s1sq - eta**2 * xi**2) / delta_m**4)
+        second = (c1**2 * eta**2 / delta_m**4
+                  - 2 * c1 * eta**3 * (1 + q) * xi / delta_m**4
+                  - eta**2 * (delta_m**2 * s2sq - eta**2 * xi**2) / delta_m**4)
+        root_delta = mp.sqrt(first * second)
+        # Expanding the Appendix B cubic with J^2=L^2+2*c1/v+S_av^2
+        # changes only the c1^2 coefficient in Eq. (118)'s second bracket:
+        # eta^2 -> q*eta. The other Eq. (117) terms match identically.
+        corrected_second = second + c1**2 * (q*eta - eta**2) / delta_m**4
+        corrected_delta = mp.sqrt(first * corrected_second)
+        g2_over_g0 = mp.mpf(743) / 336 + 11 * eta / 4
+        psi2 = 3 * g2_over_g0 + 3 / (2 * eta**3) * (
+            2 * root_delta - 2 * eta**2 * sav / delta_m**2
+            - 10 * eta * c1**2 / delta_m**4
+            + 2 * eta**2 * (7 + 6*q + 7*q**2) * c1 * xi
+              / (delta_m**2 * (1-q)**2)
+            - eta**3 * (3 + 4*q + 3*q**2) * xi**2
+              / (delta_m**2 * (1-q)**2)
+            + eta * (q * (2+q) * s1sq + (1+2*q) * s2sq) / (1-q)**2
+        )
+
+        assert math.isclose(float(psi1), float(equation["psi1"]),
+                            rel_tol=2e-12, abs_tol=2e-12)
+        assert first < 0 and second < 0  # fixes the real square-root branch
+        assert corrected_second < 0
+        assert abs(float(psi2 - scalar(equation["psi2"]))) > .25
+        assert abs(float(psi2 - scalar(compatibility["psi2"]))) > 2.
+        corrected_psi2 = psi2 + 3 * (corrected_delta - root_delta) / eta**3
+        assert math.isclose(float(corrected_psi2), float(equation["psi2"]),
+                            rel_tol=2e-12, abs_tol=2e-12)
+
+
 def test_opening_angle_uses_precession_averaged_j_at_any_nutation_phase():
     # Recover J from the triangle and check the defining averaged dJ/dL.
     l=t([.6,1.,1.4]).requires_grad_();eta,c1,sav=t(.22),t(.02),t(.04)
@@ -186,11 +366,9 @@ def test_method_selects_default_version_and_explicit_version_takes_precedence(mo
     msa=model(f,**args,precession_method='msa')
     explicit=model(f,**args,prec_version=223)
     for a,b,c,d in zip(default,nnlo,msa,explicit):
-        target_match = c if model_name == 'xp' else b
-        target_diff = b if model_name == 'xp' else c
-        torch.testing.assert_close(a,target_match,rtol=0,atol=0)
+        torch.testing.assert_close(a,c,rtol=0,atol=0)
         torch.testing.assert_close(c,d,rtol=0,atol=0)
-        assert torch.linalg.vector_norm(target_diff-a)/torch.linalg.vector_norm(a) > 1e-3
+        assert torch.linalg.vector_norm(b-a)/torch.linalg.vector_norm(a) > 1e-3
     with pytest.raises(ValueError,match='Unsupported precession version'):
         model(f,**args,prec_version=999)
     with pytest.raises(ValueError,match='precession_method'):

@@ -47,6 +47,14 @@ def _nnlo_beta(m1, m2, f, s1x, s1y, s1z, s2x, s2y, s2z):
     return torch.atan2(n1.square() * chip, L + spar)
 
 
+def _nnlo_l_plus_s_parallel(m1, m2, f, s1z, s2z):
+    """Return the longitudinal component that defines the NNLO cone branch."""
+    total = m1 + m2
+    n1, n2 = m1 / total, m2 / total
+    L = orbital_angular_momentum(m1, m2, f, s1z, s2z, pn_version=102, compat_102=False)
+    return L + n1.square() * s1z + n2.square() * s2z
+
+
 def _canonicalize_components(m1, m2, s1x, s1y, s1z, s2x, s2y, s2z):
     """Return the published convention ``m1 >= m2`` without Python branching."""
     swap = m1 < m2
@@ -80,6 +88,99 @@ def _raw_angles(v, eta, delta, m1, chi_l, chi_p):
         aa = aa.reshape(aa.shape[:-1] + (1,) * extra + (aa.shape[-1],))
         ee = ee.reshape(ee.shape[:-1] + (1,) * extra + (ee.shape[-1],))
     return (aa * basis).sum(dim=-1), (ee * basis).sum(dim=-1)
+
+
+def frequency_domain_nnlo_geometry(
+    v,
+    v0,
+    mass1,
+    mass2,
+    spin1x,
+    spin1y,
+    spin1z,
+    spin2x,
+    spin2y,
+    spin2z,
+    inclination,
+    phic,
+    *,
+    convention=1,
+    observer_azimuth=None,
+):
+    """Published NNLO-102 geometry on a frequency-domain SPA grid.
+
+    This is the frequency-domain counterpart of :func:`nnlo_geometry`.  It
+    keeps the paper's single-spin variables, Appendix-C source frame, and
+    Eq. (17) opening angle together so FD waveform callers cannot mix those
+    conventions with the two-spin MSA frame. Unsupported ``L+S_parallel<=0``
+    samples are marked with NaN in eager and compiled execution alike.
+    """
+    if convention not in (0, 1, 5, 6, 7):
+        raise ValueError("published NNLO-102 geometry supports conventions 0, 1, 5, 6, and 7")
+    total = mass1 + mass2
+    eta = mass1 * mass2 / total.square()
+    delta = (mass1 - mass2) / total
+    x1 = mass1 / total
+    chip = _effective_chip(mass1, mass2, spin1x, spin1y, spin2x, spin2y)
+    chi_eff = (mass1 * spin1z + mass2 * spin2z) / total
+
+    alpha_raw, epsilon_raw = _raw_angles(v, eta, -delta, x1, chi_eff / x1, chip)
+    alpha_ref, epsilon_ref = _raw_angles(v0, eta, -delta, x1, chi_eff / x1, chip)
+
+    source_phase = phic if observer_azimuth is None else phic - observer_azimuth
+    f_ref = v0**3 / (math.pi * total * MSUN_SEC)
+    alpha0, theta_jn, zeta, phi_j = source_frame_geometry(
+        mass1,
+        mass2,
+        spin1x,
+        spin1y,
+        spin1z,
+        spin2x,
+        spin2y,
+        spin2z,
+        inclination,
+        source_phase,
+        f_ref,
+    )
+    # At an exactly aligned reference state phi_JL is gauge-degenerate.  The
+    # published zero-azimuth branch is the continuous +x in-plane-spin limit.
+    is_aligned = spin1x.square() + spin1y.square() + spin2x.square() + spin2y.square() == 0
+    alpha0 = torch.where(is_aligned, math.pi / 2 + source_phase, alpha0)
+    phi_j = torch.where(is_aligned, torch.zeros_like(phi_j), phi_j)
+    if alpha_raw.ndim > alpha0.ndim:
+        alpha0 = alpha0.unsqueeze(-1)
+        phi_j = phi_j.unsqueeze(-1)
+    anchored = convention in (0, 1, 6)
+    alpha = alpha_raw - alpha_ref + alpha0 if anchored else alpha_raw + alpha0
+    gamma = -epsilon_raw + epsilon_ref if anchored else -epsilon_raw
+    if convention in (1, 6):
+        gamma = gamma + math.pi - phi_j
+    carrier_phase = phi_j if convention == 0 else phic
+    if convention == 1:
+        zeta = zeta - math.pi / 2
+        carrier_phase = torch.zeros_like(phi_j)
+
+    frequency = v**3 / (math.pi * total * MSUN_SEC)
+    l_plus_s = _nnlo_l_plus_s_parallel(mass1, mass2, frequency, spin1z, spin2z)
+    l_plus_s_ref = _nnlo_l_plus_s_parallel(mass1, mass2, f_ref, spin1z, spin2z)
+    requires_rotation = ~is_aligned if convention == 1 else torch.ones_like(is_aligned)
+    unsupported = requires_rotation & ((l_plus_s <= 0) | (l_plus_s_ref <= 0))
+    beta = _nnlo_beta(
+        mass1,
+        mass2,
+        frequency,
+        spin1x,
+        spin1y,
+        spin1z,
+        spin2x,
+        spin2y,
+        spin2z,
+    )
+    nan = torch.full_like(beta, float("nan"))
+    alpha = torch.where(unsupported, nan, alpha)
+    beta = torch.where(unsupported, nan, beta)
+    gamma = torch.where(unsupported, nan, gamma)
+    return alpha, beta, gamma, theta_jn, zeta, carrier_phase
 
 
 def nnlo_geometry(
@@ -183,6 +284,7 @@ def nnlo_geometry(
         if frequency_at_time is None:
             raise ValueError("frequency_at_time is required for numerical angle options")
         fq = torch.clamp(frequency_at_time(query), min=torch.finfo(frequency.dtype).tiny)
+
         def expand_param(value):
             return value.reshape(value.shape + (1,) * (query.ndim - value.ndim))
 

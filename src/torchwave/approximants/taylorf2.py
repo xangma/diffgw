@@ -31,6 +31,7 @@ from torchwave.conversions import (
     tidal_combinations,
     kerr_isco_frequency,
 )
+from diffgw_core.windowing import torch_planck_taper
 
 
 class TaylorF2:
@@ -510,6 +511,7 @@ class TaylorF2:
         reference_frame: Optional[str] = None,
         quad_monopole1: Optional[Union[float, torch.Tensor]] = None,
         quad_monopole2: Optional[Union[float, torch.Tensor]] = None,
+        window: Optional[str] = None,
     ) -> Tuple[torch.Tensor, torch.Tensor]:
         """Generate frequency-domain polarizations (h_plus, h_cross) using TaylorF2.
 
@@ -528,9 +530,13 @@ class TaylorF2:
             lambda2: Secondary tidal deformability
             quad_monopole1, quad_monopole2: Spin-induced quadrupole coefficients C_Qi (Kerr=1)
             f_isco_cutoff: If True, set signal to zero above ISCO
-            isco_type: ISCO formulation ("schwarzschild" or "kerr")
+            isco_type: ISCO formulation ("schwarzschild" or "kerr"); the Kerr
+                cutoff uses mass-weighted aligned spin (m1*chi1 + m2*chi2)/(m1+m2)
             smooth_cutoff: If True, smoothly roll off amplitude to zero at ISCO
             roll_off_delta: Fractional width of smooth roll-off window below ISCO
+            window: Smooth window type ('planck' or 'cosine'). If 'planck', applies
+                an infinitely differentiable Planck taper over [(1 - roll_off_delta) * f_isco, f_isco].
+                If None (default), behavior is controlled by smooth_cutoff.
             spin_order: Historical term group; see phase_coefficients. Default 7
                 includes spin-orbit through 3.5PN and spin-spin through 3PN;
                 use 8 to also include 3.5PN spin-spin tails and cubic spin.
@@ -603,9 +609,17 @@ class TaylorF2:
             else:
                 f_isco = 1.0 / (6.0 ** 1.5 * PI * m_sec)
 
-            if not smooth_cutoff:
+            use_planck = window is not None and str(window).lower() == "planck"
+            use_smooth = smooth_cutoff or (window is not None)
+
+            if not use_smooth:
                 mask = (f_eval <= f_isco) & (f_eval > 0.0)
                 amp = torch.where(mask, amp, torch.zeros_like(amp))
+            elif use_planck:
+                f_start = (1.0 - roll_off_delta) * f_isco
+                w = torch_planck_taper(f_eval, f_start, f_isco)
+                w = torch.where(f_eval > 0.0, w, torch.zeros_like(w))
+                amp = amp * w
             else:
                 f_start = (1.0 - roll_off_delta) * f_isco
                 x = torch.clamp((f_eval - f_start) / (f_isco - f_start + 1e-30), 0.0, 1.0)

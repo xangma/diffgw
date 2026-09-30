@@ -21,6 +21,31 @@ from jaxwave.conversions import as_array
 from jaxwave.approximants.imrphenomp import IMRPhenomP
 
 
+MSA_FINAL_SPIN_DOMAIN_ERROR = (
+    "MSA final_spin_mod=3 requires a valid nonaligned MSA remnant root; "
+    "use final_spin_mod=0 for equal-mass or coalescing-root rows."
+)
+
+
+def _check_msa_final_spin_domain(unsupported):
+    if bool(unsupported):
+        raise ValueError(MSA_FINAL_SPIN_DOMAIN_ERROR)
+
+
+def _enforce_msa_final_spin_domain(unsupported: jnp.ndarray) -> None:
+    """Raise eagerly, or through a compiled callback when values are traced."""
+    any_unsupported = jnp.any(unsupported)
+    if isinstance(any_unsupported, jax.core.Tracer):
+        # A conditional callback is not vmap-safe: batching lowers lax.cond
+        # to a select and may execute both branches. Keep the condition in the
+        # callback so valid batched/JIT rows cannot run the error branch.
+        jax.debug.callback(
+            _check_msa_final_spin_domain, any_unsupported, ordered=True
+        )
+    elif bool(any_unsupported):
+        raise ValueError(MSA_FINAL_SPIN_DOMAIN_ERROR)
+
+
 def resolve_precession_version(method: str, version: Optional[int]) -> int:
     """An explicit version takes precedence; method chooses an omitted version."""
     method_l = method.lower()
@@ -70,9 +95,9 @@ def elliptic_f(phi: jnp.ndarray, parameter: jnp.ndarray) -> jnp.ndarray:
     z = jnp.ones_like(s)
     x, y, z = jnp.broadcast_arrays(x, y, z)
     for _ in range(12):
-        root_x = jnp.sqrt(jnp.maximum(x, 0.0))
-        root_y = jnp.sqrt(jnp.maximum(y, 0.0))
-        root_z = jnp.sqrt(jnp.maximum(z, 0.0))
+        root_x = jnp.sqrt(jnp.maximum(x, 1e-24))
+        root_y = jnp.sqrt(jnp.maximum(y, 1e-24))
+        root_z = jnp.sqrt(jnp.maximum(z, 1e-24))
         lam = root_x * root_y + root_x * root_z + root_y * root_z
         x = (x + lam) * 0.25
         y = (y + lam) * 0.25
@@ -163,28 +188,32 @@ def msa_nutation_phase(
     root's v^-2, v^-1, v^0 terms. Expanding Eq. 50 then integrating gives
     the published 1PN phase, avoiding cancellation-prone nested C3 factors.
     """
-    b2 = eta * delta * delta
+    is_zero_delta = jnp.abs(delta) < 1e-12
+    safe_delta = jnp.where(is_zero_delta, jnp.ones_like(delta), delta)
+    safe_b2 = jnp.maximum(eta * safe_delta * safe_delta, 1e-24)
     b1 = 2.0 * eta * xi - 4.0 * c1
     b0 = s1_sq * (q - 1.0) + s2_sq * (1.0 / q - 1.0) - 2.0 * sav_sq
-    c2 = 4.0 * c1 * c1 - 4.0 * eta * xi * c1 + 4.0 * (eta**3) * xi * xi - 2.0 * b2 * (s1_sq + s2_sq)
+    c2 = 4.0 * c1 * c1 - 4.0 * eta * xi * c1 + 4.0 * (eta**3) * xi * xi - 2.0 * safe_b2 * (s1_sq + s2_sq)
     d2 = (
         4.0 * (1.0 - q) / q * (s2_sq - q * s1_sq) * c1 * c1
-        + b2 * ((s1_sq - s2_sq) ** 2)
-        + 4.0 * delta * eta * xi * (s1_sq - s2_sq) * c1
+        + safe_b2 * ((s1_sq - s2_sq) ** 2)
+        + 4.0 * safe_delta * eta * xi * (s1_sq - s2_sq) * c1
     )
-    root_sum = -c2 / b2
-    root_product = d2 / b2
+    root_sum = -c2 / safe_b2
+    root_product = d2 / safe_b2
     finite_plus = (root_sum + jnp.sqrt(jnp.maximum(root_sum * root_sum - 4.0 * root_product, 0.0))) / 2.0
-    sqrt1 = b1 / (2.0 * b2)
-    sqrt2 = (finite_plus + b0 + root_sum) / (2.0 * b2) - (b1 * b1) / (8.0 * b2 * b2)
+    sqrt1 = b1 / (2.0 * safe_b2)
+    sqrt2 = (finite_plus + b0 + root_sum) / (2.0 * safe_b2) - (b1 * b1) / (8.0 * safe_b2 * safe_b2)
     psi1 = 1.5 * (sqrt1 - xi)
     psi2 = 3.0 * (sqrt2 - xi * sqrt1 + 743.0 / 336.0 + 11.0 * eta / 4.0)
     g0 = 5.0 / (96.0 * eta)
 
     def phase(x):
-        return -3.0 * g0 * delta / 4.0 * (x**-3 + psi1 * x**-2 + psi2 / x)
+        return -3.0 * g0 * safe_delta / 4.0 * (x**-3 + psi1 * x**-2 + psi2 / x)
 
-    return psi_ref + phase(v) - phase(v0)
+    total_phase = phase(v) - phase(v0)
+    delta_psi = jnp.where(is_zero_delta, jnp.zeros_like(total_phase), total_phase)
+    return psi_ref + delta_psi
 
 
 def msa_opening_angle(
@@ -229,9 +258,12 @@ def msa_oscillatory_angles(
     Euler angles, including the J factor in Eq. 30.
     """
     gap = sp_sq - sm_sq
+    is_small_gap = jnp.abs(gap) < 1e-15
+    safe_gap = jnp.where(is_small_gap, jnp.full_like(gap, 1e-10), gap)
     d0 = 4.0 * j * j * l * l - (j * j + l * l - sp_sq) ** 2
-    d2 = -2.0 * gap * (j * j + l * l - sp_sq)
-    d4 = -gap * gap
+    safe_d0 = jnp.maximum(d0, 1e-20)
+    d2 = -2.0 * safe_gap * (j * j + l * l - sp_sq)
+    d4 = -safe_gap * safe_gap
     c0 = (
         0.75
         * (1.0 - xi * v)
@@ -245,21 +277,21 @@ def msa_oscillatory_angles(
             + ((j * j - sp_sq) ** 2) / eta * (v**4)
         )
     )
-    c2 = -1.5 * eta * gap * (1.0 + 2.0 * xi * v - (j * j - sp_sq) / (eta**2) * v * v) * (1.0 - xi * v) * (v**4)
+    c2 = -1.5 * eta * safe_gap * (1.0 + 2.0 * xi * v - (j * j - sp_sq) / (eta**2) * v * v) * (1.0 - xi * v) * (v**4)
     quotient = -0.75 / eta * (1.0 - xi * v) * (v**6)
-    tiny = jnp.finfo(v.dtype).tiny
-    disc = jnp.sqrt(jnp.maximum(d2 * d2 - 4.0 * d0 * d4, tiny))
-    lambda_c = (-d2 + disc) / (2.0 * d0)
-    lambda_d = (-d2 - disc) / (2.0 * d0)
-    rem0 = c0 / d0 - quotient
-    rem1 = c2 / d0 - quotient * d2 / d0
-    residue_c = (-rem1 - rem0 * lambda_c) / (lambda_d - lambda_c)
+    disc = jnp.sqrt(jnp.maximum(d2 * d2 - 4.0 * safe_d0 * d4, 1e-24))
+    lambda_c = (-d2 + disc) / (2.0 * safe_d0)
+    lambda_d = (-d2 - disc) / (2.0 * safe_d0)
+    rem0 = c0 / safe_d0 - quotient
+    rem1 = c2 / safe_d0 - quotient * d2 / safe_d0
+    diff_lam = lambda_d - lambda_c
+    safe_diff_lam = jnp.where(is_small_gap, jnp.ones_like(diff_lam), diff_lam)
+    residue_c = (-rem1 - rem0 * lambda_c) / safe_diff_lam
     residue_d = rem0 - residue_c
     sinp, cosp = jnp.sin(psi), jnp.cos(psi)
-    eps = jnp.finfo(v.dtype).eps
 
     def periodic_primitive(lam):
-        root = jnp.sqrt(jnp.maximum(1.0 - lam, eps))
+        root = jnp.sqrt(jnp.maximum(1.0 - lam, jnp.finfo(v.dtype).eps))
         return jnp.arctan2((root - 1.0) * sinp * cosp, cosp * cosp + root * sinp * sinp) / root
 
     primitive_c = periodic_primitive(lambda_c)
@@ -269,20 +301,24 @@ def msa_oscillatory_angles(
         / jnp.sqrt(eta)
         * (1.0 - xi * v)
         * (v**6)
-        * jnp.sqrt(jnp.maximum(sp_sq - s3_sq, tiny))
+        * jnp.sqrt(jnp.maximum(sp_sq - s3_sq, jnp.finfo(v.dtype).tiny))
     )
     alpha = j / psi_dot * (residue_c * primitive_c + residue_d * primitive_d)
     a_theta = (j * j + l * l - sp_sq) / (2.0 * j * l)
-    b_theta = gap / (2.0 * j * l)
+    b_theta = safe_gap / (2.0 * j * l)
+    safe_lam_c = jnp.where(is_small_gap, jnp.ones_like(lambda_c), lambda_c)
+    safe_lam_d = jnp.where(is_small_gap, jnp.ones_like(lambda_d), lambda_d)
     epsilon = (
         j
         / psi_dot
         * (
-            residue_c * (a_theta + b_theta / lambda_c) * primitive_c
-            + residue_d * (a_theta + b_theta / lambda_d) * primitive_d
+            residue_c * (a_theta + b_theta / safe_lam_c) * primitive_c
+            + residue_d * (a_theta + b_theta / safe_lam_d) * primitive_d
             - b_theta * (v**6) / 8.0 * sinp * cosp * 2.0
         )
     )
+    alpha = jnp.where(is_small_gap, jnp.zeros_like(alpha), alpha)
+    epsilon = jnp.where(is_small_gap, jnp.zeros_like(epsilon), epsilon)
     return alpha, epsilon
 
 
@@ -397,7 +433,7 @@ def solve_spin_roots(
     r_val = jnp.sqrt(safe_p_third)
     r3 = r_val**3
 
-    cos_3theta = jnp.clip(-qc_dep / (2.0 * r3 + 1e-30), -1.0 + 1e-15, 1.0 - 1e-15)
+    cos_3theta = jnp.clip(-qc_dep / (2.0 * r3 + 1e-30), -1.0 + 1e-14, 1.0 - 1e-14)
     theta = jnp.arccos(cos_3theta) / 3.0
 
     z0 = 2.0 * r_val * jnp.cos(theta) - b_coeff / 3.0
@@ -411,10 +447,15 @@ def solve_spin_roots(
     sm_sq = sorted_roots[..., 1]
     sp_sq = sorted_roots[..., 2]
 
+    sm_sq = jnp.maximum(sm_sq, s3_sq)
+    sp_sq = jnp.maximum(sp_sq, sm_sq)
+
     disc = (safe_p_third**3) - (qc_dep / 2.0) ** 2
     eps = jnp.finfo(jnp.asarray(l0).dtype).eps
     root_scale = jnp.maximum(jnp.abs(b_coeff), jnp.sqrt(jnp.abs(c_coeff)))
     disc_scale = jnp.maximum(safe_p_third**3, (qc_dep / 2.0) ** 2)
+    # Coalescing roots and near-equal-mass denominators must be resolved above
+    # roundoff before the distinct-root MSA prescription is usable.
     is_valid = (
         (disc > 32.0 * eps * disc_scale)
         & (sp_sq >= sm_sq)
@@ -480,11 +521,17 @@ def evaluate_msa_dynamics(
     a0 = 96.0 * eta / 5.0
     a2 = -743.0 / 336.0 - 2.75 * eta
 
+    is_eq = (jnp.abs(delta) < 1e-12) | (jnp.abs(1.0 - q_c) < 1e-12)
     denom_spin = eta * (1.0 - q_c * q_c)
-    s1_ell_avg = (c1 * (1.0 + q_c) - q_c * eta * xi) / denom_spin
-    s2_ell_avg = -q_c * (c1 * (1.0 + q_c) - eta * xi) / denom_spin
+    safe_denom_spin = jnp.where(is_eq, jnp.ones_like(denom_spin), denom_spin)
+    s1_ell_std = (c1 * (1.0 + q_c) - q_c * eta * xi) / safe_denom_spin
+    s2_ell_std = -q_c * (c1 * (1.0 + q_c) - eta * xi) / safe_denom_spin
+    s1_ell_avg = jnp.where(is_eq, 0.5 * c1 / eta, s1_ell_std)
+    s2_ell_avg = jnp.where(is_eq, 0.5 * c1 / eta, s2_ell_std)
 
-    variance = ((sp_sq - sm_sq) ** 2) * v0 * v0 / (32.0 * eta * eta * ((1.0 - q_c) ** 2))
+    safe_delta_qc = jnp.where(is_eq, jnp.ones_like(q_c), 1.0 - q_c)
+    variance_std = ((sp_sq - sm_sq) ** 2) * v0 * v0 / (32.0 * eta * eta * (safe_delta_qc ** 2))
+    variance = jnp.where(is_eq, jnp.zeros_like(variance_std), variance_std)
     cross_avg = s1_ell_avg * s2_ell_avg - q_c * variance
     s1_ell_sq_avg = s1_ell_avg * s1_ell_avg + variance
     s2_ell_sq_avg = s2_ell_avg * s2_ell_avg + q_c * q_c * variance
@@ -576,8 +623,11 @@ def evaluate_msa_dynamics(
         eps_secular = eps_secular - epsilon_secular(v0)
 
     eps_val = jnp.finfo(v.dtype).eps
-    initial_parameter = jnp.clip((sp_sq - sm_sq) / (sp_sq - s3_sq), 0.0, 1.0 - eps_val)
-    initial_fraction = jnp.clip((sp_sq - s0_sq) / (sp_sq - sm_sq), 0.0, 1.0)
+    gap_init = sp_sq - sm_sq
+    safe_gap_init = jnp.maximum(gap_init, 1e-20)
+    safe_span_init = jnp.maximum(sp_sq - s3_sq, 1e-20)
+    initial_parameter = jnp.clip(gap_init / safe_span_init, 0.0, 1.0 - 1e-12)
+    initial_fraction = jnp.clip((sp_sq - s0_sq) / safe_gap_init, 0.0, 1.0 - 1e-12)
     orientation = s1[..., 0] * s2[..., 1] - s1[..., 1] * s2[..., 0]
     sign = jnp.where(orientation < 0, -jnp.ones_like(orientation), jnp.ones_like(orientation))
     psi_ref = sign * elliptic_f(jnp.arcsin(jnp.sqrt(initial_fraction)), initial_parameter)
@@ -586,7 +636,9 @@ def evaluate_msa_dynamics(
     j_sq = l * l + 2.0 * c1 / v + sav_sq
     j = jnp.sqrt(jnp.maximum(j_sq, jnp.finfo(v.dtype).tiny))
     s3, sm, sp, _ = solve_spin_roots(l, j_sq, s1_sq, s2_sq, xi, q_c, eta, delta)
-    parameter = jnp.clip((sp - sm) / (sp - s3), 0.0, 1.0 - eps_val)
+    gap_dyn = sp - sm
+    safe_span_dyn = jnp.maximum(sp - s3, 1e-20)
+    parameter = jnp.clip(gap_dyn / safe_span_dyn, 0.0, 1.0 - eps_val)
     sn, _, _ = jacobi_sn_cn_dn(psi, parameter)
     spin_sq = sp + (sm - sp) * sn * sn
     beta = msa_opening_angle(l_pn, eta, c1, sav_sq, spin_sq)
@@ -602,6 +654,48 @@ def evaluate_msa_dynamics(
     if return_averages:
         return alpha, beta, -epsilon, valid, sav_sq, s1_ell_avg, s2_ell_avg
     return alpha, beta, -epsilon, valid
+
+
+def compute_msa_initialization_validity(
+    v0: jnp.ndarray,
+    m1: jnp.ndarray,
+    m2: jnp.ndarray,
+    s1x: jnp.ndarray,
+    s1y: jnp.ndarray,
+    s1z: jnp.ndarray,
+    s2x: jnp.ndarray,
+    s2y: jnp.ndarray,
+    s2z: jnp.ndarray,
+) -> jnp.ndarray:
+    """Return the published two-spin MSA initialization-validity mask."""
+    (v0, m1, m2, s1x, s1y, s1z, s2x, s2y, s2z) = jnp.broadcast_arrays(
+        v0, m1, m2, s1x, s1y, s1z, s2x, s2y, s2z
+    )
+    total_mass = m1 + m2
+    m1_norm, m2_norm = m1 / total_mass, m2 / total_mass
+    eta = m1_norm * m2_norm
+    delta = m1_norm - m2_norm
+    q_c = m2_norm / m1_norm
+    s1 = jnp.expand_dims(m1_norm**2, -1) * jnp.stack(
+        (s1x, s1y, s1z), axis=-1
+    )
+    s2 = jnp.expand_dims(m2_norm**2, -1) * jnp.stack(
+        (s2x, s2y, s2z), axis=-1
+    )
+    s1_sq = (s1 * s1).sum(axis=-1)
+    s2_sq = (s2 * s2).sum(axis=-1)
+    s0_sq = ((s1 + s2) ** 2).sum(axis=-1)
+    xi = (1.0 + q_c) * s1[..., 2] + (1.0 + 1.0 / q_c) * s2[..., 2]
+    l0 = eta / v0
+    j0_sq = l0 * l0 + 2.0 * l0 * (s1[..., 2] + s2[..., 2]) + s0_sq
+    _, sm_sq, sp_sq, roots_valid = solve_spin_roots(
+        l0, j0_sq, s1_sq, s2_sq, xi, q_c, eta, delta
+    )
+    sav0_sq = (sp_sq + sm_sq) / 2.0
+    c10 = v0 * (j0_sq - l0 * l0 - sav0_sq) / 2.0
+    cp0 = eta * eta * sp_sq - c10 * c10
+    cm0 = eta * eta * sm_sq - c10 * c10
+    return roots_valid & (s1_sq > 0) & (s2_sq > 0) & (cp0 > 0) & (cm0 > 0)
 
 
 def compute_msa_averaged_couplings(
@@ -660,7 +754,31 @@ def compute_msa_final_spin(
     s2y: jnp.ndarray,
     s2z: jnp.ndarray,
 ) -> jnp.ndarray:
-    """Return the signed Kerr parameter from the published MSA remnant path."""
+    """Return the signed Kerr parameter from the published MSA remnant path.
+
+    Nonaligned equal-mass and genuinely invalid-root rows are outside this
+    prescription.  Eager calls raise ``ValueError``; traced/JIT execution
+    reports the same diagnostic through JAX's compiled callback error.
+    """
+    final_spin, unsupported = _compute_msa_final_spin_with_domain(
+        v0, m1, m2, s1x, s1y, s1z, s2x, s2y, s2z
+    )
+    _enforce_msa_final_spin_domain(unsupported)
+    return final_spin
+
+
+def _compute_msa_final_spin_with_domain(
+    v0: jnp.ndarray,
+    m1: jnp.ndarray,
+    m2: jnp.ndarray,
+    s1x: jnp.ndarray,
+    s1y: jnp.ndarray,
+    s1z: jnp.ndarray,
+    s2x: jnp.ndarray,
+    s2y: jnp.ndarray,
+    s2z: jnp.ndarray,
+) -> Tuple[jnp.ndarray, jnp.ndarray]:
+    """Evaluate the remnant and its unsupported-domain mask without effects."""
     from jaxwave.approximants.imrphenom_xas import XASParameterFits
 
     (v0, m1, m2, s1x, s1y, s1z, s2x, s2y, s2z) = jnp.broadcast_arrays(
@@ -682,6 +800,15 @@ def compute_msa_final_spin(
     sav_sq, s1_l_avg, s2_l_avg, valid = compute_msa_averaged_couplings(
         v0, m1, m2, s1x, s1y, s1z, s2x, s2y, s2z
     )
+    inplane_sq = s1x * s1x + s1y * s1y + s2x * s2x + s2y * s2y
+    eps = jnp.finfo(v0.dtype).eps
+    numerical_degeneracy = inplane_sq <= 10.0 * eps * (
+        1.0 + s1z * s1z + s2z * s2z
+    )
+    aligned = (s1x == 0) & (s1y == 0) & (s2x == 0) & (s2y == 0)
+    unsupported = ((m1 == m2) & (~aligned)) | ((~valid) & (~numerical_degeneracy))
+    fallback = numerical_degeneracy
+
     a_parallel = a_aligned
     m_final = m_final_fit
     s_parallel = s1_l_avg + s2_l_avg
@@ -690,10 +817,7 @@ def compute_msa_final_spin(
     magnitude = jnp.sqrt(jnp.maximum(s_fin_sq, 0.0)) / (m_final**2)
     signed = jnp.where(a_parallel < 0.0, -magnitude, magnitude)
 
-    inplane_sq = s1x * s1x + s1y * s1y + s2x * s2x + s2y * s2y
-    eps = jnp.finfo(v0.dtype).eps
-    numerical_degeneracy = inplane_sq <= 10.0 * eps * (1.0 + s1z * s1z + s2z * s2z)
-    return jnp.where(numerical_degeneracy, a_aligned, signed)
+    return jnp.where(fallback, a_aligned, signed), unsupported
 
 
 def evaluate_msa_precession(
@@ -822,7 +946,7 @@ def evaluate_msa_precession(
             l_dyn,
             anchor_reference=convention not in (5, 7),
         )
-        fallback_to_nnlo = ~roots_valid
+        fallback_to_nnlo = (~roots_valid) | (jnp.abs(delta) < 1e-12) | (jnp.abs(1.0 - q_c) < 1e-12)
     else:
         fallback_to_nnlo = jnp.ones_like(eta, dtype=bool)
         alpha_msa_dyn = gamma_msa_dyn = beta_msa = jnp.zeros_like(v)
@@ -992,6 +1116,7 @@ __all__ = [
     "solve_spin_roots",
     "evaluate_msa_dynamics",
     "compute_msa_averaged_couplings",
+    "compute_msa_initialization_validity",
     "compute_msa_final_spin_squared",
     "compute_msa_final_spin",
     "evaluate_msa_precession",

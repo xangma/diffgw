@@ -19,7 +19,7 @@ versioned definitions and their component evidence.
 | **Precessing IMR** | `IMRPhenomP` / `Pv2`<br>`IMRPhenomXP`<br>`IMRPhenomXPHM` | $(2,\pm 2)$ twisted<br>$(2,\pm 2)$ twisted<br>Multipolar twisted | Generic 3D spins with NNLO PN precession angles & Wigner $d$-matrices<br>4th-gen precessing carrier with MSA analytical precession<br>Multipolar precession supporting MSA (`v223`), SpinTaylor (`v320`), and PNR (`v330`) |
 | **Tidal & Matter** | `IMRPhenomD_NRTidal`<br>`IMRPhenomD_NRTidalv2`<br>`IMRPhenomNSBH` | $(2,2)$<br>$(2,2)$<br>$(2,2)$ | Dietrich et al. (2017) rational Padé BNS tidal phasing (NRTidal v1)<br>Dietrich et al. (2019) NRTidal v2 with self-spin & Planck windowing<br>Neutron star–black hole model with tidal disruption & remnant torus |
 | **Effective-One-Body** | `SEOBNR_ROM` / `SEOBNRv4_ROM` | $(2,2)$ | External SEOBNRv4 ROM data with a native Torch/JAX evaluator |
-| **Ringdown & Bursts** | `KerrRingdown`<br>`SineGaussian`<br>`MemoryWaveform` | $(2,2,0), (l,m,n)$<br>Burst packet<br>$(2,0)$ | Damped sinusoids from Kerr quasinormal modes (time & frequency domain)<br>Standard unmodeled sine-Gaussian burst wavelet<br>Non-linear Christodoulou gravitational-wave memory effect $h_{20}^{\text{mem}}(t)$ |
+| **Ringdown & Bursts** | `KerrRingdown`<br>`SineGaussian`<br>`MemoryWaveform` | $(2,2,0), (l,m,n)$<br>Burst packet<br>Supplied $(2,\pm2)$ modes | Damped sinusoids from Kerr quasinormal modes (time & frequency domain)<br>Standard unmodeled sine-Gaussian burst wavelet<br>[Versioned dominant-pair direct-class memory](math/memory-dominant-22-direct-class.md) through `evaluate_22`; the older polarization-only carrier is diagnostic |
 | **Specialized Models** | `ContinuousWave`<br>`EMRIKludge`<br>`ParameterizedPostEinstein` | Monochromatic<br>Multi-harmonic<br>Modified phasing | Continuous waves from triaxial rotating neutron stars with Doppler modulation<br>Extreme mass ratio inspirals (LISA) with Kerr geodesic orbital frequencies<br>Model-independent testing of General Relativity ($\beta_{\rm ppE}, b_{\rm ppE}$) |
 | **Time-Domain Tools** | `get_td_waveform`<br>`HybridMECO` | Supported FD models<br>Diagnostic | FFT conditioning and time-domain waveform generation<br>Minimum Energy Circular Orbit hybrid velocity & frequency root solver |
 
@@ -89,8 +89,15 @@ models and settings; that is a measurement scope, not the full supported catalog
 - **Model-specific reference agreement:** [Differences from LAL](differences_from_lal.md#model-specific-differences)
   records configurations, deliberate differences and unresolved discrepancies,
   including XP's precession, final-spin and reference-phase choices. Independent
-  full-waveform validation of `TaylorF2_HM` remains incomplete. ROM evidence applies to the
-  selected asset. The [T-family report](validation/phenomt.md) is a separate record.
+  all-eight leading amplitudes for `TaylorF2_HM` agree with a checksum-pinned
+  author supplement. Its signed leading terms, nonspinning phase, and Eq. (11)
+  normalization also agree for an all-eight unwindowed complex raw-mode slice
+  with `f_ref=None`. Exact external all-eight complex-waveform parity remains
+  unprovable because that symbolic asset is parsed by this project and does not
+  independently generate the aligned-spin, projection, reference-frequency,
+  and cutoff contract. Physical validation remains unavailable.
+  ROM evidence applies to the selected asset. The [T-family report](validation/phenomt.md)
+  is a separate record.
 - **Derivatives:** [derivative support and evidence](validation.md#derivative-support-and-evidence)
   states the checked parameters, derivative orders and restrictions. Waveform-value
   agreement and framework autodiff do not establish derivative accuracy.

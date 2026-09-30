@@ -37,8 +37,14 @@ class MathReferenceGate:
 
     def __init__(self, config):
         self.config = config
-        self.files = {path.relative_to(config.rootpath).as_posix()
-                      for path in (Path(config.rootpath) / "tests").glob("test_*math_reference*.py")}
+        tests_path = Path(config.rootpath) / "tests"
+        required_paths = (
+            *tests_path.glob("test_*math_reference*.py"),
+            *tests_path.glob("test_nsbh_*reference.py"),
+            *tests_path.glob("test_emri_*reference.py"),
+            *tests_path.glob("test_xp_msa_remnant_boundary_policy.py"),
+        )
+        self.files = {path.relative_to(config.rootpath).as_posix() for path in required_paths}
         self.selected = set()
         self.passed = set()
         self.disallowed = set()

@@ -13,6 +13,7 @@ from typing import Dict, Optional, Tuple, Union
 import torch
 import torch.nn as nn
 import math
+from diffgw_core import phenomd_published_fits as _published
 
 from torchwave.constants import (
     C_SI,
@@ -59,16 +60,19 @@ _TABLE_V_KEYS = (
     "alpha1", "alpha2", "alpha3", "alpha4", "alpha5",
 )
 _TABLE_V_MATRIX_DATA = tuple(TABLE_V_COEFFS[k] for k in _TABLE_V_KEYS)
-_TABLE_V_CACHE: Dict[Tuple[str, torch.dtype], torch.Tensor] = {}
+_TABLE_V_PUBLISHED_MATRIX_DATA = tuple(_published.TABLE_V_COEFFS[k] for k in _TABLE_V_KEYS)
+_TABLE_V_CACHE: Dict[Tuple[str, torch.dtype, str], torch.Tensor] = {}
 
 
-def _get_table_v_matrix(device: torch.device, dtype: torch.dtype) -> torch.Tensor:
+def _get_table_v_matrix(device: torch.device, dtype: torch.dtype, calibration: str = "inherited") -> torch.Tensor:
     # Use string representation of device so 'cuda:0' matches 'cuda'
-    key = (str(device), dtype)
+    _published.validate_calibration(calibration)
+    key = (str(device), dtype, calibration)
     mat = _TABLE_V_CACHE.get(key)
     if mat is None:
         with torch.inference_mode(False):
-            mat = torch.tensor(_TABLE_V_MATRIX_DATA, device=device, dtype=dtype)
+            data = _TABLE_V_PUBLISHED_MATRIX_DATA if calibration == "published" else _TABLE_V_MATRIX_DATA
+            mat = torch.tensor(data, device=device, dtype=dtype)
         _TABLE_V_CACHE[key] = mat
     return mat
 
@@ -100,9 +104,10 @@ class IMRPhenomD(nn.Module):
         return torch.abs(f_rd + f_damp * gamma3 * offset)
 
     @staticmethod
-    def eval_table_v(name: str, eta: torch.Tensor, chi_pn: torch.Tensor) -> torch.Tensor:
+    def eval_table_v(name: str, eta: torch.Tensor, chi_pn: torch.Tensor, *, calibration: str = "inherited") -> torch.Tensor:
         """Evaluate hierarchical polynomial mapping (Eq. 31 of Khan et al. 2016)."""
-        c = TABLE_V_COEFFS[name]
+        _published.validate_calibration(calibration)
+        c = (_published.TABLE_V_COEFFS if calibration == "published" else TABLE_V_COEFFS)[name]
         eta2 = eta * eta
         x = chi_pn - 1.0
         x2 = x * x
@@ -117,7 +122,7 @@ class IMRPhenomD(nn.Module):
         return poly
 
     @staticmethod
-    def eval_all_table_v(eta: torch.Tensor, chi_pn: torch.Tensor) -> Tuple[torch.Tensor, ...]:
+    def eval_all_table_v(eta: torch.Tensor, chi_pn: torch.Tensor, *, calibration: str = "inherited") -> Tuple[torch.Tensor, ...]:
         """Evaluate all 18 hierarchical polynomial mappings simultaneously via GEMM."""
         x = chi_pn - 1.0
         eta2 = eta * eta
@@ -129,7 +134,7 @@ class IMRPhenomD(nn.Module):
             x2, x2 * eta, x2 * eta2,
             x3, x3 * eta, x3 * eta2,
         ], dim=-1)
-        matrix = _get_table_v_matrix(eta.device, eta.dtype)
+        matrix = _get_table_v_matrix(eta.device, eta.dtype, calibration)
         res = features @ matrix.T
         return tuple(res[..., i] for i in range(18))
 
@@ -139,6 +144,8 @@ class IMRPhenomD(nn.Module):
         mass2: torch.Tensor,
         chi1: torch.Tensor,
         chi2: torch.Tensor,
+        *,
+        calibration: str = "inherited",
     ) -> Tuple[torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor]:
         """Compute final mass M_f, final spin a_f, QNM frequency f_RD, and damping width f_damp.
 
@@ -152,6 +159,7 @@ class IMRPhenomD(nn.Module):
             f_rd: Dimensionless ringdown frequency (M * f_RD)
             f_damp: Dimensionless ringdown damping frequency (M * f_damp)
         """
+        _published.validate_calibration(calibration)
         total_mass = mass1 + mass2
         eta = component_masses_to_eta(mass1, mass2)
         eta2 = eta * eta
@@ -163,9 +171,9 @@ class IMRPhenomD(nn.Module):
         s3 = s2 * s
         s4 = s3 * s
 
-        # Final spin fit (Husa et al. arXiv:1508.07250v2, Eq. 22) with inherited extra digits
-        p_eta = FINAL_SPIN_ETA_POLY
-        s_c = FINAL_SPIN_S_COEFFS
+        # Final spin fit (Husa et al. arXiv:1508.07250v2, Eq. 22) at the selected calibration precision
+        p_eta = _published.FINAL_SPIN_ETA_POLY if calibration == "published" else FINAL_SPIN_ETA_POLY
+        s_c = _published.FINAL_SPIN_S_COEFFS if calibration == "published" else FINAL_SPIN_S_COEFFS
         a_final = (
             s + p_eta[0] * eta + p_eta[1] * eta2 + p_eta[2] * eta3 + p_eta[3] * eta4
             + (s_c[0][0] * s + s_c[1][0] * s2 + s_c[2][0] * s3 + s_c[3][0] * s4) * eta
@@ -175,12 +183,12 @@ class IMRPhenomD(nn.Module):
         a_final = torch.clamp(a_final, -0.999, 0.999)
 
         # Radiated energy non-spinning fit
-        e_eta = ERAD_ETA_NUMERATOR
+        e_eta = _published.ERAD_ETA_NUMERATOR if calibration == "published" else ERAD_ETA_NUMERATOR
         erad_ns = e_eta[0] * eta + e_eta[1] * eta2 + e_eta[2] * eta3 + e_eta[3] * eta4
 
         # Radiated energy full fit (Husa et al. arXiv:1508.07250v2, Eqs. 23-24)
-        e_num = ERAD_S_NUMERATOR
-        e_den = ERAD_S_DENOMINATOR
+        e_num = _published.ERAD_S_NUMERATOR if calibration == "published" else ERAD_S_NUMERATOR
+        e_den = _published.ERAD_S_DENOMINATOR if calibration == "published" else ERAD_S_DENOMINATOR
         num = 1.0 + s_hat * (e_num[0] + e_num[1] * eta + e_num[2] * eta2)
         den = 1.0 + s_hat * (e_den[0] + e_den[1] * eta + e_den[2] * eta2)
         erad_over_m = erad_ns * (num / den)
@@ -309,8 +317,12 @@ class IMRPhenomD(nn.Module):
         chi2: Union[float, torch.Tensor] = 0.0,
         *,
         remnant_provider=None,
+        calibration: str = "inherited",
     ) -> torch.Tensor:
         """Paper merger-ringdown phase derivative dPsi/d(Mf) evaluated at f_peak."""
+        _published.validate_calibration(calibration)
+        if calibration == "published" and remnant_provider is not None:
+            raise ValueError("published calibration does not accept a remnant_provider override")
         # Preserve the waveform parameter precision.  Coercing batched
         # float32 inputs to as_tensor's float64 default promotes the batched
         # gauge term, while PyTorch keeps a 0-D scalar operand weak, so
@@ -339,15 +351,19 @@ class IMRPhenomD(nn.Module):
         eta = component_masses_to_eta(m1, m2)
         _, _, chi_pn, _ = spin_combinations(m1, m2, s1, s2)
 
-        gamma2 = IMRPhenomD.eval_table_v("gamma2", eta, chi_pn)
-        gamma3 = IMRPhenomD.eval_table_v("gamma3", eta, chi_pn)
-        alpha1_raw = IMRPhenomD.eval_table_v("alpha1", eta, chi_pn)
-        alpha2 = IMRPhenomD.eval_table_v("alpha2", eta, chi_pn)
-        alpha3 = IMRPhenomD.eval_table_v("alpha3", eta, chi_pn)
-        alpha4 = IMRPhenomD.eval_table_v("alpha4", eta, chi_pn)
-        alpha5 = IMRPhenomD.eval_table_v("alpha5", eta, chi_pn)
+        gamma2 = IMRPhenomD.eval_table_v("gamma2", eta, chi_pn, calibration=calibration)
+        gamma3 = IMRPhenomD.eval_table_v("gamma3", eta, chi_pn, calibration=calibration)
+        alpha1_raw = IMRPhenomD.eval_table_v("alpha1", eta, chi_pn, calibration=calibration)
+        alpha2 = IMRPhenomD.eval_table_v("alpha2", eta, chi_pn, calibration=calibration)
+        alpha3 = IMRPhenomD.eval_table_v("alpha3", eta, chi_pn, calibration=calibration)
+        alpha4 = IMRPhenomD.eval_table_v("alpha4", eta, chi_pn, calibration=calibration)
+        alpha5 = IMRPhenomD.eval_table_v("alpha5", eta, chi_pn, calibration=calibration)
 
-        m_final, a_final, f_rd, f_damp = (IMRPhenomD.remnant_properties if remnant_provider is None else remnant_provider)(m1, m2, s1, s2)
+        if remnant_provider is None:
+            m_final, a_final, f_rd, f_damp = IMRPhenomD.remnant_properties(
+                m1, m2, s1, s2, calibration=calibration)
+        else:
+            m_final, a_final, f_rd, f_damp = remnant_provider(m1, m2, s1, s2)
         f_peak = IMRPhenomD.amplitude_peak_frequency(f_rd, f_damp, gamma2, gamma3)
 
         atan_lorentz_peak = (alpha4 * f_damp) / (f_damp * f_damp + (f_peak - alpha5 * f_rd) ** 2)
@@ -377,6 +393,7 @@ class IMRPhenomD(nn.Module):
         return_phase: bool = False,
         *,
         remnant_provider=None,
+        calibration: str = "inherited",
     ) -> Union[Tuple[torch.Tensor, torch.Tensor], Tuple[torch.Tensor, torch.Tensor, torch.Tensor]]:
         """Generate frequency-domain polarizations (h_plus, h_cross) using IMRPhenomD.
 
@@ -395,10 +412,14 @@ class IMRPhenomD(nn.Module):
                 None retains the analytic amplitude up to the existing Mf=0.2 cutoff
             phasing_convention: Phasing convention ('coalescence' or 'reference_frequency')
             reference_frame: Alias for phasing_convention
+            calibration: "inherited" (default) or paper-precision "published" fits
 
         Returns:
             (h_plus, h_cross) complex tensors with shape (B, N_f) or (N_f,)
         """
+        _published.validate_calibration(calibration)
+        if calibration == "published" and remnant_provider is not None:
+            raise ValueError("published calibration does not accept a remnant_provider override")
         device = f.device
         dtype = f.dtype if f.is_floating_point() else torch.float64
 
@@ -424,10 +445,14 @@ class IMRPhenomD(nn.Module):
             sigma1, sigma2, sigma3, sigma4,
             beta2, beta3,
             alpha1_raw, alpha2, alpha3, alpha4, alpha5,
-        ) = IMRPhenomD.eval_all_table_v(eta, chi_pn)
+        ) = IMRPhenomD.eval_all_table_v(eta, chi_pn, calibration=calibration)
 
         # Remnant black hole properties & QNM frequencies
-        m_final, a_final, f_rd, f_damp = (IMRPhenomD.remnant_properties if remnant_provider is None else remnant_provider)(m1, m2, s1, s2)
+        if remnant_provider is None:
+            m_final, a_final, f_rd, f_damp = IMRPhenomD.remnant_properties(
+                m1, m2, s1, s2, calibration=calibration)
+        else:
+            m_final, a_final, f_rd, f_damp = remnant_provider(m1, m2, s1, s2)
 
         # Amplitude peak frequency (Khan et al. 2016, arXiv:1508.07253)
         f_peak = IMRPhenomD.amplitude_peak_frequency(f_rd, f_damp, gamma2, gamma3)

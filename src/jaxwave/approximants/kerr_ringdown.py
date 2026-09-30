@@ -246,54 +246,54 @@ def _angular_matrix(m: int, c: jnp.ndarray, ell_max: int) -> jnp.ndarray:
     return a0 - (c_bc**2) * x2 - 4.0 * c_bc * x
 
 
-def _cpu_eigvals_callback(mat):
-    return np.linalg.eigvals(mat).astype(np.complex128)
-
-
-def _cpu_eig_callback(mat):
-    vals, vecs = np.linalg.eig(mat)
-    return vals.astype(np.complex128), vecs.astype(np.complex128)
-
-
-def _safe_eigvals(mat: jnp.ndarray) -> jnp.ndarray:
-    shape_val = mat.shape[:-1]
-    res_struct = jax.ShapeDtypeStruct(shape_val, jnp.complex128)
-    return jax.pure_callback(_cpu_eigvals_callback, res_struct, mat)
-
-
-def _safe_eig(mat: jnp.ndarray) -> Tuple[jnp.ndarray, jnp.ndarray]:
-    shape_val = mat.shape[:-1]
-    shape_vec = mat.shape
-    res_val = jax.ShapeDtypeStruct(shape_val, jnp.complex128)
-    res_vec = jax.ShapeDtypeStruct(shape_vec, jnp.complex128)
-    return jax.pure_callback(_cpu_eig_callback, (res_val, res_vec), mat)
-
-
 def spheroidal_coefficients(
     ell: int, m: int, c: jnp.ndarray, *, ell_max: int = 18,
 ) -> Tuple[jnp.ndarray, jnp.ndarray]:
-    """Return separation constant A and unit-norm spherical coefficients."""
+    """Return separation constant A and unit-norm spherical coefficients.
+
+    Continue the requested spin-weighted spheroidal branch (s=-2) from c=0
+    using native inverse iteration. Static continuation and Rayleigh loops
+    support JIT, batching and reverse-mode differentiation with respect to
+    complex oblateness c and Kerr spin a.
+    """
     if ell < max(2, abs(m)) or ell_max < ell + 3:
         raise ValueError("Require ell >= max(2, |m|) and ell_max >= ell+3.")
     c = jnp.asarray(c, dtype=jnp.complex128)
+    orig_shape = c.shape
+    c_flat = c.reshape(-1)
+    n_dim = ell_max - max(2, abs(m)) + 1
+    idx0 = ell - max(2, abs(m))
 
-    previous = jnp.full_like(c, ell * (ell + 1) - 2)
-    for step in range(1, 8):
-        mat = _angular_matrix(m, c * (step / 8.0), ell_max)
-        values = _safe_eigvals(mat)
-        nearest = jnp.argmin(jnp.abs(values - jnp.expand_dims(previous, -1)), axis=-1)
-        previous = jnp.take_along_axis(values, jnp.expand_dims(nearest, -1), axis=-1).squeeze(-1)
+    # Initial basis vector: e_{idx0} with shape (batch, n_dim, 1)
+    v = jnp.zeros((c_flat.shape[0], n_dim, 1), dtype=jnp.complex128).at[:, idx0, 0].set(1.0)
+    eye = jnp.eye(n_dim, dtype=jnp.complex128)[None, :, :]
 
-    mat = _angular_matrix(m, c, ell_max)
-    values, vectors = _safe_eig(mat)
-    nearest = jnp.argmin(jnp.abs(values - jnp.expand_dims(previous, -1)), axis=-1)
-    a = jnp.take_along_axis(values, jnp.expand_dims(nearest, -1), axis=-1).squeeze(-1)
-    indices = jnp.expand_dims(nearest, (-1, -2))
-    indices = jnp.broadcast_to(indices, (*vectors.shape[:-1], 1))
-    coefficients = jnp.take_along_axis(vectors, indices, axis=-1).squeeze(-1)
-    anchor = coefficients[..., ell - max(2, abs(m))]
-    coefficients = coefficients * jnp.expand_dims(jnp.conj(anchor) / jnp.abs(anchor), -1)
-    return a, coefficients
+    sigma = jnp.full((c_flat.shape[0], 1, 1), ell * (ell + 1) - 2,
+                     dtype=jnp.complex128)
+
+    # A fixed spherical shift can converge to a neighboring ell branch when
+    # c moves its eigenvalue far enough. Carry the eigenpair along the same
+    # straight continuation path used to define the angular mode instead.
+    def continue_branch(state, fraction):
+        mat = _angular_matrix(m, c_flat * fraction, ell_max)
+
+        def rayleigh_iteration(_, eigenpair):
+            sigma, v = eigenpair
+            # The imaginary offset keeps solves finite at an exact eigenpair.
+            v = jnp.linalg.solve(mat - (sigma + 1e-5j) * eye, v)
+            v = v / jnp.linalg.norm(v, axis=1, keepdims=True)
+            sigma = jnp.swapaxes(jnp.conj(v), -1, -2) @ mat @ v
+            return sigma, v
+
+        return jax.lax.fori_loop(0, 4, rayleigh_iteration, state), None
+
+    (sigma, v), _ = jax.lax.scan(
+        continue_branch, (sigma, v), jnp.arange(1, 9, dtype=jnp.float64) / 8.0)
+
+    anchor = v[:, idx0, 0]
+    phase = (jnp.conj(anchor) / jnp.abs(anchor))[:, None, None]
+    v = v * phase
+    return sigma.reshape(orig_shape), v.squeeze(-1).reshape(orig_shape + (n_dim,))
 
 
 def spin_weighted_spherical_harmonic(
@@ -333,6 +333,7 @@ def _ringdown_projection(l, m, c, inclination, phi, angular_basis):
         return _swsh_projection_coefficients(l, m, inclination, phi)
     if angular_basis != "spheroidal":
         raise ValueError("angular_basis must be 'spherical' or 'spheroidal'")
+    c = jnp.asarray(c)
     theta = jnp.stack((inclination, PI - inclination), axis=-1)
     c_exp = jnp.expand_dims(c, -1) if c.ndim > 0 else c
     phi_exp = jnp.expand_dims(phi, -1) if hasattr(phi, "ndim") and phi.ndim > 0 else phi

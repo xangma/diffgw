@@ -1,0 +1,109 @@
+{
+  "schema_version": 1,
+  "date": "2026-09-25",
+  "base_revision": "4814835f7744fe00a5863ed70eb590d41a7e3ac3",
+  "scope": "Independent TaylorF2_HM numerical oracle for the combined aligned-spin, reference-frequency, and Schwarzschild per-mode-cutoff waveform",
+  "search_policy": {
+    "lal_implementation_source_inspected": false,
+    "lal_implementation_details_translated": false,
+    "lal_outputs_fitted": false,
+    "production_or_scalar_reference_outputs_fitted": false,
+    "github_code_queries": [
+      "\"TaylorF2_HM\" in:file",
+      "\"TaylorF2HM\" in:file",
+      "\"TF28Phasing\" in:file",
+      "\"supl-mkaf16.m\" in:file"
+    ],
+    "github_external_exact_name_matches": 0
+  },
+  "required_coverage": {
+    "modes": ["22", "21", "31", "32", "33", "42", "43", "44"],
+    "amplitude_scope": "leading nonspinning amplitude of each mode",
+    "phase_scope": "declared aligned-spin TaylorF2 phase, including an identified native spin_order recipe",
+    "phase_origin": "arbitrary finite f_ref with the 2*f/m map",
+    "cutoff": "per-mode Schwarzschild ISCO hard mask, including the retained equality bin",
+    "comparison": "unaligned complex per-mode and summed h_plus/h_cross values",
+    "fp64_normalized_complex_error_max": 4e-10,
+    "masked_bins": "exact zero"
+  },
+  "candidates": [
+    {
+      "name": "Mishra et al. author supplement",
+      "url": "https://export.arxiv.org/e-print/1601.05588v1",
+      "bundle_sha256": "f0b6c6810da95f45141dbb9f0c5cccec0ba0742f60b836dba7698c90a25d5154",
+      "member": "supl-mkaf16.m",
+      "member_sha256": "501ea53c29b77e061585540b9ccfd69a4cd0283e805ea1e9c24c38800e627a70",
+      "license_record": "arXiv non-exclusive distribution license; no software reuse license established",
+      "covers": [
+        "symbolic H[l,m] definitions for all required modes",
+        "symbolic aligned-spin TF28Phasing",
+        "harmonic Theta[-f + k*Fcut] factors in the separate full-PN Ckn polarization expansion"
+      ],
+      "missing_or_incompatible": [
+        "no numerical complex waveform series",
+        "no arbitrary f_ref input or reference-frequency subtraction",
+        "default spin_order=7 omits the supplement's cubic-spin v^7 term",
+        "spin_order=8 additionally requires the Pratten et al. quadratic-spin v^7 term absent from the supplement",
+        "Ckn is a full-PN polarization expansion, not the declared leading-amplitude raw-mode carrier",
+        "the native per-mode hard cutoff is a project truncation rather than a source amplitude"
+      ],
+      "qualifies": false
+    },
+    {
+      "name": "CosmoStatGW/WF4Py TaylorF2_RestrictedPN",
+      "url": "https://github.com/CosmoStatGW/WF4Py",
+      "revision": "38c5436a243a84a9700d760f9fb3c8abca6ff7ac",
+      "license": "GPL-3.0",
+      "covers": ["dominant restricted TaylorF2 polarization", "aligned-spin phasing", "Schwarzschild or Kerr terminal frequency"],
+      "missing_or_incompatible": ["no resolved higher modes", "no arbitrary waveform f_ref", "no native per-mode cutoff contract"],
+      "qualifies": false
+    },
+    {
+      "name": "CosmoStatGW/gwfast TaylorF2_RestrictedPN",
+      "url": "https://github.com/CosmoStatGW/gwfast",
+      "revision": "8488749e769702724910c4728b71ae2bc7427ce9",
+      "license": "GPL-3.0",
+      "covers": ["dominant restricted TaylorF2 polarization", "aligned-spin phasing", "Schwarzschild or Kerr terminal frequency"],
+      "missing_or_incompatible": ["no resolved higher modes", "no arbitrary waveform f_ref", "no native per-mode cutoff contract"],
+      "qualifies": false
+    },
+    {
+      "name": "LALSuite public TaylorF2 binary API",
+      "url": "https://lscsoft.docs.ligo.org/lalsuite/lalsimulation/group___l_a_l_sim_inspiral__h.html",
+      "version_checked_elsewhere": "7.26.15",
+      "covers": ["one frequency-domain TaylorF2 carrier", "public spin-weighted harmonics"],
+      "missing_or_incompatible": ["no public frequency-domain TaylorF2 mode generator", "no all-eight raw-mode output"],
+      "qualifies": false
+    }
+  ],
+  "paper_benchmark_decision": {
+    "derived_fixture_added": false,
+    "reason": "Adding finite-f_ref subtraction, selecting a native spin recipe, importing the separate SS7 term when requested, projecting the leading modes, and applying the native cutoff would make the expected series a new project-authored composition of the same equations already exercised by the independent scalar reference. Freezing those outputs would improve reproducibility but not source independence, so it cannot close the external numerical-oracle gate."
+  },
+  "closure_contract": {
+    "acceptable_release": "A checksum-pinned, suitably licensed author or independently maintained executable, or a published numerical table with sufficient precision",
+    "required_manifest": [
+      "all binary parameters, distance, inclination, phi0, phic, tc, and nonzero aligned spins",
+      "explicit Fourier, tetrad, raw-mode-label, and phase-origin conventions",
+      "the exact aligned-spin term set and arbitrary finite f_ref",
+      "all eight complex modes or both complex polarizations for every mode contribution and their sum",
+      "frequencies below, exactly at, and above every mode cutoff"
+    ],
+    "test_rule": "Compare bins directly with no time, phase, amplitude, or frequency alignment; require the stated FP64 normalized complex threshold and exact masked zeros in both Torch and JAX."
+  },
+  "verification": {
+    "host": "len (Linux x86_64)",
+    "python": "3.12.3",
+    "packages": {
+      "torch": "2.14.0+cpu",
+      "jax": "0.11.2",
+      "jaxlib": "0.11.2"
+    },
+    "commands": [
+      "python scripts/generate_waveform_library_table.py --check",
+      "python -m pytest -q -ra tests/test_taylorf2_hm_author_supplement_math_reference.py tests/test_taylorf2_hm_math_reference.py tests/test_taylorf2_hm_paper_math_reference.py tests/test_oracle_ci.py"
+    ],
+    "result": "waveform-library table current; 35 passed in 23.96s"
+  },
+  "verdict": "UNRESOLVED_ORACLE"
+}

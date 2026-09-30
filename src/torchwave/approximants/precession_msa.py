@@ -21,6 +21,12 @@ from torchwave.constants import PI, EULER_GAMMA
 from torchwave.approximants.imrphenomp import IMRPhenomP
 
 
+MSA_FINAL_SPIN_DOMAIN_ERROR = (
+    "MSA final_spin_mod=3 requires a valid nonaligned MSA remnant root; "
+    "use final_spin_mod=0 for equal-mass or coalescing-root rows."
+)
+
+
 def resolve_precession_version(method: str, version: Optional[int]) -> int:
     """An explicit version takes precedence; method chooses an omitted version."""
     method_l = method.lower()
@@ -66,7 +72,9 @@ def elliptic_f(phi: torch.Tensor, parameter: torch.Tensor) -> torch.Tensor:
     s = torch.sin(phi)
     x, y, z = torch.broadcast_tensors(torch.cos(phi).square(), 1-parameter*s*s, torch.ones_like(s))
     for _ in range(12):
-        root_x, root_y, root_z = torch.sqrt(x), torch.sqrt(y), torch.sqrt(z)
+        root_x = torch.sqrt(torch.clamp(x, min=1e-24))
+        root_y = torch.sqrt(torch.clamp(y, min=1e-24))
+        root_z = torch.sqrt(torch.clamp(z, min=1e-24))
         lam = root_x*root_y + root_x*root_z + root_y*root_z
         x, y, z = (x+lam)/4, (y+lam)/4, (z+lam)/4
     mean = (x+y+z)/3
@@ -129,21 +137,27 @@ def msa_nutation_phase(v, v0, eta, delta, q, xi, c1, sav_sq, s1_sq, s2_sq, psi_r
     root's v^-2, v^-1, v^0 terms. Expanding Eq. 50 then integrating gives
     the published 1PN phase, avoiding cancellation-prone nested C3 factors.
     """
-    b2 = eta*delta*delta
-    b1 = 2*eta*xi-4*c1
-    b0 = s1_sq*(q-1)+s2_sq*(1/q-1)-2*sav_sq
-    c2 = 4*c1*c1-4*eta*xi*c1+4*eta**3*xi*xi-2*b2*(s1_sq+s2_sq)
-    d2 = 4*(1-q)/q*(s2_sq-q*s1_sq)*c1*c1+b2*(s1_sq-s2_sq)**2+4*delta*eta*xi*(s1_sq-s2_sq)*c1
-    root_sum, root_product = -c2/b2, d2/b2
-    finite_plus = (root_sum+torch.sqrt(torch.clamp(root_sum*root_sum-4*root_product, min=0.)))/2
-    sqrt1 = b1/(2*b2)
-    sqrt2 = (finite_plus+b0+root_sum)/(2*b2)-b1*b1/(8*b2*b2)
-    psi1 = 1.5*(sqrt1-xi)
-    psi2 = 3*(sqrt2-xi*sqrt1+743/336+11*eta/4)
-    g0 = 5/(96*eta)
+    is_zero_delta = delta.abs() < 1e-12
+    safe_delta = torch.where(is_zero_delta, torch.ones_like(delta), delta)
+    safe_b2 = torch.clamp(eta * safe_delta * safe_delta, min=1e-24)
+    b1 = 2 * eta * xi - 4 * c1
+    b0 = s1_sq * (q - 1) + s2_sq * (1 / q - 1) - 2 * sav_sq
+    c2 = 4 * c1 * c1 - 4 * eta * xi * c1 + 4 * eta**3 * xi * xi - 2 * safe_b2 * (s1_sq + s2_sq)
+    d2 = 4 * (1 - q) / q * (s2_sq - q * s1_sq) * c1 * c1 + safe_b2 * (s1_sq - s2_sq)**2 + 4 * safe_delta * eta * xi * (s1_sq - s2_sq) * c1
+    root_sum, root_product = -c2 / safe_b2, d2 / safe_b2
+    finite_plus = (root_sum + torch.sqrt(torch.clamp(root_sum * root_sum - 4 * root_product, min=0.))) / 2
+    sqrt1 = b1 / (2 * safe_b2)
+    sqrt2 = (finite_plus + b0 + root_sum) / (2 * safe_b2) - b1 * b1 / (8 * safe_b2 * safe_b2)
+    psi1 = 1.5 * (sqrt1 - xi)
+    psi2 = 3 * (sqrt2 - xi * sqrt1 + 743 / 336 + 11 * eta / 4)
+    g0 = 5 / (96 * eta)
+
     def phase(x):
-        return -3*g0*delta/4*(x**-3+psi1*x**-2+psi2/x)
-    return psi_ref+phase(v)-phase(v0)
+        return -3 * g0 * safe_delta / 4 * (x**-3 + psi1 * x**-2 + psi2 / x)
+
+    total_phase = phase(v) - phase(v0)
+    delta_psi = torch.where(is_zero_delta, torch.zeros_like(total_phase), total_phase)
+    return psi_ref + delta_psi
 
 
 def msa_opening_angle(l, eta, c1, sav_sq, spin_sq):
@@ -169,37 +183,48 @@ def msa_oscillatory_angles(v, j, l, xi, eta, s1_sq, s2_sq, delta,
     Eq. F19. Their psi derivatives equal (Omega-<Omega>)/psi_dot, for both
     Euler angles, including the J factor in Eq. 30.
     """
-    gap = sp_sq-sm_sq
-    d0 = 4*j*j*l*l-(j*j+l*l-sp_sq)**2
-    d2 = -2*gap*(j*j+l*l-sp_sq)
-    d4 = -gap*gap
-    c0 = 3/4*(1-xi*v)*v*v*(eta**3+4*eta**3*xi*v
-        -2*eta*(j*j-sp_sq+2*(s1_sq-s2_sq)*delta)*v*v
-        -4*eta*xi*(j*j-sp_sq)*v**3+(j*j-sp_sq)**2/eta*v**4)
-    c2 = -1.5*eta*gap*(1+2*xi*v-(j*j-sp_sq)/eta**2*v*v)*(1-xi*v)*v**4
-    quotient = -3/(4*eta)*(1-xi*v)*v**6  # c4/d4, regular at gap=0
-    disc = torch.sqrt(torch.clamp(d2*d2-4*d0*d4, min=torch.finfo(v.dtype).tiny))
+    gap = sp_sq - sm_sq
+    is_small_gap = gap.abs() < 1e-15
+    safe_gap = torch.where(is_small_gap, torch.full_like(gap, 1e-10), gap)
+    d0 = 4 * j * j * l * l - (j * j + l * l - sp_sq)**2
+    safe_d0 = torch.clamp(d0, min=1e-20)
+    d2 = -2 * safe_gap * (j * j + l * l - sp_sq)
+    d4 = -safe_gap * safe_gap
+    c0 = 3 / 4 * (1 - xi * v) * v * v * (eta**3 + 4 * eta**3 * xi * v
+        - 2 * eta * (j * j - sp_sq + 2 * (s1_sq - s2_sq) * delta) * v * v
+        - 4 * eta * xi * (j * j - sp_sq) * v**3 + (j * j - sp_sq)**2 / eta * v**4)
+    c2 = -1.5 * eta * safe_gap * (1 + 2 * xi * v - (j * j - sp_sq) / eta**2 * v * v) * (1 - xi * v) * v**4
+    quotient = -3 / (4 * eta) * (1 - xi * v) * v**6  # c4/d4, regular at gap=0
+    disc = torch.sqrt(torch.clamp(d2 * d2 - 4 * safe_d0 * d4, min=1e-24))
     # D(s)=d0(1-lambda_c*s)(1-lambda_d*s).
-    lambda_c = (-d2+disc)/(2*d0)
-    lambda_d = (-d2-disc)/(2*d0)
-    rem0, rem1 = c0/d0-quotient, c2/d0-quotient*d2/d0
-    residue_c = (-rem1-rem0*lambda_c)/(lambda_d-lambda_c)
-    residue_d = rem0-residue_c
+    lambda_c = (-d2 + disc) / (2 * safe_d0)
+    lambda_d = (-d2 - disc) / (2 * safe_d0)
+    rem0, rem1 = c0 / safe_d0 - quotient, c2 / safe_d0 - quotient * d2 / safe_d0
+    diff_lam = lambda_d - lambda_c
+    safe_diff_lam = torch.where(is_small_gap, torch.ones_like(diff_lam), diff_lam)
+    residue_c = (-rem1 - rem0 * lambda_c) / safe_diff_lam
+    residue_d = rem0 - residue_c
     sinp, cosp = torch.sin(psi), torch.cos(psi)
+
     def periodic_primitive(lam):
-        root = torch.sqrt(torch.clamp(1-lam, min=torch.finfo(v.dtype).eps))
+        root = torch.sqrt(torch.clamp(1 - lam, min=torch.finfo(v.dtype).eps))
         # atan(k*tan(psi))-psi, continuously wrapped into (-pi/2,pi/2).
-        return torch.atan2((root-1)*sinp*cosp, cosp*cosp+root*sinp*sinp)/root
+        return torch.atan2((root - 1) * sinp * cosp, cosp * cosp + root * sinp * sinp) / root
+
     primitive_c, primitive_d = periodic_primitive(lambda_c), periodic_primitive(lambda_d)
-    psi_dot = 3/(4*torch.sqrt(eta))*(1-xi*v)*v**6*torch.sqrt(torch.clamp(sp_sq-s3_sq, min=torch.finfo(v.dtype).tiny))
-    alpha = j/psi_dot*(residue_c*primitive_c+residue_d*primitive_d)
-    a_theta = (j*j+l*l-sp_sq)/(2*j*l)
-    b_theta = gap/(2*j*l)
+    psi_dot = 3 / (4 * torch.sqrt(eta)) * (1 - xi * v) * v**6 * torch.sqrt(torch.clamp(sp_sq - s3_sq, min=torch.finfo(v.dtype).tiny))
+    alpha = j / psi_dot * (residue_c * primitive_c + residue_d * primitive_d)
+    a_theta = (j * j + l * l - sp_sq) / (2 * j * l)
+    b_theta = safe_gap / (2 * j * l)
+    safe_lam_c = torch.where(is_small_gap, torch.ones_like(lambda_c), lambda_c)
+    safe_lam_d = torch.where(is_small_gap, torch.ones_like(lambda_d), lambda_d)
     # Btheta/lambda has a finite gap->0 limit. This function is used only
     # for nondegenerate roots; degenerate initializations select NNLO.
-    epsilon = j/psi_dot*(residue_c*(a_theta+b_theta/lambda_c)*primitive_c
-        +residue_d*(a_theta+b_theta/lambda_d)*primitive_d
-        -b_theta*v**6/8*sinp*cosp*2)
+    epsilon = j / psi_dot * (residue_c * (a_theta + b_theta / safe_lam_c) * primitive_c
+        + residue_d * (a_theta + b_theta / safe_lam_d) * primitive_d
+        - b_theta * v**6 / 8 * sinp * cosp * 2)
+    alpha = torch.where(is_small_gap, torch.zeros_like(alpha), alpha)
+    epsilon = torch.where(is_small_gap, torch.zeros_like(epsilon), epsilon)
     return alpha, epsilon
 
 
@@ -306,7 +331,7 @@ def solve_spin_roots(
     r_val = torch.sqrt(safe_p_third)
     r3 = r_val ** 3
 
-    cos_3theta = torch.clamp(-qc_dep / (2.0 * r3 + 1e-30), -1.0 + 1e-15, 1.0 - 1e-15)
+    cos_3theta = torch.clamp(-qc_dep / (2.0 * r3 + 1e-30), -1.0 + 1e-14, 1.0 - 1e-14)
     theta = torch.acos(cos_3theta) / 3.0
 
     z0 = 2.0 * r_val * torch.cos(theta) - b_coeff / 3.0
@@ -320,10 +345,12 @@ def solve_spin_roots(
     sm_sq = sorted_roots[..., 1]
     sp_sq = sorted_roots[..., 2]
 
-    # Repeated roots cannot be distinguished from a cubic's roundoff-sized
-    # discriminant. Use a scale-dependent error bound, not an absolute spin
-    # or mass-ratio cutoff. Such initializations select the documented NNLO
-    # fallback in versions 220/223.
+    sm_sq = torch.maximum(sm_sq, s3_sq)
+    sp_sq = torch.maximum(sp_sq, sm_sq)
+
+    # Resolve the discriminant, turning-root gap and unequal-mass denominators
+    # above their roundoff scales. Unresolved initializations select the
+    # documented NNLO angle fallback in versions 220/223.
     disc = (safe_p_third ** 3) - (qc_dep / 2.0) ** 2
     eps = torch.finfo(l0.dtype).eps
     root_scale = torch.maximum(torch.abs(b_coeff), torch.sqrt(torch.abs(c_coeff)))
@@ -386,14 +413,20 @@ def evaluate_msa_dynamics(v, v0, eta, delta, q_c, s1, s2, l_pn,
     a0 = 96.0 * eta / 5.0
     a2 = -743.0 / 336.0 - 2.75 * eta
 
+    is_eq = (delta.abs() < 1e-12) | ((1.0 - q_c).abs() < 1e-12)
     denom_spin = eta * (1.0 - q_c * q_c)
-    s1_ell_avg = (c1 * (1.0 + q_c) - q_c * eta * xi) / denom_spin
-    s2_ell_avg = -q_c * (c1 * (1.0 + q_c) - eta * xi) / denom_spin
+    safe_denom_spin = torch.where(is_eq, torch.ones_like(denom_spin), denom_spin)
+    s1_ell_std = (c1 * (1.0 + q_c) - q_c * eta * xi) / safe_denom_spin
+    s2_ell_std = -q_c * (c1 * (1.0 + q_c) - eta * xi) / safe_denom_spin
+    s1_ell_avg = torch.where(is_eq, 0.5 * c1 / eta, s1_ell_std)
+    s2_ell_avg = torch.where(is_eq, 0.5 * c1 / eta, s2_ell_std)
 
-    variance = (sp_sq-sm_sq)**2*v0*v0/(32*eta*eta*(1-q_c)**2)
-    cross_avg = s1_ell_avg*s2_ell_avg-q_c*variance
-    s1_ell_sq_avg = s1_ell_avg*s1_ell_avg+variance
-    s2_ell_sq_avg = s2_ell_avg*s2_ell_avg+q_c*q_c*variance
+    safe_delta_qc = torch.where(is_eq, torch.ones_like(q_c), 1.0 - q_c)
+    variance_std = (sp_sq - sm_sq)**2 * v0 * v0 / (32 * eta * eta * safe_delta_qc**2)
+    variance = torch.where(is_eq, torch.zeros_like(variance_std), variance_std)
+    cross_avg = s1_ell_avg * s2_ell_avg - q_c * variance
+    s1_ell_sq_avg = s1_ell_avg * s1_ell_avg + variance
+    s2_ell_sq_avg = s2_ell_avg * s2_ell_avg + q_c * q_c * variance
 
     beta3 = (113.0 / 12.0 + 25.0 * q_c / 4.0) * s1_ell_avg + (113.0 / 12.0 + 25.0 / (4.0 * q_c)) * s2_ell_avg
     a3 = 4.0 * PI - beta3
@@ -476,18 +509,23 @@ def evaluate_msa_dynamics(v, v0, eta, delta, q_c, s1, s2, l_pn,
     eps_secular = epsilon_secular(v)
     if anchor_reference:
         eps_secular = eps_secular-epsilon_secular(v0)
-    initial_parameter = torch.clamp((sp_sq-sm_sq)/(sp_sq-s3_sq),0.,1.-torch.finfo(v.dtype).eps)
-    initial_fraction = torch.clamp((sp_sq-s0_sq)/(sp_sq-sm_sq),0.,1.)
+    gap_init = sp_sq - sm_sq
+    safe_gap_init = torch.clamp(gap_init, min=1e-20)
+    safe_span_init = torch.clamp(sp_sq - s3_sq, min=1e-20)
+    initial_parameter = torch.clamp(gap_init / safe_span_init, 0., 1. - 1e-12)
+    initial_fraction = torch.clamp((sp_sq - s0_sq) / safe_gap_init, 0., 1. - 1e-12)
     # Eq. 28 fixes the branch of sn^-1 from the initial scalar triple product.
-    orientation = s1[...,0]*s2[...,1]-s1[...,1]*s2[...,0]
+    orientation = s1[..., 0] * s2[..., 1] - s1[..., 1] * s2[..., 0]
     sign = torch.where(orientation < 0, -torch.ones_like(orientation), torch.ones_like(orientation))
-    psi_ref = sign*elliptic_f(torch.asin(torch.sqrt(initial_fraction)),initial_parameter)
-    psi = msa_nutation_phase(v,v0,eta,delta,q_c,xi,c1,sav_sq,s1_sq,s2_sq,psi_ref)
-    l = eta/v
-    j_sq = l*l+2*c1/v+sav_sq
-    j = torch.sqrt(torch.clamp(j_sq,min=torch.finfo(v.dtype).tiny))
-    s3, sm, sp, _ = solve_spin_roots(l,j_sq,s1_sq,s2_sq,xi,q_c,eta,delta)
-    parameter = torch.clamp((sp-sm)/(sp-s3),0.,1.-torch.finfo(v.dtype).eps)
+    psi_ref = sign * elliptic_f(torch.asin(torch.sqrt(initial_fraction)), initial_parameter)
+    psi = msa_nutation_phase(v, v0, eta, delta, q_c, xi, c1, sav_sq, s1_sq, s2_sq, psi_ref)
+    l = eta / v
+    j_sq = l * l + 2 * c1 / v + sav_sq
+    j = torch.sqrt(torch.clamp(j_sq, min=torch.finfo(v.dtype).tiny))
+    s3, sm, sp, _ = solve_spin_roots(l, j_sq, s1_sq, s2_sq, xi, q_c, eta, delta)
+    gap_dyn = sp - sm
+    safe_span_dyn = torch.clamp(sp - s3, min=1e-20)
+    parameter = torch.clamp(gap_dyn / safe_span_dyn, 0., 1. - torch.finfo(v.dtype).eps)
     sn, _, _ = jacobi_sn_cn_dn(psi,parameter)
     spin_sq = sp+(sm-sp)*sn*sn
     beta = msa_opening_angle(l_pn,eta,c1,sav_sq,spin_sq)
@@ -504,6 +542,39 @@ def evaluate_msa_dynamics(v, v0, eta, delta, q_c, s1, s2, l_pn,
         # historical four-value low-level API remains unchanged.
         return alpha, beta, -epsilon, valid, sav_sq, s1_ell_avg, s2_ell_avg
     return alpha,beta,-epsilon,valid
+
+
+def compute_msa_initialization_validity(v0, m1, m2, s1x, s1y, s1z,
+                                        s2x, s2y, s2z):
+    """Return the published two-spin MSA initialization-validity mask."""
+    (v0, m1, m2, s1x, s1y, s1z, s2x, s2y, s2z) = torch.broadcast_tensors(
+        v0, m1, m2, s1x, s1y, s1z, s2x, s2y, s2z
+    )
+    total_mass = m1 + m2
+    m1_norm, m2_norm = m1 / total_mass, m2 / total_mass
+    eta = m1_norm * m2_norm
+    delta = m1_norm - m2_norm
+    q_c = m2_norm / m1_norm
+    s1 = m1_norm.square().unsqueeze(-1) * torch.stack(
+        (s1x, s1y, s1z), dim=-1
+    )
+    s2 = m2_norm.square().unsqueeze(-1) * torch.stack(
+        (s2x, s2y, s2z), dim=-1
+    )
+    s1_sq = (s1 * s1).sum(dim=-1)
+    s2_sq = (s2 * s2).sum(dim=-1)
+    s0_sq = ((s1 + s2) ** 2).sum(dim=-1)
+    xi = (1 + q_c) * s1[..., 2] + (1 + 1 / q_c) * s2[..., 2]
+    l0 = eta / v0
+    j0_sq = l0 * l0 + 2 * l0 * (s1[..., 2] + s2[..., 2]) + s0_sq
+    _, sm_sq, sp_sq, roots_valid = solve_spin_roots(
+        l0, j0_sq, s1_sq, s2_sq, xi, q_c, eta, delta
+    )
+    sav0_sq = (sp_sq + sm_sq) / 2
+    c10 = v0 * (j0_sq - l0 * l0 - sav0_sq) / 2
+    cp0 = eta * eta * sp_sq - c10 * c10
+    cm0 = eta * eta * sm_sq - c10 * c10
+    return roots_valid & (s1_sq > 0) & (s2_sq > 0) & (cp0 > 0) & (cm0 > 0)
 
 
 def compute_msa_averaged_couplings(v0, m1, m2, s1x, s1y, s1z,
@@ -584,8 +655,8 @@ def compute_msa_final_spin(
     The aligned fit supplies ``a_parallel`` and the final-mass fraction; thus
     Eq. (31) gives ``L_fin/M^2 = (M_fin/M)^2*a_parallel-S_parallel/M^2``.
 
-    The MSA averaged couplings are singular at equal masses in the published
-    prescription.  Callers must handle those rows explicitly.
+    Nonaligned equal-mass and invalid-root rows are outside the prescription.
+    Eager calls raise ``ValueError``; compiled calls use a tensor assertion.
     The carrier ``a_parallel`` is the aligned-spin fit evaluated from the
     initial aligned projections; the ``S_parallel`` subtraction uses the
     averaged projections returned by Eq. (33), which is the precession-averaged
@@ -622,10 +693,17 @@ def compute_msa_final_spin(
     sav_sq, s1_l_avg, s2_l_avg, valid = compute_msa_averaged_couplings(
         v0, m1, m2, s1x, s1y, s1z, s2x, s2y, s2z
     )
-    unequal = m1 != m2
-    if not is_comp:
-        if bool(torch.any((~unequal) & (~aligned))):
-            raise ValueError("MSA final_spin_mod=3 is unsupported for nonaligned equal-mass rows.")
+    inplane_sq = s1x.square() + s1y.square() + s2x.square() + s2y.square()
+    eps = torch.finfo(v0.dtype).eps
+    numerical_degeneracy = inplane_sq <= 10.0 * eps * (
+        1.0 + s1z.square() + s2z.square()
+    )
+    unsupported = ((m1 == m2) & (~aligned)) | ((~valid) & (~numerical_degeneracy))
+    if is_comp:
+        torch._assert_async(~torch.any(unsupported), MSA_FINAL_SPIN_DOMAIN_ERROR)
+    elif bool(torch.any(unsupported)):
+        raise ValueError(MSA_FINAL_SPIN_DOMAIN_ERROR)
+    fallback = numerical_degeneracy
 
     a_parallel = a_aligned
     m_final = m_final_fit
@@ -633,25 +711,15 @@ def compute_msa_final_spin(
     l_fin = m_final.square() * a_parallel - s_parallel
     s_fin_sq = compute_msa_final_spin_squared(sav_sq, s1_l_avg, s2_l_avg, l_fin)
     if not is_comp:
-        if bool(torch.any(~torch.isfinite(s_fin_sq) | (s_fin_sq < -1e-12))):
+        if bool(torch.any((~fallback) & (~torch.isfinite(s_fin_sq) | (s_fin_sq < -1e-12)))):
             raise ValueError("MSA final spin produced an invalid remnant-spin square.")
     magnitude = torch.sqrt(torch.clamp(s_fin_sq, min=0.0)) / m_final.square()
     # Eq. (31) fixes the sign in the co-precessing frame by the aligned fit.
     signed = torch.where(a_parallel < 0.0, -magnitude, magnitude)
     if not is_comp:
-        if bool(torch.any(~torch.isfinite(magnitude) | (magnitude > 1.0 + 1e-10))):
+        if bool(torch.any((~fallback) & (~torch.isfinite(magnitude) | (magnitude > 1.0 + 1e-10)))):
             raise ValueError("MSA final spin exceeds the physical Kerr bound.")
-    # Only machine-level root degeneracies are assigned the analytic aligned
-    # limit.  A genuinely failed nonaligned root is an unsupported point and
-    # must be surfaced rather than silently replacing the MSA result.
-    inplane_sq = s1x.square() + s1y.square() + s2x.square() + s2y.square()
-    eps = torch.finfo(v0.dtype).eps
-    numerical_degeneracy = inplane_sq <= 10.0 * eps * (1.0 + s1z.square() + s2z.square())
-    unsupported = (~valid) & (~numerical_degeneracy)
-    if not is_comp:
-        if bool(torch.any(unsupported)):
-            raise ValueError("MSA final spin has a nonaligned row outside the supported root domain.")
-    return torch.where(numerical_degeneracy, a_aligned, signed)
+    return torch.where(fallback, a_aligned, signed)
 
 def evaluate_msa_precession(
     v: torch.Tensor,
@@ -743,7 +811,7 @@ def evaluate_msa_precession(
         )
         if prec_version in (221,222) and not bool(torch.all(roots_valid)):
             raise ValueError("The MSA precession system is degenerate at the reference frequency.")
-        fallback_to_nnlo = ~roots_valid
+        fallback_to_nnlo = (~roots_valid) | (delta.abs() < 1e-12) | ((1.0 - q_c).abs() < 1e-12)
     else:
         fallback_to_nnlo = torch.ones_like(eta,dtype=torch.bool)
         alpha_msa_dyn = gamma_msa_dyn = beta_msa = torch.zeros_like(v)

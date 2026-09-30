@@ -16,6 +16,7 @@ PROTOTYPE_SYMBOLS = {
     "train_and_export_surrogate", "TEOBResumS", "SpinPrecessionODE",
     "conditioned_teob_fd",
     "EOBHamiltonian", "EOBRadiationReaction",
+    "load_xhm_amplitude_coefficients", "load_xpnr_angle_coefficients",
 }
 
 
@@ -23,9 +24,11 @@ def _inspect_member(name, content):
     parts = Path(name).parts
     assert "dev" not in parts, name
     assert "seobnr_surrogate" not in name, name
+    assert not {"scripts", "refit"}.issubset(parts), name
+    assert not {"diffgw_core", "data"}.issubset(parts), name
     # Tests and documentation can record retired model names. Shipped Python
     # implementations must not contain the actual prototype entry points.
-    if name.endswith(".py") and {"torchwave", "jaxwave"}.intersection(parts):
+    if name.endswith(".py") and {"torchwave", "jaxwave", "diffgw_core"}.intersection(parts):
         definitions = {
             node.name for node in ast.walk(ast.parse(content, filename=name))
             if isinstance(node, (ast.ClassDef, ast.FunctionDef, ast.AsyncFunctionDef))

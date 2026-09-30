@@ -24,6 +24,7 @@ from jaxwave.conversions import (
     tidal_combinations,
     kerr_isco_frequency,
 )
+from diffgw_core.windowing import jax_planck_taper
 
 
 class TaylorF2:
@@ -395,12 +396,16 @@ class TaylorF2:
         reference_frame: Optional[str] = None,
         quad_monopole1: Optional[Union[float, jnp.ndarray]] = None,
         quad_monopole2: Optional[Union[float, jnp.ndarray]] = None,
+        window: Optional[str] = None,
     ) -> Tuple[jnp.ndarray, jnp.ndarray]:
         """Generate frequency-domain polarizations (h_plus, h_cross) using TaylorF2 in JAX.
 
         ``spin_order`` selects the groups documented in ``phase_coefficients``.
         Default 7 includes spin-orbit through 3.5PN and spin-spin through 3PN;
         use 8 to also include 3.5PN spin-spin tails and cubic spin.
+        ``window`` selects smooth windowing ('planck' or 'cosine').
+        ``isco_type="kerr"`` uses the mass-weighted aligned spin
+        ``(mass1*chi1 + mass2*chi2)/(mass1 + mass2)`` for the cutoff.
         """
         dtype = jnp.float64
         m1 = as_array(mass1, dtype=dtype)
@@ -455,8 +460,8 @@ class TaylorF2:
         if f_isco_cutoff:
             total_mass = m1 + m2
             if isco_type.lower() == "kerr":
-                chi_s, _, chi_pn, _ = spin_combinations(m1, m2, s1, s2)
-                f_isco = kerr_isco_frequency(total_mass, chi_pn)
+                chi_eff = (m1 * s1 + m2 * s2) / total_mass
+                f_isco = kerr_isco_frequency(total_mass, chi_eff)
             else:
                 m_sec = total_mass * MSUN_SEC
                 f_isco = 1.0 / (6.0 * jnp.sqrt(6.0) * PI * m_sec)
@@ -464,16 +469,24 @@ class TaylorF2:
             if m1.ndim >= 1 and f_eval.ndim > m1.ndim:
                 f_isco = jnp.expand_dims(f_isco, -1)
 
-            if smooth_cutoff:
-                f_start = (1.0 - roll_off_delta) * f_isco
-                theta = jnp.clip((f_eval - f_start) / (f_isco - f_start), 0.0, 1.0)
-                window = 0.5 * (1.0 + jnp.cos(PI * theta))
-                window = jnp.where(f_eval < f_start, 1.0, window)
-                window = jnp.where(f_eval > f_isco, 0.0, window)
-                amp = amp * window
-            else:
+            f_start = (1.0 - roll_off_delta) * f_isco
+            use_planck = window is not None and str(window).lower() == "planck"
+            use_smooth = smooth_cutoff or (window is not None)
+
+            if not use_smooth:
                 mask = (f_eval <= f_isco) & (f_eval > 0.0)
                 amp = jnp.where(mask, amp, 0.0)
+            elif use_planck:
+                w = jax_planck_taper(f_eval, f_start, f_isco)
+                w = jnp.where(f_eval > 0.0, w, 0.0)
+                amp = amp * w
+            else:
+                theta = jnp.clip((f_eval - f_start) / (f_isco - f_start), 0.0, 1.0)
+                window_w = 0.5 * (1.0 + jnp.cos(PI * theta))
+                window_w = jnp.where(f_eval < f_start, 1.0, window_w)
+                window_w = jnp.where(f_eval > f_isco, 0.0, window_w)
+                window_w = jnp.where(f_eval > 0.0, window_w, 0.0)
+                amp = amp * window_w
 
         # Polarizations: h+ = amp * plus_factor * e^(-i*psi), hx = amp * cross_factor * e^(-i*(psi + pi/2))
         h_plus = (amp * plus_factor) * (jnp.cos(psi) - 1j * jnp.sin(psi))

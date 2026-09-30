@@ -1,17 +1,15 @@
-"""Pure JAX PNR (PhenomX Precession Numerical Relativity) angle engine.
+"""Pure JAX PNR angle engine used by the native XPNR-labelled route.
 
 Provides a native JAX implementation of the NR-tuned precession angles (alpha,
 beta, gamma), two-spin to single-spin mapping, multi-harmonic linear frequency mapping,
 and minimal-rotation coprecessing phase quadrature for IMRPhenomXPNR (prec_version=330).
 
 References:
-- Hamilton et al. (2021), Phys. Rev. D 104, 124027 (arXiv:2107.08876)
-- Pürrer et al. (2022), arXiv:2205.05845
-- Pratten et al. (2021), Phys. Rev. D 103, 104056 (arXiv:2004.06503)
+- Hamilton et al. (2025), arXiv:2507.02604v1
+- Thompson et al. (2024), Phys. Rev. D 109, 063012 (arXiv:2312.10025v1)
 """
 
-from typing import Optional, Sequence, Tuple, Union
-import math
+from typing import Tuple, Union
 import jax
 import jax.numpy as jnp
 
@@ -24,7 +22,6 @@ from jaxwave.approximants.pnr_coefficients import COEFF_ARRAYS
 from jaxwave.approximants.imrphenom_xas import XASParameterFits
 from jaxwave.approximants.precession_spintaylor import (
     evaluate_spintaylor_precession,
-    compute_chi_tot_perp,
 )
 
 
@@ -52,7 +49,11 @@ def compute_pnr_single_spin(
     s2y: jnp.ndarray,
     s2z: jnp.ndarray,
 ) -> Tuple[jnp.ndarray, jnp.ndarray, jnp.ndarray, jnp.ndarray]:
-    """Compute effective single-spin parameters from Eq. 17-19 of Hamilton et al. (2021)."""
+    """Compute the algebra of Hamilton et al. (2025), Eqs. (3)--(6).
+
+    Full paper fidelity requires spins at the SpinTaylor stopping frequency;
+    the current caller still supplies reference-frequency spins.
+    """
     total_m = m1 + m2
     q = m1 / m2
     eta = (m1 * m2) / (total_m * total_m)
@@ -156,7 +157,7 @@ def compute_pnr_beta_coefficients(
     b2 = -chi_eff * sintheta * jnp.exp(poly_b2)
 
     poly_b3 = _eval_coeff_poly(c_b3, eta_eff, chi_eff, costheta)
-    b3 = b2 * poly_b3
+    b3 = chi_eff * sintheta * (jnp.exp(poly_b3) - 200.0)
 
     poly_b5 = _eval_coeff_poly(c_b5, eta_eff, chi_eff, costheta)
     b5 = -(poly_b5 ** 2)
@@ -171,7 +172,7 @@ def eval_pnr_alpha_mr(
     a3: jnp.ndarray,
     a4: jnp.ndarray,
 ) -> jnp.ndarray:
-    """Merger-ringdown Lorentzian resonance expression for alpha (Eq. 48 of Hamilton et al. 2021)."""
+    """Merger-ringdown alpha Ansatz, Hamilton et al. (2025), Eq. (15)."""
     return -(a1 / jnp.maximum(mf, 1e-8) + (a2 * jnp.sqrt(a3)) / (a3 + (mf - a4) ** 2))
 
 
@@ -184,7 +185,7 @@ def eval_pnr_beta_mr(
     b4: jnp.ndarray,
     b5: jnp.ndarray,
 ) -> jnp.ndarray:
-    """Merger-ringdown rational Ansatz expression for beta (Eq. 49 of Hamilton et al. 2021)."""
+    """Merger-ringdown beta Ansatz, Hamilton et al. (2025), Eq. (16)."""
     return b0 + (b1 + b2 * mf + b3 * (mf ** 2)) / (1.0 + b4 * ((mf + b5) ** 2))
 
 
@@ -223,7 +224,7 @@ def eval_pnr_linear_frequency_map(
     mf_rd_22: jnp.ndarray,
     mf_rd_lm: jnp.ndarray,
 ) -> jnp.ndarray:
-    """Multi-harmonic linear frequency map for higher modes (Hamilton et al. Eq. 57)."""
+    """Higher-mode frequency map, Thompson et al. (2024), Eqs. (50)--(52)."""
     if ell == 2 and emm == 2:
         return mf
 
@@ -261,7 +262,7 @@ def evaluate_pnr_precession(
     convention: int = 1,
     observer_azimuth: Union[float, jnp.ndarray] = 0.0,
 ) -> Tuple[jnp.ndarray, jnp.ndarray, jnp.ndarray, jnp.ndarray, jnp.ndarray, jnp.ndarray]:
-    """Evaluate sovereign PNR precession angles and J-frame orientations in pure JAX.
+    """Evaluate the provisional native PNR angle route in pure JAX.
 
     Returns:
         alpha: J-frame precession azimuth angle

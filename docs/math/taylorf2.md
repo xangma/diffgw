@@ -98,6 +98,17 @@ ordinary call includes an ISCO window outside this reference composition.
 The native fallback that anchors explicit reference-frequency mode to the first
 sample when `f_ref` is absent is also outside this specification.
 
+The optional native `isco_type="kerr"` cutoff uses the project adapter
+$\chi_{\rm eff}=(m_1\chi_1+m_2\chi_2)/(m_1+m_2)$ in the equatorial Kerr ISCO
+frequency. Both frontends use this convention; it is not a calibrated remnant
+spin prescription. The default cutoff remains Schwarzschild with a sharp mask;
+`window="planck"` selects a smooth taper over
+$[(1-\texttt{roll_off_delta})f_{\rm ISCO},f_{\rm ISCO}]$.
+The maintained `tests/test_windowing.py` checks samples below, within, and above
+the taper, matched spinning cutoffs, a selected spin derivative, batching and
+JAX JIT. These are adapter checks outside the unwindowed mathematical reference;
+they do not qualify inspiral termination physically or expand the catalog scope.
+
 ## Mathematics and components
 
 ### Intrinsic phase and exact coefficients
@@ -334,7 +345,13 @@ From the repository root, using an environment with the optional dependencies:
 python -m pip install -e '.[reference,torch,jax,dev]'
 python -m diffgw_reference.artifacts --check
 python -m diffgw_reference.traceability --check
-JAX_ENABLE_X64=1 JAX_PLATFORMS=cpu python -m pytest tests/test_*math_reference*.py --require-math-reference --reference-device=cpu -ra
+JAX_ENABLE_X64=1 JAX_PLATFORMS=cpu python -m pytest \
+  tests/test_waveform_definitions.py tests/test_*math_reference*.py \
+  tests/test_nsbh_*reference.py tests/test_emri_*reference.py \
+  tests/test_xp_msa_remnant_boundary_policy.py \
+  tests/test_xphm_rotation_reference.py tests/test_xphm_nnlo_clean_room.py \
+  tests/test_spintaylor_reference_angle.py \
+  --require-math-reference --reference-device=cpu -ra
 ```
 
 The normal optional-dependency tests can skip unavailable frontends; the

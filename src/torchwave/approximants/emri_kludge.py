@@ -1,14 +1,8 @@
-"""Relativistic EMRI (Extreme Mass Ratio Inspiral) Kludge Waveform Model for LISA.
+"""Scoped Newtonian eccentric strain and a separate provisional EMRI prototype.
 
-Strict Clean-Room Implementation based exclusively on published literature:
-- Barack & Cutler (2004), "LISA capture sources: Approximate waveforms, signal-to-noise ratios,
-  and parameter estimation accuracy", Phys. Rev. D 69, 082005 (arXiv:gr-qc/0310125)
-- Babak, Fang, Gair, Glampedakis, Hughes (2007), "'Kludge' gravitational waveforms for a test-body
-  orbiting a Kerr black hole", Phys. Rev. D 75, 024005 (arXiv:gr-qc/0607007)
-- Chua, Galley, Vallisneri (2021), "Fast and accurate gravitational-wave waveforms for extreme mass-ratio
-  inspirals with deep neural networks", Phys. Rev. Lett. 126, 051102 (arXiv:2008.06071)
-- Peters & Mathews (1963), "Gravitational Radiation from Point Masses in a Keplerian Orbit",
-  Phys. Rev. 131, 435
+The NewtonianEccentricEMRI source strain has a paper-derived scalar reference.
+The older EMRIKludge retains only a checked leading Peters flux component.
+See docs/math/emri-kludge.md for their separate scopes.
 """
 
 from typing import Dict, Optional, Sequence, Tuple, Union
@@ -27,6 +21,109 @@ from torchwave.conversions import as_tensor
 from torchwave.detectors.lisa import LISANetwork
 
 
+def _integer_bessel_j(order: int, x: torch.Tensor) -> torch.Tensor:
+    """Integer J series through k=20, for |order|<=10 and |x|<=4.8."""
+    sign = -1 if order < 0 and (-order) % 2 else 1
+    m = abs(order)
+    term = (x / 2) ** m / math.factorial(m)
+    result = term
+    for k in range(1, 21):
+        term = term * (-(x / 2) ** 2 / (k * (m + k)))
+        result = result + term
+    return sign * result
+
+
+class NewtonianEccentricEMRI(nn.Module):
+    """Weak-field, adiabatic Peters–Mathews quadrupole strain at a fixed observer.
+
+    This is not a generic Kerr EMRI, the Barack–Cutler analytic kludge, or a
+    LISA/TDI response. See docs/math/emri-kludge.md for the exact domain.
+    """
+
+    definition_id = "emri.newtonian_eccentric_quadrupole.v1"
+
+    def __init__(self, n_harmonics: int = 5):
+        super().__init__()
+        if not isinstance(n_harmonics, int) or isinstance(n_harmonics, bool) or not 2 <= n_harmonics <= 8:
+            raise ValueError("n_harmonics must be an integer in [2, 8]")
+        self.n_harmonics = n_harmonics
+
+    def trajectory(self, t, total_mass, secondary_mass, p0, e0, phase0=0.0):
+        """RK4 solution for dimensionless p, eccentricity, and mean anomaly."""
+        if not t.is_floating_point():
+            raise ValueError("t must have a floating dtype")
+        if t.ndim != 1 or t.numel() < 2 or not bool(torch.all(t[1:] > t[:-1])):
+            raise ValueError("t must be a strictly increasing 1D array")
+        m = as_tensor(total_mass, device=t.device, dtype=t.dtype)
+        mu = as_tensor(secondary_mass, device=t.device, dtype=t.dtype)
+        p = as_tensor(p0, device=t.device, dtype=t.dtype)
+        e = as_tensor(e0, device=t.device, dtype=t.dtype)
+        phase = as_tensor(phase0, device=t.device, dtype=t.dtype)
+        if not bool(torch.all(torch.isfinite(m) & torch.isfinite(mu) &
+                              torch.isfinite(p) & torch.isfinite(e) &
+                              torch.isfinite(phase) & (m > 0) & (mu > 0) &
+                              (mu / m <= 1e-3) & (p >= 12) &
+                              (e >= 0) & (e <= 0.6))):
+            raise ValueError("requires M,mu>0, mu/M<=1e-3, p>=12, 0<=e<=0.6")
+        m, mu, p, e, phase = torch.broadcast_tensors(m, mu, p, e, phase)
+        period = 2 * math.pi * m * MSUN_SEC * (p / (1-e*e)) ** 1.5
+        if bool(torch.max(t[1:]-t[:-1]) > torch.min(period) / 4):
+            raise ValueError("time step exceeds one quarter of the initial orbital period")
+
+        def rhs(state):
+            pp, ee, _ = state
+            dp, de = peters_mathews_radiation_reaction(m, mu, pp, ee)
+            omega = (1 - ee * ee) ** 1.5 / (m * MSUN_SEC * pp ** 1.5)
+            return dp, de, omega
+
+        states = [(p, e, phase)]
+        for h in t[1:] - t[:-1]:
+            y = states[-1]
+            k1 = rhs(y)
+            k2 = rhs(tuple(v + h * k / 2 for v, k in zip(y, k1)))
+            k3 = rhs(tuple(v + h * k / 2 for v, k in zip(y, k2)))
+            k4 = rhs(tuple(v + h * k for v, k in zip(y, k3)))
+            next_y = tuple(v + h * (a + 2*b + 2*c + d) / 6
+                           for v, a, b, c, d in zip(y, k1, k2, k3, k4))
+            states.append(next_y)
+        out = tuple(torch.stack([state[i] for state in states], dim=-1)
+                    for i in range(3))
+        if not bool(torch.all((out[0] >= 12) & (out[1] >= 0) & (out[1] <= 0.6))):
+            raise ValueError("trajectory left p>=12, 0<=e<=0.6 domain")
+        return out
+
+    def polarizations(self, t, total_mass=1e6, secondary_mass=10.0,
+                      p0=16.0, e0=0.2, inclination=0.7, periapsis=0.0,
+                      phase0=0.0, distance=1000.0):
+        """Return source-frame h_plus and h_cross; distance is in Mpc."""
+        p, e, phase = self.trajectory(t, total_mass, secondary_mass, p0, e0, phase0)
+        mu = as_tensor(secondary_mass, device=t.device, dtype=t.dtype)
+        dist = as_tensor(distance, device=t.device, dtype=t.dtype)
+        inc = as_tensor(inclination, device=t.device, dtype=t.dtype)
+        gamma = as_tensor(periapsis, device=t.device, dtype=t.dtype)
+        if not bool(torch.all(torch.isfinite(dist) & torch.isfinite(inc) &
+                              torch.isfinite(gamma) & (dist > 0))):
+            raise ValueError("distance must be positive and observer angles finite")
+        amp = mu[..., None] * MSUN_SEC * (1 - e*e) / p
+        u = torch.cos(inc)[..., None]
+        cos2g, sin2g = torch.cos(2*gamma)[..., None], torch.sin(2*gamma)[..., None]
+        plus, cross = torch.zeros_like(phase), torch.zeros_like(phase)
+        for n in range(1, self.n_harmonics + 1):
+            x = n * e
+            jm2, jm1, j0, jp1, jp2 = (
+                _integer_bessel_j(n + shift, x) for shift in (-2, -1, 0, 1, 2)
+            )
+            aa = -n * amp * (jm2 - 2*e*jm1 + (2/n)*j0 + 2*e*jp1 - jp2) * torch.cos(n*phase)
+            bb = -n * amp * torch.sqrt(1-e*e) * (jm2 - 2*j0 + jp2) * torch.sin(n*phase)
+            cc = 2 * amp * j0 * torch.cos(n*phase)
+            plus = plus - (1+u*u) * (aa*cos2g - bb*sin2g) + (1-u*u)*cc
+            cross = cross + 2*u * (bb*cos2g + aa*sin2g)
+        scale = dist[..., None] * MPC_SI / C_SI
+        return plus / scale, cross / scale
+
+    forward = polarizations
+
+
 def kerr_geodesic_frequencies(
     total_mass: Union[float, torch.Tensor],
     spin: Union[float, torch.Tensor],
@@ -35,9 +132,9 @@ def kerr_geodesic_frequencies(
     inclination: Union[float, torch.Tensor] = 0.0,
     in_hz: bool = True,
 ) -> Tuple[torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor]:
-    """Compute Kerr orbital geodesic frequencies and precession rates.
+    """Compute carrier orbital frequency and approximate precession rates.
 
-    Literature: Barack & Cutler (2004) Eqs. 9-11; Babak et al. (2007) Eqs. 16-20.
+    These expressions are not generic Kerr geodesic frequencies: e is unused.
 
     Orbital azimuthal frequency:
         Omega_phi = 1 / (M_sec * (p^(3/2) + a))
@@ -119,12 +216,12 @@ def peters_mathews_radiation_reaction(
     """Compute Peters-Mathews gravitational radiation reaction evolution dp/dt and de/dt.
 
     Literature:
-    - Peters & Mathews (1963), Phys. Rev. 131, 435 Eqs. 5.6 & 5.7
-    - Barack & Cutler (2004), Phys. Rev. D 69, 082005 Eqs. 12 & 13
+    - Peters (1964), Phys. Rev. 136, B1224 Eqs. (5.6)-(5.7),
+      converted from semimajor axis to semilatus rectum at leading order
 
     Formulas:
         dp/dt = -64/5 * (mu / M^2) * p^(-3) * (1 - e^2)^(3/2) * (1 + 7/8 * e^2)
-        de/dt = -604/48 * (mu / M^2) * e * p^(-4) * (1 - e^2)^(3/2) * (1 + 121/304 * e^2)
+        de/dt = -304/15 * (mu / M^2) * e * p^(-4) * (1 - e^2)^(3/2) * (1 + 121/304 * e^2)
 
     Args:
         total_mass: Central black hole mass M in solar masses.
@@ -161,19 +258,17 @@ def peters_mathews_radiation_reaction(
     # de/dt
     p_fourth = p_cubed * p_safe
     e_term = 1.0 + (121.0 / 304.0) * e_sq
-    de_dt = -(604.0 / 48.0) * mass_factor * e_safe * (1.0 / p_fourth) * e_factor * e_term
+    de_dt = -(304.0 / 15.0) * mass_factor * e_safe * (1.0 / p_fourth) * e_factor * e_term
 
     return dp_dt, de_dt
 
 
 class EMRIKludge(nn.Module):
-    """Relativistic Extreme Mass Ratio Inspiral (EMRI) Kludge Model for LISA.
+    """Short-time harmonic EMRI prototype with a static LISA projection.
 
-    Strict clean-room literature implementation combining:
-    - Kerr relativistic orbital geodesic frequencies (Barack & Cutler 2004)
-    - Peters-Mathews radiation reaction dissipation (Peters & Mathews 1963)
-    - Multipolar orbital harmonic emission summed across harmonics n in [-N, N]
-    - Direct projection onto LISA TDI channels (A, E, T) via LISANetwork
+    The Peters (1964) leading p/e rates are used only at the initial orbit;
+    the emitted harmonics and A/E/T antenna multiplication are not a full
+    analytic/numerical kludge waveform or a validated TDI response.
     """
 
     def __init__(self, n_harmonics: int = 5):
@@ -213,7 +308,7 @@ class EMRIKludge(nn.Module):
         p_t = torch.clamp(p_init + dp_dt * t, min=1.5)
         e_t = torch.clamp(e_init + de_dt * t, min=0.0, max=0.999)
 
-        # Kerr geodesic frequencies
+        # Carrier frequency and approximate precession rates
         omega_phi, omega_r, omega_theta, gamma_dot, alpha_dot = kerr_geodesic_frequencies(
             m, a, p_t, e_t, inc, in_hz=True
         )
@@ -290,8 +385,7 @@ class EMRIKludge(nn.Module):
         h_cross = torch.zeros_like(t)
 
         # Multipolar harmonic sum n in [1, N]
-        # Peters & Mathews (1963) harmonic amplitudes:
-        # Dominant quadrupole n=2, eccentric sidebands n=1, 3, ...
+        # Heuristic eccentric sidebands, not Peters-Mathews Bessel harmonics.
         for n in range(1, self.n_harmonics + 1):
             if n == 2:
                 # Dominant quadrupolar harmonic
@@ -321,14 +415,14 @@ class EMRIKludge(nn.Module):
         channels: Sequence[str] = ("A", "E", "T"),
         **emri_kwargs,
     ) -> Dict[str, torch.Tensor]:
-        """Generate EMRI signal projected into LISA TDI channels.
+        """Apply static LISA antenna patterns labeled A, E, and T.
 
         Args:
             t: Time array in seconds.
             theta: Source ecliptic co-latitude in radians.
             phi: Source ecliptic longitude in radians.
             psi: Polarization angle in radians.
-            channels: TDI channels to evaluate ('A', 'E', 'T').
+            channels: Static antenna-pattern labels ('A', 'E', 'T').
             **emri_kwargs: Parameters passed to polarizations().
 
         Returns:

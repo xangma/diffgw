@@ -1,18 +1,12 @@
-"""Parameterized Post-Einsteinian (ppE) and Modified Dispersion Gravitational Waveforms.
+"""ppE inspiral amplitude/phase and massive-graviton overlays for FD carriers.
 
-Strict Clean-Room Implementation based exclusively on published literature:
-- Yunes & Pretorius (2009), "Dynamical Systems Approach to Runaway Instabilities in Black Hole-Torus Systems",
-  Phys. Rev. D 80, 122003 (arXiv:0909.3328)
-- Mirshekari, Yunes, Will (2012), "Constraining Generic Post-Einsteinian Extensions of Gravity with Gravitational Waves",
-  Phys. Rev. D 85, 024041 (arXiv:1110.2720)
-- Chatziioannou, Yunes, Cornish (2012), "Model-Independent Test of General Relativity: An Extended Parameterized Post-Einsteinian Framework",
-  Phys. Rev. D 86, 022004 (arXiv:1204.2585)
-- Will (1998), "Bounding the mass of the graviton using gravitational-wave observations of inspiralling compact binaries",
-  Phys. Rev. D 57, 2061 (arXiv:gr-qc/9709011)
+Source equations: Yunes & Pretorius, PRD 80 122003 (2009), arXiv:0909.3328,
+Eq. (1); Mirshekari, Yunes & Will, PRD 85 024041 (2012), arXiv:1110.2720,
+Eqs. (14)-(16), (28)-(31). The adapter follows the carrier's negative Fourier
+phase sign; it does not implement the papers' merger/ringdown branches.
 """
 
-from typing import Any, Callable, Dict, Optional, Tuple, Union
-import math
+from typing import Any, Dict, Optional, Tuple, Union
 import torch
 import torch.nn as nn
 
@@ -23,9 +17,10 @@ from torchwave.constants import (
     PI,
 )
 from torchwave.conversions import as_tensor
-from torchwave.approximants.taylorf2 import TaylorF2
+from diffgw_core.ppe_cosmology import (
+    D0_QUADRATURE_NODES, D0_QUADRATURE_WEIGHTS, OMEGA_M, OMEGA_LAMBDA,
+)
 from torchwave.approximants.imrphenomd import IMRPhenomD
-from torchwave.approximants.imrphenom_xas import IMRPhenomXAS
 
 
 # Standard PN order to ppE exponent mapping: b_ppE = 2 * PN - 5
@@ -45,21 +40,21 @@ PPE_PN_MAPPING: Dict[Union[int, float], int] = {
 
 def ppe_phase_shift(
     f: torch.Tensor,
-    total_mass: Union[float, torch.Tensor],
+    chirp_mass: Union[float, torch.Tensor],
     beta_ppe: Union[float, torch.Tensor] = 0.0,
     b_ppe: Union[int, float, torch.Tensor] = -2,
 ) -> torch.Tensor:
     """Compute ppE frequency-dependent phase deformation delta Psi_ppE(f).
 
-    Literature: Yunes & Pretorius (2009) Eq. 1; Mirshekari et al. (2012) Eq. 20.
+    Literature: Yunes & Pretorius (2009) Eq. (1), u = pi * Mc * f.
 
     Formula:
-        delta Psi_ppE(f) = beta_ppE * (pi * M * f)^(b_ppE / 3)
-    where M is total mass in geometric seconds: M_sec = (m1 + m2) * MSUN_SEC.
+        delta Psi_ppE(f) = beta_ppE * (pi * Mc * f)^(b_ppE / 3)
+    Here b_ppE is the project's velocity exponent, three times the paper's b.
 
     Args:
         f: Frequency tensor in Hz.
-        total_mass: Total binary mass M = m1 + m2 in solar masses.
+        chirp_mass: Chirp mass in solar masses, in the frame of supplied f.
         beta_ppe: ppE phase deformation magnitude (0 recovers pure GR).
         b_ppe: ppE phase exponent (-7 for -1PN dipole, -2 for 1.5PN, 0 for 2.5PN).
 
@@ -70,18 +65,38 @@ def ppe_phase_shift(
     device = f_t.device
     dtype = f_t.dtype
 
-    m = as_tensor(total_mass, device=device, dtype=dtype)
+    m = as_tensor(chirp_mass, device=device, dtype=dtype)
     beta = as_tensor(beta_ppe, device=device, dtype=dtype)
     b = as_tensor(b_ppe, device=device, dtype=dtype)
 
     m_sec = m * MSUN_SEC
-    # Dimensionless PN velocity v = (pi * M * f)^(1/3)
+    # Dimensionless velocity formed from the paper's chirp-mass u.
     safe_f = torch.clamp(f_t, min=1e-15)
     v = torch.pow(PI * m_sec * safe_f, 1.0 / 3.0)
 
     # delta Psi = beta * v^b
     delta_psi = beta * torch.pow(v, b)
     return delta_psi
+
+
+def ppe_amplitude_factor(
+    f: torch.Tensor,
+    chirp_mass: Union[float, torch.Tensor],
+    alpha_ppe: Union[float, torch.Tensor] = 0.0,
+    a_ppe: Union[int, float, torch.Tensor] = 0.0,
+) -> torch.Tensor:
+    """Eq. (1) inspiral factor ``1 + alpha_ppe*(pi*Mc*f)**a_ppe``.
+
+    ``a_ppe`` is the paper's exponent of ``u=pi*Mc*f`` (unlike the
+    existing phase helper's velocity exponent ``b_ppe``). ``Mc`` is in
+    solar masses in the frame of ``f``. The paper scope is positive Hz.
+    """
+    f_t = as_tensor(f)
+    m = as_tensor(chirp_mass, device=f_t.device, dtype=f_t.dtype)
+    alpha = as_tensor(alpha_ppe, device=f_t.device, dtype=f_t.dtype)
+    a = as_tensor(a_ppe, device=f_t.device, dtype=f_t.dtype)
+    u = PI * m * MSUN_SEC * torch.clamp(f_t, min=1e-15)
+    return 1.0 + alpha * torch.pow(u, a)
 
 
 def modified_dispersion_phase_shift(
@@ -93,12 +108,11 @@ def modified_dispersion_phase_shift(
 ) -> torch.Tensor:
     """Compute frequency phase shift due to modified GW dispersion relation (massive graviton).
 
-    Literature: Mirshekari, Yunes, Will (2012) Eq. 24; Will (1998) Eq. 2.11.
+    Literature: Mirshekari, Yunes & Will (2012) Eqs. (14)-(16), (28)-(31).
 
-    Dispersion relation:
-        E^2 = p^2 * c^2 + A_alpha * p^alpha * c^alpha
-    For alpha = 0 (massive graviton with Compton wavelength lambda_g = h / (m_g * c)):
-        delta Psi_disp(f) = - (pi^2 * D_0) / (lambda_g^2 * (1 + z)) * f^(-1)
+    Massive-graviton term, with the paper's separate Lorentz-violating
+    A_alpha contribution set to zero and lambda_g = h / (m_g * c):
+        delta Psi_disp(f) = - pi * D_0 * c / (lambda_g^2 * (1 + z) * f)
 
     Args:
         f: Frequency tensor in Hz.
@@ -106,7 +120,9 @@ def modified_dispersion_phase_shift(
         lambda_g: Graviton Compton wavelength in meters (inf recovers pure GR).
         z: Cosmological redshift of source (default 0).
         d_alpha: Optional cosmological dispersion distance in meters.
-            If None, computed as D_0 = D_L * MPC_SI / (1 + z).
+            If None, D_0 is derived from supplied D_L via the flat
+            matter/Lambda cosmological integrals of Eqs. (15)-(16), using
+            Omega_m=0.3 and Omega_Lambda=0.7.
 
     Returns:
         Tensor of dispersion phase shifts in radians.
@@ -119,24 +135,22 @@ def modified_dispersion_phase_shift(
     l_g = as_tensor(lambda_g, device=device, dtype=dtype)
     redshift = as_tensor(z, device=device, dtype=dtype)
 
-    if torch.isinf(l_g) or l_g > 1e40:
-        return torch.zeros_like(f_t)
-
     if d_alpha is None:
-        # Physical cosmological dispersion distance in meters: D0 = D_L / (1 + z)
-        dist_m = dist_mpc * MPC_SI
-        d0 = dist_m / (1.0 + redshift)
+        nodes = torch.as_tensor(D0_QUADRATURE_NODES, device=device, dtype=dtype)
+        weights = torch.as_tensor(D0_QUADRATURE_WEIGHTS, device=device, dtype=dtype)
+        zp = redshift[..., None] * (nodes + 1.0) / 2.0
+        e = torch.sqrt(OMEGA_M * (1.0 + zp) ** 3 + OMEGA_LAMBDA)
+        ratio = torch.sum(weights * (1.0 + zp) ** -2 / e, dim=-1) / torch.sum(weights / e, dim=-1)
+        d0 = dist_mpc * MPC_SI * ratio
     else:
         d0 = as_tensor(d_alpha, device=device, dtype=dtype)
 
     safe_f = torch.clamp(f_t, min=1e-15)
-    l_g_safe = torch.clamp(l_g, min=1e-30)
+    is_gr = torch.isinf(l_g)
+    l_g_safe = torch.where(is_gr, torch.ones_like(l_g), l_g)
 
-    # delta Psi_disp = - (pi^2 * D0) / (lambda_g^2 * (1 + z)) * f^(-1)
-    # Dimension check: [D0] = m, [lambda_g^2] = m^2, c is used to convert m/c to seconds:
-    # Mirshekari et al. (2012) Eq. 24 with c in meters/second:
-    coeff = -(PI ** 2.0) * d0 * C_SI / (l_g_safe * l_g_safe * (1.0 + redshift))
-    return coeff / safe_f
+    coeff = -PI * d0 * C_SI / (l_g_safe * l_g_safe * (1.0 + redshift))
+    return torch.where(is_gr, torch.zeros_like(coeff), coeff / safe_f)
 
 
 class ParameterizedPostEinstein(nn.Module):
@@ -165,6 +179,9 @@ class ParameterizedPostEinstein(nn.Module):
         lambda_g: Union[float, torch.Tensor] = float("inf"),
         distance: Union[float, torch.Tensor] = 100.0,
         redshift: Union[float, torch.Tensor] = 0.0,
+        d_alpha: Optional[Union[float, torch.Tensor]] = None,
+        alpha_ppe: Union[float, torch.Tensor] = 0.0,
+        a_ppe: Union[int, float, torch.Tensor] = 0.0,
         **waveform_kwargs,
     ) -> Tuple[torch.Tensor, torch.Tensor]:
         """Generate ppE-deformed polarizations h_plus and h_cross.
@@ -178,6 +195,9 @@ class ParameterizedPostEinstein(nn.Module):
             lambda_g: Graviton Compton wavelength in meters (default inf for GR).
             distance: Luminosity distance in Mpc.
             redshift: Cosmological redshift.
+            d_alpha: Optional independently supplied D_0 in meters.
+            alpha_ppe: Dimensionless inspiral amplitude coefficient (zero for GR).
+            a_ppe: Paper exponent of u=pi*Mc*f in the inspiral amplitude.
             **waveform_kwargs: Additional parameters passed to the underlying approximant
                 (e.g., chi1, chi2, inclination, phic, tc, f_ref).
 
@@ -195,27 +215,40 @@ class ParameterizedPostEinstein(nn.Module):
 
         m1 = as_tensor(mass1, device=f.device, dtype=f.dtype if f.is_floating_point() else torch.float64)
         m2 = as_tensor(mass2, device=f.device, dtype=f.dtype if f.is_floating_point() else torch.float64)
-        total_m = m1 + m2
+        chirp_m = (m1 * m2) ** (3.0 / 5.0) / (m1 + m2) ** (1.0 / 5.0)
+
+        # The carrier identifies the batch axes. A (B,) parameter must act on
+        # every frequency of its waveform, even when B happens to equal N.
+        batch_shape = hp_gr.shape[:-1]
+
+        def align(value):
+            tensor = as_tensor(value, device=f.device, dtype=m1.dtype)
+            return tensor.unsqueeze(-1) if batch_shape and tensor.shape == batch_shape else tensor
+
+        chirp_m = align(chirp_m)
 
         # 2. Compute non-GR phase shifts
-        delta_psi_ppe = ppe_phase_shift(f, total_m, beta_ppe=beta_ppe, b_ppe=b_ppe)
+        delta_psi_ppe = ppe_phase_shift(f, chirp_m, beta_ppe=align(beta_ppe), b_ppe=align(b_ppe))
         delta_psi_disp = modified_dispersion_phase_shift(
-            f, distance=distance, lambda_g=lambda_g, z=redshift
+            f, distance=align(distance), lambda_g=align(lambda_g), z=align(redshift),
+            d_alpha=None if d_alpha is None else align(d_alpha)
         )
 
         total_shift = delta_psi_ppe + delta_psi_disp
+        amplitude_factor = ppe_amplitude_factor(f, chirp_m, align(alpha_ppe), align(a_ppe))
 
         # 3. Apply stationary phase deformation: exp(-i * delta_Psi)
         # Match tensor dimensions if hp_gr is batched
         if hp_gr.dim() > total_shift.dim():
             total_shift = total_shift.unsqueeze(0)
+            amplitude_factor = amplitude_factor.unsqueeze(0)
 
         cos_shift = torch.cos(total_shift)
         sin_shift = torch.sin(total_shift)
         exp_factor = torch.complex(cos_shift, -sin_shift)
 
-        hp_ppe = hp_gr * exp_factor
-        hc_ppe = hc_gr * exp_factor
+        hp_ppe = hp_gr * amplitude_factor * exp_factor
+        hc_ppe = hc_gr * amplitude_factor * exp_factor
 
         return hp_ppe, hc_ppe
 

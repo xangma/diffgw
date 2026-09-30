@@ -2,8 +2,9 @@
 
 Port of torchwave.approximants.kerr_ringdown_public_clean.
 Analytic Fourier transform of a damped complex mode and its mirror.
-The angular shape uses the separately documented public-compatible
-inferred convention; no public implementation or calibration values are used.
+The default angular shape uses the separately documented inferred
+public-compatible convention; ``source_spectral`` selects the angular
+Teukolsky eigensolution. No public implementation or calibration values are used.
 """
 
 import math
@@ -193,6 +194,20 @@ def _grid(g, params):
     return g, params
 
 
+def _angular_pair(a, wr, damp, inc, pc, angular_convention):
+    if angular_convention == "public_compat":
+        return (spin_weighted_spheroidal_harmonic_table_compat(a, inc, pc),
+                spin_weighted_spheroidal_harmonic_table_compat(a, math.pi - inc, pc))
+    if angular_convention != "source_spectral":
+        raise ValueError("angular_convention must be 'public_compat' or 'source_spectral'")
+    from jaxwave.approximants.kerr_ringdown import spin_weighted_spheroidal_harmonic as spectral
+    c = a * (wr - 1j * damp)
+    equator = spectral(2, 2, c, jnp.full_like(inc, math.pi / 2), 0., ell_max=18)
+    gauge = jnp.conj(equator) / jnp.abs(equator)
+    return (spectral(2, 2, c, inc, pc, ell_max=18) * gauge,
+            spectral(2, 2, c, math.pi - inc, pc, ell_max=18) * gauge)
+
+
 def kerr220_td(
     t: jnp.ndarray,
     final_mass: Union[float, jnp.ndarray],
@@ -202,6 +217,8 @@ def kerr220_td(
     inclination: Union[float, jnp.ndarray] = 0.0,
     phic: Union[float, jnp.ndarray] = 0.0,
     tc: Union[float, jnp.ndarray] = 0.0,
+    *,
+    angular_convention: str = "public_compat",
 ) -> Tuple[jnp.ndarray, jnp.ndarray]:
     """Return ``(hp,hc)`` for u=t-tc>=0; zero before onset in JAX."""
     M, a, D, e, inc, pc, t0 = _params(final_mass, final_spin, distance, energy_fraction, inclination, phic, tc, t)
@@ -211,8 +228,7 @@ def kerr220_td(
     omega = wr / sec
     lam = damp / sec
     A = ringdown_amplitude_from_energy_fraction(M, D, e, omega, 1.0 / lam, convention="single_mode")
-    Sp = spin_weighted_spheroidal_harmonic_table_compat(a, inc, pc)
-    Sm = spin_weighted_spheroidal_harmonic_table_compat(a, math.pi - inc, pc)
+    Sp, Sm = _angular_pair(a, wr, damp, inc, pc, angular_convention)
     u = t - t0
     up = jnp.maximum(u, 0.0)
     z = jnp.exp(-lam * up - 1j * omega * up)
@@ -231,6 +247,8 @@ def kerr220_fd(
     inclination: Union[float, jnp.ndarray] = 0.0,
     phic: Union[float, jnp.ndarray] = 0.0,
     tc: Union[float, jnp.ndarray] = 0.0,
+    *,
+    angular_convention: str = "public_compat",
 ) -> Tuple[jnp.ndarray, jnp.ndarray]:
     """Return Fourier-minus-frequency ``(hp,hc)`` for frequency f in Hz in JAX."""
     M, a, D, e, inc, pc, t0 = _params(final_mass, final_spin, distance, energy_fraction, inclination, phic, tc, f)
@@ -240,8 +258,7 @@ def kerr220_fd(
     omega = wr / sec
     lam = damp / sec
     A = ringdown_amplitude_from_energy_fraction(M, D, e, omega, 1.0 / lam, convention="single_mode")
-    Sp = spin_weighted_spheroidal_harmonic_table_compat(a, inc, pc)
-    Sm = spin_weighted_spheroidal_harmonic_table_compat(a, math.pi - inc, pc)
+    Sp, Sm = _angular_pair(a, wr, damp, inc, pc, angular_convention)
     P = Sp + Sm
     C = Sp - Sm
     zp = 1.0 / (lam + 1j * (2.0 * math.pi * f + omega))

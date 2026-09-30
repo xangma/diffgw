@@ -818,6 +818,36 @@ def _build_holdout_cases() -> List[Dict[str, Any]]:
                               spin2x=.12, spin2y=.08, spin2z=.2,
                               f_ref=35., inclination=1.1, phic=.71)
         cases.append(case)
+    ringdown = copy.deepcopy(base["KerrRingdown"])
+    ringdown["id"] = "KerrRingdown_holdout_off_axis_energy_onset"
+    ringdown["params"].update(mass1=53., chi1=.35, distance=230.,
+                              energy_fraction=.017, inclination=1.1,
+                              phic=.41, tc=.002)
+    cases.append(ringdown)
+    # Independently chosen, nonspinning, nonzero-eccentricity model holdouts.
+    # Keep f0_ecc and f_ref explicit and distinct; the optional amplitude is off.
+    for case_id, m1, m2, e0, f0_ecc, f_ref, flow, fhigh, distance, inclination, phic in (
+        ("TF2Ecc_nonspin_offcatalog_20260927", 1.55, 1.25, .06, 28., 43., 30., 500., 160., .65, .4),
+        ("TF2Ecc_nonspin_offcatalog_second_20260927", 1.85, 1.15, .035, 32., 48., 34., 450., 220., 1.1, .73),
+    ):
+        cases.append({
+            "id": case_id,
+            "torch_name": "TaylorF2_Eccentric",
+            "lal_name": "TaylorF2Ecc",
+            "oracle_type": "lal",
+            "oracle_api": "SimInspiralChooseFDWaveform",
+            "verification_scope": "full_polarizations",
+            "params": {
+                "mass1": m1, "mass2": m2, "chi1": 0., "chi2": 0.,
+                "e0": e0, "f0_ecc": f0_ecc, "f_ref": f_ref,
+                "distance": distance, "inclination": inclination,
+                "phic": phic, "tc": 0., "spin_order": 7, "ecc_order": 6,
+                "include_amplitude_correction": False, "f_isco_cutoff": True,
+                "phasing_convention": "reference_frequency",
+            },
+            "grid": {"flow": flow, "fhigh": fhigh, "df": .25},
+            "expected_gate": dict(PARITY_GATE),
+        })
     return cases
 
 

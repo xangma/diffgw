@@ -21,7 +21,7 @@ from torchwave.constants import MSUN_SEC
 
 
 def _matched_ringdown(mf, eta, alpha2, alpha3, alpha4, alpha5, rd22, ratio, width):
-    """Full London Eq9, solving its two affine coefficients from a C1 join.
+    """Full London Eq14, solving its two affine coefficients from a C1 join.
 
     Synthetic join phase/slope are sufficient because they cancel when the
     two independently constructed phases are subtracted.
@@ -48,7 +48,7 @@ def _independent_eq9_change(mf, eta, a4, a5, rd22, damp22, rdlm, damplm):
 
 
 def test_hm_eq9_full_ansatz_and_parameter_gradients():
-    """The correction equals independently C1-matched full Eq9 minus D."""
+    """The correction equals independently C1-matched full Eq14 minus D."""
     values = ([0.03, 0.045, 0.07, 0.11], 0.21, 0.18, 0.98,
               0.085, 0.012, 0.14, 0.014)
     args = tuple(torch.tensor(value, dtype=torch.float64, requires_grad=True) for value in values)
@@ -57,7 +57,7 @@ def test_hm_eq9_full_ansatz_and_parameter_gradients():
     torch.testing.assert_close(actual, expected, rtol=1e-12, atol=2e-14)
     assert torch.autograd.gradcheck(hm_module._d_ringdown_phase_correction, args,
                                     eps=1e-6, atol=1e-5, rtol=1e-4)
-    # Eq9 reduces exactly to the original carrier for its own QNM.
+    # London Eq. (14) reduces to the original carrier for its own QNM.
     same = hm_module._d_ringdown_phase_correction(*args[:6], *args[4:6])
     torch.testing.assert_close(same, torch.zeros_like(same), atol=0.0, rtol=0.0)
 

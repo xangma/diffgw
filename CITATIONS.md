@@ -20,6 +20,20 @@ The resulting correction is also printed directly in
 [Pratten et al., arXiv:2001.11412v1](https://arxiv.org/abs/2001.11412v1),
 Eq. (A24), supplementing that paper's baseline Eq. (A19).
 
+The `TaylorF2_HM` author-source component gates also use the Mathematica-readable
+`supl-mkaf16.m` file in the author-published arXiv v1 source bundle for
+Mishra et al. Its bundle SHA256 is
+`f0b6c6810da95f45141dbb9f0c5cccec0ba0742f60b836dba7698c90a25d5154`
+and the member SHA256 is
+`501ea53c29b77e061585540b9ccfd69a4cd0283e805ea1e9c24c38800e627a70`.
+The repository retains generated amplitude-ratio evaluations, a transformed
+normalized nonspinning `TF28Phasing` expression, and provenance. The
+complex component gate combines those records with the paper's Eq. (11)
+absolute normalization; the repository does not retain the author source file.
+The transformed expression remains third-party-derived verification material
+with unresolved redistribution terms; the repository's MIT grant does not
+assert ownership of it.
+
 The [quadrupolar tidal reference](docs/math/taylorf2-tidal.md) uses
 [Wade et al., arXiv:1402.5156v1](https://arxiv.org/abs/1402.5156v1),
 Eqs. (4)–(6) and (A26), for the 5PN/6PN phase and tidal parameters, and
@@ -358,6 +372,34 @@ The current PhenomD fundamental Kerr-mode representation uses eigenvalues from t
     pages = "064002",
     year = "2020"
 }
+
+@article{Mezzasoma:2022qvh,
+    author = "Mezzasoma, Stefano and Yunes, Nicol{\'a}s",
+    title = "{Theory-agnostic framework for inspiral tests of general relativity with higher-harmonic gravitational waves}",
+    eprint = "2203.15934",
+    archivePrefix = "arXiv",
+    primaryClass = "gr-qc",
+    doi = "10.1103/PhysRevD.106.024026",
+    journal = "Phys. Rev. D",
+    volume = "106",
+    number = "2",
+    pages = "024026",
+    year = "2022"
+}
+
+@article{Mishra:2016whh,
+    author = "Mishra, Chandra Kant and Kela, Aditya and Arun, K. G. and Faye, Guillaume",
+    title = "{Ready-to-use post-Newtonian gravitational waveforms for binary black holes with nonprecessing spins: An update}",
+    eprint = "1601.05588",
+    archivePrefix = "arXiv",
+    primaryClass = "gr-qc",
+    doi = "10.1103/PhysRevD.93.084054",
+    journal = "Phys. Rev. D",
+    volume = "93",
+    number = "8",
+    pages = "084054",
+    year = "2016"
+}
 ```
 
 ---
@@ -429,6 +471,75 @@ The current PhenomD fundamental Kerr-mode representation uses eigenvalues from t
     journal = "Phys. Rev. D",
     volume = "101",
     pages = "024056",
+    year = "2020"
+}
+
+@article{Hamilton:2025xpnr,
+    author = "Hamilton, Eleanor and others",
+    title = "{PhenomXPNR: An improved gravitational wave model linking precessing inspirals and NR-calibrated merger-ringdown}",
+    eprint = "2507.02604",
+    archivePrefix = "arXiv",
+    primaryClass = "gr-qc",
+    year = "2025"
+}
+
+@article{Thompson:2024xo4a,
+    author = "Thompson, Jonathan E. and others",
+    title = "{PhenomXO4a: a phenomenological gravitational-wave model for precessing black-hole binaries with higher multipoles and asymmetries}",
+    eprint = "2312.10025",
+    archivePrefix = "arXiv",
+    primaryClass = "gr-qc",
+    doi = "10.1103/PhysRevD.109.063012",
+    journal = "Phys. Rev. D",
+    volume = "109",
+    pages = "063012",
+    year = "2024"
+}
+
+@article{Hamilton:2021pnr,
+    author = "Hamilton, Eleanor and London, Lionel and Thompson, Jonathan E. and Fauchon-Jones, Edward and Hannam, Mark and Kalaghatgi, Chinmay and Khan, Sebastian and Pannarale, Francesco and Vano-Vinuales, Alex",
+    title = "{The final twist: A model of gravitational waves from precessing black-hole binaries through merger and ringdown}",
+    eprint = "2107.08876",
+    archivePrefix = "arXiv",
+    primaryClass = "gr-qc",
+    doi = "10.1103/PhysRevD.104.124027",
+    journal = "Phys. Rev. D",
+    volume = "104",
+    pages = "124027",
+    year = "2021"
+}
+
+@article{Hamilton:2024bam,
+    author = "Hamilton, Eleanor and others",
+    title = "{A catalogue of precessing black-hole-binary numerical-relativity simulations}",
+    eprint = "2303.05419",
+    archivePrefix = "arXiv",
+    primaryClass = "gr-qc",
+    doi = "10.1103/PhysRevD.109.044032",
+    journal = "Phys. Rev. D",
+    volume = "109",
+    pages = "044032",
+    year = "2024"
+}
+
+@article{London:2018nxs,
+    author = "London, Lionel and Fauchon-Jones, Edward",
+    title = "{On modeling for Kerr black holes: Basis learning, QNM frequencies, and spherical-spheroidal mixing coefficients}",
+    eprint = "1810.03550",
+    archivePrefix = "arXiv",
+    primaryClass = "gr-qc",
+    doi = "10.1088/1361-6382/ab2f11",
+    journal = "Class. Quant. Grav.",
+    volume = "36",
+    pages = "235015",
+    year = "2019"
+}
+
+@software{London:2020positive,
+    author = "London, Lionel and Fauchon, Edward and Hamilton, Eleanor",
+    title = "{positive v1.0}",
+    version = "1.0",
+    doi = "10.5281/zenodo.3901856",
     year = "2020"
 }
 ```
@@ -916,6 +1027,27 @@ The current PhenomD fundamental Kerr-mode representation uses eigenvalues from t
     volume = "58",
     pages = "063001",
     year = "1998"
+}
+
+@misc{LIGO:T980044-10,
+    author = {{LIGO Laboratory}},
+    title = {{LIGO Hanford Observatory as-built detector coordinate survey}},
+    howpublished = {LIGO-T980044-10, Section 2.1 and Table 4},
+    url = {https://dcc.ligo.org/public/0002/T980044/000/T980044-10.pdf}
+}
+
+@misc{IERS:BulletinC49,
+    author = {{International Earth Rotation and Reference Systems Service}},
+    title = {{Bulletin C49: Announcement of a leap second in the UTC time scale}},
+    howpublished = {IERS Bulletin C49},
+    url = {https://datacenter.iers.org/data/html/bulletinc-049.html}
+}
+
+@misc{IERS:EOP14C04-2015,
+    author = {{International Earth Rotation and Reference Systems Service}},
+    title = {{EOP 14 C04 (IAU1980), 2015 series}},
+    howpublished = {MJD 57279, UT1-UTC datum},
+    url = {https://datacenter.iers.org/data/html/eopc04_14.15.html}
 }
 ```
 

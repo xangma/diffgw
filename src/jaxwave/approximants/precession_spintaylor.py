@@ -308,6 +308,9 @@ def evaluate_spintaylor_precession(
     phi_ref: Union[float, jnp.ndarray],
     convention: int = 1,
     observer_azimuth: Optional[Union[float, jnp.ndarray]] = None,
+    damp_beta: bool = False,
+    damping_rate: float = 2.0,
+    **kwargs,
 ) -> Tuple[jnp.ndarray, jnp.ndarray, jnp.ndarray, jnp.ndarray, jnp.ndarray, jnp.ndarray]:
     """Evaluate SpinTaylor precession Euler angles and frame geometry across frequency grid f in JAX.
 
@@ -472,78 +475,82 @@ def evaluate_spintaylor_precession(
     f_trans = 0.98 * f_meco
     v_trans = (PI * m_sec * f_trans) ** (1.0 / 3.0)
 
-    # Target frequency bounds (physical integration down to seismic band)
-    f_min_grid = jnp.min(jnp.where(f_eval > 0.0, f_eval, 1e9))
-    f_min_grid = jnp.where(jnp.any(f_eval > 0.0), f_min_grid, f_ref_t)
-    f_min_eval = jnp.minimum(f_ref_t, jnp.clip(f_min_grid, 15.0, None))
+    # Fixed endpoint and reference anchored IVP make the trajectory independent
+    # of the frequencies requested by the caller.
+    f_min_eval = jnp.minimum(f_ref_t, 15.0)
     v_min = (PI * m_sec * f_min_eval) ** (1.0 / 3.0)
 
-    # Integrate ODE on velocity grid
-    n_nodes = 200
-    v_grid = jnp.linspace(0.0, 1.0, n_nodes, dtype=dtype)
-    v_nodes = v_min[..., None] + v_grid * (v_trans - v_min)[..., None]
-    v_nodes_t = jnp.moveaxis(v_nodes, -1, 0)  # (n_nodes, ...)
+    # Integrate in both directions from the reference state.
+    n_low, n_high = 100, 200
 
     s1_norm_0 = jnp.linalg.norm(s1_0, axis=-1, keepdims=True)
     s2_norm_0 = jnp.linalg.norm(s2_0, axis=-1, keepdims=True)
 
-    lnh_curr = lnh_0
-    s1_curr = s1_0
-    s2_curr = s2_0
-
-    h_step = (v_trans - v_min) / float(n_nodes - 1)
     m1_exp = m1_m[..., None]
     m2_exp = m2_m[..., None]
     eta_exp = eta[..., None]
-    h_exp = h_step[..., None]
 
-    def step_derivs(v_in, l_in, s1_in, s2_in):
-        return SpinTaylorT4Engine.derivatives(v_in, l_in, s1_in, s2_in, m1_exp, m2_exp, eta_exp)
+    def integrate_segment(v_start, v_end, num_nodes):
+        v_grid = jnp.linspace(0.0, 1.0, num_nodes, dtype=dtype)
+        segment_nodes = v_start[..., None] + v_grid * (v_end - v_start)[..., None]
+        v_nodes_t = jnp.moveaxis(segment_nodes, -1, 0)
+        h_step = (v_end - v_start) / float(num_nodes - 1)
+        h_exp = h_step[..., None]
+        lnh_curr, s1_curr, s2_curr = lnh_0, s1_0, s2_0
+        def step_derivs(v_in, l_in, s1_in, s2_in):
+            return SpinTaylorT4Engine.derivatives(v_in, l_in, s1_in, s2_in, m1_exp, m2_exp, eta_exp)
 
-    def scan_step(state, v_cur_val):
-        lnh_c, s1_c, s2_c = state
-        v_cur = v_cur_val[..., None]
-        h = h_exp
+        def scan_step(state, v_cur_val):
+            lnh_c, s1_c, s2_c = state
+            v_cur = v_cur_val[..., None]
+            h = h_exp
 
-        _, k1_l, k1_s1, k1_s2 = step_derivs(v_cur, lnh_c, s1_c, s2_c)
+            _, k1_l, k1_s1, k1_s2 = step_derivs(v_cur, lnh_c, s1_c, s2_c)
 
-        v_half = v_cur + 0.5 * h
-        l2 = lnh_c + 0.5 * h * k1_l
-        l2 = l2 / jnp.maximum(jnp.linalg.norm(l2, axis=-1, keepdims=True), 1e-24)
-        s1_2 = s1_c + 0.5 * h * k1_s1
-        s2_2 = s2_c + 0.5 * h * k1_s2
-        _, k2_l, k2_s1, k2_s2 = step_derivs(v_half, l2, s1_2, s2_2)
+            v_half = v_cur + 0.5 * h
+            l2 = lnh_c + 0.5 * h * k1_l
+            l2 = l2 / jnp.maximum(jnp.linalg.norm(l2, axis=-1, keepdims=True), 1e-24)
+            s1_2 = s1_c + 0.5 * h * k1_s1
+            s2_2 = s2_c + 0.5 * h * k1_s2
+            _, k2_l, k2_s1, k2_s2 = step_derivs(v_half, l2, s1_2, s2_2)
 
-        l3 = lnh_c + 0.5 * h * k2_l
-        l3 = l3 / jnp.maximum(jnp.linalg.norm(l3, axis=-1, keepdims=True), 1e-24)
-        s1_3 = s1_c + 0.5 * h * k2_s1
-        s2_3 = s2_c + 0.5 * h * k2_s2
-        _, k3_l, k3_s1, k3_s2 = step_derivs(v_half, l3, s1_3, s2_3)
+            l3 = lnh_c + 0.5 * h * k2_l
+            l3 = l3 / jnp.maximum(jnp.linalg.norm(l3, axis=-1, keepdims=True), 1e-24)
+            s1_3 = s1_c + 0.5 * h * k2_s1
+            s2_3 = s2_c + 0.5 * h * k2_s2
+            _, k3_l, k3_s1, k3_s2 = step_derivs(v_half, l3, s1_3, s2_3)
 
-        v_full = v_cur + h
-        l4 = lnh_c + h * k3_l
-        l4 = l4 / jnp.maximum(jnp.linalg.norm(l4, axis=-1, keepdims=True), 1e-24)
-        s1_4 = s1_c + h * k3_s1
-        s2_4 = s2_c + h * k3_s2
-        _, k4_l, k4_s1, k4_s2 = step_derivs(v_full, l4, s1_4, s2_4)
+            v_full = v_cur + h
+            l4 = lnh_c + h * k3_l
+            l4 = l4 / jnp.maximum(jnp.linalg.norm(l4, axis=-1, keepdims=True), 1e-24)
+            s1_4 = s1_c + h * k3_s1
+            s2_4 = s2_c + h * k3_s2
+            _, k4_l, k4_s1, k4_s2 = step_derivs(v_full, l4, s1_4, s2_4)
 
-        lnh_next = lnh_c + (h / 6.0) * (k1_l + 2.0 * k2_l + 2.0 * k3_l + k4_l)
-        lnh_next = lnh_next / jnp.maximum(jnp.linalg.norm(lnh_next, axis=-1, keepdims=True), 1e-24)
-        s1_next = s1_c + (h / 6.0) * (k1_s1 + 2.0 * k2_s1 + 2.0 * k3_s1 + k4_s1)
-        s2_next = s2_c + (h / 6.0) * (k1_s2 + 2.0 * k2_s2 + 2.0 * k3_s2 + k4_s2)
+            lnh_next = lnh_c + (h / 6.0) * (k1_l + 2.0 * k2_l + 2.0 * k3_l + k4_l)
+            lnh_next = lnh_next / jnp.maximum(jnp.linalg.norm(lnh_next, axis=-1, keepdims=True), 1e-24)
+            s1_next = s1_c + (h / 6.0) * (k1_s1 + 2.0 * k2_s1 + 2.0 * k3_s1 + k4_s1)
+            s2_next = s2_c + (h / 6.0) * (k1_s2 + 2.0 * k2_s2 + 2.0 * k3_s2 + k4_s2)
 
-        s1_norm = jnp.maximum(jnp.linalg.norm(s1_next, axis=-1, keepdims=True), 1e-24)
-        s2_norm = jnp.maximum(jnp.linalg.norm(s2_next, axis=-1, keepdims=True), 1e-24)
-        s1_next = s1_next * (s1_norm_0 / s1_norm)
-        s2_next = s2_next * (s2_norm_0 / s2_norm)
+            s1_norm = jnp.maximum(jnp.linalg.norm(s1_next, axis=-1, keepdims=True), 1e-24)
+            s2_norm = jnp.maximum(jnp.linalg.norm(s2_next, axis=-1, keepdims=True), 1e-24)
+            s1_next = s1_next * (s1_norm_0 / s1_norm)
+            s2_next = s2_next * (s2_norm_0 / s2_norm)
 
-        return (lnh_next, s1_next, s2_next), lnh_next
+            return (lnh_next, s1_next, s2_next), lnh_next
 
-    init_state = (lnh_curr, s1_curr, s2_curr)
-    _, lnh_steps = jax.lax.scan(scan_step, init_state, v_nodes_t[:-1])
+        init_state = (lnh_curr, s1_curr, s2_curr)
+        _, lnh_steps = jax.lax.scan(scan_step, init_state, v_nodes_t[:-1])
 
-    lnh_all_t = jnp.concatenate([lnh_curr[None, ...], lnh_steps], axis=0)
-    lnh_all = jnp.moveaxis(lnh_all_t, 0, -2)
+        lnh_all_t = jnp.concatenate([lnh_curr[None, ...], lnh_steps], axis=0)
+        lnh_all = jnp.moveaxis(lnh_all_t, 0, -2)
+        return segment_nodes, lnh_all
+
+    v_low_desc, lnh_low_desc = integrate_segment(v0, v_min, n_low)
+    v_high, lnh_high = integrate_segment(v0, v_trans, n_high)
+    v_nodes = jnp.concatenate([jnp.flip(v_low_desc, axis=-1)[..., :-1], v_high], axis=-1)
+    lnh_all = jnp.concatenate([jnp.flip(lnh_low_desc, axis=-2)[..., :-1, :], lnh_high], axis=-2)
+    n_nodes = n_low + n_high - 1
 
     # Rotate to J-frame
     lnh_j_nodes = rotate_to_j(lnh_all)
@@ -571,13 +578,14 @@ def evaluate_spintaylor_precession(
     f_trans_exp = unsqueeze_param(f_trans)
     m_sec_exp = unsqueeze_param(m_sec)
     v_min_exp = unsqueeze_param(v_min)
+    v_ref_exp = unsqueeze_param(v0)
     v_trans_exp = unsqueeze_param(v_trans)
 
-    # Interpolation indices in v-space (v varies linearly on nodes)
+    # Each side of the reference frequency has its own uniform v grid.
     v_eval = (PI * m_sec_exp * jnp.maximum(f_eval, 1e-12)) ** (1.0 / 3.0)
-    u_v = (v_eval - v_min_exp) / jnp.maximum(v_trans_exp - v_min_exp, 1e-12)
-    u_v = jnp.clip(u_v, 0.0, 1.0)
-    idx_float = u_v * float(n_nodes - 1)
+    u_low = jnp.clip((v_eval - v_min_exp) / jnp.maximum(v_ref_exp - v_min_exp, 1e-12), 0.0, 1.0)
+    u_high = jnp.clip((v_eval - v_ref_exp) / jnp.maximum(v_trans_exp - v_ref_exp, 1e-12), 0.0, 1.0)
+    idx_float = jnp.where(v_eval < v_ref_exp, u_low * (n_low - 1), (n_low - 1) + u_high * (n_high - 1))
     idx_low = jnp.clip(idx_float.astype(jnp.int64), 0, n_nodes - 2)
     t_frac = jnp.clip(idx_float - idx_low.astype(dtype), 0.0, 1.0)
 
@@ -596,8 +604,8 @@ def evaluate_spintaylor_precession(
 
     # MRD analytical continuation for f >= f_trans
     mf_nodes = (v_nodes ** 3) / PI
-    idx1 = int(0.97 * (n_nodes - 1))
-    idx2 = int(0.99 * (n_nodes - 1))
+    idx1 = (n_low - 1) + int(0.97 * (n_high - 1))
+    idx2 = (n_low - 1) + int(0.99 * (n_high - 1))
     f1 = mf_nodes[..., idx1]
     f2 = mf_nodes[..., idx2]
     a1 = -alpha_nodes[..., idx1]
@@ -621,8 +629,14 @@ def evaluate_spintaylor_precession(
     cC_u = unsqueeze_param(cC)
 
     alpha_mrd = -(aC_u + bC_u / jnp.maximum(mf4, 1e-16) + cC_u / jnp.maximum(mf2, 1e-8))
-    cosb_mrd = cosb_insp
-    gamma_mrd = gamma_insp - cosb_insp * (alpha_mrd - alpha_insp)
+    if damp_beta:
+        beta_insp = jnp.arccos(jnp.clip(cosb_insp, -1.0, 1.0))
+        delta_f = jnp.maximum((f_eval - f_trans_exp) / f_trans_exp, 0.0)
+        beta_damped = beta_insp * jnp.exp(-damping_rate * delta_f)
+        cosb_mrd = jnp.cos(beta_damped)
+    else:
+        cosb_mrd = cosb_insp
+    gamma_mrd = gamma_insp - cosb_mrd * (alpha_mrd - alpha_insp)
 
     is_mrd = f_eval >= f_trans_exp
     alpha_out = jnp.where(is_mrd, alpha_mrd, alpha_insp)
@@ -630,23 +644,11 @@ def evaluate_spintaylor_precession(
     gamma_out = jnp.where(is_mrd, gamma_mrd, gamma_insp)
     beta_out = jnp.arccos(jnp.clip(cosb_out, -1.0, 1.0))
 
-    # Reference value offset alignment at f_ref
-    u_ref = (v0 - v_min) / jnp.maximum(v_trans - v_min, 1e-12)
-    idx_ref = jnp.clip((u_ref * float(n_nodes - 1)).astype(jnp.int64), 0, n_nodes - 2)
-
-    idx_g = idx_ref[..., None]
-    if alpha_nodes.ndim > 1 and alpha_nodes.shape[:-1] != idx_g.shape[:-1]:
-        alpha_nodes_exp = jnp.broadcast_to(alpha_nodes, idx_g.shape[:-1] + (alpha_nodes.shape[-1],))
-        gamma_nodes_exp = jnp.broadcast_to(gamma_nodes, idx_g.shape[:-1] + (gamma_nodes.shape[-1],))
-    else:
-        alpha_nodes_exp = alpha_nodes
-        gamma_nodes_exp = gamma_nodes
-
-    alpha_ref_val = jnp.take_along_axis(alpha_nodes_exp, idx_g, axis=-1)[..., 0]
-    gamma_ref_val = jnp.take_along_axis(gamma_nodes_exp, idx_g, axis=-1)[..., 0]
-
-    # In LAL, alpha(f_ref) = 0 for SpinTaylor
-    alpha_offset = -alpha_ref_val
+    # Pratten et al. (2021), Appendix C, fixes the reference gauge:
+    # alpha_0 = pi - kappa and gamma_0 = -epsilon_0 (convention 1).
+    alpha_ref_val = alpha_nodes[..., n_low - 1]
+    gamma_ref_val = gamma_nodes[..., n_low - 1]
+    alpha_offset = alpha_0 - alpha_ref_val
     alpha_final = alpha_out + unsqueeze_param(alpha_offset)
 
     # Return gamma = -epsilon to match MSA convention in twisting-up:

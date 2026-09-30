@@ -42,6 +42,17 @@ from .nrtidal_fits import (
     NRTIDAL_V2_AMP_COEFFS,
     BNS_MERGER_FREQ_COEFFS,
 )
+from .windowing import (
+    planck_taper,
+    torch_planck_taper,
+    jax_planck_taper,
+    nsbh_gamma1_continuation,
+    torch_nsbh_gamma1_continuation,
+    jax_nsbh_gamma1_continuation,
+    nsbh_ringdown_width_window,
+    torch_nsbh_ringdown_width_window,
+    jax_nsbh_ringdown_width_window,
+)
 
 __all__ = [
     "C_SI",
@@ -73,4 +84,13 @@ __all__ = [
     "NRTIDAL_V2_PHASE_COEFFS",
     "NRTIDAL_V2_AMP_COEFFS",
     "BNS_MERGER_FREQ_COEFFS",
+    "planck_taper",
+    "torch_planck_taper",
+    "jax_planck_taper",
+    "nsbh_gamma1_continuation",
+    "torch_nsbh_gamma1_continuation",
+    "jax_nsbh_gamma1_continuation",
+    "nsbh_ringdown_width_window",
+    "torch_nsbh_ringdown_width_window",
+    "jax_nsbh_ringdown_width_window",
 ]

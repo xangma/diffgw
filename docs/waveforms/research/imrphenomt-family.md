@@ -22,8 +22,8 @@ and [Pratten et al., arXiv:2004.06503](https://arxiv.org/abs/2004.06503).
 
 | Variant | Coprecessing/aligned input modes | Extra construction | Research status |
 | --- | --- | --- | --- |
-| T | `(2,±2)` | Updated aligned carrier | Native executable; independent scalar spec pending |
-| THM | T plus `(2,±1),(3,±3),(4,±4),(5,±5)` | Mode-specific amplitude and merger/ringdown frequency | Native executable; independent scalar spec pending |
+| T | `(2,±2)` | Updated aligned carrier | Native executable; supplied-input dominant merger scalar checked; complete scalar spec pending |
+| THM | T plus `(2,±1),(3,±3),(4,±4),(5,±5)` | Mode-specific amplitude and merger/ringdown frequency | Native executable; shared dominant merger checked; HM scalar spec pending |
 | TP | T pair | Euler angles, remnant adjustment, Wigner rotation | Native executable; numerical-precession qualification blocked |
 | TPHM | THM set | Same precession/rotation for each degree | Native executable; numerical-precession qualification blocked |
 
@@ -59,8 +59,10 @@ their negative partners for polarization projection.
 
 TP/TPHM accept Cartesian spin vectors in the reference `L0` source frame;
 aligned variants reject nonzero transverse spin. The frame axes follow TPHM
-Eq. (3): reference `z=L_N`, `x` points from the smaller to larger black hole,
-and `y` completes a right-handed triad. TPHM Eqs. (4)–(9) rotate from the
+Eq. (3): reference `z=L_N` and `x=(r1-r2)/|r1-r2|`. In the paper's labeling,
+`q=m2/m1>=1`, so `x` points from the larger body 2 toward the smaller body 1;
+DiffGW's public mass labels are canonicalized with `m1>=m2`. `y` completes a
+right-handed triad. TPHM Eqs. (4)–(9) rotate from the
 coprecessing frame through a `J` frame into `L0` and project spin-weight `-2`
 harmonics. Native `project_modes` evaluates the equivalent `J`-frame sum at
 azimuth zero, followed by a polarization-basis factor `exp(2i zeta)`; compare
@@ -98,23 +100,33 @@ merger; the selected precessing final spin changes **ringdown QNM inputs**
 
 Stable IDs below are proposed `v0` research identifiers. `conditional` means
 that published equations need pinned calibrated fits/QNM inputs;
-`pending` means the independent scalar expression and checks are absent.
+`checked` means an independent executable scalar component is present and
+matches both native backends, without qualifying its composed model;
+`pending` means the independent scalar expression or a downstream gate is absent.
 The native locations are implementation evidence, not independent sources.
 
 | Component ID | Exact source equation/algorithm and dependency | Variants | Status | Native locations and next gate |
 | --- | --- | --- | --- | --- |
-| `T-PN-FREQ-v0` | THM Eqs. (7)–(11): `theta=[eta(t0-t)/(5M)]^(-1/8)` and six fitted frequency values at `theta={.33,.45,.55,.65,.75,.82}` solve Eq. (10). Eq. (8) defines orbital `omega_N=theta³/8`; the native `(2,2)` carrier uses twice the orbital TaylorT3 series and pseudo-PN sum, with leading `theta³/4`. T3 spin coefficients/phase primitive trace to original T App. A. | all | conditional | `imrphenomt.py` `_pn_coefficients`, `_coeff`, `_phase_insp_raw`; transcribe independent PN coefficients and fitted `t0` branch |
+| `T-PN-FREQ-v0` | THM Eqs. (7)–(11): `theta=[eta(t0-t)/(5M)]^(-1/8)` and six fitted frequency values at `theta={.33,.45,.55,.65,.75,.82}` solve Eq. (10). Eq. (8) defines orbital `omega_N=theta³/8`; the native `(2,2)` carrier uses twice the orbital TaylorT3 series and pseudo-PN sum, with leading `theta³/4`. The PN terms are covered by `T-PN-T3-v1`. | all | conditional | `imrphenomt.py` `_coeff`, `_phase_insp_raw`; `T-PN-FIT-INPUT-v1` pins the fit inputs on a finite grid, but the complete inspiral phase/carrier and physical calibration remain open |
+| `T-PN-T3-v1` | T/TP App. A Eqs. (A5a)–(A5h), THM Eqs. (8)–(9): 3.5PN TaylorT3 coefficients, `(2,2)` frequency, and integrated phase primitive. The printed A5g omits `235925 eta³/1769472`; the pinned MIT author carrier explicitly restores it. Both source variants are visible in the [component spec](../../math/phenomt-taylor-t3.md). | all | checked | `diffgw_reference/phenomt_taylor_t3.py`; `tests/test_phenomt_taylor_t3_math_reference.py` checks both native backends; [len receipt](../../validation/phenomt_taylor_t3_20260927.md). This does not qualify calibrated fit inputs or the complete inspiral. |
+| `T-PN-FREQ-COLLOC-v0` | THM Eqs. (8)–(11): high-precision scalar solve of the six `(2,2)` pseudo-PN coefficients, including the `t0`-shifted first target and off-node interpolation. It takes the six TaylorT3 coefficients and calibrated fits as inputs. | all | checked | `diffgw_reference/phenomt_inspiral_collocation.py`; `tests/test_phenomt_inspiral_collocation_math_reference.py` checks Torch/JAX at equal mass, unequal spin, and q=10 with independent `T-PN-T3-v1` input and source-derived finite-grid fit values. The complete carrier remains unqualified. |
+| `T-PN-FIT-INPUT-v1` | THM Eqs. (8)–(11) define the six nodes; pinned MIT phenomxpy `fits.py` supplies the unprinted algebraic `t0` and five fitted frequency surfaces. | all | checked on finite grid | [component spec](../../math/phenomt-inspiral-fit-inputs.md), author-asset hash verifier, frozen source-derived values, `tests/test_phenomt_inspiral_fit_inputs_math_reference.py`, and [len receipt](../../validation/phenomt_inspiral_fit_inputs_20260927.md). The source transcription is checked; the underlying NR/EOB calibration is not reconstructed. |
+| `T-INSP-TIME-ADAPTER-v1` | THM Eqs. (8)–(11), T/TP Eq. (19), and the pinned MIT author post-`tEarly` carrier origin define bounded inspiral frequency inversion and phase differences; the fixed grid, `f_ref` rule and lower-frequency mask are diffGW interface conventions. | T dominant `(2,2)` | checked on finite post-`tEarly`, pre-join grid | [component spec](../../math/phenomt-inspiral-time-adapter.md), `diffgw_reference/phenomt_inspiral_time_adapter.py`, `tests/test_phenomt_inspiral_time_adapter_math_reference.py`, and [len receipt](../../validation/phenomt_inspiral_time_adapter_20260927.md). The author pre-`tEarly` inversion branch shifts by `t0`, unlike the native inversion, and remains outside this gate. |
 | `T-PN-AMP-v0` | THM Eqs. (12)–(16), App. A: complex PN amplitude and three real pseudo-PN orders `x^(k/2)` for `k=8,9,10`, `x=(omega22/2)^(2/3)`; collocation at `t/M=-2000,-250,-150`; rotate HM amplitude by Eq. (13) offsets `(0,pi/2,-pi/2,pi,pi/2)`. | T, THM, TP, TPHM | conditional | `_phenomt_amplitude.py`, `imrphenomthm.py` `_mode_pn`/`_pn_amp`; isolate PN complex coefficient tables |
 | `T-HM-PHASE-v0` | THM Eqs. (17)–(21): `phi_lm^insp=(m/2)phi22+arg(H_lm^insp)-Delta phi_lm`; differentiate `arg` for cut frequency. | THM, TPHM | conditional | `imrphenomthm.py` `_pn_amp_phase_derivative`, `_positive`; establish sign at complex-amplitude zeros |
 | `T-REMNANT-QNM-v0` | THM Sec. II.3, Eqs. (22)–(27): 2017 aligned remnant fits, fundamental/first-overtone Kerr frequency and damping fits, with `omega=2*pi*f/M_f` converted to total-mass time by `1/(M_f/M)`; fitted peak, `c2,c3,d3`. | all | conditional | `phenomt_fits.py`; `imrphenomt.py` `_state`/`_coeff`; `imrphenomthm.py` `_positive`; pin every fit symbol/asset and numeric domain |
-| `T-RD-v0` | THM Eqs. (24)–(27): QNM-rescaled rational frequency correction `c1 c2(c3 e^(-c2 t)+2c4 e^(-2c2 t))/(1+c3 e^(-c2 t)+c4 e^(-2c2 t))`, and `bar H=d1 tanh[d2(t-t_peak)+d3]+d4`; amplitude carries `exp[-alpha1(t-t_peak)]`. Model calibrates `c2`, sets frequency `c4=0`, keeps amplitude `d2=(alpha2-alpha1)/2`; continuity determines the other coefficients. Eq. (25)'s printed `bar omega=omega-omega_RD` conflicts in sign with Eq. (27a)'s `c1` and the native `omega=omega_RD-correction`; retain as a transcription gate. | all | conditional | `imrphenomt.py` and `_phenomt_amplitude.py`; THM `_positive`; verify each mode's peak shift and precessing-QNM splice |
-| `T-MERGER-v0` | THM Eqs. (28)–(33): `omega=omega_RD[1-sum_{k=0}^4 a_k asinh(alpha1 t)^k]`; `H=b0+b1 tau²+b2 sech(2 alpha1 tau)^(1/7)+b3 sech(alpha1 tau)`; values/slopes and fitted interior collocation determine coefficients. | all | conditional | `imrphenomt.py` `_coeff`/`_phase_inter_raw`, `_phenomt_amplitude.py`, THM `_positive`; specify distinct frequency and amplitude joins |
-| `T-FITS-v0` | THM Sec. III Eqs. (34)–(40): six `(2,2)` frequency, three per-mode amplitude, two per-mode merger, peak, and three ringdown calibrated values (16 dominant/10 additional per paper), plus final-state/QNM fits. Hierarchical NR/Teukolsky/EOB calibration is **not** recreated here. | all | conditional | `diffgw_core/phenomt_fits.py`; pin author asset hash, fit function mapping and licenses |
-| `P-ANGLES-v0` | TPHM Eqs. (4)–(7), (15)–(20), App. A: `alpha=atan2(Ly,Lx)`, `cos beta=Lz`, `dot gamma=-dot alpha cos beta`; NNLO effective single spin, double-spin MSA with `alpha=alpha_-1+alpha_0`, selected suffix continuation. | TP, TPHM | pending | `_phenomt_precession.py`, `_phenomt_msa.py`, `_phenomt_angle_options.py`; independent scalar angle tables and aligned-limit checks |
-| `P-NUMERICAL-v0` | TPHM Eqs. (12)–(14), Sturani Eqs. (3),(21),(22),(24),(25): evolve both spins and orbital direction against the **T carrier** frequency, with nonspinning 3PN angular-momentum magnitude and spin-dependent L terms disabled (TPHM Sec. II.4.1). Production excludes Sturani's N3LO quadratic-spin Eq. (24), retains leading Kerr self-quadrupole coefficient 1 and N4LO spin-orbit. | TP, TPHM PV300 | pending | `_phenomt_spin_evolution.py`, `_phenomt_numerical.py`; resolve black-box initial spin-even rate difference before qualification |
+| `T-RD-v0` | THM Eqs. (24)–(27): QNM-rescaled rational frequency correction `c1 c2(c3 e^(-c2 t)+2c4 e^(-2c2 t))/(1+c3 e^(-c2 t)+c4 e^(-2c2 t))`, and `bar H=d1 tanh[d2(t-t_peak)+d3]+d4`; amplitude carries `exp[-alpha1(t-t_peak)]`. Model calibrates `c2`, sets frequency `c4=0`, keeps amplitude `d2=(alpha2-alpha1)/2`; continuity determines the other coefficients. Eq. (25)'s printed `bar omega=omega-omega_RD` conflicts in sign with Eq. (27a)'s `c1` and the native `omega=omega_RD-correction`. | all | conditional; dominant supplied-input frequency/phase and amplitude shapes checked | [frequency/phase spec](../../math/phenomt-ringdown-frequency.md), [amplitude spec](../../math/phenomt-ringdown-amplitude.md), and their len receipts; other modes, fit/QNM provenance, peak shifts, and precessing-QNM splice remain open. The native bounded-`d2` branch is an explicitly separate carrier diagnostic. |
+| `T-MERGER-22-FREQ-v1` | THM Eqs. (28), (29), (31): five frequency/slope boundary conditions solve the QNM-normalized asinh polynomial; phase is its integral. Dominant interior `theta=.95` is an author-carrier specialization. | all, shared `(2,2)` | checked with supplied inputs | [component spec](../../math/phenomt-merger.md), `diffgw_reference/phenomt_merger.py`, `tests/test_phenomt_merger_math_reference.py`, and [len receipt](../../validation/phenomt_merger_20260929.md); calibrated targets and QNM rates remain inputs |
+| `T-MERGER-22-AMP-v1` | THM Eqs. (30), (32): three signed amplitude values and cutoff slope determine the four sech/quadratic coefficients. | all, shared `(2,2)` | checked with supplied inputs | Same spec, reference, test, and receipt; PN cutoff, fitted targets, zero crossings, and HM amplitudes remain outside this gate |
+| `T-MERGER-HM-v0` | THM Eqs. (28)–(33): mode-specific merger frequency/amplitude and peak shifts for `(2,1),(3,3),(4,4),(5,5)`. | THM, TPHM | conditional | `imrphenomthm.py` `_positive`; isolate mode-specific joins and signed-amplitude phase behavior |
+| `T-FITS-v0` | THM Sec. III Eqs. (34)–(40): six `(2,2)` frequency, three per-mode amplitude, two per-mode merger, peak, and three ringdown calibrated values (16 dominant/10 additional per paper), plus final-state/QNM fits. Hierarchical NR/Teukolsky/EOB calibration is **not** recreated here. | all | conditional | `diffgw_core/phenomt_fits.py`; the inspiral `t0` and five frequency targets have a bounded source transcription gate (`T-PN-FIT-INPUT-v1`); remaining fit symbols and physical calibration need separate evidence |
+| `P-ANGLES-v0` | TPHM Eqs. (4)–(7), (15)–(20), App. A: `alpha=atan2(Ly,Lx)`, `cos beta=Lz`, `dot gamma=-dot alpha cos beta`; NNLO effective single spin, double-spin MSA with `alpha=alpha_-1+alpha_0`, selected suffix continuation. | TP, TPHM | pending | `_phenomt_precession.py`, `_phenomt_msa.py`, `_phenomt_angle_options.py`; the [q=10 gate decision](../../validation/phenomt_q10_gate_blocker_20260927.md) records raw published-equation MSA scalar agreement below `3e-10`. NNLO scalar expressions, broader angle/limit checks and the binary PV223 convention provenance remain open. |
+| `P-ANGLE-CONTINUATION-v0` | TPHM Eqs. (5), (20), and (24): minimal-rotation gamma, continuous linear alpha/beta continuation from MECO, and fixed-beta ringdown alpha/gamma evolution. | TP, TPHM MSA | checked | `diffgw_reference/phenomt_angle_continuation.py`; scalar-table refinement agrees within `1.65e-7` rad and native continuation within `7.26e-6` rad. The separate [raw MSA scalar gate](../../validation/phenomt_q10_gate_blocker_20260927.md) agrees with production on its declared case; full analytical-angle qualification and binary PV223 convention provenance remain open. |
+| `P-NUMERICAL-RHS-v0` | TPHM Eqs. (12)–(14), Sturani Eqs. (3),(21),(22),(24),(25): both spin derivatives, the nonspinning 3PN orbital-angular-momentum magnitude, and constrained `dLhat/d(t/M)`. The scalar exposes the `v5` through `v9` pieces separately. Production excludes only Sturani's N3LO quadratic-spin Eq. (24), while retaining the leading Kerr self-quadrupole coefficient 1 and N4LO spin-orbit. | TP, TPHM PV300 | checked | `diffgw_reference/phenomt_spin_evolution.py`; 80-digit scalar totals and independently recovered PN-power coefficients match Torch/JAX |
+| `P-NUMERICAL-v0` | Integrate `P-NUMERICAL-RHS-v0` against the **T carrier** frequency using TPHM Sec. II.4.1 and Eqs. (12)–(14), then construct Euler angles and event/ringdown continuation. | TP, TPHM PV300 | pending | `diffgw_reference/phenomt_numerical_trajectory.py`; the independent path matches native rotation within `4.78e-9` rad, but diverges from rotations reconstructed from the public Euler angles by `1e-4` rad after `1.465` ms and `0.39276` rad maximum. The frozen clock/chart receipt excludes a common output-clock or gamma-integration cause; hidden precession timing, ODE evolution, and alpha/beta construction remain unresolved alternatives |
 | `P-RD-REMNANT-v0` | TPHM Eqs. (21)–(26): Eq. (25) supplies the magnitude `sqrt(chi_f,AS²+S_perp²/M⁴)`; native code restores the aligned final-spin sign for the QNM input. Ringdown uses `dot alpha=omega_122-omega_121`, beta fixed at peak, gamma from minimal rotation. | TP, TPHM | conditional | `_phenomt_dispatch.py`, `_phenomt_angle_options.py`, `_phenomt_numerical.py`; characterize FS0/3/4 inputs and signs |
-| `P-ROTATION-v0` | TPHM Eqs. (4),(8),(9): Wigner-D rotation from coprecessing to `J`, fixed inverse reference rotation to `L0`, SWSH projection. | TP, TPHM | pending | `_phenomt_precession.py` `wigner_d`/`project_modes`; independent factorial/SWSH scalar and frame tests |
-| `T-SAMPLING-v0` | Native adapter: seconds↔mass units, reference-phase anchoring, frequency inversion, `f_lower` mask, peak placement and fixed sample grid. This is interface mathematics rather than a paper ansatz. | all | pending | `torchwave/_phenomt_td.py`, `jaxwave/_phenomt_td.py`; scalar adapter and boundary tests |
+| `P-ROTATION-v0` | TPHM Eqs. (4),(8),(9): Wigner-D rotation from coprecessing to `J`, fixed inverse reference rotation to `L0`, SWSH projection. | TP, TPHM | checked | `diffgw_reference/phenomt_rotation.py` constructs Wigner d by exponentiating the angular-momentum generator; strict Torch/JAX tests cover degrees 2–5, signed modes, observer phase and reference inverse. The separate public-binary supplied-mode/angle projection agrees below `8e-16`. This qualifies rotation only for supplied modes and angles. |
+| `T-SAMPLING-v0` | Native adapter: seconds↔mass units, reference-phase anchoring, frequency inversion, `f_lower` mask, peak placement and fixed sample grid. This is interface mathematics rather than a paper ansatz. | all | pending beyond bounded T inspiral gate | `T-INSP-TIME-ADAPTER-v1` covers the dominant post-`tEarly` inspiral on a finite grid; full-T merger/ringdown, HM/precessing branches, auto-duration and unsupported-frequency boundaries remain open. |
 
 The native `(2,2)` frequency join is `t_cut=-26.982976386771437/eta` and its
 interior collocation time uses `theta=.95`; higher-mode frequency joins at
@@ -138,7 +150,12 @@ modules. `src/diffgw_core/phenomt_options.py` validates method/version for
 both; `src/diffgw_core/phenomt_fits.py` supplies algebraic calibration fits.
 The wrapper routes through `src/torchwave/_phenomt_td.py` or
 `src/jaxwave/_phenomt_td.py`; neither backend calls a scalar reference. No
-independent scalar T-family module exists yet.
+independent scalar carrier or raw analytical-angle module exists yet. The
+isolated `diffgw_reference/phenomt_spin_evolution.py` covers the numerical RHS;
+`phenomt_numerical_trajectory.py` independently supplies the event, DOP853
+evolution, tangent transport, and angle reconstruction; and
+`phenomt_angle_continuation.py` supplies the paper's scalar continuation rules.
+None imports production ODE, interpolation, angle, or continuation helpers.
 
 The calibration/reconstruction adaptation is attributed to the authors'
 MIT-licensed [`phenomxpy` revision
@@ -177,7 +194,8 @@ implementation. No held-out NR comparison of the native family is established.
 
 The reference report's T/THM and NNLO LAL criteria are **thresholds**, not
 measured global worst cases. For MSA `(40,15)`, TP/TPHM relative L2 is
-`0.00379/0.00388`. Numerical PV300/FS4 gives `0.0234/0.0236` there and
+`0.00379/0.00388`; for the strongly spinning `(60,6)` holdout it is
+`0.0202/0.0225`, above the retained `0.01` gate. Numerical PV300/FS4 gives `0.0234/0.0236` there and
 `0.308/0.307` for a strongly spinning `(60,6)` case, with mismatch `0.0475`.
 The high-mass-ratio residual survives 16384 Hz output sampling and doubled
 intrinsic integration steps. Its initial-phase-anchored coprecessing `(2,2)`
@@ -188,40 +206,74 @@ agrees below `8e-16`; this localizes, but does not solve, the PV300 issue.
 The quadrupole sensitivity diagnostic reduces `(60,6)` TP L2 to `0.0181`
 when native self-quadrupole coupling is set to zero, but **production retains
 the published black-hole coefficient 1**. The binary's spin-even initial axis
-rate is strongly suppressed relative to the native result in two cases, yet
-this does not prove its internal coefficient choice. A separate binary
+rate is strongly suppressed relative to the native result in two cases. The
+new independent trajectory matches the native published rate to `8.33e-17 1/s`
+and its rotation evolution to `4.78e-9` rad. Its reference-event relative triad
+agrees with the binary to `1.38e-16` rad, then crosses `1e-4` rad after
+`1.465` ms and reaches `0.39276` rad. Because the public rotation is
+reconstructed from its Euler-angle series and no raw orbital-axis state is
+exposed, this localizes the failure only to the pre-merger orientation path,
+before projection or ringdown. Public carrier/time mapping, trajectory
+evolution, and angle construction remain unresolved alternatives; the near
+reference-event agreement removes a material fixed offset but not later clock
+drift. This also does not prove the binary's internal coefficient choice. A separate binary
 full-mode inverse-frame discrepancy reaches `1.3e-9` (localized to degree 5);
 no native correction is justified. These are explicit qualification blockers
 for numerical precession and a reason to keep component-level evidence
 distinct from whole-family validation.
+
+For MSA PV22300, the relative rotation crosses `1e-4` rad after `31.738` ms
+and reaches `0.01623` rad on 5,326 samples strictly before MECO. Continuation,
+ringdown, and numerical-gamma rules are inactive there, so the earliest
+component is the raw analytical-angle branch. The independent clean-room
+scalar MSA transcription now agrees with production below `3e-10`; its first
+material split from the public-compatible path is the radiation-reaction spin
+contractions. The published equations prescribe precession-averaged values,
+so the public-compatible initial-reference values do not support a production
+change. The exact [q=10 gate dependency](../../validation/phenomt_q10_gate_blocker_20260927.md)
+is author provenance for that convention and the later quadratic-nutation
+phase choice.
 
 ## Reproduce the checks
 
 The existing maintained paths are `tests/test_phenomt_reference.py`,
 `tests/test_phenomthm_reference.py`, `tests/test_phenomt_precession.py`,
 `tests/test_phenomt_spin_evolution.py`, `tests/test_phenomt_angle_options.py`,
-`tests/test_phenomt_numerical.py`, `tests/test_phenomt_family_lal.py`, and
+`tests/test_phenomt_numerical.py`, `tests/test_phenomt_spin_math_reference.py`,
+`tests/test_phenomt_rotation_math_reference.py`,
+`tests/test_phenomt_independent_trajectory.py`,
+`tests/test_phenomt_family_lal.py`, and
 `tests/parity/test_phenomt_parity.py` plus the THM/precession parity modules.
 The LAL tests require optional binary bindings and skip otherwise. Receipts
-and exact diagnostic commands are linked in the [validation report](../../validation/phenomt.md);
+and maintained check commands are linked in the [validation report](../../validation/phenomt.md);
 `python scripts/validate_phenomt_precession.py` and
 `python scripts/diagnose_phenomt_precession.py --output receipt.json` are
 the targeted external checks.
+The scalar continuation diagnostic is
+`python scripts/diagnose_phenomt_msa_scalar_angles.py --output receipt.json`.
+The raw MSA and independent trajectory probes in the validation report are
+historical diagnostic results; their one-off replay scripts are not
+maintained. `tests/test_phenomt_independent_trajectory.py` retains the
+independent trajectory regressions.
 
 The staged path to the canonical six-section executable reference is:
 
 1. Freeze a source/asset manifest for every `T-FITS-v0` symbol (author
    revision, function, fit coefficients and domains); resolve the four printed
    equation/convention discrepancies above and publish scalar conventions/cutoffs.
-2. Build independent scalar expressions for `T-PN-FREQ`, `T-PN-AMP`,
-   `T-MERGER`, `T-RD`, and `T-REMNANT-QNM`; check collocation solves,
+2. Complete independent scalar expressions for `T-PN-AMP`,
+   `T-MERGER`, other-mode `T-RD`, and `T-REMNANT-QNM`; check collocation solves,
    primitives, boundary value/slope, signed amplitude and phase at all mode
    branches before composing T and THM.
-3. Add scalar `P-ANGLES` NNLO/MSA, remnant choices and `P-ROTATION`; verify
-   aligned limit, reference-frame identity, each Wigner/SWSH degree and
-   phase convention before composing TP/TPHM analytical versions.
-4. Add `P-NUMERICAL` RHS and a converged ODE/event/integration-range rule;
-   resolve the self-quadrupole/orbital-axis discrepancy with equation-level
+3. Complete scalar `P-ANGLES` NNLO expressions and remnant choices; the
+   published-equation raw MSA scalar path, independent suffix continuation,
+   and `P-ROTATION` are present. Verify angle origins and phase convention
+   before composing TP/TPHM analytical versions. Resolving the observed
+   PV223 convention split requires the independent author provenance named
+   in the q=10 gate decision receipt.
+4. Extend the converged independent `P-NUMERICAL-RHS-v0` event/ODE/angle path
+   through ringdown and waveform composition; resolve the pre-merger orientation
+   discrepancy with equation-level
    and binary-output evidence. Keep PV300 conditional until then.
 5. Add scalar `T-SAMPLING`, independent Torch/JAX component and waveform
    checks, derivatives, parameter sweeps and held-out physical comparisons.
