@@ -164,17 +164,17 @@ jobs:
       - name: "Step 1: Verify PyTorch without JAX"
         run: |
           pip install .[torch]
-          pytest tests/test_diffgw.py tests/test_waveform_definitions.py
+          pytest tests/test_diffgw.py tests/test_diffgw_inference.py tests/test_mcmc.py tests/test_waveform_definitions.py
           pytest --collect-only -q tests/test_xpnr_component_evidence.py
 
       - name: "Step 2: Verify JAX without PyTorch"
         run: |
           pip uninstall -y torch
           pip install .[jax]
-          pytest tests/test_diffgw.py tests/test_waveform_definitions.py
+          pytest tests/test_diffgw.py tests/test_diffgw_inference.py tests/test_waveform_definitions.py
           pytest --collect-only -q tests/test_xpnr_component_evidence.py
 
       - name: "Step 3: Verify core suite with all and dev"
         run: |
           pip install .[all,dev]
-          pytest tests/test_diffgw.py tests/test_waveform_definitions.py tests/test_mit_packaging.py tests/test_external_data.py tests/test_taylorf2_hm_external_api.py tests/test_rom_release_contract.py tests/test_eob_release_contract.py tests/test_prototype_release_contract.py tests/test_release_distributions.py
+          pytest tests/test_diffgw.py tests/test_diffgw_inference.py tests/test_waveform_definitions.py tests/test_mit_packaging.py tests/test_external_data.py tests/test_taylorf2_hm_external_api.py tests/test_rom_release_contract.py tests/test_eob_release_contract.py tests/test_prototype_release_contract.py tests/test_release_distributions.py

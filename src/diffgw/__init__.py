@@ -6,18 +6,19 @@ The convenience API selects PyTorch by default; use ``backend="jax"`` for JAX.
 
 from importlib import import_module
 
-import diffgw_core as core
-
 __version__ = "0.1.0"
-__all__ = ["core", "torch", "jax", "waveforms", "reference", "get_fd_waveform", "get_td_waveform", "WaveformGenerator", "list_approximants"]
+__all__ = ["core", "torch", "jax", "waveforms", "reference", "inference", "get_fd_waveform", "get_td_waveform", "WaveformGenerator", "list_approximants"]
+_BACKEND_CACHE = {}
 
 
 def _backend(name):
     if name not in ("torch", "jax"):
         raise ValueError("backend must be 'torch' or 'jax'")
+    if name in _BACKEND_CACHE:
+        return _BACKEND_CACHE[name]
     pkg = {"torch": "torchwave", "jax": "jaxwave"}[name]
     try:
-        return import_module(pkg)
+        module = import_module(pkg)
     except ModuleNotFoundError as exc:
         if exc.name in (name, pkg):
             raise ModuleNotFoundError(
@@ -25,6 +26,8 @@ def _backend(name):
                 f"install 'diffgw[{name}]'.", name=exc.name
             ) from exc
         raise
+    _BACKEND_CACHE[name] = module
+    return module
 
 
 def __getattr__(name):
@@ -32,8 +35,8 @@ def __getattr__(name):
         module = _backend(name)
         globals()[name] = module
         return module
-    if name in ("waveforms", "reference"):
-        module = import_module(f"diffgw.{name}")
+    if name in ("core", "waveforms", "reference", "inference"):
+        module = import_module("diffgw_core" if name == "core" else f"diffgw.{name}")
         globals()[name] = module
         return module
     raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
