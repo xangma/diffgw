@@ -1,0 +1,1607 @@
+{
+  "archive_manifest": {
+    "mac_hash_verification": "all matched",
+    "retained_files": 52,
+    "sha256": "836ef222cce4ece00622e1408fb8561b288a9285c192dad4b9956b9093e0a494"
+  },
+  "cases": {
+    "IMRPhenomD": {
+      "backends": {
+        "jax": {
+          "execution": {
+            "adapter_batch_implementation": null,
+            "jax_jit_requested": false,
+            "strategy": "eager"
+          },
+          "final_grid": {
+            "axes": [
+              {
+                "boundary_mass_low_high": [
+                  0.0013000414245990907,
+                  0.011773703934010893
+                ],
+                "kl_from_uniform_prior": 0.2857360345497616,
+                "mean": 36.17853601402271,
+                "mode": 36.0,
+                "prior_dominated": false,
+                "prior_support_limited": true,
+                "quantiles_05_50_95": [
+                  34.42565756398979,
+                  36.12800430782818,
+                  38.12610121042006
+                ],
+                "std": 1.107710406540827,
+                "truth_cdf": 0.45508203435998956,
+                "width90": 3.700443646430273
+              },
+              {
+                "boundary_mass_low_high": [
+                  1.725745962532062e-25,
+                  0.0
+                ],
+                "kl_from_uniform_prior": 0.62471148871254,
+                "mean": 28.886092332346095,
+                "mode": 28.999999999999993,
+                "prior_dominated": false,
+                "prior_support_limited": false,
+                "quantiles_05_50_95": [
+                  27.527763627377443,
+                  28.908736291312152,
+                  30.15376469367558
+                ],
+                "std": 0.7866564621180802,
+                "truth_cdf": 0.5448871916452351,
+                "width90": 2.6260010662981372
+              }
+            ],
+            "kl_from_uniform_prior": 4.11292640443507,
+            "log_integrated_likelihood": -5.07367847209825,
+            "marginal_kl_method": "2048 uniform native-coordinate CDF bins",
+            "maximum_log_likelihood": -7.604676015803876e-22,
+            "posterior_integral": 1.0,
+            "prior_dominated": false,
+            "shape": [
+              241,
+              241
+            ],
+            "size": 241
+          },
+          "refinements": [
+            {
+              "coarse": 31,
+              "converged": false,
+              "failures": [
+                "axis1_underresolved"
+              ],
+              "fine": 61,
+              "metrics": {
+                "axes": [
+                  {
+                    "intervals_in_width90": 37.02193934311748,
+                    "mode_drift_coarse_intervals": 0.0,
+                    "quantile_drift_fraction_of_width90": 0.0004818629728895427,
+                    "width90_relative_drift": 0.0009613077834611822
+                  },
+                  {
+                    "intervals_in_width90": 3.3233879100538157,
+                    "mode_drift_coarse_intervals": 0.0,
+                    "quantile_drift_fraction_of_width90": 0.006628690895023762,
+                    "width90_relative_drift": 0.007571244827190228
+                  }
+                ],
+                "interpolated_coarse_posterior_integral": 0.9999999999999999,
+                "joint_density_total_variation": 0.022883435006322526,
+                "joint_tv_at_fine_nodes": 0.023403691174737912,
+                "joint_tv_estimator_absolute_drift": 0.00014903359397719015,
+                "joint_tv_refinement_factor2": 0.023032468600299717,
+                "log_normalizer_absolute_drift": 0.0003715125348415782,
+                "minimum_conditional_v_intervals_in_width90": 5.632691776482609
+              }
+            },
+            {
+              "coarse": 61,
+              "converged": true,
+              "failures": [],
+              "fine": 121,
+              "metrics": {
+                "axes": [
+                  {
+                    "intervals_in_width90": 74.01583588021674,
+                    "mode_drift_coarse_intervals": 0.0,
+                    "quantile_drift_fraction_of_width90": 0.0002651942338845025,
+                    "width90_relative_drift": 0.0003788757592137831
+                  },
+                  {
+                    "intervals_in_width90": 6.3979868836908125,
+                    "mode_drift_coarse_intervals": 0.0,
+                    "quantile_drift_fraction_of_width90": 0.0002266810264774964,
+                    "width90_relative_drift": 7.838968940881215e-05
+                  }
+                ],
+                "interpolated_coarse_posterior_integral": 1.0,
+                "joint_density_total_variation": 0.0060062830773392525,
+                "joint_tv_at_fine_nodes": 0.00608617608996703,
+                "joint_tv_estimator_absolute_drift": 2.2920189459377932e-05,
+                "joint_tv_refinement_factor2": 0.00602920326679863,
+                "log_normalizer_absolute_drift": 2.927727094448329e-05,
+                "minimum_conditional_v_intervals_in_width90": 10.27371649308441
+              }
+            },
+            {
+              "coarse": 121,
+              "converged": true,
+              "failures": [],
+              "fine": 241,
+              "metrics": {
+                "axes": [
+                  {
+                    "intervals_in_width90": 148.01774585717726,
+                    "mode_drift_coarse_intervals": 0.0,
+                    "quantile_drift_fraction_of_width90": 6.611099246226365e-05,
+                    "width90_relative_drift": 9.408265984961113e-05
+                  },
+                  {
+                    "intervals_in_width90": 12.551958062843246,
+                    "mode_drift_coarse_intervals": 0.0,
+                    "quantile_drift_fraction_of_width90": 2.617878864221382e-05,
+                    "width90_relative_drift": 4.949008361247056e-05
+                  }
+                ],
+                "interpolated_coarse_posterior_integral": 1.0000000000000002,
+                "joint_density_total_variation": 0.0015199117768199687,
+                "joint_tv_at_fine_nodes": 0.0015374336165626013,
+                "joint_tv_estimator_absolute_drift": 5.0796238528967065e-06,
+                "joint_tv_refinement_factor2": 0.0015249914006728654,
+                "log_normalizer_absolute_drift": 7.72616714428409e-06,
+                "minimum_conditional_v_intervals_in_width90": 20.313490240590873
+              }
+            }
+          ]
+        },
+        "torch": {
+          "execution": {
+            "adapter_batch_implementation": null,
+            "jax_jit_requested": false,
+            "strategy": "eager"
+          },
+          "final_grid": {
+            "axes": [
+              {
+                "boundary_mass_low_high": [
+                  0.0013000414245957232,
+                  0.011773703934077173
+                ],
+                "kl_from_uniform_prior": 0.28573603454937757,
+                "mean": 36.178536014024786,
+                "mode": 36.0,
+                "prior_dominated": false,
+                "prior_support_limited": true,
+                "quantiles_05_50_95": [
+                  34.42565756399113,
+                  36.128004307830174,
+                  38.12610121042297
+                ],
+                "std": 1.1077104065413297,
+                "truth_cdf": 0.45508203435932376,
+                "width90": 3.700443646431843
+              },
+              {
+                "boundary_mass_low_high": [
+                  1.7257459625440196e-25,
+                  1.1102230246251565e-16
+                ],
+                "kl_from_uniform_prior": 0.6247114887121801,
+                "mean": 28.886092332344525,
+                "mode": 28.999999999999993,
+                "prior_dominated": false,
+                "prior_support_limited": false,
+                "quantiles_05_50_95": [
+                  27.527763627375304,
+                  28.908736291310635,
+                  30.153764693674532
+                ],
+                "std": 0.7866564621184197,
+                "truth_cdf": 0.5448871916459154,
+                "width90": 2.626001066299228
+              }
+            ],
+            "kl_from_uniform_prior": 4.1129264044348055,
+            "log_integrated_likelihood": -5.07367847209771,
+            "marginal_kl_method": "2048 uniform native-coordinate CDF bins",
+            "maximum_log_likelihood": -1.0626662566277293e-22,
+            "posterior_integral": 1.0,
+            "prior_dominated": false,
+            "shape": [
+              241,
+              241
+            ],
+            "size": 241
+          },
+          "refinements": [
+            {
+              "coarse": 31,
+              "converged": false,
+              "failures": [
+                "axis1_underresolved"
+              ],
+              "fine": 61,
+              "metrics": {
+                "axes": [
+                  {
+                    "intervals_in_width90": 37.021939343105544,
+                    "mode_drift_coarse_intervals": 0.0,
+                    "quantile_drift_fraction_of_width90": 0.0004818629732121317,
+                    "width90_relative_drift": 0.0009613077835248274
+                  },
+                  {
+                    "intervals_in_width90": 3.3233879100520083,
+                    "mode_drift_coarse_intervals": 0.0,
+                    "quantile_drift_fraction_of_width90": 0.006628690894553793,
+                    "width90_relative_drift": 0.007571244827579972
+                  }
+                ],
+                "interpolated_coarse_posterior_integral": 1.0,
+                "joint_density_total_variation": 0.02288343500625116,
+                "joint_tv_at_fine_nodes": 0.02340369117467595,
+                "joint_tv_estimator_absolute_drift": 0.00014903359398223126,
+                "joint_tv_refinement_factor2": 0.02303246860023339,
+                "log_normalizer_absolute_drift": 0.00037151253457246014,
+                "minimum_conditional_v_intervals_in_width90": 5.632691776463095
+              }
+            },
+            {
+              "coarse": 61,
+              "converged": true,
+              "failures": [],
+              "fine": 121,
+              "metrics": {
+                "axes": [
+                  {
+                    "intervals_in_width90": 74.01583588024417,
+                    "mode_drift_coarse_intervals": 0.0,
+                    "quantile_drift_fraction_of_width90": 0.00026519423343897004,
+                    "width90_relative_drift": 0.00037887575852053174
+                  },
+                  {
+                    "intervals_in_width90": 6.397986883692778,
+                    "mode_drift_coarse_intervals": 0.0,
+                    "quantile_drift_fraction_of_width90": 0.00022668102666143012,
+                    "width90_relative_drift": 7.838969025980354e-05
+                  }
+                ],
+                "interpolated_coarse_posterior_integral": 0.9999999999999999,
+                "joint_density_total_variation": 0.006006283077507547,
+                "joint_tv_at_fine_nodes": 0.006086176090319303,
+                "joint_tv_estimator_absolute_drift": 2.2920189505686375e-05,
+                "joint_tv_refinement_factor2": 0.006029203267013233,
+                "log_normalizer_absolute_drift": 2.9277271455185883e-05,
+                "minimum_conditional_v_intervals_in_width90": 10.273716493077675
+              }
+            },
+            {
+              "coarse": 121,
+              "converged": true,
+              "failures": [],
+              "fine": 241,
+              "metrics": {
+                "axes": [
+                  {
+                    "intervals_in_width90": 148.01774585724007,
+                    "mode_drift_coarse_intervals": 0.0,
+                    "quantile_drift_fraction_of_width90": 6.61109924276728e-05,
+                    "width90_relative_drift": 9.408265979580686e-05
+                  },
+                  {
+                    "intervals_in_width90": 12.551958062848458,
+                    "mode_drift_coarse_intervals": 0.0,
+                    "quantile_drift_fraction_of_width90": 2.617878868143701e-05,
+                    "width90_relative_drift": 4.9490083720681906e-05
+                  }
+                ],
+                "interpolated_coarse_posterior_integral": 1.0,
+                "joint_density_total_variation": 0.0015199117769447215,
+                "joint_tv_at_fine_nodes": 0.0015374336166822516,
+                "joint_tv_estimator_absolute_drift": 5.079623850656962e-06,
+                "joint_tv_refinement_factor2": 0.0015249914007953785,
+                "log_normalizer_absolute_drift": 7.726167278399032e-06,
+                "minimum_conditional_v_intervals_in_width90": 20.313490240527486
+              }
+            }
+          ]
+        }
+      },
+      "case": {
+        "api_kind": "fd_dispatch",
+        "axes": [
+          {
+            "lower": 33.0,
+            "name": "mass1",
+            "truth": 36.0,
+            "unit": "Msun",
+            "upper": 39.0
+          },
+          {
+            "lower": 26.0,
+            "name": "mass2",
+            "truth": 29.0,
+            "unit": "Msun",
+            "upper": 32.0
+          }
+        ],
+        "backends": [
+          "torch",
+          "jax"
+        ],
+        "blocked_reason": null,
+        "domain": "frequency",
+        "id": "IMRPhenomD",
+        "model": "IMRPhenomD",
+        "settings": {
+          "batch_mode": "native",
+          "detectors": [
+            "H1",
+            "L1"
+          ],
+          "df": 1.0,
+          "f_max": 400.0,
+          "f_min": 20.0,
+          "grid_sizes": [
+            31,
+            61,
+            121,
+            241,
+            481
+          ],
+          "likelihood_kind": "detector_network",
+          "prior": "independent_uniform_native_axes",
+          "psd_names": {
+            "H1": "aLIGOZeroDetHighPower",
+            "L1": "aLIGOZeroDetHighPower"
+          },
+          "sky": {
+            "dec": -0.3,
+            "psi": 0.27,
+            "ra": 1.1,
+            "t_gps": 1126259462.0
+          },
+          "target_snr": 20.0
+        },
+        "truth": {
+          "distance": 400.0,
+          "f_ref": 20.0,
+          "inclination": 0.7,
+          "mass1": 36.0,
+          "mass2": 29.0,
+          "phic": 0.13,
+          "spin1z": 0.15,
+          "spin2z": -0.1,
+          "tc": 0.0
+        }
+      },
+      "chart": {
+        "lower": [
+          33.0,
+          26.0
+        ],
+        "scale": 0.031625357824682364,
+        "truth": [
+          36.0,
+          29.0
+        ],
+        "upper": [
+          39.0,
+          32.0
+        ]
+      },
+      "elapsed_seconds": 79.7888916656375,
+      "independent_gauss": {
+        "bindings": {
+          "final_grid": {
+            "bytes": 1737546,
+            "path": "/home/xangma/artifacts/diffgw-pe-pilot-20261001/IMRPhenomD/torch_grid_241.npz",
+            "sha256": "f7175550d64bfa4d1fdd9c0420cac35c771961bd4c1f171a41151c62ede42307"
+          },
+          "shared_signals": {
+            "bytes": 45071,
+            "path": "/home/xangma/artifacts/diffgw-pe-pilot-20261001/IMRPhenomD/shared_signals.npz",
+            "sha256": "987fd6ab22771a3014841d76c17c47924b4eb8ac91d0492e7ca4b0a0896b4a8a"
+          },
+          "source_receipt": {
+            "bytes": 18907,
+            "path": "/home/xangma/artifacts/diffgw-pe-20260930/results/IMRPhenomD/torch/snr20/zero_seed0/receipt.json",
+            "sha256": "7ae3ad9be0693357c7dbabac02245570ba2da09e4fb62f00a39db6a27647af4e"
+          }
+        },
+        "elapsed_seconds": 3.0089358403347433,
+        "method": "fresh full-support tensor Gauss-Legendre likelihood nodes",
+        "orders": [
+          {
+            "artifact": {
+              "bytes": 133104,
+              "path": "/home/xangma/artifacts/diffgw-pe-pilot-20261001/IMRPhenomD/independent_gauss_64.npz",
+              "sha256": "805caf9cc2c2cd8392889f9da1a26c322ffab5d2a1a32ef7ad018bdf8090f5cd"
+            },
+            "log_integrated_likelihood": -5.073674153981512,
+            "means": [
+              36.17852945620942,
+              28.886092178607722
+            ],
+            "order": 64,
+            "passed": false,
+            "refinement": null,
+            "std": [
+              1.1077286904624641,
+              0.7866570422504202
+            ],
+            "versus_trapezoid": {
+              "density_TV_from_bilinear_trapezoid": 0.000525403749236604,
+              "log_normalizer_difference_from_trapezoid": 4.31811619883149e-06,
+              "native_mean_difference_fraction_width90": [
+                1.772170040852363e-06,
+                5.854407479748442e-08
+              ],
+              "native_std_relative_difference": [
+                1.6505775549445223e-05,
+                7.374649553632658e-07
+              ],
+              "trapezoid_interpolation_Gauss_integral": 1.0000537450496216
+            }
+          },
+          {
+            "artifact": {
+              "bytes": 549657,
+              "path": "/home/xangma/artifacts/diffgw-pe-pilot-20261001/IMRPhenomD/independent_gauss_128.npz",
+              "sha256": "3798ed5f486b7153751ad612ca10b6c02be6d7d56688bab360313b6d3c8baaec"
+            },
+            "log_integrated_likelihood": -5.073675896432421,
+            "means": [
+              36.17853883584563,
+              28.886090415619197
+            ],
+            "order": 128,
+            "passed": true,
+            "refinement": {
+              "density_TV_estimator_absolute_drift": 4.013497500467448e-06,
+              "log_normalizer_absolute_drift": 1.7424509097807572e-06,
+              "native_mean_drift_fraction_width90": [
+                2.534732888009831e-06,
+                6.713586477820347e-07
+              ],
+              "native_std_relative_drift": [
+                1.322655035682909e-05,
+                2.657892195415387e-06
+              ]
+            },
+            "std": [
+              1.1077140392269433,
+              0.7866591331055905
+            ],
+            "versus_trapezoid": {
+              "density_TV_from_bilinear_trapezoid": 0.0005213902517361365,
+              "log_normalizer_difference_from_trapezoid": 2.5756652890507326e-06,
+              "native_mean_difference_fraction_width90": [
+                7.625628471574681e-07,
+                7.29902722579519e-07
+              ],
+              "native_std_relative_difference": [
+                3.2794435070876174e-06,
+                3.3953551906763033e-06
+              ],
+              "trapezoid_interpolation_Gauss_integral": 0.9999958565976017
+            }
+          }
+        ],
+        "protocol": {
+          "TV_estimator_order_drift_tolerance": 0.0025,
+          "density_TV_tolerance": 0.05,
+          "log_normalizer_tolerance": 0.05,
+          "native_mean_fraction_width90_tolerance": 0.05,
+          "native_std_relative_tolerance": 0.05,
+          "orders": [
+            64,
+            128,
+            256
+          ]
+        },
+        "status": "independent_quadrature_passed"
+      },
+      "parity_history": [
+        {
+          "likelihood": {
+            "max_absolute_difference": 6.619416126341093e-10,
+            "passed": true,
+            "size": 31
+          },
+          "posterior": {
+            "passed": true,
+            "threshold": 1e-05,
+            "total_variation": 4.710861910718074e-12
+          },
+          "size": 31
+        },
+        {
+          "likelihood": {
+            "max_absolute_difference": 6.911022865097038e-10,
+            "passed": true,
+            "size": 61
+          },
+          "posterior": {
+            "passed": true,
+            "threshold": 1e-05,
+            "total_variation": 4.639443612366259e-12
+          },
+          "size": 61
+        },
+        {
+          "likelihood": {
+            "max_absolute_difference": 8.644178706163075e-10,
+            "passed": true,
+            "size": 121
+          },
+          "posterior": {
+            "passed": true,
+            "threshold": 1e-05,
+            "total_variation": 4.612505828673379e-12
+          },
+          "size": 121
+        },
+        {
+          "likelihood": {
+            "max_absolute_difference": 1.0017231488745892e-09,
+            "passed": true,
+            "size": 241
+          },
+          "posterior": {
+            "passed": true,
+            "threshold": 1e-05,
+            "total_variation": 4.541066552624823e-12
+          },
+          "size": 241
+        }
+      ],
+      "protocol": {
+        "chart_scale": "fixed before integration from truth curvature diagnostic; no posterior fitting",
+        "claim": "restricted_common_data_self_injection_and_coordinate_quadrature",
+        "convergence": "two consecutive passing refinements for each backend",
+        "grid_sizes": [
+          31,
+          61,
+          121,
+          241,
+          481
+        ],
+        "joint_tv": "normalized coarse-density interpolation in identical dm1*dv measure",
+        "joint_tv_integration": "factor2 and factor4 oversampling of both piecewise-bilinear densities; drift <=0.0025",
+        "measure": "trapezoidal dm1*dv times exact dm2/dv divided by native prior area",
+        "mode": "maximum native likelihood; no Jacobian contribution",
+        "native_resolution": "maximum native coordinate span across four corners of every mapped chart cell",
+        "not_tested": [
+          "physical_accuracy",
+          "sampler",
+          "noise_coverage",
+          "full_parameter_PE"
+        ],
+        "parity": {
+          "atol": 1e-07,
+          "posterior_total_variation": 1e-05,
+          "rtol": 1e-08
+        },
+        "prior": "unchanged independent uniform native masses",
+        "thresholds": {
+          "boundary_mass_diagnostic": 0.01,
+          "boundary_strip_prior_fraction": 0.05,
+          "joint_density_total_variation": 0.05,
+          "joint_tv_estimator_absolute_drift": 0.0025,
+          "log_normalizer_absolute_drift": 0.05,
+          "minimum_intervals_in_width90": 4.0,
+          "mode_drift_coarse_intervals": 1.0,
+          "prior_dominated_kl_diagnostic": 0.01,
+          "quantile_drift_fraction_of_width90": 0.05,
+          "width90_relative_drift": 0.05
+        },
+        "transverse_resolution": "minimum conditional-v width90/gridstep across rows in native mass1 central90%; >=4"
+      },
+      "receipts": [
+        {
+          "bytes": 7789,
+          "name": "IMRPhenomD/preflight_receipt.json",
+          "sha256": "376081fd178b2c11e43dd3a9a04a388e72044284f70e9b2539984987d5eac640"
+        },
+        {
+          "bytes": 31801,
+          "name": "IMRPhenomD/pilot_receipt.json",
+          "sha256": "1fe9803f69aab7c7d6a63722dab2e30b2ab7755db098c6d5937c48f4c36d4e41"
+        },
+        {
+          "bytes": 5140,
+          "name": "IMRPhenomD/independent_gauss_receipt.json",
+          "sha256": "a5b5ac61a3a558cbf791bd5faf92148284da21c19fb42535935772db2136ce25"
+        }
+      ],
+      "shared_data": {
+        "preflight_receipt": {
+          "bytes": 7789,
+          "path": "/home/xangma/artifacts/diffgw-pe-pilot-20261001/IMRPhenomD/preflight_receipt.json",
+          "sha256": "376081fd178b2c11e43dd3a9a04a388e72044284f70e9b2539984987d5eac640"
+        },
+        "signals": {
+          "bytes": 45071,
+          "path": "/home/xangma/artifacts/diffgw-pe-pilot-20261001/IMRPhenomD/shared_signals.npz",
+          "sha256": "987fd6ab22771a3014841d76c17c47924b4eb8ac91d0492e7ca4b0a0896b4a8a"
+        },
+        "source_receipt": {
+          "bytes": 18907,
+          "path": "/home/xangma/artifacts/diffgw-pe-20260930/results/IMRPhenomD/torch/snr20/zero_seed0/receipt.json",
+          "sha256": "7ae3ad9be0693357c7dbabac02245570ba2da09e4fb62f00a39db6a27647af4e"
+        },
+        "source_signals": {
+          "bytes": 45071,
+          "path": "/home/xangma/artifacts/diffgw-pe-20260930/results/IMRPhenomD/torch/snr20/zero_seed0/signals.npz",
+          "sha256": "987fd6ab22771a3014841d76c17c47924b4eb8ac91d0492e7ca4b0a0896b4a8a"
+        },
+        "source_status": "completed_grid_baseline",
+        "source_waveform_binding": {
+          "device": "cpu",
+          "host": "len",
+          "platform": "Linux-6.8.0-138-generic-x86_64-with-glibc2.39",
+          "precision": "float64/complex128",
+          "python": "3.12.3",
+          "revision": "872462864aba09acf21a9767dcae366025272269",
+          "source_sha256": "fb6d1e0f72733e9f4336dfb5e8f35a7b74185f3aafa30ef63488896480090aed",
+          "thread_environment": {
+            "MKL_NUM_THREADS": "1",
+            "OMP_NUM_THREADS": "1",
+            "OPENBLAS_NUM_THREADS": "1",
+            "XLA_FLAGS": null
+          },
+          "versions": {
+            "jax": "0.11.2",
+            "jaxlib": "0.11.2",
+            "numpy": "2.5.3",
+            "scipy": "1.18.1",
+            "torch": "2.14.0+cpu"
+          }
+        }
+      },
+      "status": "completed_transformed_baseline"
+    },
+    "IMRPhenomD_NRTidal": {
+      "backends": {
+        "jax": {
+          "execution": {
+            "adapter_batch_implementation": null,
+            "jax_jit_requested": false,
+            "strategy": "eager"
+          },
+          "final_grid": {
+            "axes": [
+              {
+                "boundary_mass_low_high": [
+                  0.04845228119945874,
+                  0.04747606510580826
+                ],
+                "kl_from_uniform_prior": 0.0002464979129900174,
+                "mean": 1.5999690600916225,
+                "mode": 1.6,
+                "prior_dominated": true,
+                "prior_support_limited": true,
+                "quantiles_05_50_95": [
+                  1.5910317498186026,
+                  1.599956326180985,
+                  1.6089472632412607
+                ],
+                "std": 0.005717791837465545,
+                "truth_cdf": 0.5022366498612812,
+                "width90": 0.01791551342265807
+              },
+              {
+                "boundary_mass_low_high": [
+                  3.5076050601242656e-57,
+                  1.1102230246251565e-16
+                ],
+                "kl_from_uniform_prior": 0.35304680682947176,
+                "mean": 1.300042670236285,
+                "mode": 1.3000000000000003,
+                "prior_dominated": false,
+                "prior_support_limited": false,
+                "quantiles_05_50_95": [
+                  1.2930474961402125,
+                  1.3000369035700823,
+                  1.3070733351351604
+                ],
+                "std": 0.004476321663497504,
+                "truth_cdf": 0.4977633196543101,
+                "width90": 0.014025838994947915
+              }
+            ],
+            "kl_from_uniform_prior": 5.757159793978753,
+            "log_integrated_likelihood": -6.28126791030347,
+            "marginal_kl_method": "2048 uniform native-coordinate CDF bins",
+            "maximum_log_likelihood": -2.815720378862065e-23,
+            "posterior_integral": 1.0,
+            "prior_dominated": false,
+            "shape": [
+              241,
+              241
+            ],
+            "size": 241
+          },
+          "refinements": [
+            {
+              "coarse": 31,
+              "converged": false,
+              "failures": [
+                "axis1_underresolved"
+              ],
+              "fine": 61,
+              "metrics": {
+                "axes": [
+                  {
+                    "intervals_in_width90": 53.74654867252269,
+                    "mode_drift_coarse_intervals": 0.0,
+                    "quantile_drift_fraction_of_width90": 2.8854661045850177e-06,
+                    "width90_relative_drift": 9.529398579691756e-07
+                  },
+                  {
+                    "intervals_in_width90": 3.942132825907492,
+                    "mode_drift_coarse_intervals": 0.0,
+                    "quantile_drift_fraction_of_width90": 0.01624967363264944,
+                    "width90_relative_drift": 0.032222646122436256
+                  }
+                ],
+                "interpolated_coarse_posterior_integral": 1.0,
+                "joint_density_total_variation": 0.02463892996430104,
+                "joint_tv_at_fine_nodes": 0.025175691552777206,
+                "joint_tv_estimator_absolute_drift": 0.0001482876272316247,
+                "joint_tv_refinement_factor2": 0.024787217591532663,
+                "log_normalizer_absolute_drift": 4.686697722000588e-05,
+                "minimum_conditional_v_intervals_in_width90": 7.832970899353193
+              }
+            },
+            {
+              "coarse": 61,
+              "converged": true,
+              "failures": [],
+              "fine": 121,
+              "metrics": {
+                "axes": [
+                  {
+                    "intervals_in_width90": 107.49308361793427,
+                    "mode_drift_coarse_intervals": 0.0,
+                    "quantile_drift_fraction_of_width90": 3.653008120583458e-07,
+                    "width90_relative_drift": 1.2770160686671187e-07
+                  },
+                  {
+                    "intervals_in_width90": 7.461979517208955,
+                    "mode_drift_coarse_intervals": 0.0,
+                    "quantile_drift_fraction_of_width90": 0.0005238240419426195,
+                    "width90_relative_drift": 0.0007960635783547651
+                  }
+                ],
+                "interpolated_coarse_posterior_integral": 1.0,
+                "joint_density_total_variation": 0.0066144357266358055,
+                "joint_tv_at_fine_nodes": 0.006680423725638769,
+                "joint_tv_estimator_absolute_drift": 1.8975698072363004e-05,
+                "joint_tv_refinement_factor2": 0.0066334114247081685,
+                "log_normalizer_absolute_drift": 9.592633423594066e-06,
+                "minimum_conditional_v_intervals_in_width90": 14.985410585911952
+              }
+            },
+            {
+              "coarse": 121,
+              "converged": true,
+              "failures": [],
+              "fine": 241,
+              "metrics": {
+                "axes": [
+                  {
+                    "intervals_in_width90": 214.9861610716341,
+                    "mode_drift_coarse_intervals": 0.0,
+                    "quantile_drift_fraction_of_width90": 9.300921046079048e-08,
+                    "width90_relative_drift": 2.8672703514836564e-08
+                  },
+                  {
+                    "intervals_in_width90": 14.473351995448231,
+                    "mode_drift_coarse_intervals": 0.0,
+                    "quantile_drift_fraction_of_width90": 0.002406792766003592,
+                    "width90_relative_drift": 0.003148407220916688
+                  }
+                ],
+                "interpolated_coarse_posterior_integral": 0.9999999999999999,
+                "joint_density_total_variation": 0.0016834024746402259,
+                "joint_tv_at_fine_nodes": 0.0016944548919564746,
+                "joint_tv_estimator_absolute_drift": 3.2505318284183245e-06,
+                "joint_tv_refinement_factor2": 0.0016866530064686442,
+                "log_normalizer_absolute_drift": 2.398358873278994e-06,
+                "minimum_conditional_v_intervals_in_width90": 29.568602089701553
+              }
+            }
+          ]
+        },
+        "torch": {
+          "execution": {
+            "adapter_batch_implementation": null,
+            "jax_jit_requested": false,
+            "strategy": "eager"
+          },
+          "final_grid": {
+            "axes": [
+              {
+                "boundary_mass_low_high": [
+                  0.04845228119942542,
+                  0.047476065105832355
+                ],
+                "kl_from_uniform_prior": 0.00024649791298965006,
+                "mean": 1.5999690600916228,
+                "mode": 1.6,
+                "prior_dominated": true,
+                "prior_support_limited": true,
+                "quantiles_05_50_95": [
+                  1.5910317498186033,
+                  1.599956326180985,
+                  1.6089472632412611
+                ],
+                "std": 0.005717791837465561,
+                "truth_cdf": 0.502236649861277,
+                "width90": 0.017915513422657847
+              },
+              {
+                "boundary_mass_low_high": [
+                  3.507605060152679e-57,
+                  1.1102230246251565e-16
+                ],
+                "kl_from_uniform_prior": 0.35304680682941736,
+                "mean": 1.3000426702362846,
+                "mode": 1.3000000000000003,
+                "prior_dominated": false,
+                "prior_support_limited": false,
+                "quantiles_05_50_95": [
+                  1.2930474961402119,
+                  1.3000369035700823,
+                  1.3070733351351598
+                ],
+                "std": 0.004476321663497513,
+                "truth_cdf": 0.49776331965431403,
+                "width90": 0.014025838994947915
+              }
+            ],
+            "kl_from_uniform_prior": 5.757159793978653,
+            "log_integrated_likelihood": -6.281267910303455,
+            "marginal_kl_method": "2048 uniform native-coordinate CDF bins",
+            "maximum_log_likelihood": -2.706449369077961e-23,
+            "posterior_integral": 1.0,
+            "prior_dominated": false,
+            "shape": [
+              241,
+              241
+            ],
+            "size": 241
+          },
+          "refinements": [
+            {
+              "coarse": 31,
+              "converged": false,
+              "failures": [
+                "axis1_underresolved"
+              ],
+              "fine": 61,
+              "metrics": {
+                "axes": [
+                  {
+                    "intervals_in_width90": 53.74654867252935,
+                    "mode_drift_coarse_intervals": 0.0,
+                    "quantile_drift_fraction_of_width90": 2.885466129372626e-06,
+                    "width90_relative_drift": 9.529397340292267e-07
+                  },
+                  {
+                    "intervals_in_width90": 3.9421328259075543,
+                    "mode_drift_coarse_intervals": 0.0,
+                    "quantile_drift_fraction_of_width90": 0.016249673632633414,
+                    "width90_relative_drift": 0.03222264612234114
+                  }
+                ],
+                "interpolated_coarse_posterior_integral": 1.0,
+                "joint_density_total_variation": 0.024638929964013158,
+                "joint_tv_at_fine_nodes": 0.025175691552431444,
+                "joint_tv_estimator_absolute_drift": 0.00014828762724506533,
+                "joint_tv_refinement_factor2": 0.024787217591258223,
+                "log_normalizer_absolute_drift": 4.686697666400619e-05,
+                "minimum_conditional_v_intervals_in_width90": 7.832970899358982
+              }
+            },
+            {
+              "coarse": 61,
+              "converged": true,
+              "failures": [],
+              "fine": 121,
+              "metrics": {
+                "axes": [
+                  {
+                    "intervals_in_width90": 107.4930836179396,
+                    "mode_drift_coarse_intervals": 0.0,
+                    "quantile_drift_fraction_of_width90": 3.6530051460269585e-07,
+                    "width90_relative_drift": 1.277016812306135e-07
+                  },
+                  {
+                    "intervals_in_width90": 7.461979517209072,
+                    "mode_drift_coarse_intervals": 0.0,
+                    "quantile_drift_fraction_of_width90": 0.0005238240419426113,
+                    "width90_relative_drift": 0.0007960635783547525
+                  }
+                ],
+                "interpolated_coarse_posterior_integral": 1.0,
+                "joint_density_total_variation": 0.006614435726682492,
+                "joint_tv_at_fine_nodes": 0.006680423725641394,
+                "joint_tv_estimator_absolute_drift": 1.8975698062742227e-05,
+                "joint_tv_refinement_factor2": 0.006633411424745234,
+                "log_normalizer_absolute_drift": 9.59263333655258e-06,
+                "minimum_conditional_v_intervals_in_width90": 14.985410585886592
+              }
+            },
+            {
+              "coarse": 121,
+              "converged": true,
+              "failures": [],
+              "fine": 241,
+              "metrics": {
+                "axes": [
+                  {
+                    "intervals_in_width90": 214.98616107163141,
+                    "mode_drift_coarse_intervals": 0.0,
+                    "quantile_drift_fraction_of_width90": 9.300922285477665e-08,
+                    "width90_relative_drift": 2.8672765484762e-08
+                  },
+                  {
+                    "intervals_in_width90": 14.473351995448231,
+                    "mode_drift_coarse_intervals": 0.0,
+                    "quantile_drift_fraction_of_width90": 0.00240679276597193,
+                    "width90_relative_drift": 0.003148407220932519
+                  }
+                ],
+                "interpolated_coarse_posterior_integral": 1.0,
+                "joint_density_total_variation": 0.0016834024746922003,
+                "joint_tv_at_fine_nodes": 0.0016944548920291955,
+                "joint_tv_estimator_absolute_drift": 3.2505318330376762e-06,
+                "joint_tv_refinement_factor2": 0.001686653006525238,
+                "log_normalizer_absolute_drift": 2.3983589017007034e-06,
+                "minimum_conditional_v_intervals_in_width90": 29.568602089679384
+              }
+            }
+          ]
+        }
+      },
+      "case": {
+        "api_kind": "fd_dispatch",
+        "axes": [
+          {
+            "lower": 1.59,
+            "name": "mass1",
+            "truth": 1.6,
+            "unit": "Msun",
+            "upper": 1.61
+          },
+          {
+            "lower": 1.29,
+            "name": "mass2",
+            "truth": 1.3,
+            "unit": "Msun",
+            "upper": 1.31
+          }
+        ],
+        "backends": [
+          "torch",
+          "jax"
+        ],
+        "blocked_reason": null,
+        "domain": "frequency",
+        "id": "IMRPhenomD_NRTidal",
+        "model": "IMRPhenomD_NRTidal",
+        "settings": {
+          "batch_mode": "native",
+          "detectors": [
+            "H1",
+            "L1"
+          ],
+          "df": 1.0,
+          "f_max": 512.0,
+          "f_min": 30.0,
+          "grid_sizes": [
+            31,
+            61,
+            121,
+            241,
+            481
+          ],
+          "likelihood_kind": "detector_network",
+          "prior": "independent_uniform_native_axes",
+          "psd_names": {
+            "H1": "aLIGOZeroDetHighPower",
+            "L1": "aLIGOZeroDetHighPower"
+          },
+          "sky": {
+            "dec": -0.3,
+            "psi": 0.27,
+            "ra": 1.1,
+            "t_gps": 1126259462.0
+          },
+          "target_snr": 20.0
+        },
+        "truth": {
+          "distance": 400.0,
+          "f_ref": 30.0,
+          "inclination": 0.7,
+          "lambda1": 300.0,
+          "lambda2": 700.0,
+          "mass1": 1.6,
+          "mass2": 1.3,
+          "phic": 0.13,
+          "spin1z": 0.02,
+          "spin2z": -0.01,
+          "tc": 0.0
+        }
+      },
+      "chart": {
+        "lower": [
+          1.59,
+          1.29
+        ],
+        "scale": 1.5285226586348568e-05,
+        "truth": [
+          1.6,
+          1.3
+        ],
+        "upper": [
+          1.61,
+          1.31
+        ]
+      },
+      "elapsed_seconds": 96.47812384692952,
+      "independent_gauss": {
+        "bindings": {
+          "final_grid": {
+            "bytes": 1718655,
+            "path": "/home/xangma/artifacts/diffgw-pe-pilot-20261001/IMRPhenomD_NRTidal/torch_grid_241.npz",
+            "sha256": "afad5932f52d89d84610f6c4c88322e0bac30160e524c8fabd945697e157ae31"
+          },
+          "shared_signals": {
+            "bytes": 56078,
+            "path": "/home/xangma/artifacts/diffgw-pe-pilot-20261001/IMRPhenomD_NRTidal/shared_signals.npz",
+            "sha256": "f995dcd57b788ee1e87984cf175496c5ceb8aaaaf3774f80e5898e9ea7d4b638"
+          },
+          "source_receipt": {
+            "bytes": 19219,
+            "path": "/home/xangma/artifacts/diffgw-pe-20260930/results/IMRPhenomD_NRTidal/torch/snr20/zero_seed0/receipt.json",
+            "sha256": "47c4fd9ef8ed4f12e92aca19b8cc2ceda895787c4fc63390d7b6b1dce6f9e923"
+          }
+        },
+        "elapsed_seconds": 5.775508202146739,
+        "method": "fresh full-support tensor Gauss-Legendre likelihood nodes",
+        "orders": [
+          {
+            "artifact": {
+              "bytes": 131216,
+              "path": "/home/xangma/artifacts/diffgw-pe-pilot-20261001/IMRPhenomD_NRTidal/independent_gauss_64.npz",
+              "sha256": "1ebcf5b3d98d66223f0566bcb573de74fe88526163ef714efc43efc05cc8f079"
+            },
+            "log_integrated_likelihood": -6.281266860253171,
+            "means": [
+              1.5999690624869325,
+              1.300042667771871
+            ],
+            "order": 64,
+            "passed": false,
+            "refinement": null,
+            "std": [
+              0.005717701622371391,
+              0.0044762510119755764
+            ],
+            "versus_trapezoid": {
+              "density_TV_from_bilinear_trapezoid": 0.0006089437686233737,
+              "log_normalizer_difference_from_trapezoid": 1.0500502840571357e-06,
+              "native_mean_difference_fraction_width90": [
+                1.3370031167028084e-07,
+                1.7570525107243e-07
+              ],
+              "native_std_relative_difference": [
+                1.5778209519933362e-05,
+                1.5783637188276793e-05
+              ],
+              "trapezoid_interpolation_Gauss_integral": 1.000034604651907
+            }
+          },
+          {
+            "artifact": {
+              "bytes": 542417,
+              "path": "/home/xangma/artifacts/diffgw-pe-pilot-20261001/IMRPhenomD_NRTidal/independent_gauss_128.npz",
+              "sha256": "6bfbc85fc9850b7b8263edc03adb51dcb9b4986dcf6e9b9661cf2d1f1187117c"
+            },
+            "log_integrated_likelihood": -6.281267110851976,
+            "means": [
+              1.5999690616959277,
+              1.3000426683884712
+            ],
+            "order": 128,
+            "passed": true,
+            "refinement": {
+              "density_TV_estimator_absolute_drift": 4.509793091590428e-05,
+              "log_normalizer_absolute_drift": 2.505988048184804e-07,
+              "native_mean_drift_fraction_width90": [
+                4.415194800958318e-08,
+                4.3961726961967575e-08
+              ],
+              "native_std_relative_drift": [
+                2.593479050907453e-07,
+                2.607996015566283e-07
+              ]
+            },
+            "std": [
+              0.005717700139497838,
+              0.0044762498445714005
+            ],
+            "versus_trapezoid": {
+              "density_TV_from_bilinear_trapezoid": 0.0005638458377074695,
+              "log_normalizer_difference_from_trapezoid": 7.994514792386553e-07,
+              "native_mean_difference_fraction_width90": [
+                8.954836366069766e-08,
+                1.3174352411046243e-07
+              ],
+              "native_std_relative_difference": [
+                1.603756151706969e-05,
+                1.604444090619971e-05
+              ],
+              "trapezoid_interpolation_Gauss_integral": 1.000002887073385
+            }
+          }
+        ],
+        "protocol": {
+          "TV_estimator_order_drift_tolerance": 0.0025,
+          "density_TV_tolerance": 0.05,
+          "log_normalizer_tolerance": 0.05,
+          "native_mean_fraction_width90_tolerance": 0.05,
+          "native_std_relative_tolerance": 0.05,
+          "orders": [
+            64,
+            128,
+            256
+          ]
+        },
+        "status": "independent_quadrature_passed"
+      },
+      "parity_history": [
+        {
+          "likelihood": {
+            "max_absolute_difference": 1.158866780315293e-09,
+            "passed": true,
+            "size": 31
+          },
+          "posterior": {
+            "passed": true,
+            "threshold": 1e-05,
+            "total_variation": 1.8415134895667006e-12
+          },
+          "size": 31
+        },
+        {
+          "likelihood": {
+            "max_absolute_difference": 1.8902710507973097e-09,
+            "passed": true,
+            "size": 61
+          },
+          "posterior": {
+            "passed": true,
+            "threshold": 1e-05,
+            "total_variation": 1.5529532729919777e-12
+          },
+          "size": 61
+        },
+        {
+          "likelihood": {
+            "max_absolute_difference": 2.037893409578828e-09,
+            "passed": true,
+            "size": 121
+          },
+          "posterior": {
+            "passed": true,
+            "threshold": 1e-05,
+            "total_variation": 1.6855332237099485e-12
+          },
+          "size": 121
+        },
+        {
+          "likelihood": {
+            "max_absolute_difference": 2.4250539354397915e-09,
+            "passed": true,
+            "size": 241
+          },
+          "posterior": {
+            "passed": true,
+            "threshold": 1e-05,
+            "total_variation": 1.6922037783655834e-12
+          },
+          "size": 241
+        }
+      ],
+      "protocol": {
+        "chart_scale": "fixed before integration from truth curvature diagnostic; no posterior fitting",
+        "claim": "restricted_common_data_self_injection_and_coordinate_quadrature",
+        "convergence": "two consecutive passing refinements for each backend",
+        "grid_sizes": [
+          31,
+          61,
+          121,
+          241,
+          481
+        ],
+        "joint_tv": "normalized coarse-density interpolation in identical dm1*dv measure",
+        "joint_tv_integration": "factor2 and factor4 oversampling of both piecewise-bilinear densities; drift <=0.0025",
+        "measure": "trapezoidal dm1*dv times exact dm2/dv divided by native prior area",
+        "mode": "maximum native likelihood; no Jacobian contribution",
+        "native_resolution": "maximum native coordinate span across four corners of every mapped chart cell",
+        "not_tested": [
+          "physical_accuracy",
+          "sampler",
+          "noise_coverage",
+          "full_parameter_PE"
+        ],
+        "parity": {
+          "atol": 1e-07,
+          "posterior_total_variation": 1e-05,
+          "rtol": 1e-08
+        },
+        "prior": "unchanged independent uniform native masses",
+        "thresholds": {
+          "boundary_mass_diagnostic": 0.01,
+          "boundary_strip_prior_fraction": 0.05,
+          "joint_density_total_variation": 0.05,
+          "joint_tv_estimator_absolute_drift": 0.0025,
+          "log_normalizer_absolute_drift": 0.05,
+          "minimum_intervals_in_width90": 4.0,
+          "mode_drift_coarse_intervals": 1.0,
+          "prior_dominated_kl_diagnostic": 0.01,
+          "quantile_drift_fraction_of_width90": 0.05,
+          "width90_relative_drift": 0.05
+        },
+        "transverse_resolution": "minimum conditional-v width90/gridstep across rows in native mass1 central90%; >=4"
+      },
+      "receipts": [
+        {
+          "bytes": 7981,
+          "name": "IMRPhenomD_NRTidal/preflight_receipt.json",
+          "sha256": "e348da808ad77589f5716bd1b6503bee0bfee06ae8574881721e0f959f49dddd"
+        },
+        {
+          "bytes": 32028,
+          "name": "IMRPhenomD_NRTidal/pilot_receipt.json",
+          "sha256": "752b5b54ecaba9020fe6a54be35670ee7a5245810f62da9bf37a8dc6444c13f8"
+        },
+        {
+          "bytes": 5206,
+          "name": "IMRPhenomD_NRTidal/independent_gauss_receipt.json",
+          "sha256": "cd8a0716940bcfe6794b3553f3e44ff81355f791a3cf22512c4123306fb5faba"
+        }
+      ],
+      "shared_data": {
+        "preflight_receipt": {
+          "bytes": 7981,
+          "path": "/home/xangma/artifacts/diffgw-pe-pilot-20261001/IMRPhenomD_NRTidal/preflight_receipt.json",
+          "sha256": "e348da808ad77589f5716bd1b6503bee0bfee06ae8574881721e0f959f49dddd"
+        },
+        "signals": {
+          "bytes": 56078,
+          "path": "/home/xangma/artifacts/diffgw-pe-pilot-20261001/IMRPhenomD_NRTidal/shared_signals.npz",
+          "sha256": "f995dcd57b788ee1e87984cf175496c5ceb8aaaaf3774f80e5898e9ea7d4b638"
+        },
+        "source_receipt": {
+          "bytes": 19219,
+          "path": "/home/xangma/artifacts/diffgw-pe-20260930/results/IMRPhenomD_NRTidal/torch/snr20/zero_seed0/receipt.json",
+          "sha256": "47c4fd9ef8ed4f12e92aca19b8cc2ceda895787c4fc63390d7b6b1dce6f9e923"
+        },
+        "source_signals": {
+          "bytes": 56078,
+          "path": "/home/xangma/artifacts/diffgw-pe-20260930/results/IMRPhenomD_NRTidal/torch/snr20/zero_seed0/signals.npz",
+          "sha256": "f995dcd57b788ee1e87984cf175496c5ceb8aaaaf3774f80e5898e9ea7d4b638"
+        },
+        "source_status": "unresolved_convergence",
+        "source_waveform_binding": {
+          "device": "cpu",
+          "host": "len",
+          "platform": "Linux-6.8.0-138-generic-x86_64-with-glibc2.39",
+          "precision": "float64/complex128",
+          "python": "3.12.3",
+          "revision": "872462864aba09acf21a9767dcae366025272269",
+          "source_sha256": "fb6d1e0f72733e9f4336dfb5e8f35a7b74185f3aafa30ef63488896480090aed",
+          "thread_environment": {
+            "MKL_NUM_THREADS": "1",
+            "OMP_NUM_THREADS": "1",
+            "OPENBLAS_NUM_THREADS": "1",
+            "XLA_FLAGS": null
+          },
+          "versions": {
+            "jax": "0.11.2",
+            "jaxlib": "0.11.2",
+            "numpy": "2.5.3",
+            "scipy": "1.18.1",
+            "torch": "2.14.0+cpu"
+          }
+        }
+      },
+      "status": "completed_transformed_baseline"
+    }
+  },
+  "date": "2026-10-01",
+  "executed_provenance": {
+    "device": "cpu",
+    "host": "len",
+    "pilot_source_sha256": "689f8cb23a068b422a3f60e7058ea3c3a77d4bb94ce93760277ccade97d95775",
+    "platform": "Linux-6.8.0-138-generic-x86_64-with-glibc2.39",
+    "precision": "float64/complex128",
+    "python": "3.12.3",
+    "revision": "872462864aba09acf21a9767dcae366025272269",
+    "source_sha256": "6bf08a2dcda524442612be5d3555458aa2b29c88410194afebcd6d648bcfc871",
+    "thread_environment": {
+      "MKL_NUM_THREADS": "4",
+      "OMP_NUM_THREADS": "4",
+      "OPENBLAS_NUM_THREADS": "4",
+      "XLA_FLAGS": null
+    },
+    "versions": {
+      "jax": "0.11.2",
+      "jaxlib": "0.11.2",
+      "numpy": "2.5.3",
+      "scipy": "1.18.1",
+      "torch": "2.14.0+cpu"
+    },
+    "waveform_source_sha256": "58ab01258e817af5b97e2d76785d795e19bbc7bfdd8c47a8b6f939103d82e64f"
+  },
+  "executors": [
+    {
+      "bytes": 1982538,
+      "name": "source-pilot.tar.gz",
+      "sha256": "7d220096be0acb5836cf494bca9505c6cb71e1673f7fbd9dc31830e1a6d8cce9"
+    },
+    {
+      "bytes": 749,
+      "name": "run-preflight.sh",
+      "sha256": "f48368b471702ca3f392f45966ba05b3b6d1dc574c5c74b3c2abbfc9a6b90cac"
+    },
+    {
+      "bytes": 1037,
+      "name": "run-pilot.sh",
+      "sha256": "eeec00642bee0009568bfe6ee03a6b548239683142860d7ede4e484f10731e03"
+    },
+    {
+      "bytes": 298,
+      "name": "run-gauss.sh",
+      "sha256": "71ef68d6319f2d85de1b10882941cd47ac52f282ff148d4015c8380cd276bc9a"
+    },
+    {
+      "bytes": 11889,
+      "name": "independent_gauss.py",
+      "sha256": "a43854b155dd2479401a3e1a4bd2d1956eeff08a24b2c7e2fcf27b660175ffbe"
+    },
+    {
+      "bytes": 9201,
+      "name": "plot_pilot.py",
+      "sha256": "bdb705931252ca77725afb88a55db02366eec44a999574ef29d5b56b3fb603df"
+    },
+    {
+      "bytes": 2596,
+      "name": "frozen-design.json",
+      "sha256": "de8879bfc4193ba2812bf66fb59c6d7df74766c28033829ab9cdb977949f56dd"
+    },
+    {
+      "bytes": 5358,
+      "name": "frozen-design-v2.json",
+      "sha256": "fbbaebb234b87338927aedd6166c5eadffe7804efe792adf3a0a921932364cd5"
+    }
+  ],
+  "frozen_design": {
+    "TV_check": "same fixed chart and integration measure; inspect oversampled coarse/fine piecewise bilinear densities",
+    "amendment": "Before production integration: bind final maintained preflights, five positive finite curvature estimates and final conservative cell/transverse/TV estimator gates; scales unchanged.",
+    "cases": [
+      "IMRPhenomD_NRTidal",
+      "IMRPhenomD"
+    ],
+    "chart": "mass1 native; unit v mapped to full native mass2 interval with asinh warp around constant truth chirp-mass curve",
+    "claim": "restricted two-mass same-model numerical convergence and common-data frontend agreement",
+    "device": "cpu",
+    "frontend_thresholds": {
+      "fixed_and_grid_log_likelihood_atol": 1e-07,
+      "fixed_and_grid_log_likelihood_rtol": 1e-08,
+      "posterior_joint_TV": 1e-05
+    },
+    "frozen_at": "2026-10-01T08:57:28.513183+00:00",
+    "host": "len",
+    "independent_check": "fresh native Torch likelihood evaluations at full-support tensor Gauss-Legendre orders 64,128,256 if necessary; compare normalization and native moments to final trapezoidal baseline",
+    "independent_thresholds": {
+      "TV_estimator_absolute_drift_between_orders": 0.0025,
+      "joint_density_TV": 0.05,
+      "log_normalizer_absolute_difference": 0.05,
+      "native_mean_drift_fraction_width90": 0.05,
+      "native_standard_deviation_relative_difference": 0.05
+    },
+    "jacobian": "dmass2/dv = scale*cosh(a+v*(b-a))*(b-a); no numerical prior renormalization",
+    "limitations": [
+      "self-injection",
+      "two masses only",
+      "fixed tidal parameters and spins",
+      "prior support diagnostics remain",
+      "no sampler validation",
+      "no independent physical injection",
+      "no ensemble coverage"
+    ],
+    "native_mass2_resolution": "maximum mass2 span across all four corners of every mapped cell, over complete prior",
+    "numerical_thresholds": {
+      "joint_TV_estimator_absolute_drift": 0.0025,
+      "joint_density_TV": 0.05,
+      "log_normalizer_absolute_drift": 0.05,
+      "minimum_conditional_v_width90_intervals": 4,
+      "minimum_native_width90_cell_spans": 4.0,
+      "native_MAP_drift_coarse_max_cell_spans": 1.0,
+      "native_quantile_drift_fraction_width90": 0.05,
+      "native_width90_relative_drift": 0.05
+    },
+    "precision": "float64/complex128",
+    "preflights": {
+      "IMRPhenomD": {
+        "provenance": {
+          "device": "cpu",
+          "host": "len",
+          "pilot_source_sha256": "689f8cb23a068b422a3f60e7058ea3c3a77d4bb94ce93760277ccade97d95775",
+          "platform": "Linux-6.8.0-138-generic-x86_64-with-glibc2.39",
+          "precision": "float64/complex128",
+          "python": "3.12.3",
+          "revision": "872462864aba09acf21a9767dcae366025272269",
+          "source_sha256": "6bf08a2dcda524442612be5d3555458aa2b29c88410194afebcd6d648bcfc871",
+          "thread_environment": {
+            "MKL_NUM_THREADS": "4",
+            "OMP_NUM_THREADS": "4",
+            "OPENBLAS_NUM_THREADS": "4",
+            "XLA_FLAGS": null
+          },
+          "versions": {
+            "jax": "0.11.2",
+            "jaxlib": "0.11.2",
+            "numpy": "2.5.3",
+            "scipy": "1.18.1",
+            "torch": "2.14.0+cpu"
+          },
+          "waveform_source_sha256": "58ab01258e817af5b97e2d76785d795e19bbc7bfdd8c47a8b6f939103d82e64f"
+        },
+        "sha256": "376081fd178b2c11e43dd3a9a04a388e72044284f70e9b2539984987d5eac640"
+      },
+      "IMRPhenomD_NRTidal": {
+        "provenance": {
+          "device": "cpu",
+          "host": "len",
+          "pilot_source_sha256": "689f8cb23a068b422a3f60e7058ea3c3a77d4bb94ce93760277ccade97d95775",
+          "platform": "Linux-6.8.0-138-generic-x86_64-with-glibc2.39",
+          "precision": "float64/complex128",
+          "python": "3.12.3",
+          "revision": "872462864aba09acf21a9767dcae366025272269",
+          "source_sha256": "6bf08a2dcda524442612be5d3555458aa2b29c88410194afebcd6d648bcfc871",
+          "thread_environment": {
+            "MKL_NUM_THREADS": "4",
+            "OMP_NUM_THREADS": "4",
+            "OPENBLAS_NUM_THREADS": "4",
+            "XLA_FLAGS": null
+          },
+          "versions": {
+            "jax": "0.11.2",
+            "jaxlib": "0.11.2",
+            "numpy": "2.5.3",
+            "scipy": "1.18.1",
+            "torch": "2.14.0+cpu"
+          },
+          "waveform_source_sha256": "58ab01258e817af5b97e2d76785d795e19bbc7bfdd8c47a8b6f939103d82e64f"
+        },
+        "sha256": "e348da808ad77589f5716bd1b6503bee0bfee06ae8574881721e0f959f49dddd"
+      }
+    },
+    "previous_design": {
+      "path": "frozen-design.json",
+      "sha256": "de8879bfc4193ba2812bf66fb59c6d7df74766c28033829ab9cdb977949f56dd"
+    },
+    "scale_provenance": "median of all five positive finite conditional likelihood-curvature estimates; relative sigma spread<=0.05; successful hash-bound maintained preflight",
+    "scales_Msun": {
+      "IMRPhenomD": 0.031625357824682364,
+      "IMRPhenomD_NRTidal": 1.5285226586348568e-05
+    },
+    "shared_data": "original campaign Torch zero-noise SNR20 signals/PSDs/amplitude scale, hash-verified from retained original receipt",
+    "stop": "two consecutive refinements satisfying every mapped-grid gate; otherwise retain unresolved outcome",
+    "trapezoidal_schedule": [
+      31,
+      61,
+      121,
+      241,
+      481
+    ],
+    "unchanged": [
+      "native independent uniform mass priors and bounds",
+      "all other fixed parameters",
+      "waveform code",
+      "frequency bins",
+      "PSD",
+      "sky projection",
+      "original campaign status and receipts"
+    ],
+    "version": 2
+  },
+  "original_campaign_outcomes_preserved": true,
+  "retained_roots": {
+    "len": "/home/xangma/artifacts/diffgw-pe-pilot-20261001",
+    "mac": "/Users/xangma/artifacts/diffgw-pe-pilot-20261001"
+  },
+  "scope": "restricted_two_mass_common_data_self_injection_numerical_baseline",
+  "verification": {
+    "executed_source_tests": {
+      "command": "env PYTHONPATH=src OMP_NUM_THREADS=4 MKL_NUM_THREADS=4 OPENBLAS_NUM_THREADS=4 taskset -c 40-43 /home/xangma/.cache/diffgw-taylorf2-hm-venv/bin/python -m pytest -q tests/test_parameter_estimation_pilot.py tests/test_parameter_estimation_qualification.py tests/test_parameter_estimation_plots.py tests/test_parameter_estimation_summary.py",
+      "cwd": "/home/xangma/diffgw-pe-pilot-20261001",
+      "exit_code": 0,
+      "host": "len",
+      "result": "56 passed in 64.04s"
+    },
+    "maintained_grid_check": {
+      "checks": [
+        {
+          "KL_absolute_difference": 0.0,
+          "backend": "torch",
+          "model": "IMRPhenomD",
+          "native_marginal_summaries_and_log_normalizer_identical": true,
+          "passed": true,
+          "posterior_byte_values_identical": true
+        },
+        {
+          "KL_absolute_difference": 0.0,
+          "backend": "jax",
+          "model": "IMRPhenomD",
+          "native_marginal_summaries_and_log_normalizer_identical": true,
+          "passed": true,
+          "posterior_byte_values_identical": true
+        },
+        {
+          "KL_absolute_difference": 0.0,
+          "backend": "torch",
+          "model": "IMRPhenomD_NRTidal",
+          "native_marginal_summaries_and_log_normalizer_identical": true,
+          "passed": true,
+          "posterior_byte_values_identical": true
+        },
+        {
+          "KL_absolute_difference": 0.0,
+          "backend": "jax",
+          "model": "IMRPhenomD_NRTidal",
+          "native_marginal_summaries_and_log_normalizer_identical": true,
+          "passed": true,
+          "posterior_byte_values_identical": true
+        }
+      ],
+      "passed": true,
+      "provenance": {
+        "device": "cpu",
+        "host": "len",
+        "pilot_source_sha256": "ed9a38efa1896053e6e2289f68f22d1262c81271d893c63ba94584654acd1ae7",
+        "platform": "Linux-6.8.0-138-generic-x86_64-with-glibc2.39",
+        "precision": "float64/complex128",
+        "python": "3.12.3",
+        "revision": "872462864aba09acf21a9767dcae366025272269",
+        "source_sha256": "6bf08a2dcda524442612be5d3555458aa2b29c88410194afebcd6d648bcfc871",
+        "thread_environment": {
+          "MKL_NUM_THREADS": "4",
+          "OMP_NUM_THREADS": "4",
+          "OPENBLAS_NUM_THREADS": "4",
+          "XLA_FLAGS": null
+        },
+        "versions": {
+          "jax": "0.11.2",
+          "jaxlib": "0.11.2",
+          "numpy": "2.5.3",
+          "scipy": "1.18.1",
+          "torch": "2.14.0+cpu"
+        },
+        "waveform_source_sha256": "58ab01258e817af5b97e2d76785d795e19bbc7bfdd8c47a8b6f939103d82e64f"
+      }
+    },
+    "maintained_tests": "57 passed in 62.57s on len"
+  }
+}

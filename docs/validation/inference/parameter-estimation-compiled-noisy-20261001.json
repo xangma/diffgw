@@ -1,0 +1,1931 @@
+{
+  "schema": "diffgw.compiled-noisy-reference-pilot-publication.v1",
+  "version": 1,
+  "date": "2026-10-01",
+  "status": "failed_noisy_reference_pilot",
+  "scope": "CPU FP64 H1/L1 matched Gaussian-noise fixed-truth two-mass self-injection; native PyTorch/JAX reference parity and independent full-support Gauss audit only",
+  "claim_limits": ["Fixed truths are descriptive, not prior-drawn calibration.", "No ensemble, sampler, gradient performance, physical accuracy or full-dimensional PE claim.", "Earlier noisy campaign receipts and failures are unchanged."],
+  "provenance": {
+    "device": "cpu",
+    "host": "len",
+    "noisy_source_sha256": "017118bf17283ae7bda727eb1d4215fbba1df924766bde7cb4161d8e7886091c",
+    "pilot_source_sha256": "3fefbd49886d176c0326bd17521906b624a8ea6592a09774bc903c72e887b0c8",
+    "platform": "Linux-6.8.0-138-generic-x86_64-with-glibc2.39",
+    "precision": "float64/complex128",
+    "python": "3.12.3",
+    "revision": "973399a5cb238e1b250b5b769a35f0861b2308ba",
+    "sampler_runner_sha256": "403a096e6b7c8b16578779426cc491f69097f1689fea9eaa51b633baf9a96cba",
+    "source_sha256": "c54804f023cfdde8c8b7adbfd6fa4f6ccb997ac3d4db78e93b9023141d7ea7da",
+    "thread_environment": {
+      "MKL_NUM_THREADS": "1",
+      "OMP_NUM_THREADS": "1",
+      "OPENBLAS_NUM_THREADS": "1",
+      "XLA_FLAGS": null
+    },
+    "versions": {
+      "arviz": "0.22.0",
+      "jax": "0.11.2",
+      "jaxlib": "0.11.2",
+      "numpy": "2.5.3",
+      "scipy": "1.18.1",
+      "torch": "2.14.0+cpu"
+    },
+    "waveform_source_sha256": "0de2bbceef58ad1e044fd94a1f0777b3e2ff8c1e9807f587c442aec59eef6082"
+  },
+  "design": {
+    "amplitude_policy": "One nominal SNR20 scale/model, fixed for every truth and template; no SNR selection",
+    "fixed_sampler_trials_per_model": 0,
+    "fixed_truth_repeats_per_model": 4,
+    "prior_drawn_trials_per_model": 0,
+    "sampler_subset_per_model": [],
+    "scope": "fixed-truth matched Gaussian-noise two-mass reference pilot; no sampler, calibration, physical accuracy or full-PE claim"
+  },
+  "counts": {
+    "blocked": 0,
+    "planned": 8,
+    "reference_passed": 7,
+    "sampler_passed": 0,
+    "terminal": 8
+  },
+  "stop_reason": null,
+  "calibration": {
+    "interpretation": "fixed-truth reference pilot; no ensemble calibration or sampler SBC",
+    "panels": [],
+    "passed": null,
+    "status": "not_requested"
+  },
+  "protocol": {
+    "bytes": 15843,
+    "path": "/home/xangma/artifacts/diffgw-pe-compiled-pilot-20261001/noisy_protocol.json",
+    "sha256": "fdf2330044415bad81a27581bf82d01bd6d1f56acaafd9480e1c75bc0d207d25"
+  },
+  "campaign_receipt": {
+    "bytes": 31879,
+    "path": "/home/xangma/artifacts/diffgw-pe-compiled-pilot-20261001/noisy_campaign_receipt.json",
+    "sha256": "6faa6a8e7d99a80879bb4bb92b699d2985bd93191eadfd53c0af32e28600cb03"
+  },
+  "source_snapshot": {
+    "bytes": 2051485,
+    "path": "/home/xangma/artifacts/diffgw-pe-compiled-pilot-20261001/source-compiled-pilot-v1.tar.gz",
+    "sha256": "d988d0301ba5e6461ca07359971480d248fcb5cef4bd10e35f4f9a0b9a82ceee"
+  },
+  "retention_roots": {
+    "host": "len",
+    "remote_root": "/home/xangma/artifacts/diffgw-pe-compiled-pilot-20261001",
+    "local_mirror": "/Users/xangma/artifacts/diffgw-pe-compiled-pilot-20261001"
+  },
+  "full_report": {
+    "path": "/home/xangma/artifacts/diffgw-pe-compiled-pilot-20261001/compiled-pilot-report.json",
+    "bytes": 415611,
+    "sha256": "a1eada58a082885a3dd229d53f95e0fe67b5ad48d3a6167fdccebd5fa1b52c45"
+  },
+  "figures_manifest": {
+    "path": "/home/xangma/artifacts/diffgw-pe-compiled-pilot-20261001/reporting/figures-manifest.json",
+    "bytes": 5028,
+    "sha256": "601a96b60076a98d30e73df982a458ac70a93647f804fd990615e7efdb41b11d"
+  },
+  "figures": [
+    {
+      "bytes": 180616,
+      "path": "/home/xangma/artifacts/diffgw-pe-compiled-pilot-20261001/reporting/grid-refinement.png",
+      "sha256": "66287714ac93e435d8492502ff970a868afd8795fbb19e66003e1b85ff1c7dac"
+    },
+    {
+      "bytes": 116764,
+      "path": "/home/xangma/artifacts/diffgw-pe-compiled-pilot-20261001/reporting/native-mass-recovery.png",
+      "sha256": "ff966151d8ece932438fceeae5c3209c2271215ba2f24e5f597e053a38cbb4a2"
+    }
+  ],
+  "frozen_config": {
+    "calibration": {
+      "cdf_numerical_allowance": 0.002,
+      "count_per_panel": 50,
+      "coverage_interval_alpha": 0.05,
+      "coverage_levels": [0.5, 0.9],
+      "family_alpha": 0.05,
+      "method": "simultaneous DKW bound; weak calibration screen",
+      "panels": 4
+    },
+    "chain_seed_root": 660101,
+    "chunk_size": 128,
+    "discovery": {
+      "anchor_interior_fraction": 1e-07,
+      "chirp_separation_fraction": 0.01,
+      "curvature_step_powers": [12, 13, 14, 15, 16],
+      "diagonal_points": 4097,
+      "global_objective_calls": 1920,
+      "mass1_fractions": [0.1, 0.3, 0.5, 0.7, 0.9],
+      "maxfun_per_start": 80,
+      "maxiter": 60,
+      "peaks": 4,
+      "sigma_relative_spread": 0.05,
+      "width_method": "five native mass2 finite differences only"
+    },
+    "ensemble_count": 0,
+    "ensemble_noise_seed_base": {
+      "IMRPhenomD": 640101,
+      "IMRPhenomD_NRTidal": 650101
+    },
+    "extension": "none; failures and timeouts retained, no truth redraw or automatic extension",
+    "fixed_count": 4,
+    "fixed_noise_seeds": {
+      "IMRPhenomD": [610101, 610102, 610103, 610104],
+      "IMRPhenomD_NRTidal": [620101, 620102, 620103, 620104]
+    },
+    "gauss_orders": [64, 128, 256, 512],
+    "grid_sizes": [31, 61, 121, 241, 481, 961, 1921],
+    "noise_audit": {
+      "effective_psd_floor": 1e-50,
+      "realizations": 1024,
+      "seeds": {
+        "IMRPhenomD": 600101,
+        "IMRPhenomD_NRTidal": 600102
+      },
+      "standard_errors": 5,
+      "timeout_seconds": 120
+    },
+    "prior_seeds": {
+      "IMRPhenomD": 630101,
+      "IMRPhenomD_NRTidal": 630102
+    },
+    "profile": "compiled-pilot-v1",
+    "reference_gates": {
+      "gauss_density_tv": 0.002,
+      "gauss_tv_order_drift": 0.00025,
+      "joint_density_total_variation": 0.002,
+      "joint_tv_estimator_absolute_drift": 0.00025,
+      "maximum_log_likelihood_deficit": 0.05,
+      "native_mean_drift_fraction_width90": 0.005,
+      "native_quantile_drift_fraction_width90": 0.005,
+      "truth_cdf_absolute_drift": 0.002
+    },
+    "reference_jax_strategy": "jax_jit",
+    "reference_only": true,
+    "reference_timeout_seconds": 3600,
+    "sampler": {
+      "draws": 4000,
+      "max_depth": 8,
+      "target_accept": 0.95,
+      "warmup": 1000
+    },
+    "sampler_indices": [],
+    "sampler_strategy": "torch_compile",
+    "scope": "fixed-truth matched Gaussian-noise two-mass reference pilot; no sampler, calibration, physical accuracy or full-PE claim",
+    "source_checks": {
+      "likelihood_atol": 1e-07,
+      "likelihood_rtol": 1e-08,
+      "strain_atol": 1e-30,
+      "strain_rtol": 1e-08
+    },
+    "threads": 1,
+    "total_trial_timeout_seconds": 3900
+  },
+  "executed_source_check": {
+    "passed": true,
+    "files": 366,
+    "method": "SHA256 equality of every src Python file and five inference drivers"
+  },
+  "retained_archive_check": {
+    "passed": true,
+    "files": 380,
+    "manifest": {
+      "bytes": 68511,
+      "path": "/home/xangma/artifacts/diffgw-pe-compiled-pilot-20261001/source-manifest.json",
+      "sha256": "b343b323569b0189cfc1cb78b47b544de65dc4647275088108a635e2c27b7af3"
+    },
+    "method": "SHA256/size of every declared source member in frozen archive"
+  },
+  "reference_history_schema": {
+    "columns": ["coarse", "fine", "converged", "failures", "consecutive_passing_after_refinement", "joint_density_total_variation", "joint_tv_estimator_absolute_drift", "truth_cdf_absolute_drift", "log_normalizer_absolute_drift", "minimum_conditional_v_intervals_in_width90", "axis0_mode_drift_coarse_intervals", "axis0_intervals_in_width90", "axis0_native_mean_drift_fraction_width90", "axis0_native_quantile_drift_fraction_width90", "axis0_quantile_drift_fraction_of_width90", "axis0_width90_relative_drift", "axis1_mode_drift_coarse_intervals", "axis1_intervals_in_width90", "axis1_native_mean_drift_fraction_width90", "axis1_native_quantile_drift_fraction_width90", "axis1_quantile_drift_fraction_of_width90", "axis1_width90_relative_drift"],
+    "index_base": 0,
+    "failed_mode_gate_row_indices": "Every refinement row with a recorded joint-mode gate failure.",
+    "null_metric": "Unavailable in maintained runner receipt; never imputed.",
+    "pass_count_rule": "Any failed gate resets count; two consecutive passing refinements required."
+  },
+  "native_summary_schema": {
+    "columns": ["mean", "std", "mode", "q05", "q50", "q95", "width90", "truth_cdf", "kl_from_uniform_prior", "boundary_mass_low", "boundary_mass_high", "prior_dominated", "prior_support_limited"],
+    "axis_order": ["mass1", "mass2"],
+    "basis": "Exact native-axis summaries from each final retained backend grid."
+  },
+  "parity_history_schema": {
+    "columns": ["size", "likelihood_passed", "posterior_total_variation", "posterior_threshold", "posterior_passed"]
+  },
+  "historical_reference_gates": {
+    "boundary_mass_diagnostic": 0.01,
+    "boundary_strip_prior_fraction": 0.05,
+    "joint_density_total_variation": 0.05,
+    "joint_tv_estimator_absolute_drift": 0.0025,
+    "log_normalizer_absolute_drift": 0.05,
+    "minimum_intervals_in_width90": 4.0,
+    "mode_drift_coarse_intervals": 1.0,
+    "prior_dominated_kl_diagnostic": 0.01,
+    "quantile_drift_fraction_of_width90": 0.05,
+    "width90_relative_drift": 0.05
+  },
+  "noise_audits": [
+    {
+      "model": "IMRPhenomD",
+      "receipt": {
+        "bytes": 7908,
+        "path": "/home/xangma/artifacts/diffgw-pe-compiled-pilot-20261001/noise-audit/IMRPhenomD/noise_audit_receipt.json",
+        "sha256": "c2c8e071d7dc17791c286218713029c3b559aba771f3bc4da49ab0b931e1318d"
+      },
+      "status": "completed_noise_audit",
+      "elapsed_seconds": 2.4022441669367254,
+      "external_wall_elapsed_seconds": 5.874389371369034,
+      "native_likelihood": {
+        "jax": {
+          "max_absolute_error_from_minus_q_over2": 2.2737367544323206e-13,
+          "passed": true
+        },
+        "torch": {
+          "max_absolute_error_from_minus_q_over2": 2.2737367544323206e-13,
+          "passed": true
+        }
+      },
+      "statistics": {
+        "component_mean_standard_errors": [0.7022673761346391, -0.18591902642253907, 1.2159844330561027, 0.15356643622948085],
+        "component_means": [0.001124320236523405, -0.00029765375819125977, 0.0019467740519393058, 0.0002458577142710446],
+        "component_unbiased_variances": [0.998236247713482, 0.996976358743499, 0.9973842896737076, 1.001891302642612],
+        "component_variance_standard_errors": [-0.7789946975305416, -1.3354485910823963, -1.1552781476361835, 0.8353297349531966],
+        "degrees_of_freedom": 1524,
+        "passed": true,
+        "q_expected_mean": 1524,
+        "q_expected_variance": 3048,
+        "q_mean": 1521.898085234527,
+        "q_mean_standard_error": 1.7252717177302825,
+        "q_standard_errors": [-1.218309408235318, 0.07866472828107009],
+        "q_unbiased_variance": 3058.6224474391356,
+        "q_variance_standard_error": 135.03443882983325,
+        "realizations": 1024,
+        "threshold_standard_errors": 5,
+        "correlation_checks": 22,
+        "maximum_absolute_fisher_standard_errors": 2.4464690340245783
+      }
+    },
+    {
+      "model": "IMRPhenomD_NRTidal",
+      "receipt": {
+        "bytes": 7933,
+        "path": "/home/xangma/artifacts/diffgw-pe-compiled-pilot-20261001/noise-audit/IMRPhenomD_NRTidal/noise_audit_receipt.json",
+        "sha256": "bf688a64f084530b59725542ef7863613c7e664f39ef0c3429de4de440c59941"
+      },
+      "status": "completed_noise_audit",
+      "elapsed_seconds": 2.594342216383666,
+      "external_wall_elapsed_seconds": 6.077663532458246,
+      "native_likelihood": {
+        "jax": {
+          "max_absolute_error_from_minus_q_over2": 3.410605131648481e-13,
+          "passed": true
+        },
+        "torch": {
+          "max_absolute_error_from_minus_q_over2": 2.2737367544323206e-13,
+          "passed": true
+        }
+      },
+      "statistics": {
+        "component_mean_standard_errors": [-0.10028350187293678, 0.497349282667316, -1.0612161350087987, 0.6815190954583076],
+        "component_means": [-0.00014259554168169388, 0.0007071929982740933, -0.0015089689409197907, 0.0009690685184331556],
+        "component_unbiased_variances": [1.003505458616773, 1.0000241590024628, 0.9996748698947663, 0.9979942028124141],
+        "component_variance_standard_errors": [1.7432230158786672, 0.012013985540228167, -0.1616833471907326, -0.9974591643598095],
+        "degrees_of_freedom": 1932,
+        "passed": true,
+        "q_expected_mean": 1932,
+        "q_expected_variance": 3864,
+        "q_mean": 1932.5768647541845,
+        "q_mean_standard_error": 1.9425337834900067,
+        "q_standard_errors": [0.296965107679151, 0.35261779084897676],
+        "q_unbiased_variance": 3924.338038494597,
+        "q_variance_standard_error": 171.11456103597297,
+        "realizations": 1024,
+        "threshold_standard_errors": 5,
+        "correlation_checks": 22,
+        "maximum_absolute_fisher_standard_errors": 1.8002529996721899
+      }
+    }
+  ],
+  "fixed_trials": [
+    {
+      "id": "IMRPhenomD/fixed/000",
+      "model": "IMRPhenomD",
+      "stage": "fixed",
+      "index": 0,
+      "truth": [36.0, 29.0],
+      "noise_seed": 610101,
+      "sampler_required": false,
+      "status": "completed_noisy_trial",
+      "reference_passed": true,
+      "sampler_status": "not_requested_reference_only",
+      "receipt": {
+        "bytes": 11365,
+        "path": "/home/xangma/artifacts/diffgw-pe-compiled-pilot-20261001/trials/IMRPhenomD/fixed/000/noisy_trial_receipt.json",
+        "sha256": "dae262c8d1590539e8c450af2f0c82c637e30f5b41ef462a2d4edcf032689a47"
+      },
+      "reference_elapsed_seconds": 141.60580001678318,
+      "elapsed_seconds": 141.60580001678318,
+      "external_wall_elapsed_seconds": 145.35487372800708,
+      "summary": {
+        "actual_snr": 20.0,
+        "final_grid_size": 481,
+        "final_gauss_order": 128,
+        "native_summary_location": "reference.backends.torch.final_summary.native_axis_rows"
+      },
+      "controller": {
+        "host": "len",
+        "cwd": "/home/xangma/diffgw-pe-compiled-pilot-20261001",
+        "cap_seconds": 3900,
+        "external_wall_elapsed_seconds": 145.35487372800708,
+        "exit_code": 0,
+        "finished_utc": "2026-10-01T14:51:50.053539+00:00",
+        "watchdog_status": "completed",
+        "failure": null
+      },
+      "reference": {
+        "receipt": {
+          "bytes": 36194,
+          "path": "/home/xangma/artifacts/diffgw-pe-compiled-pilot-20261001/trials/IMRPhenomD/fixed/000/noisy_reference_receipt.json",
+          "sha256": "7506b7e7ef81d04e2b208504eec98237d33e4f1a89b5c54805d7ef451104efe7"
+        },
+        "raw_status": "completed_transformed_baseline",
+        "partial": false,
+        "chart": {
+          "lower": [33.0, 26.0],
+          "scale": 0.032270046169856285,
+          "truth": [37.20825523193808, 28.13676156559204],
+          "upper": [39.0, 32.0]
+        },
+        "summary_truth": [36.0, 29.0],
+        "maximum_log_likelihood_deficit": 1.880156014522072e-05,
+        "mode_metric": "native component mass coordinate at joint native log-likelihood grid maximum; coarse native prior intervals",
+        "parity_rows": [[31, true, 3.326227313677466e-12, 1e-05, true], [61, true, 3.4121647487987756e-12, 1e-05, true], [121, true, 3.2829143808356585e-12, 1e-05, true], [241, true, 3.305563401717057e-12, 1e-05, true], [481, true, 3.308359236384791e-12, 1e-05, true]],
+        "backends": {
+          "jax": {
+            "grid_sizes": [31, 61, 121, 241, 481],
+            "execution": {
+              "adapter_batch_implementation": null,
+              "first_chunk_max_absolute_log_likelihood_difference": 4.838511813431978e-10,
+              "first_chunk_seconds": 2.9854857712052763,
+              "fixed_chunk_size": 128,
+              "jax_jit_requested": true,
+              "parity_tolerances": {
+                "atol": 1e-09,
+                "rtol": 1e-08
+              },
+              "strategy": "jax_jit"
+            },
+            "consecutive_passing_refinements": 2,
+            "final_summary": {
+              "log_integrated_likelihood": -812.8351186407025,
+              "maximum_log_likelihood": -807.8418340268223,
+              "size": 481,
+              "native_axis_rows": [[37.092568532202385, 1.0707966774408846, 37.2, 35.24177735132737, 37.14559011948905, 38.73468390011401, 3.4929065487866353, 0.16735879801992665, 0.3632305385243537, 0.00011078253221997539, 0.05712002238048153, false, true], [28.228765589175474, 0.7461875342070763, 28.142397683182466, 27.107129205878138, 28.180106933071425, 29.535563746073183, 2.4284345401950453, 0.8368537463211604, 0.7225734751307026, 4.965266052584651e-24, 0.0, false, false]]
+            },
+            "refinement_rows": [
+              [31, 61, false, ["axis1_underresolved", "noisy_joint_density_total_variation", "noisy_axis1_native_quantile_drift_fraction_width90"], 0, 0.014047922091080588, 6.871223721536569e-05, 0.001918138298741101, 7.874146706399188e-05, 6.895047739145276, 0.0, 34.94165976562677, 0.0003339031797311066, null, 0.002179039142323103, 0.002195006560343406, 0.0, 3.0845030247337366, 0.000348036881260972, null, 0.006333134392767549, 0.011410759693903481],
+              [61, 121, false, ["noisy_joint_density_total_variation"], 0, 0.0036818365662832087, 1.656386689791265e-05, 0.0001249935194769236, 6.747337044998858e-05, 13.013216670293518, 0.4999999999999645, 69.86416913270718, 4.860107314202203e-06, null, 0.00026333106380520895, 0.0002741090143793295, 0.041311276476063155, 5.941690718317125, 5.771594700360012e-06, null, 0.00018186465350807996, 0.00025598402160185963],
+              [121, 241, true, [], 1, 0.0009315792673361284, 3.9170616221017186e-06, 2.8630932388612473e-05, 1.686179132320831e-05, 25.84201809444595, 0.9999999999998579, 139.71867435596727, 1.220279659482e-06, null, 6.652253119053256e-05, 6.916691324020422e-05, 0.08296977456492374, 11.656784744049476, 1.4574452820193403e-06, null, 2.2932908111047707e-05, 3.816355850374727e-05],
+              [241, 481, true, [], 2, 0.00023365319668958924, 9.592864575321762e-07, 7.157191847906308e-06, 4.215351282255142e-06, 51.535072410689196, 0.0, 279.4325239028673, 3.049714638270307e-07, null, 1.659731657949551e-05, 1.726645488459577e-05, 0.0, 23.08961442453098, 3.64251642699122e-07, null, 5.7328133966587565e-06, 9.74700138708146e-06]
+            ],
+            "failed_mode_gate_row_indices": []
+          },
+          "torch": {
+            "grid_sizes": [31, 61, 121, 241, 481],
+            "execution": {
+              "adapter_batch_implementation": null,
+              "jax_jit_requested": false,
+              "strategy": "eager"
+            },
+            "consecutive_passing_refinements": 2,
+            "final_summary": {
+              "log_integrated_likelihood": -812.8351186407025,
+              "maximum_log_likelihood": -807.8418340268222,
+              "size": 481,
+              "native_axis_rows": [[37.09256853220221, 1.070796677440874, 37.2, 35.241777351327315, 37.145590119488794, 38.734683900113914, 3.4929065487866, 0.16735879801995143, 0.36323053852433573, 0.00011078253221999787, 0.05712002238045899, false, true], [28.22876558917561, 0.7461875342070707, 28.142397683182466, 27.1071292058782, 28.180106933071613, 29.535563746073226, 2.4284345401950276, 0.8368537463211286, 0.7225734751306765, 4.965266052574589e-24, 0.0, false, false]]
+            },
+            "refinement_rows": [
+              [31, 61, false, ["axis1_underresolved", "noisy_joint_density_total_variation", "noisy_axis1_native_quantile_drift_fraction_width90"], 0, 0.014047922091067902, 6.871223717816628e-05, 0.0019181382984987394, 7.874146615449718e-05, 6.8950477391395, 0.0, 34.941659765629396, 0.00033390317965177455, null, 0.0021790391420951857, 0.00219500656010532, 0.0, 3.0845030247341385, 0.0003480368811950732, null, 0.006333134392536969, 0.011410759693642972],
+              [61, 121, false, ["noisy_joint_density_total_variation"], 0, 0.003681836566266742, 1.656386687267416e-05, 0.00012499351931483105, 6.74733702226149e-05, 13.01321667028707, 0.4999999999999645, 69.86416913270945, 4.860107365053772e-06, null, 0.00026333106391910824, 0.000274109014422036, 0.041311276476063155, 5.941690718317542, 5.771594764733131e-06, null, 0.00018186465356805163, 0.0002559840215418572],
+              [121, 241, true, [], 1, 0.0009315792674042239, 3.917061621881842e-06, 2.8630932414591692e-05, 1.6861791436895146e-05, 25.84201809445674, 0.9999999999998579, 139.718674355963, 1.2202796737215057e-06, null, 6.652253124138982e-05, 6.916691330326683e-05, 0.08296977456492374, 11.65678474404934, 1.457445292260209e-06, null, 2.29329081022701e-05, 3.8163558421820903e-05],
+              [241, 481, true, [], 2, 0.00023365319670422637, 9.592864533005893e-07, 7.1571918759949504e-06, 4.215351282255142e-06, 51.53507241065272, 0.0, 279.43252390286443, 3.049714658612787e-07, null, 1.6597316565255963e-05, 1.7266454864253495e-05, 0.0, 23.089614424530808, 3.642516456250538e-07, null, 5.732813396658798e-06, 9.747001391470425e-06]
+            ],
+            "failed_mode_gate_row_indices": []
+          }
+        }
+      },
+      "gauss": {
+        "receipt": {
+          "bytes": 3110,
+          "path": "/home/xangma/artifacts/diffgw-pe-compiled-pilot-20261001/trials/IMRPhenomD/fixed/000/independent_gauss_receipt.json",
+          "sha256": "184ba12b5705d3fb17bec7e18b92e1b477babc34acb9bdee1307d183d09ee3c5"
+        },
+        "raw_status": "independent_quadrature_passed",
+        "partial": false,
+        "method": "fresh full-support tensor Gauss-Legendre likelihood nodes",
+        "executed_orders": [64, 128],
+        "order_passes": [false, true],
+        "final_order": {
+          "log_integrated_likelihood": -812.8351172355126,
+          "means": [37.09256888695882, 28.22876529454551],
+          "order": 128,
+          "passed": true,
+          "refinement": {
+            "density_TV_estimator_absolute_drift": 1.1724863472557098e-05,
+            "log_normalizer_absolute_drift": 6.258271810111182e-06,
+            "native_mean_drift_fraction_width90": [6.99362173870105e-06, 6.575772106812249e-06],
+            "native_std_relative_drift": [3.6598131737909614e-05, 3.206310537614354e-05]
+          },
+          "std": [1.0707943344229884, 0.7461860627323198],
+          "versus_trapezoid": {
+            "density_TV_from_bilinear_trapezoid": 7.999516166292756e-05,
+            "log_normalizer_difference_from_trapezoid": 1.4051898915568017e-06,
+            "native_mean_difference_fraction_width90": [1.0156487447921203e-07, 1.2132511427421164e-07],
+            "native_std_relative_difference": [2.1881119559240076e-06, 1.971994418587474e-06],
+            "trapezoid_interpolation_Gauss_integral": 0.9999965258319923
+          }
+        }
+      }
+    },
+    {
+      "id": "IMRPhenomD/fixed/001",
+      "model": "IMRPhenomD",
+      "stage": "fixed",
+      "index": 1,
+      "truth": [36.0, 29.0],
+      "noise_seed": 610102,
+      "sampler_required": false,
+      "status": "completed_noisy_trial",
+      "reference_passed": true,
+      "sampler_status": "not_requested_reference_only",
+      "receipt": {
+        "bytes": 11368,
+        "path": "/home/xangma/artifacts/diffgw-pe-compiled-pilot-20261001/trials/IMRPhenomD/fixed/001/noisy_trial_receipt.json",
+        "sha256": "d8e921053f0ff5900676e1b47f6a155f01d67405bbf399230479cb61b14e21f5"
+      },
+      "reference_elapsed_seconds": 142.89621023228392,
+      "elapsed_seconds": 142.89621023228392,
+      "external_wall_elapsed_seconds": 146.64752623718232,
+      "summary": {
+        "actual_snr": 20.0,
+        "final_grid_size": 481,
+        "final_gauss_order": 128,
+        "native_summary_location": "reference.backends.torch.final_summary.native_axis_rows"
+      },
+      "controller": {
+        "host": "len",
+        "cwd": "/home/xangma/diffgw-pe-compiled-pilot-20261001",
+        "cap_seconds": 3900,
+        "external_wall_elapsed_seconds": 146.64752623718232,
+        "exit_code": 0,
+        "finished_utc": "2026-10-01T14:51:51.347169+00:00",
+        "watchdog_status": "completed",
+        "failure": null
+      },
+      "reference": {
+        "receipt": {
+          "bytes": 36200,
+          "path": "/home/xangma/artifacts/diffgw-pe-compiled-pilot-20261001/trials/IMRPhenomD/fixed/001/noisy_reference_receipt.json",
+          "sha256": "4cbf9576c7bfb79f6573beef168acb3a97b6fd42cdf96db639df153947833b26"
+        },
+        "raw_status": "completed_transformed_baseline",
+        "partial": false,
+        "chart": {
+          "lower": [33.0, 26.0],
+          "scale": 0.03120204643039492,
+          "truth": [35.717544264791414, 29.174873646019282],
+          "upper": [39.0, 32.0]
+        },
+        "summary_truth": [36.0, 29.0],
+        "maximum_log_likelihood_deficit": 2.48439133656575e-05,
+        "mode_metric": "native component mass coordinate at joint native log-likelihood grid maximum; coarse native prior intervals",
+        "parity_rows": [[31, true, 3.727287452090779e-12, 1e-05, true], [61, true, 3.803395650763552e-12, 1e-05, true], [121, true, 3.726347139712362e-12, 1e-05, true], [241, true, 3.763162597090441e-12, 1e-05, true], [481, true, 3.79191507677968e-12, 1e-05, true]],
+        "backends": {
+          "jax": {
+            "grid_sizes": [31, 61, 121, 241, 481],
+            "execution": {
+              "adapter_batch_implementation": null,
+              "first_chunk_max_absolute_log_likelihood_difference": 4.922640073345974e-10,
+              "first_chunk_seconds": 2.9741291431710124,
+              "fixed_chunk_size": 128,
+              "jax_jit_requested": true,
+              "parity_tolerances": {
+                "atol": 1e-09,
+                "rtol": 1e-08
+              },
+              "strategy": "jax_jit"
+            },
+            "consecutive_passing_refinements": 2,
+            "final_summary": {
+              "log_integrated_likelihood": -753.0166898645616,
+              "maximum_log_likelihood": -747.8752131424484,
+              "size": 481,
+              "native_axis_rows": [[35.90295912504486, 1.0732018376626424, 35.7125, 34.22958496915185, 35.842356408277034, 37.804531299435794, 3.574946330283943, 0.5573537137711299, 0.3154901218568919, 0.002279449016171335, 0.006109829096948349, false, false], [29.054510725038995, 0.7653166994915886, 29.17833656877278, 27.72018476111403, 29.085341675272122, 30.270386157223623, 2.5502013961095926, 0.45641902826534547, 0.6493699460475845, 4.489923778909506e-24, 0.0, false, false]]
+            },
+            "refinement_rows": [
+              [31, 61, false, ["axis1_underresolved", "noisy_joint_density_total_variation", "noisy_truth_cdf_absolute_drift"], 0, 0.026312783397985866, 0.00017893166964479124, 0.008582616536813803, 0.0007612707097450766, 5.415739374996561, 0.4999999999999645, 35.77044674341606, 0.0003682952943327415, null, 0.0007688755488259961, 0.00022513825393202487, 0.04512262563746982, 3.2184190804961395, 0.000398611880159519, null, 0.0047441575955754645, 0.003596423080331646],
+              [61, 121, false, ["noisy_joint_density_total_variation"], 0, 0.006924868289056415, 2.735281365674226e-05, 0.00016013395438413403, 2.3047446347845835e-05, 9.719460102093212, 0.0, 71.50892122680632, 3.7584114483603332e-06, null, 0.0002779036894630936, 0.0004471086889887912, 0.0, 6.196232529240497, 3.208807202419519e-06, null, 0.00013298790540403036, 4.0735467967532257e-07],
+              [121, 241, true, [], 1, 0.001761383821845778, 6.054312670914462e-06, 1.3011832172171722e-05, 6.191828560986323e-06, 19.14681304751142, 0.49999999999992895, 143.00183840763071, 6.344677852164992e-07, null, 6.957000460882286e-05, 0.00011191496654738668, 0.04052857756387429, 12.155274341155208, 5.078230823598753e-07, null, 2.3579438091296447e-05, 4.5952555682580946e-05],
+              [241, 481, true, [], 2, 0.0004424963215371504, 1.4573463051185433e-06, 3.2524986228743558e-06, 1.5482246453757398e-06, 37.81270861037734, 0.5, 285.9957064226504, 1.5852914689385598e-07, null, 1.7293383838993554e-05, 2.7868924015361097e-05, 0.039734494684992024, 24.07522633901258, 1.268615852540055e-07, null, 6.6360614665105055e-06, 1.2193068963879102e-05]
+            ],
+            "failed_mode_gate_row_indices": []
+          },
+          "torch": {
+            "grid_sizes": [31, 61, 121, 241, 481],
+            "execution": {
+              "adapter_batch_implementation": null,
+              "jax_jit_requested": false,
+              "strategy": "eager"
+            },
+            "consecutive_passing_refinements": 2,
+            "final_summary": {
+              "log_integrated_likelihood": -753.0166898645616,
+              "maximum_log_likelihood": -747.8752131424484,
+              "size": 481,
+              "native_axis_rows": [[35.90295912504466, 1.0732018376626342, 35.7125, 34.229584969151716, 35.84235640827683, 37.80453129943561, 3.5749463302838933, 0.557353713771211, 0.31549012185690123, 0.0022794490161725774, 0.006109829096945241, false, false], [29.05451072503914, 0.765316699491587, 29.17833656877278, 27.720184761114183, 29.085341675272247, 30.270386157223765, 2.550201396109582, 0.4564190282652621, 0.6493699460475608, 4.4899237789153435e-24, 0.0, false, false]]
+            },
+            "refinement_rows": [
+              [31, 61, false, ["axis1_underresolved", "noisy_joint_density_total_variation", "noisy_truth_cdf_absolute_drift"], 0, 0.026312783398224585, 0.00017893166962640317, 0.008582616536737864, 0.0007612707087218951, 5.415739374986166, 0.4999999999999645, 35.77044674340675, 0.00036829529424543594, null, 0.0007688755484130257, 0.00022513825412675027, 0.04512262563746982, 3.218419080495292, 0.0003986118800565277, null, 0.004744157595725785, 0.0035964230806962163],
+              [61, 121, false, ["noisy_joint_density_total_variation"], 0, 0.00692486828933773, 2.7352813657415334e-05, 0.0001601339546871139, 2.3047446347845835e-05, 9.719460102104849, 0.0, 71.50892122679026, 3.758411313225854e-06, null, 0.00027790368931609696, 0.0004471086889531205, 0.0, 6.196232529239142, 3.2088070449895215e-06, null, 0.00013298790523687642, 4.0735472425755666e-07],
+              [121, 241, true, [], 1, 0.001761383821938139, 6.0543126631353115e-06, 1.3011832244003152e-05, 6.191828674673161e-06, 19.14681304759776, 0.49999999999992895, 143.00183840760684, 6.344677534164999e-07, null, 6.957000459492192e-05, 0.00011191496648976768, 0.04052857756387429, 12.15527434115321, 5.078230544973986e-07, null, 2.3579438131701034e-05, 4.5952555736920495e-05],
+              [241, 481, true, [], 2, 0.0004424963215590783, 1.4573462972314061e-06, 3.2524986044446536e-06, 1.548224531688902e-06, 37.81270861037654, 0.5, 285.99570642264644, 1.5852916676947787e-07, null, 1.7293383787317182e-05, 2.7868923862319215e-05, 0.039734494684992024, 24.07522633901248, 1.268616075437824e-07, null, 6.636061526414307e-06, 1.2193069124086922e-05]
+            ],
+            "failed_mode_gate_row_indices": []
+          }
+        }
+      },
+      "gauss": {
+        "receipt": {
+          "bytes": 3114,
+          "path": "/home/xangma/artifacts/diffgw-pe-compiled-pilot-20261001/trials/IMRPhenomD/fixed/001/independent_gauss_receipt.json",
+          "sha256": "20552e3faf8d91972bc559f165084c0421eef984ca11cb7c32837ea18721956d"
+        },
+        "raw_status": "independent_quadrature_passed",
+        "partial": false,
+        "method": "fresh full-support tensor Gauss-Legendre likelihood nodes",
+        "executed_orders": [64, 128],
+        "order_passes": [false, true],
+        "final_order": {
+          "log_integrated_likelihood": -753.0166893487817,
+          "means": [35.902959314832586, 29.054510616520574],
+          "order": 128,
+          "passed": true,
+          "refinement": {
+            "density_TV_estimator_absolute_drift": 1.6829245793518837e-05,
+            "log_normalizer_absolute_drift": 3.0522559768542123e-05,
+            "native_mean_drift_fraction_width90": [2.007366173249169e-05, 2.2488209772639155e-05],
+            "native_std_relative_drift": [5.943386423374211e-05, 7.934479753748557e-05]
+          },
+          "std": [1.0732029918046957, 0.765317539417229],
+          "versus_trapezoid": {
+            "density_TV_from_bilinear_trapezoid": 0.00015702381458533907,
+            "log_normalizer_difference_from_trapezoid": 5.157799023436382e-07,
+            "native_mean_difference_fraction_width90": [5.3088328686714026e-08, 4.255293983556757e-08],
+            "native_std_relative_difference": [1.075418229626905e-06, 1.0974864664375824e-06],
+            "trapezoid_interpolation_Gauss_integral": 1.0000064254988974
+          }
+        }
+      }
+    },
+    {
+      "id": "IMRPhenomD/fixed/002",
+      "model": "IMRPhenomD",
+      "stage": "fixed",
+      "index": 2,
+      "truth": [36.0, 29.0],
+      "noise_seed": 610103,
+      "sampler_required": false,
+      "status": "completed_noisy_trial",
+      "reference_passed": true,
+      "sampler_status": "not_requested_reference_only",
+      "receipt": {
+        "bytes": 11365,
+        "path": "/home/xangma/artifacts/diffgw-pe-compiled-pilot-20261001/trials/IMRPhenomD/fixed/002/noisy_trial_receipt.json",
+        "sha256": "5e4fea096d1731f07b845aa21e4843a080b4358b92a53f3d5b2c38de1a5c5466"
+      },
+      "reference_elapsed_seconds": 139.68059387104586,
+      "elapsed_seconds": 139.68059387104586,
+      "external_wall_elapsed_seconds": 143.44862793385983,
+      "summary": {
+        "actual_snr": 20.0,
+        "final_grid_size": 481,
+        "final_gauss_order": 128,
+        "native_summary_location": "reference.backends.torch.final_summary.native_axis_rows"
+      },
+      "controller": {
+        "host": "len",
+        "cwd": "/home/xangma/diffgw-pe-compiled-pilot-20261001",
+        "cap_seconds": 3900,
+        "external_wall_elapsed_seconds": 143.44862793385983,
+        "exit_code": 0,
+        "finished_utc": "2026-10-01T14:51:48.148818+00:00",
+        "watchdog_status": "completed",
+        "failure": null
+      },
+      "reference": {
+        "receipt": {
+          "bytes": 36201,
+          "path": "/home/xangma/artifacts/diffgw-pe-compiled-pilot-20261001/trials/IMRPhenomD/fixed/002/noisy_reference_receipt.json",
+          "sha256": "96b1b0b9b74c3965ce78667190870f58792c1f48492fcc7134904470669869d2"
+        },
+        "raw_status": "completed_transformed_baseline",
+        "partial": false,
+        "chart": {
+          "lower": [33.0, 26.0],
+          "scale": 0.03138130456765374,
+          "truth": [37.044369001726224, 28.23624357898199],
+          "upper": [39.0, 32.0]
+        },
+        "summary_truth": [36.0, 29.0],
+        "maximum_log_likelihood_deficit": 2.159535438295279e-05,
+        "mode_metric": "native component mass coordinate at joint native log-likelihood grid maximum; coarse native prior intervals",
+        "parity_rows": [[31, true, 3.6186345992303235e-12, 1e-05, true], [61, true, 3.5740834297246e-12, 1e-05, true], [121, true, 3.5871276504905926e-12, 1e-05, true], [241, true, 3.6344083748130466e-12, 1e-05, true], [481, true, 3.6177881685479115e-12, 1e-05, true]],
+        "backends": {
+          "jax": {
+            "grid_sizes": [31, 61, 121, 241, 481],
+            "execution": {
+              "adapter_batch_implementation": null,
+              "first_chunk_max_absolute_log_likelihood_difference": 6.043592293281108e-10,
+              "first_chunk_seconds": 2.9071979001164436,
+              "fixed_chunk_size": 128,
+              "jax_jit_requested": true,
+              "parity_tolerances": {
+                "atol": 1e-09,
+                "rtol": 1e-08
+              },
+              "strategy": "jax_jit"
+            },
+            "consecutive_passing_refinements": 2,
+            "final_summary": {
+              "log_integrated_likelihood": -839.9291077666236,
+              "maximum_log_likelihood": -834.8643702308334,
+              "size": 481,
+              "native_axis_rows": [[37.02843261542609, 1.0397591626430518, 37.05, 35.265247707696986, 37.05537891264351, 38.68054857096053, 3.415300863263546, 0.1735093614151666, 0.37803193272212815, 5.679337713200675e-05, 0.0466001938552002, false, true], [28.258302650966325, 0.7223318553409301, 28.232201942412534, 27.13172696334958, 28.22870212304195, 29.49946602202024, 2.3677390586706615, 0.8364636517092866, 0.740408498711123, 1.6885190257131911e-16, 0.0, false, false]]
+            },
+            "refinement_rows": [
+              [31, 61, false, ["axis1_underresolved", "noisy_joint_density_total_variation", "noisy_truth_cdf_absolute_drift", "noisy_axis1_native_quantile_drift_fraction_width90"], 0, 0.01473932897143257, 8.080346230191979e-05, 0.004879738858563187, 7.573691709694685e-05, 6.723952209705759, 0.5, 34.167149610009076, 0.00021362306528416487, null, 0.0018294655481025863, 0.0019064157158712632, 0.04487940148214328, 2.9908395118787507, 0.00022144888499462255, null, 0.007111769567899132, 0.0006914277216311203],
+              [61, 121, false, ["noisy_joint_density_total_variation"], 0, 0.0038736817947810876, 1.7827778010450542e-05, 0.0001286176895406166, 6.857421419681486e-05, 13.139911993433868, 0.5000000000000355, 68.31267192333712, 1.5242566078274087e-05, null, 0.0002942284652842053, 0.00031659275017732, 0.04156543179815859, 5.759169813558287, 1.5774722118637844e-05, null, 0.0002670128160942519, 0.0002574299695234748],
+              [121, 241, true, [], 1, 0.0009800110507172982, 4.113336365729357e-06, 3.196784290981913e-05, 1.7355038494315522e-05, 25.51053381505569, 0.0, 136.61471129120648, 3.5971741948624797e-06, null, 7.21325199706691e-05, 7.782877369397374e-05, 0.0, 11.298976045776591, 3.7283991408612995e-06, null, 2.8731447906667522e-05, 4.3621303493826886e-05],
+              [241, 481, true, [], 2, 0.0002459628649449183, 1.0059459610178454e-06, 7.991280540547985e-06, 4.33868831350992e-06, 50.891815362761136, 0.0, 273.22406906102157, 8.991797128610478e-07, null, 1.8147843738863757e-05, 1.959388647486912e-05, 0.0, 22.379690257015376, 9.31958112608764e-07, null, 7.1946979791984305e-06, 1.1208873274623289e-05]
+            ],
+            "failed_mode_gate_row_indices": []
+          },
+          "torch": {
+            "grid_sizes": [31, 61, 121, 241, 481],
+            "execution": {
+              "adapter_batch_implementation": null,
+              "jax_jit_requested": false,
+              "strategy": "eager"
+            },
+            "consecutive_passing_refinements": 2,
+            "final_summary": {
+              "log_integrated_likelihood": -839.9291077666236,
+              "maximum_log_likelihood": -834.8643702308332,
+              "size": 481,
+              "native_axis_rows": [[37.02843261542599, 1.039759162643087, 37.05, 35.26524770769685, 37.05537891264337, 38.68054857096055, 3.4153008632637025, 0.17350936141520823, 0.37803193272209273, 5.6793377132082036e-05, 0.04660019385520631, false, true], [28.258302650966396, 0.7223318553409563, 28.232201942412534, 27.13172696334957, 28.228702123042048, 29.499466022020382, 2.3677390586708107, 0.8364636517092456, 0.7404084987110833, 1.6885190257206597e-16, 0.0, false, false]]
+            },
+            "refinement_rows": [
+              [31, 61, false, ["axis1_underresolved", "noisy_joint_density_total_variation", "noisy_truth_cdf_absolute_drift", "noisy_axis1_native_quantile_drift_fraction_width90"], 0, 0.01473932897131007, 8.080346228179006e-05, 0.0048797388587431545, 7.573691698326002e-05, 6.723952209692246, 0.5, 34.167149610002184, 0.00021362306522181972, null, 0.0018294655478034918, 0.0019064157155097958, 0.04487940148214328, 2.9908395118780953, 0.00022144888493613458, null, 0.007111769567565982, 0.000691427721206507],
+              [61, 121, false, ["noisy_joint_density_total_variation"], 0, 0.0038736817945918913, 1.782777801068126e-05, 0.00012861768941313523, 6.85742143105017e-05, 13.139911993411665, 0.5000000000000355, 68.31267192334465, 1.5242565938894566e-05, null, 0.00029422846504078176, 0.0003165927498652452, 0.04156543179815859, 5.759169813558901, 1.577472197308291e-05, null, 0.0002670128163478163, 0.0002574299698490665],
+              [121, 241, true, [], 1, 0.0009800110507390072, 4.113336354060089e-06, 3.196784285633414e-05, 1.7355038266941847e-05, 25.51053381500657, 0.0, 136.61471129121642, 3.5971741802992203e-06, null, 7.213251997898556e-05, 7.782877373141578e-05, 0.0, 11.298976045777438, 3.728399130357635e-06, null, 2.873144787815618e-05, 4.362130346231346e-05],
+              [241, 481, true, [], 2, 0.00024596286491540965, 1.0059459587763117e-06, 7.991280583097282e-06, 4.338688427196757e-06, 50.89181536270992, 0.0, 273.2240690610341, 8.991797232633514e-07, null, 1.8147843772150427e-05, 1.959388650191432e-05, 0.0, 22.379690257016787, 9.319581276133725e-07, null, 7.194698004705912e-06, 1.1208873262618848e-05]
+            ],
+            "failed_mode_gate_row_indices": []
+          }
+        }
+      },
+      "gauss": {
+        "receipt": {
+          "bytes": 3111,
+          "path": "/home/xangma/artifacts/diffgw-pe-compiled-pilot-20261001/trials/IMRPhenomD/fixed/002/independent_gauss_receipt.json",
+          "sha256": "9ce6884c4fbcfb384052480184fbf8dd91ccd006233b0dded29004c322ad33db"
+        },
+        "raw_status": "independent_quadrature_passed",
+        "partial": false,
+        "method": "fresh full-support tensor Gauss-Legendre likelihood nodes",
+        "executed_orders": [64, 128],
+        "order_passes": [false, true],
+        "final_order": {
+          "log_integrated_likelihood": -839.9291063203241,
+          "means": [37.028433638726895, 28.258301915707143],
+          "order": 128,
+          "passed": true,
+          "refinement": {
+            "density_TV_estimator_absolute_drift": 1.2170468406742064e-05,
+            "log_normalizer_absolute_drift": 1.5747871316307283e-05,
+            "native_mean_drift_fraction_width90": [1.6075884878598957e-05, 1.644775944798605e-05],
+            "native_std_relative_drift": [7.991529751857371e-05, 8.414418726435356e-05]
+          },
+          "std": [1.039757738435162, 0.7223309737745978],
+          "versus_trapezoid": {
+            "density_TV_from_bilinear_trapezoid": 8.411727603609652e-05,
+            "log_normalizer_difference_from_trapezoid": 1.446299506824289e-06,
+            "native_mean_difference_fraction_width90": [2.9962247677085934e-07, 3.1053221422384243e-07],
+            "native_std_relative_difference": [1.3697497719926824e-06, 1.2204465689358201e-06],
+            "trapezoid_interpolation_Gauss_integral": 0.9999968452701768
+          }
+        }
+      }
+    },
+    {
+      "id": "IMRPhenomD/fixed/003",
+      "model": "IMRPhenomD",
+      "stage": "fixed",
+      "index": 3,
+      "truth": [36.0, 29.0],
+      "noise_seed": 610104,
+      "sampler_required": false,
+      "status": "completed_noisy_trial",
+      "reference_passed": true,
+      "sampler_status": "not_requested_reference_only",
+      "receipt": {
+        "bytes": 11866,
+        "path": "/home/xangma/artifacts/diffgw-pe-compiled-pilot-20261001/trials/IMRPhenomD/fixed/003/noisy_trial_receipt.json",
+        "sha256": "6b51a688071fd59b3b8a4e6ea96dae47b448d304e610514a734abb4d49130bdb"
+      },
+      "reference_elapsed_seconds": 363.1080125309527,
+      "elapsed_seconds": 363.1080125309527,
+      "external_wall_elapsed_seconds": 366.89638670906425,
+      "summary": {
+        "actual_snr": 20.0,
+        "final_grid_size": 961,
+        "final_gauss_order": 128,
+        "native_summary_location": "reference.backends.torch.final_summary.native_axis_rows"
+      },
+      "controller": {
+        "host": "len",
+        "cwd": "/home/xangma/diffgw-pe-compiled-pilot-20261001",
+        "cap_seconds": 3900,
+        "external_wall_elapsed_seconds": 366.89638670906425,
+        "exit_code": 0,
+        "finished_utc": "2026-10-01T14:55:31.598620+00:00",
+        "watchdog_status": "completed",
+        "failure": null
+      },
+      "reference": {
+        "receipt": {
+          "bytes": 43732,
+          "path": "/home/xangma/artifacts/diffgw-pe-compiled-pilot-20261001/trials/IMRPhenomD/fixed/003/noisy_reference_receipt.json",
+          "sha256": "88ce5728a6bfac06227e67db926f3aa5a373fecf943b9001f153f0d3ebdf26f8"
+        },
+        "raw_status": "completed_transformed_baseline",
+        "partial": false,
+        "chart": {
+          "lower": [33.0, 26.0],
+          "scale": 0.03152016361945369,
+          "truth": [35.26508020645137, 29.556701764503565],
+          "upper": [39.0, 32.0]
+        },
+        "summary_truth": [36.0, 29.0],
+        "maximum_log_likelihood_deficit": 6.4427249526488595e-06,
+        "mode_metric": "native component mass coordinate at joint native log-likelihood grid maximum; coarse native prior intervals",
+        "parity_rows": [[31, true, 3.671591334280552e-12, 1e-05, true], [61, true, 3.533592583121498e-12, 1e-05, true], [121, true, 3.597516124468916e-12, 1e-05, true], [241, true, 3.711299396592596e-12, 1e-05, true], [481, true, 3.717075168617899e-12, 1e-05, true], [961, true, 3.727150954360873e-12, 1e-05, true]],
+        "backends": {
+          "jax": {
+            "grid_sizes": [31, 61, 121, 241, 481, 961],
+            "execution": {
+              "adapter_batch_implementation": null,
+              "first_chunk_max_absolute_log_likelihood_difference": 5.212541509536095e-10,
+              "first_chunk_seconds": 3.035885618068278,
+              "fixed_chunk_size": 128,
+              "jax_jit_requested": true,
+              "parity_tolerances": {
+                "atol": 1e-09,
+                "rtol": 1e-08
+              },
+              "strategy": "jax_jit"
+            },
+            "consecutive_passing_refinements": 2,
+            "final_summary": {
+              "log_integrated_likelihood": -765.7611648347806,
+              "maximum_log_likelihood": -760.5961233363123,
+              "size": 961,
+              "native_axis_rows": [[35.457034507311455, 1.048739732525985, 35.26875, 33.841594315029674, 35.38752062493428, 37.31683708876851, 3.4752427737388345, 0.71337240855993, 0.34379113248773985, 0.008098839226334415, 0.0023207624545195094, false, false], [29.429287724953518, 0.7581211221907506, 29.55403158022771, 28.10384797302995, 29.467476631372374, 30.620688255188327, 2.516840282158377, 0.2758110147473765, 0.6621823446341545, 8.443588912880104e-30, 0.0, false, false]]
+            },
+            "refinement_rows": [
+              [31, 61, false, ["axis1_underresolved", "noisy_joint_density_total_variation", "noisy_truth_cdf_absolute_drift"], 0, 0.028713299639877787, 0.00021313231689029655, 0.006027908945433869, 0.00033827812012532377, 5.019619356946251, 0.0, 34.77373258445198, 0.00023773600030084892, null, 0.0011104874771749574, 0.001162446879019866, 0.0, 3.1826036632083308, 0.00020622694344769708, null, 0.004073711635498244, 0.007715791985736125],
+              [61, 121, false, ["noisy_joint_density_total_variation"], 0, 0.008267109764917312, 3.344028259015877e-05, 0.00023436251401737218, 3.833976211353729e-05, 9.061241154349656, 0.4999999999999645, 69.51539157398405, 1.448048045725745e-05, null, 0.00023571510064675035, 0.00046138839455199353, 0.04374316762158923, 6.127261235331309, 1.5173166903760686e-05, null, 0.00018127155601877276, 0.00029843544828279483],
+              [121, 241, false, ["noisy_joint_density_total_variation"], 0, 0.002096258701530268, 7.180983859491133e-06, 3.052771218547967e-05, 9.749226023814117e-06, 17.746958247928, 0.49999999999992895, 139.01470484655982, 3.725508166941694e-06, null, 5.955609100862883e-05, 0.00011565899741513704, 0.04537162517748655, 12.021717456290673, 3.909628260022265e-06, null, 4.381983570351954e-05, 6.205235695909777e-05],
+              [241, 481, true, [], 1, 0.0005271893709857723, 1.7501553247702053e-06, 7.63126472502762e-06, 2.4376720375585137e-06, 35.298040725557506, 0.4999999999997158, 278.02141941892774, 9.314432194104404e-07, null, 1.4842043343901388e-05, 2.8739779145827725e-05, 0.04120475057541086, 23.811186219875207, 9.774275765141876e-07, null, 1.0070669759882242e-05, 1.5001221188358364e-05],
+              [481, 961, true, [], 2, 0.00013197982850960546, 4.319303944215632e-07, 1.907774758391767e-06, 6.094408036005916e-07, 70.15012897098644, 0.49999999999943157, 556.0388437980871, 2.3286495339652805e-07, null, 3.6940002164247443e-06, 7.184821371615324e-06, 0.04081699177745336, 47.39146441200785, 2.4435816987082936e-07, null, 2.609029022683475e-06, 3.816834502802795e-06]
+            ],
+            "failed_mode_gate_row_indices": []
+          },
+          "torch": {
+            "grid_sizes": [31, 61, 121, 241, 481, 961],
+            "execution": {
+              "adapter_batch_implementation": null,
+              "jax_jit_requested": false,
+              "strategy": "eager"
+            },
+            "consecutive_passing_refinements": 2,
+            "final_summary": {
+              "log_integrated_likelihood": -765.7611648347806,
+              "maximum_log_likelihood": -760.5961233363121,
+              "size": 961,
+              "native_axis_rows": [[35.457034507311256, 1.0487397325259613, 35.26875, 33.84159431502956, 35.38752062493405, 37.316837088768246, 3.4752427737386853, 0.7133724085599901, 0.34379113248776627, 0.008098839226339447, 0.002320762454517067, false, false], [29.42928772495366, 0.7581211221907372, 29.55403158022771, 28.103847973030128, 29.467476631372563, 30.620688255188444, 2.5168402821583165, 0.2758110147473169, 0.6621823446341872, 8.443588912859877e-30, 2.220446049250313e-16, false, false]]
+            },
+            "refinement_rows": [
+              [31, 61, false, ["axis1_underresolved", "noisy_joint_density_total_variation", "noisy_truth_cdf_absolute_drift"], 0, 0.02871329964012546, 0.00021313231687923942, 0.006027908945336946, 0.00033827812001163693, 5.019619356949125, 0.0, 34.773732584458585, 0.00023773600007195059, null, 0.001110487476531097, 0.0011624468787989652, 0.0, 3.182603663208798, 0.00020622694322737723, null, 0.004073711635856322, 0.007715791985302886],
+              [61, 121, false, ["noisy_joint_density_total_variation"], 0, 0.008267109764936754, 3.3440282591574305e-05, 0.00023436251411035336, 3.833976177247678e-05, 9.061241154356523, 0.4999999999999645, 69.51539157396472, 1.448048041842026e-05, null, 0.00023571510078582655, 0.00046138839502026066, 0.04374316762158923, 6.127261235329406, 1.5173166857179592e-05, null, 0.00018127155600612384, 0.0002984354478254996],
+              [121, 241, false, ["noisy_joint_density_total_variation"], 0, 0.002096258701473597, 7.180983859051814e-06, 3.0527712087335956e-05, 9.74922591012728e-06, 17.746958247949102, 0.49999999999992895, 139.0147048465368, 3.7255081587642667e-06, null, 5.955609089005706e-05, 0.00011565899730270809, 0.04537162517748655, 12.021717456288789, 3.909628250141653e-06, null, 4.3819835868684017e-05, 6.205235711297227e-05],
+              [241, 481, true, [], 1, 0.0005271893710622093, 1.7501553182960004e-06, 7.631264747121058e-06, 2.4376720375585137e-06, 35.298040725623665, 0.4999999999997158, 278.02141941891637, 9.314432010093505e-07, null, 1.4842043266208343e-05, 2.8739779021110146e-05, 0.04120475057541086, 23.811186219874838, 9.774275581636325e-07, null, 1.0070669837519427e-05, 1.5001221329516828e-05],
+              [481, 961, true, [], 2, 0.00013197982850782095, 4.319303911128492e-07, 1.9077747702711534e-06, 6.094408036005916e-07, 70.15012897102805, 0.49999999999943157, 556.0388437980632, 2.3286495748570697e-07, null, 3.6940002143803185e-06, 7.184821373660217e-06, 0.04081699177745336, 47.39146441200671, 2.443581712824122e-07, null, 2.60902901703723e-06, 3.816834494333425e-06]
+            ],
+            "failed_mode_gate_row_indices": []
+          }
+        }
+      },
+      "gauss": {
+        "receipt": {
+          "bytes": 3114,
+          "path": "/home/xangma/artifacts/diffgw-pe-compiled-pilot-20261001/trials/IMRPhenomD/fixed/003/independent_gauss_receipt.json",
+          "sha256": "f33a5686582e4e7ee8ca4e50dd9fd4fb98fc9d21121e1ad683803f7428324283"
+        },
+        "raw_status": "independent_quadrature_passed",
+        "partial": false,
+        "method": "fresh full-support tensor Gauss-Legendre likelihood nodes",
+        "executed_orders": [64, 128],
+        "order_passes": [false, true],
+        "final_order": {
+          "log_integrated_likelihood": -765.7611646317555,
+          "means": [35.457034237817936, 29.429287929760385],
+          "order": 128,
+          "passed": true,
+          "refinement": {
+            "density_TV_estimator_absolute_drift": 6.014839111364696e-06,
+            "log_normalizer_absolute_drift": 5.4857986242495826e-05,
+            "native_mean_drift_fraction_width90": [3.3921332779794846e-05, 3.548843663835144e-05],
+            "native_std_relative_drift": [8.928179334568746e-05, 0.00010088910550767257]
+          },
+          "std": [1.0487401162821544, 0.758121409505189],
+          "versus_trapezoid": {
+            "density_TV_from_bilinear_trapezoid": 5.1921104778541644e-05,
+            "log_normalizer_difference_from_trapezoid": 2.030251380347181e-07,
+            "native_mean_difference_fraction_width90": [7.754661692721182e-08, 8.137454169043319e-08],
+            "native_std_relative_difference": [3.6592115347485057e-07, 3.7898211049490335e-07],
+            "trapezoid_interpolation_Gauss_integral": 0.9999974166788881
+          }
+        }
+      }
+    },
+    {
+      "id": "IMRPhenomD_NRTidal/fixed/000",
+      "model": "IMRPhenomD_NRTidal",
+      "stage": "fixed",
+      "index": 0,
+      "truth": [1.6, 1.3],
+      "noise_seed": 620101,
+      "sampler_required": false,
+      "status": "completed_noisy_trial",
+      "reference_passed": true,
+      "sampler_status": "not_requested_reference_only",
+      "receipt": {
+        "bytes": 12101,
+        "path": "/home/xangma/artifacts/diffgw-pe-compiled-pilot-20261001/trials/IMRPhenomD_NRTidal/fixed/000/noisy_trial_receipt.json",
+        "sha256": "283ebd95178e4524b76c75e08944ffd602d6d49f5b3f4e5b545919fc38fe4344"
+      },
+      "reference_elapsed_seconds": 563.7956274691969,
+      "elapsed_seconds": 563.7956274691969,
+      "external_wall_elapsed_seconds": 567.5423589362763,
+      "summary": {
+        "actual_snr": 20.0,
+        "final_grid_size": 961,
+        "final_gauss_order": 128,
+        "native_summary_location": "reference.backends.torch.final_summary.native_axis_rows"
+      },
+      "controller": {
+        "host": "len",
+        "cwd": "/home/xangma/diffgw-pe-compiled-pilot-20261001",
+        "cap_seconds": 3900,
+        "external_wall_elapsed_seconds": 567.5423589362763,
+        "exit_code": 0,
+        "finished_utc": "2026-10-01T14:58:52.246369+00:00",
+        "watchdog_status": "completed",
+        "failure": null
+      },
+      "reference": {
+        "receipt": {
+          "bytes": 44199,
+          "path": "/home/xangma/artifacts/diffgw-pe-compiled-pilot-20261001/trials/IMRPhenomD_NRTidal/fixed/000/noisy_reference_receipt.json",
+          "sha256": "c460a1002ad71c8c1b9e2d9733a0c0c763ac5b908d56901f479080beee1359f8"
+        },
+        "raw_status": "completed_transformed_baseline",
+        "partial": false,
+        "chart": {
+          "lower": [1.59, 1.29],
+          "scale": 1.550286809808318e-05,
+          "truth": [1.6099999980000002, 1.2922575721558014],
+          "upper": [1.61, 1.31]
+        },
+        "summary_truth": [1.6, 1.3],
+        "maximum_log_likelihood_deficit": 4.37699452504603e-06,
+        "mode_metric": "native component mass coordinate at joint native log-likelihood grid maximum; coarse native prior intervals",
+        "parity_rows": [[31, true, 9.84684248753504e-12, 1e-05, true], [61, true, 9.863880262864215e-12, 1e-05, true], [121, true, 9.843006152965548e-12, 1e-05, true], [241, true, 1.0139394175225408e-11, 1e-05, true], [481, true, 1.0404188719782343e-11, 1e-05, true], [961, true, 1.037299112180474e-11, 1e-05, true]],
+        "backends": {
+          "jax": {
+            "grid_sizes": [31, 61, 121, 241, 481, 961],
+            "execution": {
+              "adapter_batch_implementation": null,
+              "first_chunk_max_absolute_log_likelihood_difference": 1.3999397197039798e-09,
+              "first_chunk_seconds": 3.1465728152543306,
+              "fixed_chunk_size": 128,
+              "jax_jit_requested": true,
+              "parity_tolerances": {
+                "atol": 1e-09,
+                "rtol": 1e-08
+              },
+              "strategy": "jax_jit"
+            },
+            "consecutive_passing_refinements": 2,
+            "final_summary": {
+              "log_integrated_likelihood": -982.0380184310453,
+              "maximum_log_likelihood": -975.3340749731104,
+              "size": 961,
+              "native_axis_rows": [[1.6017644290381787, 0.005569419895366276, 1.61, 1.5917743015182164, 1.6025489877331818, 1.6093604524056804, 0.01758615088746396, 0.36750331127147506, 0.047268862267649925, 0.027482457680608315, 0.07757140848670574, false, true], [1.2986675457397605, 0.004355317193077442, 1.2922575262865588, 1.2927512942395125, 1.298037842538781, 1.3065070009720445, 0.013755706732532014, 0.6306661457061201, 0.29256690217750103, 1.117003563450742e-67, 0.0, false, false]]
+            },
+            "refinement_rows": [
+              [31, 61, false, ["axis1_underresolved", "noisy_joint_density_total_variation", "noisy_joint_tv_estimator_absolute_drift", "noisy_truth_cdf_absolute_drift", "noisy_axis1_native_quantile_drift_fraction_width90"], 0, 0.04171681203038904, 0.00025867001983665566, 0.0076057241118193675, 5.8148885727860034e-05, 4.406777488231071, 0.0, 52.75850920927636, 0.00015719716213950975, null, 0.00010311387051568654, 0.0001050469230096362, 0.0005411847590463137, 3.87331101888786, 0.00015430673522259366, null, 0.01683855874650037, 0.01695265650256008],
+              [61, 121, false, ["noisy_joint_density_total_variation", "noisy_truth_cdf_absolute_drift", "noisy_axis1_native_quantile_drift_fraction_width90"], 0, 0.011661685986790881, 2.5187247871346144e-05, 0.003793817250849818, 1.1683837897180638e-05, 8.05848664668473, 0.0, 105.51693100432918, 3.9845972613139606e-05, null, 2.424498131251876e-06, 8.284372225108187e-07, 0.0004864610817609481, 7.2870595287135105, 3.937325533378052e-05, null, 0.007326074889360458, 0.00703419317815124],
+              [121, 241, false, ["noisy_joint_density_total_variation"], 0, 0.0030063126420168396, 2.573003605184799e-06, 0.0018533585404757469, 2.9218753070381354e-06, 15.7019537776658, 0.0, 211.03382246269453, 9.960508596040733e-06, null, 5.968198349563319e-07, 1.873915914301902e-07, 0.0, 14.225154570993604, 9.810597834494463e-06, null, 0.0026401835628765686, 0.003220391405656777],
+              [241, 481, true, [], 1, 0.0007574524787403419, 3.9348018654331365e-07, 0.00012106099567743556, 7.304679456865415e-07, 31.21857762139773, 0.0, 422.06762609049275, 2.4901341918649707e-06, null, 1.5022625322039123e-07, 4.4625304441641465e-08, 0.00044793514247179315, 28.0596821603992, 2.452650823134729e-06, null, 0.0004746339744325172, 2.1585024584230248e-06],
+              [481, 961, true, [], 2, 0.00018973621673754415, 8.317017531031838e-08, 4.067396974116733e-06, 1.826171001084731e-07, 62.35163177658062, 0.0, 844.1352425972384, 6.225340695478912e-07, null, 3.7452047982695314e-08, 1.1353331368712943e-08, 0.0, 55.7312444314105, 6.131644874028238e-07, null, 6.935710001268191e-06, 2.0434521883141812e-06]
+            ],
+            "failed_mode_gate_row_indices": []
+          },
+          "torch": {
+            "grid_sizes": [31, 61, 121, 241, 481, 961],
+            "execution": {
+              "adapter_batch_implementation": null,
+              "jax_jit_requested": false,
+              "strategy": "eager"
+            },
+            "consecutive_passing_refinements": 2,
+            "final_summary": {
+              "log_integrated_likelihood": -982.0380184310515,
+              "maximum_log_likelihood": -975.3340749731062,
+              "size": 961,
+              "native_axis_rows": [[1.6017644290381812, 0.005569419895365502, 1.61, 1.5917743015182195, 1.6025489877331855, 1.6093604524056804, 0.01758615088746085, 0.36750331127131797, 0.04726886226779514, 0.02748245768054419, 0.07757140848674793, false, true], [1.298667545739758, 0.004355317193076828, 1.2922575262865588, 1.292751294239512, 1.2980378425387777, 1.3065070009720419, 0.013755706732529793, 0.6306661457062878, 0.29256690217763404, 1.1170035634430582e-67, 0.0, false, false]]
+            },
+            "refinement_rows": [
+              [31, 61, false, ["axis1_underresolved", "noisy_joint_density_total_variation", "noisy_joint_tv_estimator_absolute_drift", "noisy_truth_cdf_absolute_drift", "noisy_axis1_native_quantile_drift_fraction_width90"], 0, 0.04171681203107103, 0.0002586700199154607, 0.00760572411139282, 5.8148888570030977e-05, 4.406777488206717, 0.0, 52.75850920925371, 0.00015719716277088185, null, 0.0001031138693541303, 0.00010504692183545469, 0.0005411847590463137, 3.8733110188873616, 0.00015430673591409802, null, 0.01683855874622916, 0.016952656502288884],
+              [61, 121, false, ["noisy_joint_density_total_variation", "noisy_truth_cdf_absolute_drift", "noisy_axis1_native_quantile_drift_fraction_width90"], 0, 0.011661685986392584, 2.5187247808410376e-05, 0.0037938172510664225, 1.1683837556120125e-05, 8.058486646647413, 0.0, 105.51693100429054, 3.984597266365861e-05, null, 2.424497815600191e-06, 8.284371593806075e-07, 0.0004864610817609481, 7.287059528712212, 3.937325530139923e-05, null, 0.007326074889442733, 0.007034193178201075],
+              [121, 241, false, ["noisy_joint_density_total_variation"], 0, 0.003006312641913269, 2.573003611805371e-06, 0.0018533585401854236, 2.921875875472324e-06, 15.701953777747974, 0.0, 211.03382246265988, 9.96050869705121e-06, null, 5.968195824343243e-07, 1.8739138941253654e-07, 0.0, 14.225154570991537, 9.810597979773897e-06, null, 0.002640183562909236, 0.003220391405689529],
+              [241, 481, true, [], 1, 0.0007574524786447568, 3.934801900310836e-07, 0.00012106099551911775, 7.304680593733792e-07, 31.218577621708363, 0.0, 422.06762609041283, 2.4901343560048186e-06, null, 1.502261269593613e-07, 4.46253296938616e-08, 0.00044793514247179315, 28.059682160394217, 2.452650968412859e-06, null, 0.0004746339744810274, 2.1585024261394757e-06],
+              [481, 961, true, [], 2, 0.00018973621674224663, 8.317017483402836e-08, 4.067396848106419e-06, 1.8261698642163537e-07, 62.35163177715637, 0.0, 844.1352425970891, 6.225339937913653e-07, null, 3.745212373933783e-08, 1.1353318742608968e-08, 0.0, 55.73124443140151, 6.131644066929275e-07, null, 6.935710081979305e-06, 2.043452172172512e-06]
+            ],
+            "failed_mode_gate_row_indices": []
+          }
+        }
+      },
+      "gauss": {
+        "receipt": {
+          "bytes": 3134,
+          "path": "/home/xangma/artifacts/diffgw-pe-compiled-pilot-20261001/trials/IMRPhenomD_NRTidal/fixed/000/independent_gauss_receipt.json",
+          "sha256": "e2abd89d4ba386bc68d1297655339fa31cee8e07bbd2c64d72dd659be7d32956"
+        },
+        "raw_status": "independent_quadrature_passed",
+        "partial": false,
+        "method": "fresh full-support tensor Gauss-Legendre likelihood nodes",
+        "executed_orders": [64, 128],
+        "order_passes": [false, true],
+        "final_order": {
+          "log_integrated_likelihood": -982.0380184919233,
+          "means": [1.601764425388863, 1.298667548551255],
+          "order": 128,
+          "passed": true,
+          "refinement": {
+            "density_TV_estimator_absolute_drift": 5.343899552912376e-06,
+            "log_normalizer_absolute_drift": 7.300205879801069e-07,
+            "native_mean_drift_fraction_width90": [4.702452518270715e-07, 4.6474255113779543e-07],
+            "native_std_relative_drift": [1.1433587481818614e-06, 1.1054516520807286e-06]
+          },
+          "std": [0.005569413815877049, 0.004355312476865087],
+          "versus_trapezoid": {
+            "density_TV_from_bilinear_trapezoid": 7.03607042034626e-05,
+            "log_normalizer_difference_from_trapezoid": 6.087179826863576e-08,
+            "native_mean_difference_fraction_width90": [2.0751091039358903e-07, 2.0438768358833596e-07],
+            "native_std_relative_difference": [1.091584977242345e-06, 1.0828641493893257e-06],
+            "trapezoid_interpolation_Gauss_integral": 0.9999995911342762
+          }
+        }
+      }
+    },
+    {
+      "id": "IMRPhenomD_NRTidal/fixed/001",
+      "model": "IMRPhenomD_NRTidal",
+      "stage": "fixed",
+      "index": 1,
+      "truth": [1.6, 1.3],
+      "noise_seed": 620102,
+      "sampler_required": false,
+      "status": "completed_noisy_trial",
+      "reference_passed": true,
+      "sampler_status": "not_requested_reference_only",
+      "receipt": {
+        "bytes": 12097,
+        "path": "/home/xangma/artifacts/diffgw-pe-compiled-pilot-20261001/trials/IMRPhenomD_NRTidal/fixed/001/noisy_trial_receipt.json",
+        "sha256": "8251a0e8a85b992f24c4e57b73ce4fbc35b4cb96026006b6a6f3772f2ed9208a"
+      },
+      "reference_elapsed_seconds": 570.4803635026328,
+      "elapsed_seconds": 570.4803635026328,
+      "external_wall_elapsed_seconds": 574.2468936000951,
+      "summary": {
+        "actual_snr": 20.0,
+        "final_grid_size": 961,
+        "final_gauss_order": 128,
+        "native_summary_location": "reference.backends.torch.final_summary.native_axis_rows"
+      },
+      "controller": {
+        "host": "len",
+        "cwd": "/home/xangma/diffgw-pe-compiled-pilot-20261001",
+        "cap_seconds": 3900,
+        "external_wall_elapsed_seconds": 574.2468936000951,
+        "exit_code": 0,
+        "finished_utc": "2026-10-01T14:58:58.951171+00:00",
+        "watchdog_status": "completed",
+        "failure": null
+      },
+      "reference": {
+        "receipt": {
+          "bytes": 43916,
+          "path": "/home/xangma/artifacts/diffgw-pe-compiled-pilot-20261001/trials/IMRPhenomD_NRTidal/fixed/001/noisy_reference_receipt.json",
+          "sha256": "7682f8de06adb68310460836197645c42739d6f9dbad7b6cf96007b937660ab7"
+        },
+        "raw_status": "completed_transformed_baseline",
+        "partial": false,
+        "chart": {
+          "lower": [1.59, 1.29],
+          "scale": 1.5796118882165074e-05,
+          "truth": [1.590000002, 1.3078800118870149],
+          "upper": [1.61, 1.31]
+        },
+        "summary_truth": [1.6, 1.3],
+        "maximum_log_likelihood_deficit": 2.2797064502810827e-06,
+        "mode_metric": "native component mass coordinate at joint native log-likelihood grid maximum; coarse native prior intervals",
+        "parity_rows": [[31, true, 8.34841049258253e-12, 1e-05, true], [61, true, 8.430372874931984e-12, 1e-05, true], [121, true, 8.494823649693763e-12, 1e-05, true], [241, true, 8.917842484368868e-12, 1e-05, true], [481, true, 8.851230488000689e-12, 1e-05, true], [961, true, 8.884700063856078e-12, 1e-05, true]],
+        "backends": {
+          "jax": {
+            "grid_sizes": [31, 61, 121, 241, 481, 961],
+            "execution": {
+              "adapter_batch_implementation": null,
+              "first_chunk_max_absolute_log_likelihood_difference": 1.5613750292686746e-09,
+              "first_chunk_seconds": 3.1879740208387375,
+              "fixed_chunk_size": 128,
+              "jax_jit_requested": true,
+              "parity_tolerances": {
+                "atol": 1e-09,
+                "rtol": 1e-08
+              },
+              "strategy": "jax_jit"
+            },
+            "consecutive_passing_refinements": 2,
+            "final_summary": {
+              "log_integrated_likelihood": -898.5980514036028,
+              "maximum_log_likelihood": -892.0174636340178,
+              "size": 961,
+              "native_axis_rows": [[1.5985728926797464, 0.005603145467613915, 1.59, 1.5907074710842273, 1.5979360100238473, 1.6083778055424673, 0.017670334458240067, 0.6075002121169562, 0.0310430934630858, 0.07037521591124436, 0.03023921217867298, false, true], [1.3011310998060779, 0.0043901863153914525, 1.3078800456160113, 1.2934761488804423, 1.3016131588307251, 1.307318408394244, 0.013842259513801691, 0.39281586060269974, 0.271827456727103, 2.73145827804231e-57, 1.1102230246251565e-16, false, false]]
+            },
+            "refinement_rows": [
+              [31, 61, false, ["axis1_underresolved", "noisy_joint_density_total_variation", "noisy_joint_tv_estimator_absolute_drift", "noisy_axis1_native_quantile_drift_fraction_width90"], 0, 0.04154610807692624, 0.0002554244452776522, 0.0016801646495069877, 7.258335688220541e-05, 4.290867145514118, 0.0, 53.011066322016745, 8.468076785216256e-05, null, 0.0001273035711835126, 0.0001309512443165795, 0.0005493654930605478, 3.888960746654089, 8.707369265647381e-05, null, 0.016232759474035633, 0.01641398294796987],
+              [61, 121, false, ["noisy_joint_density_total_variation"], 0, 0.011640004419067805, 2.3224013902527207e-05, 0.0009600392941156999, 1.3817166291119065e-06, 8.0574426686697, 0.0, 106.02203234443152, 3.150801022633033e-05, null, 2.1048120821075738e-06, 9.460253602862875e-07, 0.0, 7.369707824645532, 3.206530887479158e-05, null, 0.0007810214117743177, 3.926107994687841e-05],
+              [121, 241, false, ["noisy_joint_density_total_variation"], 0, 0.0029966497076242167, 2.517830381680141e-06, 0.0005055700156749721, 3.3372668895026436e-07, 15.633815865780123, 0.0, 212.04402544626987, 7.884422783379543e-06, null, 5.195616190602652e-07, 1.8506813899786005e-07, 0.0004668085501800697, 14.346842498641273, 8.02080562557477e-06, null, 0.002660757499221761, 0.00036428157879538656],
+              [241, 481, true, [], 1, 0.0007550728794239263, 3.907033265090811e-07, 0.00019229043097024334, 8.343135959876236e-08, 31.033415492801474, 0.0, 424.0880317910407, 1.9711024766388764e-06, null, 1.2989789364085846e-07, 4.5041353721920566e-08, 0.0, 28.292432254797628, 2.0058131274745974e-06, null, 0.00039276514818201836, 0.0003067011023773168],
+              [481, 961, true, [], 2, 0.00018914037730194841, 8.240273455790525e-08, 5.515794446020461e-06, 2.0857783056271728e-08, 62.00872205944866, 0.0, 848.1760539944867, 4.927753702693831e-07, null, 3.2473905167893295e-08, 1.1303779059756142e-08, 0.0004478904537032295, 56.19531869201495, 5.014510525088373e-07, null, 3.07141902481944e-06, 3.997949468014458e-06]
+            ],
+            "failed_mode_gate_row_indices": []
+          },
+          "torch": {
+            "grid_sizes": [31, 61, 121, 241, 481, 961],
+            "execution": {
+              "adapter_batch_implementation": null,
+              "jax_jit_requested": false,
+              "strategy": "eager"
+            },
+            "consecutive_passing_refinements": 2,
+            "final_summary": {
+              "log_integrated_likelihood": -898.5980514036004,
+              "maximum_log_likelihood": -892.0174636340089,
+              "size": 961,
+              "native_axis_rows": [[1.5985728926797487, 0.005603145467613883, 1.59, 1.5907074710842277, 1.597936010023851, 1.6083778055424682, 0.01767033445824051, 0.6075002121167998, 0.03104309346299139, 0.07037521591118931, 0.0302392121786913, false, true], [1.301131099806076, 0.004390186315391421, 1.3078800456160113, 1.2934761488804414, 1.301613158830722, 1.3073184083942433, 0.013842259513801913, 0.3928158606028692, 0.2718274567270364, 2.731458277983754e-57, 0.0, false, false]]
+            },
+            "refinement_rows": [
+              [31, 61, false, ["axis1_underresolved", "noisy_joint_density_total_variation", "noisy_joint_tv_estimator_absolute_drift", "noisy_axis1_native_quantile_drift_fraction_width90"], 0, 0.04154610807720098, 0.00025542444519627283, 0.0016801646493177502, 7.258335483584233e-05, 4.290867145512919, 0.0, 53.01106632199942, 8.468076783962429e-05, null, 0.00012730357035420223, 0.0001309512432862153, 0.0005493654930605478, 3.888960746653777, 8.707369265648081e-05, null, 0.01623275947442196, 0.01641398294840434],
+              [61, 121, false, ["noisy_joint_density_total_variation"], 0, 0.011640004419215044, 2.3224013837195787e-05, 0.0009600392938298175, 1.3817162880513933e-06, 8.05744266860414, 0.0, 106.02203234442086, 3.1508010176069694e-05, null, 2.1048118810525744e-06, 9.460251340992704e-07, 0.0, 7.369707824645532, 3.206530882666541e-05, null, 0.0007810214117422336, 3.926108002708869e-05],
+              [121, 241, false, ["noisy_joint_density_total_variation"], 0, 0.002996649707557018, 2.5178303862819287e-06, 0.000505570015594925, 3.3372668895026436e-07, 15.633815865700614, 0.0, 212.04402544625387, 7.88442292160562e-06, null, 5.195619709069886e-07, 1.8506811386596798e-07, 0.0004668085501800697, 14.346842498639203, 8.020805769901839e-06, null, 0.002660757499125928, 0.00036428157865111324],
+              [241, 481, true, [], 1, 0.0007550728794079795, 3.9070333475508916e-07, 0.00019229043081109287, 8.34315869724378e-08, 31.03341549295719, 0.0, 424.08803179105666, 1.971102602298338e-06, null, 1.298972276453142e-07, 4.504124062833671e-08, 0.0, 28.29243225479899, 2.0058132878858067e-06, null, 0.0003927651483905341, 0.00030670110218480846],
+              [481, 961, true, [], 2, 0.00018914037728924815, 8.240272747185801e-08, 5.515794537391816e-06, 2.0857783056271728e-08, 62.00872205928329, 0.0, 848.1760539945079, 4.927753200055559e-07, null, 3.247449576771707e-08, 1.1303791625709572e-08, 0.0004478904537032295, 56.19531869201585, 5.014509562624305e-07, null, 3.0714189927372577e-06, 3.997949435932261e-06]
+            ],
+            "failed_mode_gate_row_indices": []
+          }
+        }
+      },
+      "gauss": {
+        "receipt": {
+          "bytes": 3139,
+          "path": "/home/xangma/artifacts/diffgw-pe-compiled-pilot-20261001/trials/IMRPhenomD_NRTidal/fixed/001/independent_gauss_receipt.json",
+          "sha256": "318e585e62011372305d769d482ddf42ad64ffaf1009d8c293d650380a12c742"
+        },
+        "raw_status": "independent_quadrature_passed",
+        "partial": false,
+        "method": "fresh full-support tensor Gauss-Legendre likelihood nodes",
+        "executed_orders": [64, 128],
+        "order_passes": [false, true],
+        "final_order": {
+          "log_integrated_likelihood": -898.5980514105494,
+          "means": [1.5985728955822913, 1.3011310974923056],
+          "order": 128,
+          "passed": true,
+          "refinement": {
+            "density_TV_estimator_absolute_drift": 5.541766221803623e-06,
+            "log_normalizer_absolute_drift": 3.5566575888879015e-06,
+            "native_mean_drift_fraction_width90": [2.311656117497417e-06, 2.3080961185282187e-06],
+            "native_std_relative_drift": [5.673177089852572e-06, 5.645841681383376e-06]
+          },
+          "std": [0.005603139664720764, 0.0043901817359903806],
+          "versus_trapezoid": {
+            "density_TV_from_bilinear_trapezoid": 7.042539250374979e-05,
+            "log_normalizer_difference_from_trapezoid": 6.948994268896058e-09,
+            "native_mean_difference_fraction_width90": [1.642607647032892e-07, 1.6715266074984777e-07],
+            "native_std_relative_difference": [1.0356502722365159e-06, 1.0431005630409285e-06],
+            "trapezoid_interpolation_Gauss_integral": 0.9999996064840847
+          }
+        }
+      }
+    },
+    {
+      "id": "IMRPhenomD_NRTidal/fixed/002",
+      "model": "IMRPhenomD_NRTidal",
+      "stage": "fixed",
+      "index": 2,
+      "truth": [1.6, 1.3],
+      "noise_seed": 620103,
+      "sampler_required": false,
+      "status": "failed_reference_gates",
+      "reference_passed": false,
+      "sampler_status": "not_requested_reference_only",
+      "receipt": {
+        "bytes": 12625,
+        "path": "/home/xangma/artifacts/diffgw-pe-compiled-pilot-20261001/trials/IMRPhenomD_NRTidal/fixed/002/noisy_trial_receipt.json",
+        "sha256": "fc48c60d7fda822b4f966d5106d9b2a8a97e41b00676a212e603bfca95dd6d0b"
+      },
+      "reference_elapsed_seconds": 1975.3371111187153,
+      "elapsed_seconds": 1975.3371111187153,
+      "external_wall_elapsed_seconds": 1979.2932186527178,
+      "summary": {
+        "actual_snr": 20.0,
+        "final_grid_size": 1921,
+        "final_gauss_order": 128,
+        "native_summary_location": "reference.backends.torch.final_summary.native_axis_rows"
+      },
+      "controller": {
+        "host": "len",
+        "cwd": "/home/xangma/diffgw-pe-compiled-pilot-20261001",
+        "cap_seconds": 3900,
+        "external_wall_elapsed_seconds": 1979.2932186527178,
+        "exit_code": 1,
+        "finished_utc": "2026-10-01T15:22:23.998448+00:00",
+        "watchdog_status": "failed_subprocess",
+        "failure": null
+      },
+      "reference": {
+        "receipt": {
+          "bytes": 51863,
+          "path": "/home/xangma/artifacts/diffgw-pe-compiled-pilot-20261001/trials/IMRPhenomD_NRTidal/fixed/002/noisy_reference_receipt.json",
+          "sha256": "b2ed8ad33a0b05857a2fdf526819e5585f75fc086603f8d72f0296bfac09b4e7"
+        },
+        "raw_status": "unresolved_noisy_reference",
+        "partial": false,
+        "chart": {
+          "lower": [1.59, 1.29],
+          "scale": 1.5957286576619182e-05,
+          "truth": [1.5968021793380835, 1.3025167144377705],
+          "upper": [1.61, 1.31]
+        },
+        "summary_truth": [1.6, 1.3],
+        "mode_metric": "native component mass coordinate at joint native log-likelihood grid maximum; coarse native prior intervals",
+        "parity_rows": [[31, true, 7.823633330470286e-12, 1e-05, true], [61, true, 8.198322778261719e-12, 1e-05, true], [121, true, 8.974842860211527e-12, 1e-05, true], [241, true, 8.958602534391968e-12, 1e-05, true], [481, true, 8.789843919713754e-12, 1e-05, true], [961, true, 8.703187293097575e-12, 1e-05, true], [1921, true, 8.693935337600843e-12, 1e-05, true]],
+        "backends": {
+          "jax": {
+            "grid_sizes": [31, 61, 121, 241, 481, 961, 1921],
+            "execution": {
+              "adapter_batch_implementation": null,
+              "first_chunk_max_absolute_log_likelihood_difference": 1.6079866327345371e-09,
+              "first_chunk_seconds": 3.193398719187826,
+              "fixed_chunk_size": 128,
+              "jax_jit_requested": true,
+              "parity_tolerances": {
+                "atol": 1e-09,
+                "rtol": 1e-08
+              },
+              "strategy": "jax_jit"
+            },
+            "consecutive_passing_refinements": 0,
+            "final_summary": {
+              "log_integrated_likelihood": -994.347043976054,
+              "maximum_log_likelihood": -988.1016440311337,
+              "size": 1921,
+              "native_axis_rows": [[1.5998304854978755, 0.005719519595226255, 1.5968229166666668, 1.5909894115639769, 1.5997515677731688, 1.6089068598549103, 0.017917448290933446, 0.5127074511101807, 0.0006368794768244462, 0.05053691931409018, 0.04569994316368087, true, true], [1.3001589475191628, 0.004477721904723735, 1.3025004091236216, 1.2930802385573437, 1.3002022708525198, 1.3071071164127082, 0.014026877855364495, 0.4867850765207498, 0.24346936561934185, 4.156033306725704e-60, 1.1102230246251565e-16, false, false]]
+            },
+            "refinement_rows": [
+              [31, 61, false, ["axis1_underresolved", "noisy_joint_density_total_variation", "noisy_truth_cdf_absolute_drift", "noisy_axis1_native_quantile_drift_fraction_width90"], 0, 0.025601300742841195, 0.0001474393272385098, 0.0032268321761725893, 5.242202576027921e-05, 6.388049401272003, 0.0, 53.75235130040954, 2.546944924301414e-05, null, 8.96832059250264e-05, 8.255550102644746e-05, 0.0, 3.9622787993252757, 2.7372203671213658e-05, null, 0.01644240742019803, 0.00020758145001607855],
+              [61, 121, false, ["axis0_mode_drift_coarse_intervals", "noisy_joint_density_total_variation", "noisy_axis1_native_quantile_drift_fraction_width90"], 0, 0.006874663965822744, 1.8207534728378015e-05, 0.0015966909948173513, 8.870870260579977e-06, 12.197521745506009, 2.4999999999983347, 107.50469264448765, 4.04073235440169e-06, null, 1.6849844927857656e-07, 9.261232762650628e-08, 0.18453456782897867, 7.460943709041281, 4.563349209405439e-06, null, 0.006516011742294538, 0.006420393185726931],
+              [121, 241, true, [], 1, 0.001751810720280593, 3.0221909572271215e-06, 0.0007969680023093284, 2.2175337335283984e-06, 24.242393781644168, 0.9999999999986677, 215.0093810357855, 1.0100454417711702e-06, null, 3.6434665819314447e-08, 1.978141502411299e-08, 0.07001030907552482, 14.558233147950864, 1.1376710158731412e-06, null, 0.0024617135686727685, 0.0026500109654082724],
+              [241, 481, false, ["axis0_mode_drift_coarse_intervals"], 0, 0.000440115593811997, 6.543300880242943e-07, 0.0002845327026453903, 5.543819270314998e-07, 48.2213170768197, 2.4999999999973355, 430.01875971805094, 2.5251059657887605e-07, null, 9.207785990305443e-09, 5.473063656705099e-09, 0.17005794021623916, 28.719357534353456, 2.8440929452947587e-07, null, 0.00022145872649873759, 2.643138990541039e-05],
+              [481, 961, false, ["axis0_mode_drift_coarse_intervals"], 0, 0.00011016552397310792, 1.5722675414419404e-07, 6.1686599460708536e-06, 1.3859551017958438e-07, 96.27113962398249, 2.499999999994671, 860.0375182585585, 6.312763374034367e-08, null, 2.3014755801568963e-09, 1.369176775575616e-09, 0.16772231272142185, 57.043613658697765, 7.110220699450021e-08, null, 7.256497523197575e-06, 1.028173715077247e-06],
+              [961, 1921, false, ["axis0_mode_drift_coarse_intervals"], 0, 2.7549924917048017e-05, 3.892000782517696e-08, 1.8128266665584647e-09, 3.4648905966605525e-08, 192.37061525807857, 2.499999999994671, 1720.075035909176, 1.5781911538657302e-08, null, 5.749072691500137e-10, 3.4278060539090295e-10, 0.16657428773312238, 113.69342452322053, 1.7775563870886645e-08, null, 7.635807979442872e-09, 1.405347058010808e-08]
+            ],
+            "failed_mode_gate_row_indices": [1, 3, 4, 5]
+          },
+          "torch": {
+            "grid_sizes": [31, 61, 121, 241, 481, 961, 1921],
+            "execution": {
+              "adapter_batch_implementation": null,
+              "jax_jit_requested": false,
+              "strategy": "eager"
+            },
+            "consecutive_passing_refinements": 0,
+            "final_summary": {
+              "log_integrated_likelihood": -994.3470439760547,
+              "maximum_log_likelihood": -988.101644031128,
+              "size": 1921,
+              "native_axis_rows": [[1.5998304854978778, 0.005719519595226375, 1.5968229166666668, 1.5909894115639773, 1.5997515677731764, 1.6089068598549112, 0.01791744829093389, 0.5127074511100129, 0.0006368794768140014, 0.050536919314059306, 0.045699943163719836, true, true], [1.3001589475191613, 0.004477721904723824, 1.3025004091236216, 1.2930802385573428, 1.300202270852517, 1.3071071164127075, 0.014026877855364717, 0.486785076520932, 0.24346936561935628, 4.1560333066646185e-60, 0.0, false, false]]
+            },
+            "refinement_rows": [
+              [31, 61, false, ["axis1_underresolved", "noisy_joint_density_total_variation", "noisy_truth_cdf_absolute_drift", "noisy_axis1_native_quantile_drift_fraction_width90"], 0, 0.025601300742959573, 0.00014743932726374656, 0.0032268321755024587, 5.2422025532905536e-05, 6.388049401267716, 0.0, 53.75235130044951, 2.5469448672933526e-05, null, 8.96832059745303e-05, 8.255550146012865e-05, 0.0, 3.9622787993259005, 2.737220308767578e-05, null, 0.016442407420290062, 0.00020758144990564757],
+              [61, 121, false, ["axis0_mode_drift_coarse_intervals", "noisy_joint_density_total_variation", "noisy_axis1_native_quantile_drift_fraction_width90"], 0, 0.0068746639653216885, 1.8207534717320888e-05, 0.001596690995560035, 8.870870260579977e-06, 12.197521745300959, 2.4999999999983347, 107.5046926445063, 4.040732738573024e-06, null, 1.6849915565938536e-07, 9.261289768821916e-08, 0.18453456782897867, 7.460943709041992, 4.563349606215867e-06, null, 0.006516011742325662, 0.00642039318578981],
+              [121, 241, true, [], 1, 0.0017518107203984001, 3.0221909552157096e-06, 0.00079696800197121, 2.2175340745889116e-06, 24.242393781397244, 0.9999999999986677, 215.00938103579082, 1.010045206310861e-06, null, 3.643403379434068e-08, 1.978156373587082e-08, 0.07001030907552482, 14.558233147951094, 1.1376707942479105e-06, null, 0.0024617135686252384, 0.0026500109653290788],
+              [241, 481, false, ["axis0_mode_drift_coarse_intervals"], 0, 0.00044011559377244244, 6.543300991453897e-07, 0.0002845327026065325, 5.543819270314998e-07, 48.22131707648429, 2.4999999999973355, 430.0187597180563, 2.5251062136416615e-07, null, 9.207971880004245e-09, 5.473076049351625e-09, 0.17005794021623916, 28.71935753435391, 2.8440927869951747e-07, null, 0.00022145872646707417, 2.6431389905409972e-05],
+              [481, 961, false, ["axis0_mode_drift_coarse_intervals"], 0, 0.00011016552387160294, 1.5722675795229154e-07, 6.168659943295296e-06, 1.3859551017958438e-07, 96.27113962332126, 2.499999999994671, 860.0375182585478, 6.312762134769784e-08, null, 2.301475580156925e-09, 1.369201560868856e-09, 0.16772231272142185, 57.04361365869686, 7.110222282443897e-08, null, 7.256497507367752e-06, 1.028173683417388e-06],
+              [961, 1921, false, ["axis0_mode_drift_coarse_intervals"], 0, 2.7549924906343544e-05, 3.892000873691645e-08, 1.8128239465120544e-09, 3.4648905966605525e-08, 192.37061525734424, 2.499999999994671, 1720.0750359092185, 1.5781923931303528e-08, null, 5.751427294356981e-10, 3.4274342745104726e-10, 0.16657428773312238, 113.69342452322233, 1.7775548040948496e-08, null, 7.635776319567016e-09, 1.4053438920232123e-08]
+            ],
+            "failed_mode_gate_row_indices": [1, 3, 4, 5]
+          }
+        }
+      },
+      "gauss": {
+        "receipt": {
+          "bytes": 3132,
+          "path": "/home/xangma/artifacts/diffgw-pe-compiled-pilot-20261001/trials/IMRPhenomD_NRTidal/fixed/002/independent_gauss_receipt.json",
+          "sha256": "707bb085c67ff1dde053bf0c0f209389f7432969ba590efd4f2af90924442aa1"
+        },
+        "raw_status": "independent_quadrature_passed",
+        "partial": false,
+        "method": "fresh full-support tensor Gauss-Legendre likelihood nodes",
+        "executed_orders": [64, 128],
+        "order_passes": [false, true],
+        "final_order": {
+          "log_integrated_likelihood": -994.3470439645068,
+          "means": [1.5998304855921297, 1.3001589474360533],
+          "order": 128,
+          "passed": true,
+          "refinement": {
+            "density_TV_estimator_absolute_drift": 7.730539202529342e-07,
+            "log_normalizer_absolute_drift": 9.079337814910104e-08,
+            "native_mean_drift_fraction_width90": [5.7642264197817e-08, 5.915359676204804e-08],
+            "native_std_relative_drift": [1.176392949507851e-07, 1.25225240713602e-07]
+          },
+          "std": [0.005719518154284416, 0.004477720775389788],
+          "versus_trapezoid": {
+            "density_TV_from_bilinear_trapezoid": 8.42860218326739e-06,
+            "log_normalizer_difference_from_trapezoid": 1.154785422841087e-08,
+            "native_mean_difference_fraction_width90": [5.2603438869157316e-09, 5.924908294726463e-09],
+            "native_std_relative_difference": [2.5193415260382547e-07, 2.5221180432166805e-07],
+            "trapezoid_interpolation_Gauss_integral": 1.0000008453532063
+          }
+        }
+      }
+    },
+    {
+      "id": "IMRPhenomD_NRTidal/fixed/003",
+      "model": "IMRPhenomD_NRTidal",
+      "stage": "fixed",
+      "index": 3,
+      "truth": [1.6, 1.3],
+      "noise_seed": 620104,
+      "sampler_required": false,
+      "status": "completed_noisy_trial",
+      "reference_passed": true,
+      "sampler_status": "not_requested_reference_only",
+      "receipt": {
+        "bytes": 12097,
+        "path": "/home/xangma/artifacts/diffgw-pe-compiled-pilot-20261001/trials/IMRPhenomD_NRTidal/fixed/003/noisy_trial_receipt.json",
+        "sha256": "d24f8c832347123ef6a332a50fb5e213b096e20f724f617d1e69c24a36ad3c7a"
+      },
+      "reference_elapsed_seconds": 562.2149327578954,
+      "elapsed_seconds": 562.2149327578954,
+      "external_wall_elapsed_seconds": 566.0093548907898,
+      "summary": {
+        "actual_snr": 20.0,
+        "final_grid_size": 961,
+        "final_gauss_order": 128,
+        "native_summary_location": "reference.backends.torch.final_summary.native_axis_rows"
+      },
+      "controller": {
+        "host": "len",
+        "cwd": "/home/xangma/diffgw-pe-compiled-pilot-20261001",
+        "cap_seconds": 3900,
+        "external_wall_elapsed_seconds": 566.0093548907898,
+        "exit_code": 0,
+        "finished_utc": "2026-10-01T14:58:50.717528+00:00",
+        "watchdog_status": "completed",
+        "failure": null
+      },
+      "reference": {
+        "receipt": {
+          "bytes": 43864,
+          "path": "/home/xangma/artifacts/diffgw-pe-compiled-pilot-20261001/trials/IMRPhenomD_NRTidal/fixed/003/noisy_reference_receipt.json",
+          "sha256": "f597b8c84f9cbfc351848d0de02ed4d0a4c399cbd993dd01889099fcfd5c7390"
+        },
+        "raw_status": "completed_transformed_baseline",
+        "partial": false,
+        "chart": {
+          "lower": [1.59, 1.29],
+          "scale": 1.4857436996959559e-05,
+          "truth": [1.6099999980000002, 1.2922256346839132],
+          "upper": [1.61, 1.31]
+        },
+        "summary_truth": [1.6, 1.3],
+        "maximum_log_likelihood_deficit": 1.4351712707139086e-07,
+        "mode_metric": "native component mass coordinate at joint native log-likelihood grid maximum; coarse native prior intervals",
+        "parity_rows": [[31, true, 7.072727198120735e-12, 1e-05, true], [61, true, 8.06895739519561e-12, 1e-05, true], [121, true, 9.081830445849018e-12, 1e-05, true], [241, true, 9.424423381017448e-12, 1e-05, true], [481, true, 9.4032543833386e-12, 1e-05, true], [961, true, 9.402089024306468e-12, 1e-05, true]],
+        "backends": {
+          "jax": {
+            "grid_sizes": [31, 61, 121, 241, 481, 961],
+            "execution": {
+              "adapter_batch_implementation": null,
+              "first_chunk_max_absolute_log_likelihood_difference": 1.349235390080139e-09,
+              "first_chunk_seconds": 3.2575212260708213,
+              "fixed_chunk_size": 128,
+              "jax_jit_requested": true,
+              "parity_tolerances": {
+                "atol": 1e-09,
+                "rtol": 1e-08
+              },
+              "strategy": "jax_jit"
+            },
+            "consecutive_passing_refinements": 2,
+            "final_summary": {
+              "log_integrated_likelihood": -1057.7145789495287,
+              "maximum_log_likelihood": -1051.186859426322,
+              "size": 961,
+              "native_axis_rows": [[1.600990960428403, 0.005670065544528781, 1.61, 1.591396236976748, 1.601453299792307, 1.6092099130460482, 0.017813676069300177, 0.42517432739580874, 0.014977574295641768, 0.03551017873747168, 0.06317342336693554, false, true], [1.2992409098926703, 0.004436335179541487, 1.2922256267238916, 1.2928356716810743, 1.2988614976589847, 1.3067753905842745, 0.013939718903200227, 0.5749539718941727, 0.259326565235116, 1.0156996415325781e-56, 1.1102230246251565e-16, false, false]]
+            },
+            "refinement_rows": [
+              [31, 61, false, ["axis1_underresolved", "noisy_joint_density_total_variation", "noisy_joint_tv_estimator_absolute_drift"], 0, 0.049379611767188435, 0.00034760462158195393, 0.0010498631350103205, 6.931657026143512e-07, 4.042402703691362, 0.0, 53.44106208778636, 8.684232489890501e-05, null, 0.0004886438316762053, 0.00048654325605171784, 0.0005194338086365608, 3.925486693342819, 8.421608726780604e-05, null, 0.0006888606910991093, 0.0008972312805620846],
+              [61, 121, false, ["noisy_joint_density_total_variation", "noisy_axis1_native_quantile_drift_fraction_width90"], 0, 0.01403960109943994, 3.23492469104774e-05, 0.00046715646823658474, 3.43254782819713e-06, 7.424110629636201, 0.0, 106.88206818351713, 2.123041745344655e-05, null, 1.907658930912466e-06, 5.238669622871059e-07, 0.00046649908275393006, 7.375547473128499, 2.0683597576701198e-05, null, 0.007326634934065741, 0.007965480182717555],
+              [121, 241, false, ["noisy_joint_density_total_variation"], 0, 0.0036391868522913833, 3.2764888078001993e-06, 0.00022761903138557305, 8.548013283871114e-07, 14.421294143359061, 0.0, 213.76411864620147, 5.304268202868298e-06, null, 4.799028839081272e-07, 8.289900528380117e-08, 0.0, 14.335276006114105, 5.172318645602514e-06, null, 0.0027476643853790355, 0.0009345294941162837],
+              [241, 481, true, [], 1, 0.0009180487533570896, 4.845275515975985e-07, 9.10363203799891e-05, 2.1370078684412874e-07, 28.646394621020544, 0.0, 427.5282279681762, 1.3260612741393367e-06, null, 1.2032987148235797e-07, 2.18096165681576e-08, 0.00042934278482920974, 28.281769385012684, 1.2927182078883076e-06, null, 0.00044597285264914746, 0.00027511912324677666],
+              [481, 961, true, [], 2, 0.00023003617974824364, 9.980583234270811e-08, 3.997192750349043e-06, 5.342531039786991e-08, 57.199809754833204, 0.0, 855.0564513253635, 3.3151499623675307e-07, null, 3.005525728918701e-08, 5.39261345477416e-09, 0.0, 56.16978495967307, 3.2317819911692865e-07, null, 7.866197685139877e-06, 3.1263842596896775e-06]
+            ],
+            "failed_mode_gate_row_indices": []
+          },
+          "torch": {
+            "grid_sizes": [31, 61, 121, 241, 481, 961],
+            "execution": {
+              "adapter_batch_implementation": null,
+              "jax_jit_requested": false,
+              "strategy": "eager"
+            },
+            "consecutive_passing_refinements": 2,
+            "final_summary": {
+              "log_integrated_likelihood": -1057.7145789495316,
+              "maximum_log_likelihood": -1051.1868594263274,
+              "size": 961,
+              "native_axis_rows": [[1.6009909604284047, 0.005670065544528576, 1.61, 1.591396236976749, 1.6014532997922868, 1.6092099130460487, 0.017813676069299733, 0.42517432739570843, 0.014977574295689453, 0.035510178737433104, 0.06317342336696052, false, true], [1.299240909892669, 0.0044363351795413215, 1.2922256267238916, 1.2928356716810738, 1.298861497658983, 1.3067753905842734, 0.01393971890319956, 0.5749539718942902, 0.2593265652351464, 1.0156996415231573e-56, 0.0, false, false]]
+            },
+            "refinement_rows": [
+              [31, 61, false, ["axis1_underresolved", "noisy_joint_density_total_variation", "noisy_joint_tv_estimator_absolute_drift"], 0, 0.04937961176606042, 0.000347604621511767, 0.0010498631347767295, 6.931643383722985e-07, 4.042402703764776, 0.0, 53.44106208783365, 8.684232440023491e-05, null, 0.0004886438317879563, 0.0004865432560263576, 0.0005194338086365608, 3.9254866933436867, 8.42160868097998e-05, null, 0.0006888606909568229, 0.000897231280419752],
+              [61, 121, false, ["noisy_joint_density_total_variation", "noisy_axis1_native_quantile_drift_fraction_width90"], 0, 0.014039601099333483, 3.234924688141558e-05, 0.0004671564677506401, 3.4325476008234546e-06, 7.424110629637573, 0.0, 106.88206818352246, 2.1230417503304842e-05, null, 1.9076574849912012e-06, 5.238677974312036e-07, 0.00046649908275393006, 7.375547473128499, 2.0683597592619667e-05, null, 0.007326634933938393, 0.007965480182940413],
+              [121, 241, false, ["noisy_joint_density_total_variation"], 0, 0.00363918685218792, 3.2764887880464694e-06, 0.00022761903143131423, 8.548004188924097e-07, 14.42129414334691, 0.0, 213.76411864618814, 5.30426819040379e-06, null, 4.799041802513821e-07, 8.289911746735464e-08, 0.0, 14.33527600611319, 5.172318677469542e-06, null, 0.002747664385347344, 0.0009345294941800767],
+              [241, 481, true, [], 1, 0.0009180487534772262, 4.845275343482672e-07, 9.103632025320163e-05, 2.1370033209677786e-07, 28.646394620946364, 0.0, 427.5282279681709, 1.3260611744206415e-06, null, 1.2032889922491954e-07, 2.180956670880198e-08, 0.00042934278482920974, 28.281769385012684, 1.292718080456585e-06, null, 0.00044597285264914746, 0.0002751191233104925],
+              [481, 961, true, [], 2, 0.00023003617988135342, 9.980583843120804e-08, 3.997192721483245e-06, 5.342553777154535e-08, 57.19980975492465, 0.0, 855.0564513253422, 3.315149588422442e-07, null, 3.00540731294789e-08, 5.392625919613335e-09, 0.0, 56.16978495967039, 3.23178167259113e-07, null, 7.866197605495674e-06, 3.1263842119030805e-06]
+            ],
+            "failed_mode_gate_row_indices": []
+          }
+        }
+      },
+      "gauss": {
+        "receipt": {
+          "bytes": 3137,
+          "path": "/home/xangma/artifacts/diffgw-pe-compiled-pilot-20261001/trials/IMRPhenomD_NRTidal/fixed/003/independent_gauss_receipt.json",
+          "sha256": "4ae69f9013b8ec0126bf9b8c6f4941cd002888101553786a94a17589bdbe4fee"
+        },
+        "raw_status": "independent_quadrature_passed",
+        "partial": false,
+        "method": "fresh full-support tensor Gauss-Legendre likelihood nodes",
+        "executed_orders": [64, 128],
+        "order_passes": [false, true],
+        "final_order": {
+          "log_integrated_likelihood": -1057.7145789317253,
+          "means": [1.600990958459934, 1.2992409113943162],
+          "order": 128,
+          "passed": true,
+          "refinement": {
+            "density_TV_estimator_absolute_drift": 8.473777094745172e-06,
+            "log_normalizer_absolute_drift": 1.422824880137341e-06,
+            "native_mean_drift_fraction_width90": [8.384696602678136e-07, 8.255508361087184e-07],
+            "native_std_relative_drift": [1.7098653881889755e-06, 1.6285130198170436e-06]
+          },
+          "std": [0.005670059713645622, 0.00443633063806499],
+          "versus_trapezoid": {
+            "density_TV_from_bilinear_trapezoid": 8.615060082793637e-05,
+            "log_normalizer_difference_from_trapezoid": 1.7806314644985832e-08,
+            "native_mean_difference_fraction_width90": [1.1050334092199472e-07, 1.0772435666871445e-07],
+            "native_std_relative_difference": [1.0283635885510214e-06, 1.023701049763185e-06],
+            "trapezoid_interpolation_Gauss_integral": 0.9999984219201279
+          }
+        }
+      }
+    }
+  ],
+  "diagnostics": [
+    {
+      "phase": "preflight",
+      "model": "IMRPhenomD",
+      "status": "failed_cost_preflight",
+      "terminal": {
+        "elapsed_seconds": 11.207095614168793,
+        "exit_code": 1,
+        "timed_out": false
+      },
+      "terminal_receipt": {
+        "bytes": 84,
+        "path": "/home/xangma/artifacts/diffgw-pe-compiled-pilot-20261001/preflight/IMRPhenomD.terminal.json",
+        "sha256": "70392bf1e61a7f50d3f1faece8a5bfd22400be5467e88d47d9cdc5d2f222c158"
+      },
+      "receipt": {
+        "bytes": 1940,
+        "path": "/home/xangma/artifacts/diffgw-pe-compiled-pilot-20261001/preflight/IMRPhenomD/receipt.json",
+        "sha256": "fbc6931c333b5556cee17472ad14a68f424b3878650d0cfeaad0af89fd46c59a"
+      },
+      "interpretation": "Initial metadata-binding attempt failed; superseded diagnostic only.",
+      "elapsed_seconds": 9.652735386043787,
+      "error": {
+        "type": "KeyError",
+        "message": "'retained_files'"
+      }
+    },
+    {
+      "phase": "preflight",
+      "model": "IMRPhenomD_NRTidal",
+      "status": "failed_cost_preflight",
+      "terminal": {
+        "elapsed_seconds": 11.806823482736945,
+        "exit_code": 1,
+        "timed_out": false
+      },
+      "terminal_receipt": {
+        "bytes": 84,
+        "path": "/home/xangma/artifacts/diffgw-pe-compiled-pilot-20261001/preflight/IMRPhenomD_NRTidal.terminal.json",
+        "sha256": "8778b3fbd98bdd11a52e12501cf724ed93c71cd42d3cc901dbd4a6b24e623053"
+      },
+      "receipt": {
+        "bytes": 1965,
+        "path": "/home/xangma/artifacts/diffgw-pe-compiled-pilot-20261001/preflight/IMRPhenomD_NRTidal/receipt.json",
+        "sha256": "96259c1b373fc107d128cd5647b026c6961ad9d614b41e94709ad20b373b11c3"
+      },
+      "interpretation": "Initial metadata-binding attempt failed; superseded diagnostic only.",
+      "elapsed_seconds": 10.207088246010244,
+      "error": {
+        "type": "KeyError",
+        "message": "'retained_files'"
+      }
+    },
+    {
+      "phase": "preflight-v2",
+      "model": "IMRPhenomD",
+      "status": "completed_cost_preflight",
+      "terminal": {
+        "elapsed_seconds": 26.616020559333265,
+        "exit_code": 0,
+        "timed_out": false
+      },
+      "terminal_receipt": {
+        "bytes": 84,
+        "path": "/home/xangma/artifacts/diffgw-pe-compiled-pilot-20261001/preflight-v2/IMRPhenomD.terminal.json",
+        "sha256": "2ac038dec490b5bca86914bb506a817d7c046c6a4986c48c5f5f3b868d721dde"
+      },
+      "receipt": {
+        "bytes": 5684,
+        "path": "/home/xangma/artifacts/diffgw-pe-compiled-pilot-20261001/preflight-v2/IMRPhenomD/receipt.json",
+        "sha256": "8525397649a0743667b1ec564010b16b8a40ce7d33d3023823fc3af4b71b931b"
+      },
+      "elapsed_seconds": 24.817492539063096,
+      "gauss_status": "independent_quadrature_passed",
+      "gauss_seconds": 6.017702212091535,
+      "gauss_orders_executed": [64, 128],
+      "likelihood_chunk32_median_seconds": {
+        "jax": 0.002198446076363325,
+        "torch": 0.009379402734339237
+      }
+    },
+    {
+      "phase": "preflight-v2",
+      "model": "IMRPhenomD_NRTidal",
+      "status": "completed_cost_preflight",
+      "terminal": {
+        "elapsed_seconds": 30.21735818963498,
+        "exit_code": 0,
+        "timed_out": false
+      },
+      "terminal_receipt": {
+        "bytes": 83,
+        "path": "/home/xangma/artifacts/diffgw-pe-compiled-pilot-20261001/preflight-v2/IMRPhenomD_NRTidal.terminal.json",
+        "sha256": "93d5288aac4c10ce96a44185c7f1f6623d2ccb6063478ef281760b1cc63c2da8"
+      },
+      "receipt": {
+        "bytes": 5727,
+        "path": "/home/xangma/artifacts/diffgw-pe-compiled-pilot-20261001/preflight-v2/IMRPhenomD_NRTidal/receipt.json",
+        "sha256": "563ca7e6f3c9157138615adb0a4374934db8e543a9f81c7094095eb59dbc68fd"
+      },
+      "elapsed_seconds": 28.522850417997688,
+      "gauss_status": "independent_quadrature_passed",
+      "gauss_seconds": 8.22200409276411,
+      "gauss_orders_executed": [64, 128],
+      "likelihood_chunk32_median_seconds": {
+        "jax": 0.0040405490435659885,
+        "torch": 0.012714848387986422
+      }
+    },
+    {
+      "phase": "batching",
+      "model": "IMRPhenomD",
+      "status": "completed_batching_preflight",
+      "terminal": {
+        "elapsed_seconds": 107.06105552986264,
+        "exit_code": 0,
+        "timed_out": false
+      },
+      "terminal_receipt": {
+        "bytes": 84,
+        "path": "/home/xangma/artifacts/diffgw-pe-compiled-pilot-20261001/batching/IMRPhenomD.terminal.json",
+        "sha256": "2a548757b4d1b68d3cfc6f412b072e63837829a90f11fa98731229daa169e141"
+      },
+      "receipt": {
+        "bytes": 8661,
+        "path": "/home/xangma/artifacts/diffgw-pe-compiled-pilot-20261001/batching/IMRPhenomD/receipt.json",
+        "sha256": "f19a695879b493a46ec901382e6706430e2534f20db87ecf590ad682910176ec"
+      },
+      "elapsed_seconds": 105.22711762180552,
+      "batching": [
+        {
+          "backend": "torch",
+          "chunk": 32,
+          "median_seconds": 0.009341465774923563,
+          "full_grid_241_seconds": 17.0093953483738,
+          "retained_parity": {
+            "max_absolute_error": 0.0,
+            "passed": true
+          }
+        },
+        {
+          "backend": "jax",
+          "chunk": 32,
+          "median_seconds": 0.0029803221113979816,
+          "full_grid_241_seconds": 5.353690908290446,
+          "retained_parity": {
+            "max_absolute_error": 6.739355740137398e-10,
+            "passed": true
+          }
+        },
+        {
+          "backend": "torch",
+          "chunk": 128,
+          "median_seconds": 0.03186067985370755,
+          "full_grid_241_seconds": 15.114687715191394,
+          "retained_parity": {
+            "max_absolute_error": 0.0,
+            "passed": true
+          }
+        },
+        {
+          "backend": "jax",
+          "chunk": 128,
+          "median_seconds": 0.010671059601008892,
+          "full_grid_241_seconds": 4.67240532906726,
+          "retained_parity": {
+            "max_absolute_error": 6.739355740137398e-10,
+            "passed": true
+          }
+        },
+        {
+          "backend": "torch",
+          "chunk": 512,
+          "median_seconds": 0.15371246822178364,
+          "full_grid_241_seconds": 17.406428132671863,
+          "retained_parity": {
+            "max_absolute_error": 0.0,
+            "passed": true
+          }
+        },
+        {
+          "backend": "jax",
+          "chunk": 512,
+          "median_seconds": 0.028961032163351774,
+          "full_grid_241_seconds": 3.308281166944653,
+          "retained_parity": {
+            "max_absolute_error": 6.739355740137398e-10,
+            "passed": true
+          }
+        }
+      ]
+    },
+    {
+      "phase": "batching",
+      "model": "IMRPhenomD_NRTidal",
+      "status": "completed_batching_preflight",
+      "terminal": {
+        "elapsed_seconds": 142.8794942847453,
+        "exit_code": 0,
+        "timed_out": false
+      },
+      "terminal_receipt": {
+        "bytes": 83,
+        "path": "/home/xangma/artifacts/diffgw-pe-compiled-pilot-20261001/batching/IMRPhenomD_NRTidal.terminal.json",
+        "sha256": "9bb3d9c3c2e97535439072ebe8b414a820c1a1b419cf7b283e0f0e402df442f3"
+      },
+      "receipt": {
+        "bytes": 8679,
+        "path": "/home/xangma/artifacts/diffgw-pe-compiled-pilot-20261001/batching/IMRPhenomD_NRTidal/receipt.json",
+        "sha256": "aece81c5e06085cf5273ae8b30bf9e3817e14ad365dd771ee5eb56236e38d5d2"
+      },
+      "elapsed_seconds": 141.02610470494255,
+      "batching": [
+        {
+          "backend": "torch",
+          "chunk": 32,
+          "median_seconds": 0.012801602017134428,
+          "full_grid_241_seconds": 23.25392096536234,
+          "retained_parity": {
+            "max_absolute_error": 0.0,
+            "passed": true
+          }
+        },
+        {
+          "backend": "jax",
+          "chunk": 32,
+          "median_seconds": 0.00508244289085269,
+          "full_grid_241_seconds": 8.781104404013604,
+          "retained_parity": {
+            "max_absolute_error": 2.6263933250447735e-09,
+            "passed": true
+          }
+        },
+        {
+          "backend": "torch",
+          "chunk": 128,
+          "median_seconds": 0.048795641865581274,
+          "full_grid_241_seconds": 22.134939483832568,
+          "retained_parity": {
+            "max_absolute_error": 0.0,
+            "passed": true
+          }
+        },
+        {
+          "backend": "jax",
+          "chunk": 128,
+          "median_seconds": 0.019193062093108892,
+          "full_grid_241_seconds": 7.829429315868765,
+          "retained_parity": {
+            "max_absolute_error": 2.6263933250447735e-09,
+            "passed": true
+          }
+        },
+        {
+          "backend": "torch",
+          "chunk": 512,
+          "median_seconds": 0.21146335871890187,
+          "full_grid_241_seconds": 23.949081969913095,
+          "retained_parity": {
+            "max_absolute_error": 0.0,
+            "passed": true
+          }
+        },
+        {
+          "backend": "jax",
+          "chunk": 512,
+          "median_seconds": 0.06631268886849284,
+          "full_grid_241_seconds": 7.591731720138341,
+          "retained_parity": {
+            "max_absolute_error": 2.6263933250447735e-09,
+            "passed": true
+          }
+        }
+      ]
+    }
+  ],
+  "same_data_verification": {
+    "receipt": {
+      "path": "/home/xangma/artifacts/diffgw-pe-compiled-pilot-20261001/same-data-verification.json",
+      "bytes": 8943,
+      "sha256": "9ec7f26b4d8dc07a8d268b77bfe2954bc454a5bcc43d1abfee3fac5a9eeed50e"
+    },
+    "status": "passed",
+    "method": "exact numpy.array_equal of every retained source array, including data/noise/truth/PSD/frequencies",
+    "host": "len",
+    "logical_data_sets": 8,
+    "per_model": {
+      "IMRPhenomD": 4,
+      "IMRPhenomD_NRTidal": 4
+    },
+    "all_recorded_arrays_equal": true,
+    "records": [
+      {
+        "model": "IMRPhenomD",
+        "index": 0,
+        "array_count": 15,
+        "new_sha256": "addcf6fcd75710f68b8329b85855b37284e9f1604a7dad8c71e0424d4908415f",
+        "original_sha256": "addcf6fcd75710f68b8329b85855b37284e9f1604a7dad8c71e0424d4908415f"
+      },
+      {
+        "model": "IMRPhenomD",
+        "index": 1,
+        "array_count": 15,
+        "new_sha256": "8139a94a65eb98f3bbb72ece5846fd34d458c7ce9f62ce72e99780ebc4e64561",
+        "original_sha256": "8139a94a65eb98f3bbb72ece5846fd34d458c7ce9f62ce72e99780ebc4e64561"
+      },
+      {
+        "model": "IMRPhenomD",
+        "index": 2,
+        "array_count": 15,
+        "new_sha256": "40d438cbaa893b55adb536c87a74c135b4767919ab3606ef14adc5d8ea08e2e7",
+        "original_sha256": "40d438cbaa893b55adb536c87a74c135b4767919ab3606ef14adc5d8ea08e2e7"
+      },
+      {
+        "model": "IMRPhenomD",
+        "index": 3,
+        "array_count": 15,
+        "new_sha256": "3f62eeb4c7bd58877d2cec9ed057a114b63a8b1b3d29411347663fcc3830769a",
+        "original_sha256": "3f62eeb4c7bd58877d2cec9ed057a114b63a8b1b3d29411347663fcc3830769a"
+      },
+      {
+        "model": "IMRPhenomD_NRTidal",
+        "index": 0,
+        "array_count": 15,
+        "new_sha256": "e049c6eaa9e4cb8d25f898ddcf90a2e75f28bec5e1cbc53bcecf503720f2b55c",
+        "original_sha256": "e049c6eaa9e4cb8d25f898ddcf90a2e75f28bec5e1cbc53bcecf503720f2b55c"
+      },
+      {
+        "model": "IMRPhenomD_NRTidal",
+        "index": 1,
+        "array_count": 15,
+        "new_sha256": "07090feddf62f267502c7cecdf200dbc91b4508c7eb2af30daa4f5b7ac67d1b1",
+        "original_sha256": "07090feddf62f267502c7cecdf200dbc91b4508c7eb2af30daa4f5b7ac67d1b1"
+      },
+      {
+        "model": "IMRPhenomD_NRTidal",
+        "index": 2,
+        "array_count": 15,
+        "new_sha256": "8383cd1e28e2d0831bbe8a98af7cc51bb6d39128f5a79f2dbd8ecf76b7a66e47",
+        "original_sha256": "8383cd1e28e2d0831bbe8a98af7cc51bb6d39128f5a79f2dbd8ecf76b7a66e47"
+      },
+      {
+        "model": "IMRPhenomD_NRTidal",
+        "index": 3,
+        "array_count": 15,
+        "new_sha256": "010c6e8e00cc3e1999cbf67c5a89e52f6e39af6d87b3d7558caa8ffdbaba797c",
+        "original_sha256": "010c6e8e00cc3e1999cbf67c5a89e52f6e39af6d87b3d7558caa8ffdbaba797c"
+      }
+    ]
+  },
+  "retained_array_verification": {
+    "receipt": {
+      "path": "/home/xangma/artifacts/diffgw-pe-compiled-pilot-20261001/retained-array-verification.json",
+      "bytes": 48522,
+      "sha256": "609a958f4ca5a12713e2e245097577b70752afb86b2b17159ee01ceaea6c5740"
+    },
+    "status": "passed",
+    "host": "len",
+    "paired_grid_count": 46,
+    "scope": "retained paired arrays only; no fresh waveform evaluation or changed inference outcome",
+    "columns": ["id", "size", "finite_fp64", "same_chart_nodes", "atol", "rtol", "likelihood_passed", "maximum_absolute_likelihood_difference", "maximum_fraction_of_likelihood_tolerance", "posterior_total_variation", "torch_posterior_normalizer", "jax_posterior_normalizer"],
+    "grid_rows": [["IMRPhenomD/fixed/000", 31, true, true, 1e-07, 1e-08, true, 5.375113687478006e-10, 4.5492958105340566e-05, 3.326227313677466e-12, 1.0, 1.0], ["IMRPhenomD/fixed/000", 61, true, true, 1e-07, 1e-08, true, 5.375113687478006e-10, 4.5492958105340566e-05, 3.4121647487987756e-12, 1.0, 1.0], ["IMRPhenomD/fixed/000", 121, true, true, 1e-07, 1e-08, true, 5.475158104673028e-10, 5.177796502422169e-05, 3.2829143808356585e-12, 1.0, 1.0000000000000002], ["IMRPhenomD/fixed/000", 241, true, true, 1e-07, 1e-08, true, 6.739355740137398e-10, 6.249748377749022e-05, 3.305563401717057e-12, 0.9999999999999999, 0.9999999999999999], ["IMRPhenomD/fixed/000", 481, true, true, 1e-07, 1e-08, true, 6.969003152335063e-10, 6.561380024068541e-05, 3.308359236384791e-12, 1.0, 1.0], ["IMRPhenomD/fixed/001", 31, true, true, 1e-07, 1e-08, true, 7.009930413914844e-10, 6.294101002708433e-05, 3.727287452090779e-12, 1.0, 1.0], ["IMRPhenomD/fixed/001", 61, true, true, 1e-07, 1e-08, true, 7.198650564532727e-10, 6.463549716047648e-05, 3.803395650763552e-12, 0.9999999999999998, 1.0000000000000002], ["IMRPhenomD/fixed/001", 121, true, true, 1e-07, 1e-08, true, 7.198650564532727e-10, 6.463549716047648e-05, 3.726347139712362e-12, 1.0, 0.9999999999999999], ["IMRPhenomD/fixed/001", 241, true, true, 1e-07, 1e-08, true, 7.339622243307531e-10, 6.555619676434346e-05, 3.763162597090441e-12, 1.0, 0.9999999999999999], ["IMRPhenomD/fixed/001", 481, true, true, 1e-07, 1e-08, true, 7.785274647176266e-10, 7.459456958357208e-05, 3.79191507677968e-12, 0.9999999999999999, 1.0], ["IMRPhenomD/fixed/002", 31, true, true, 1e-07, 1e-08, true, 7.335074769798666e-10, 5.72693677488409e-05, 3.6186345992303235e-12, 1.0, 1.0], ["IMRPhenomD/fixed/002", 61, true, true, 1e-07, 1e-08, true, 7.332801033044234e-10, 5.7251615309985084e-05, 3.5740834297246e-12, 1.0, 1.0], ["IMRPhenomD/fixed/002", 121, true, true, 1e-07, 1e-08, true, 7.332801033044234e-10, 5.7251615309985084e-05, 3.5871276504905926e-12, 1.0, 0.9999999999999999], ["IMRPhenomD/fixed/002", 241, true, true, 1e-07, 1e-08, true, 7.432845450239256e-10, 7.539926842896619e-05, 3.6344083748130466e-12, 1.0000000000000002, 1.0], ["IMRPhenomD/fixed/002", 481, true, true, 1e-07, 1e-08, true, 7.46126715966966e-10, 7.568758010084202e-05, 3.6177881685479115e-12, 1.0, 1.0], ["IMRPhenomD/fixed/003", 31, true, true, 1e-07, 1e-08, true, 5.948095349594951e-10, 5.139949620663379e-05, 3.671591334280552e-12, 1.0, 1.0], ["IMRPhenomD/fixed/003", 61, true, true, 1e-07, 1e-08, true, 6.764366844436154e-10, 7.125703596232814e-05, 3.533592583121498e-12, 1.0, 0.9999999999999998], ["IMRPhenomD/fixed/003", 121, true, true, 1e-07, 1e-08, true, 6.63817445456516e-10, 6.992770302252672e-05, 3.597516124468916e-12, 1.0, 1.0], ["IMRPhenomD/fixed/003", 241, true, true, 1e-07, 1e-08, true, 7.444214134011418e-10, 6.992770302252672e-05, 3.711299396592596e-12, 0.9999999999999998, 1.0000000000000002], ["IMRPhenomD/fixed/003", 481, true, true, 1e-07, 1e-08, true, 8.130882633849978e-10, 7.572534034313079e-05, 3.717075168617899e-12, 1.0, 1.0000000000000002], ["IMRPhenomD/fixed/003", 961, true, true, 1e-07, 1e-08, true, 8.189999789465219e-10, 7.627591608388063e-05, 3.727150954360873e-12, 1.0, 1.0], ["IMRPhenomD_NRTidal/fixed/000", 31, true, true, 1e-07, 1e-08, true, 2.096840034937486e-09, 0.00016770988175759485, 9.84684248753504e-12, 1.0, 1.0], ["IMRPhenomD_NRTidal/fixed/000", 61, true, true, 1e-07, 1e-08, true, 2.331944415345788e-09, 0.0001802946094667482, 9.863880262864215e-12, 1.0, 0.9999999999999998], ["IMRPhenomD_NRTidal/fixed/000", 121, true, true, 1e-07, 1e-08, true, 2.3321717890212312e-09, 0.0001869157342565269, 9.843006152965548e-12, 0.9999999999999999, 0.9999999999999999], ["IMRPhenomD_NRTidal/fixed/000", 241, true, true, 1e-07, 1e-08, true, 2.6263933250447735e-09, 0.00021712252006061655, 1.0139394175225408e-11, 1.0, 1.0], ["IMRPhenomD_NRTidal/fixed/000", 481, true, true, 1e-07, 1e-08, true, 3.0072442314121872e-09, 0.0002203044481938363, 1.0404188719782343e-11, 0.9999999999999999, 1.0], ["IMRPhenomD_NRTidal/fixed/000", 961, true, true, 1e-07, 1e-08, true, 3.19596438203007e-09, 0.00023339906819977183, 1.037299112180474e-11, 1.0, 1.0], ["IMRPhenomD_NRTidal/fixed/001", 31, true, true, 1e-07, 1e-08, true, 2.315346137038432e-09, 0.00017601961411459305, 8.34841049258253e-12, 1.0, 1.0], ["IMRPhenomD_NRTidal/fixed/001", 61, true, true, 1e-07, 1e-08, true, 2.849446900654584e-09, 0.00021066137194984176, 8.430372874931984e-12, 0.9999999999999999, 1.0], ["IMRPhenomD_NRTidal/fixed/001", 121, true, true, 1e-07, 1e-08, true, 2.849446900654584e-09, 0.00022210659260120158, 8.494823649693763e-12, 1.0, 1.0], ["IMRPhenomD_NRTidal/fixed/001", 241, true, true, 1e-07, 1e-08, true, 2.849446900654584e-09, 0.0002220292170246117, 8.917842484368868e-12, 1.0, 1.0], ["IMRPhenomD_NRTidal/fixed/001", 481, true, true, 1e-07, 1e-08, true, 2.9956481739645824e-09, 0.0002483900220067472, 8.851230488000689e-12, 0.9999999999999999, 1.0], ["IMRPhenomD_NRTidal/fixed/001", 961, true, true, 1e-07, 1e-08, true, 2.9967850423417985e-09, 0.0002707367605077678, 8.884700063856078e-12, 0.9999999999999999, 0.9999999999999999], ["IMRPhenomD_NRTidal/fixed/002", 31, true, true, 1e-07, 1e-08, true, 2.067281457129866e-09, 0.00017191581441040142, 7.823633330470286e-12, 1.0, 1.0], ["IMRPhenomD_NRTidal/fixed/002", 61, true, true, 1e-07, 1e-08, true, 2.493607098585926e-09, 0.00019976193653824064, 8.198322778261719e-12, 1.0, 1.0], ["IMRPhenomD_NRTidal/fixed/002", 121, true, true, 1e-07, 1e-08, true, 2.493607098585926e-09, 0.00019976193653824064, 8.974842860211527e-12, 1.0, 0.9999999999999999], ["IMRPhenomD_NRTidal/fixed/002", 241, true, true, 1e-07, 1e-08, true, 2.5900135369738564e-09, 0.00020039752788307717, 8.958602534391968e-12, 1.0, 1.0], ["IMRPhenomD_NRTidal/fixed/002", 481, true, true, 1e-07, 1e-08, true, 2.9338025342440233e-09, 0.00022511775218972968, 8.789843919713754e-12, 1.0000000000000002, 1.0], ["IMRPhenomD_NRTidal/fixed/002", 961, true, true, 1e-07, 1e-08, true, 2.9428974812617525e-09, 0.00022642517884605682, 8.703187293097575e-12, 0.9999999999999999, 1.0], ["IMRPhenomD_NRTidal/fixed/002", 1921, true, true, 1e-07, 1e-08, true, 3.301011020084843e-09, 0.00024908056986663396, 8.693935337600843e-12, 1.0000000000000002, 1.0], ["IMRPhenomD_NRTidal/fixed/003", 31, true, true, 1e-07, 1e-08, true, 2.307388058397919e-09, 0.00014210602161542605, 7.072727198120735e-12, 1.0, 1.0], ["IMRPhenomD_NRTidal/fixed/003", 61, true, true, 1e-07, 1e-08, true, 2.9174316296121106e-09, 0.00019978047135225482, 8.06895739519561e-12, 1.0, 1.0], ["IMRPhenomD_NRTidal/fixed/003", 121, true, true, 1e-07, 1e-08, true, 2.9174316296121106e-09, 0.00019978047135225482, 9.081830445849018e-12, 1.0, 1.0], ["IMRPhenomD_NRTidal/fixed/003", 241, true, true, 1e-07, 1e-08, true, 3.2964635465759784e-09, 0.00022674790726723594, 9.424423381017448e-12, 1.0, 0.9999999999999999], ["IMRPhenomD_NRTidal/fixed/003", 481, true, true, 1e-07, 1e-08, true, 3.534978532115929e-09, 0.0002442421224222518, 9.4032543833386e-12, 1.0, 1.0], ["IMRPhenomD_NRTidal/fixed/003", 961, true, true, 1e-07, 1e-08, true, 3.534978532115929e-09, 0.0002442421224222518, 9.402089024306468e-12, 1.0000000000000002, 0.9999999999999999]]
+  },
+  "mode_diagnosis": {
+    "receipt": {
+      "path": "/home/xangma/artifacts/diffgw-pe-compiled-pilot-20261001/mode-diagnosis-final.json",
+      "bytes": 16666,
+      "sha256": "d13a92b337995dc20eafbab2f2e105948dc5f4f1b471344e3bd6fc25ab7fb54c"
+    },
+    "status": "completed_retained_grid_diagnostic",
+    "model": "IMRPhenomD_NRTidal",
+    "index": 2,
+    "scope": "existing likelihood nodes only; no altered gates or inference outcome",
+    "source": {
+      "path": "/home/xangma/artifacts/diffgw-pe-compiled-pilot-20261001/verify_terminal_arrays.py",
+      "bytes": 8664,
+      "sha256": "14c8c57721a1adc7607d12834e5961e25977d12c828aa62a0e96ca5d9888bca9"
+    },
+    "top_five_existing_node_columns": ["index0", "index1", "mass1", "mass2", "v", "log_likelihood", "deficit_from_grid_maximum"],
+    "grids": [
+      {
+        "size": 31,
+        "winning_node_masses": [1.596, 1.3031477340278108],
+        "discovery_peak_deficit": 0.00047520530370093184,
+        "winning_node_displacement_from_discovery": [-0.0008021793380834641, 0.0006310195900403048],
+        "frontends_have_same_argmax": true,
+        "likelihood_machine_spacing_near_peak": 1.1368683772161603e-13,
+        "top_five_existing_node_rows": [[9, 16, 1.596, 1.3031477340278108, 0.5333333333333333, -988.1021189476521, 0.0], [12, 15, 1.598, 1.3015768018344365, 0.5, -988.1055547332322, 0.003435785580109041], [14, 14, 1.5993333333333335, 1.3005290395766758, 0.4666666666666667, -988.107220625699, 0.005101678046912639], [11, 15, 1.5973333333333335, 1.302097424716774, 0.5, -988.1078773871778, 0.00575843952572086], [7, 17, 1.5946666666666667, 1.3042001362703781, 0.5666666666666667, -988.1088276245691, 0.0067086769170146]]
+      },
+      {
+        "size": 61,
+        "winning_node_masses": [1.596, 1.3031477340278108],
+        "discovery_peak_deficit": 0.00047520530370093184,
+        "winning_node_displacement_from_discovery": [-0.0008021793380834641, 0.0006310195900403048],
+        "frontends_have_same_argmax": true,
+        "likelihood_machine_spacing_near_peak": 1.1368683772161603e-13,
+        "top_five_existing_node_rows": [[18, 32, 1.596, 1.3031477340278108, 0.5333333333333333, -988.1021189476521, 0.0], [23, 30, 1.5976666666666668, 1.3018370527793661, 0.5, -988.1022643187015, 0.00014537104937062395], [21, 31, 1.597, 1.3023617329593165, 0.5166666666666666, -988.1022871440425, 0.0001681963904047734], [20, 31, 1.5966666666666667, 1.3026223543711348, 0.5166666666666666, -988.1033779164895, 0.001258968837419161], [16, 33, 1.5953333333333335, 1.3036736401666436, 0.55, -988.1037593012402, 0.001640353588072685]]
+      },
+      {
+        "size": 121,
+        "winning_node_masses": [1.5968333333333333, 1.3024920285488562],
+        "discovery_peak_deficit": 6.943603125364461e-05,
+        "winning_node_displacement_from_discovery": [3.1153995249777466e-05, -2.4685888914355303e-05],
+        "frontends_have_same_argmax": true,
+        "likelihood_machine_spacing_near_peak": 1.1368683772161603e-13,
+        "top_five_existing_node_rows": [[41, 62, 1.5968333333333333, 1.3024920285488562, 0.5166666666666666, -988.1017131783797, 0.0], [39, 63, 1.5965, 1.3027545982648745, 0.525, -988.101781751078, 6.857269829652068e-05], [44, 61, 1.5973333333333335, 1.302099339513023, 0.5083333333333333, -988.1018778835289, 0.00016470514924549207], [36, 64, 1.596, 1.3031477340278108, 0.5333333333333333, -988.1021189476521, 0.0004057692724472872], [46, 60, 1.5976666666666668, 1.3018370527793661, 0.5, -988.1022643187015, 0.0005511403218179112]]
+      },
+      {
+        "size": 241,
+        "winning_node_masses": [1.5966666666666667, 1.3026232983763264],
+        "discovery_peak_deficit": 1.20146266908705e-05,
+        "winning_node_displacement_from_discovery": [-0.00013551267141687084, 0.0001065839385558931],
+        "frontends_have_same_argmax": true,
+        "likelihood_machine_spacing_near_peak": 1.1368683772161603e-13,
+        "top_five_existing_node_rows": [[80, 125, 1.5966666666666667, 1.3026232983763264, 0.5208333333333334, -988.1016557569751, 0.0], [85, 123, 1.5970833333333334, 1.3022956510719537, 0.5125, -988.1016953915081, 3.9634532981835946e-05], [82, 124, 1.5968333333333333, 1.3024920285488562, 0.5166666666666666, -988.1017131783792, 5.7421404108026763e-05], [83, 124, 1.5969166666666668, 1.3024268769663538, 0.5166666666666666, -988.1017209531624, 6.519618727907073e-05], [78, 126, 1.5965, 1.3027545982648745, 0.525, -988.101781751078, 0.0001259941028592948]]
+      },
+      {
+        "size": 481,
+        "winning_node_masses": [1.596875, 1.3024594518117367],
+        "discovery_peak_deficit": 3.4469716183593846e-06,
+        "winning_node_displacement_from_discovery": [7.282066191649506e-05, -5.726262603378274e-05],
+        "frontends_have_same_argmax": true,
+        "likelihood_machine_spacing_near_peak": 1.1368683772161603e-13,
+        "top_five_existing_node_rows": [[165, 248, 1.596875, 1.3024594518117367, 0.5166666666666666, -988.10164718932, 0.0], [160, 250, 1.5966666666666667, 1.3026232983763264, 0.5208333333333334, -988.1016557569751, 8.567655072511116e-06], [162, 249, 1.5967500000000001, 1.3025576597839625, 0.51875, -988.1016612823015, 1.4092981473368127e-05], [163, 249, 1.5967916666666668, 1.3025250793149485, 0.51875, -988.1016625663536, 1.5377033605545876e-05], [167, 247, 1.5969583333333335, 1.3023938315422694, 0.5145833333333333, -988.1016786364755, 3.1447155492969614e-05]]
+      },
+      {
+        "size": 961,
+        "winning_node_masses": [1.5967708333333335, 1.3025413693130425],
+        "discovery_peak_deficit": 6.689326710329624e-07,
+        "winning_node_displacement_from_discovery": [-3.134600475007687e-05, 2.465487527203436e-05],
+        "frontends_have_same_argmax": true,
+        "likelihood_machine_spacing_near_peak": 1.1368683772161603e-13,
+        "top_five_existing_node_rows": [[325, 498, 1.5967708333333335, 1.3025413693130425, 0.51875, -988.1016444112811, 0.0], [330, 496, 1.596875, 1.3024594518117367, 0.5166666666666666, -988.10164718932, 2.778038947326422e-06], [327, 497, 1.5968125000000002, 1.302508553716494, 0.5177083333333333, -988.1016477352425, 3.3239614367630566e-06], [328, 497, 1.5968333333333333, 1.30249226464897, 0.5177083333333333, -988.1016490720878, 4.660806666834105e-06], [323, 499, 1.5967291666666668, 1.3025741867537024, 0.5197916666666667, -988.1016526481578, 8.236876738010324e-06]]
+      },
+      {
+        "size": 1921,
+        "winning_node_masses": [1.5968229166666668, 1.3025004091236216],
+        "discovery_peak_deficit": 2.8877957447548397e-07,
+        "winning_node_displacement_from_discovery": [2.073732858320909e-05, -1.6305314148867822e-05],
+        "frontends_have_same_argmax": true,
+        "likelihood_machine_spacing_near_peak": 1.1368683772161603e-13,
+        "top_five_existing_node_rows": [[655, 994, 1.5968229166666668, 1.3025004091236216, 0.5177083333333333, -988.101644031128, 0.0], [650, 996, 1.5967708333333335, 1.3025413693130425, 0.51875, -988.1016444112811, 3.801530965574784e-07], [652, 995, 1.5967916666666668, 1.3025249612855068, 0.5182291666666666, -988.101644623202, 5.920740022702375e-07], [653, 995, 1.5968020833333334, 1.3025168164596903, 0.5182291666666666, -988.1016451232767, 1.0921487501036609e-06], [657, 993, 1.5968437500000001, 1.3024840022441508, 0.5171875, -988.1016458457706, 1.8146425873055705e-06]]
+      }
+    ]
+  },
+  "software_checks": {
+    "receipt": {
+      "path": "/home/xangma/artifacts/diffgw-pe-compiled-pilot-20261001/source-and-tests-verification.json",
+      "bytes": 938,
+      "sha256": "c83fdcd910e7657f20a50e311ba66885f5847b7d9ba673a1dc18d31f46bb60ca"
+    },
+    "status": "passed",
+    "host": "len",
+    "cwd": "/home/xangma/diffgw-pe-compiled-pilot-20261001",
+    "source_manifest_files": 380,
+    "source_archive": {
+      "path": "/home/xangma/artifacts/diffgw-pe-compiled-pilot-20261001/source-compiled-pilot-v1.tar.gz",
+      "bytes": 2051485,
+      "sha256": "d988d0301ba5e6461ca07359971480d248fcb5cef4bd10e35f4f9a0b9a82ceee"
+    },
+    "tests": {
+      "focused-tests": {
+        "path": "/home/xangma/artifacts/diffgw-pe-compiled-pilot-20261001/logs/focused-tests.log",
+        "bytes": 114,
+        "sha256": "02e1fe5660b4599f1929c03e066cd27455f332730bbd22bcf8eb72c71b31f65d",
+        "passed": 16
+      },
+      "pe-tests": {
+        "path": "/home/xangma/artifacts/diffgw-pe-compiled-pilot-20261001/logs/pe-tests.log",
+        "bytes": 272,
+        "sha256": "85a81d27ee4f618a6ea4ba2add9f353d4c5fddfda2794881bf62f6571d34c9c5",
+        "passed": 174
+      }
+    },
+    "overlap": "16 focused tests are included in 174 PE checks"
+  },
+  "postprocessing": {
+    "source": {
+      "path": "/Users/xangma/artifacts/diffgw-pe-compiled-pilot-20261001/reporting/compact_publication.py",
+      "bytes": 20040,
+      "sha256": "afd6d2387907054baf87f4db89604fd3f3fee1224ec9b7da70748dd555ddf557"
+    },
+    "method": "Reverified exact full-report, figure, source and diagnostic bindings before scalar-only compaction.",
+    "verified_binding_count": 344,
+    "fresh_remote_proof": {
+      "path": "/home/xangma/artifacts/diffgw-pe-compiled-pilot-20261001/bindings-proof.json",
+      "bytes": 35466,
+      "sha256": "01fe54cc9bbc1a075cd1f488fd0ad0e73b9c3f1bd795132cb094fea83f046244"
+    },
+    "bulk_policy": "No array contents, full source/evidence file lists, or raw logs in documentation."
+  }
+}

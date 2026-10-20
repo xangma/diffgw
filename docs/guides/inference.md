@@ -2,6 +2,10 @@
 
 Detector projections, noise models, likelihoods, and parameter-estimation examples.
 
+Use [the public PE workflow](parameter-estimation.md) for `diffgw.inference`
+priors, posteriors and NUTS sampling in Torch or JAX on an explicit CPU/GPU device.
+The native APIs below provide detector analysis and advanced likelihood tools.
+
 <a id="10-detector-networks-projections"></a>
 ## Detector networks and projections
 

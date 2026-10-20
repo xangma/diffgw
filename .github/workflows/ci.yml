@@ -156,25 +156,30 @@ jobs:
           python-version: ${{ matrix.python-version }}
           cache: 'pip'
 
-      - name: Install test runner
-        run: |
-          python -m pip install --upgrade pip
-          pip install pytest
-
       - name: "Step 1: Verify PyTorch without JAX"
         run: |
-          pip install .[torch]
-          pytest tests/test_diffgw.py tests/test_waveform_definitions.py
-          pytest --collect-only -q tests/test_xpnr_component_evidence.py
+          python -m venv "$RUNNER_TEMP/diffgw-torch"
+          source "$RUNNER_TEMP/diffgw-torch/bin/activate"
+          python -m pip install --upgrade pip
+          python -m pip install '.[torch]' pytest
+          python -c "import importlib.util; assert importlib.util.find_spec('jax') is None"
+          python -m pytest tests/test_diffgw.py tests/test_diffgw_inference.py tests/test_mcmc.py tests/test_waveform_definitions.py
+          python -m pytest --collect-only -q tests/test_xpnr_component_evidence.py
 
       - name: "Step 2: Verify JAX without PyTorch"
         run: |
-          pip uninstall -y torch
-          pip install .[jax]
-          pytest tests/test_diffgw.py tests/test_waveform_definitions.py
-          pytest --collect-only -q tests/test_xpnr_component_evidence.py
+          # Uninstalling an exercised backend can leave an importable namespace.
+          # A fresh environment proves backend independence.
+          python -m venv "$RUNNER_TEMP/diffgw-jax"
+          source "$RUNNER_TEMP/diffgw-jax/bin/activate"
+          python -m pip install --upgrade pip
+          python -m pip install '.[jax]' pytest
+          python -c "import importlib.util; assert importlib.util.find_spec('torch') is None"
+          python -m pytest tests/test_diffgw.py tests/test_diffgw_inference.py tests/test_waveform_definitions.py
+          python -m pytest --collect-only -q tests/test_xpnr_component_evidence.py
 
       - name: "Step 3: Verify core suite with all and dev"
         run: |
-          pip install .[all,dev]
-          pytest tests/test_diffgw.py tests/test_waveform_definitions.py tests/test_mit_packaging.py tests/test_external_data.py tests/test_taylorf2_hm_external_api.py tests/test_rom_release_contract.py tests/test_eob_release_contract.py tests/test_prototype_release_contract.py tests/test_release_distributions.py
+          source "$RUNNER_TEMP/diffgw-torch/bin/activate"
+          python -m pip install '.[all,dev]'
+          python -m pytest tests/test_diffgw.py tests/test_diffgw_inference.py tests/test_waveform_definitions.py tests/test_mit_packaging.py tests/test_external_data.py tests/test_taylorf2_hm_external_api.py tests/test_rom_release_contract.py tests/test_eob_release_contract.py tests/test_prototype_release_contract.py tests/test_release_distributions.py

@@ -34,6 +34,22 @@ chart switches, guards and numerical solvers. Derivatives need branch-specific
 checks. Plateau and symmetry derivatives can legitimately be zero. The NSBH
 project continuation below is only C1.
 
+The [current PE results](../validation/inference/parameter-estimation-results.md)
+cover 29 inventory entries: 28 supported waveform/API scopes and one
+component-only entry. The original two-parameter, SNR-20 zero-noise grid study
+recorded 18 converged baselines, 10 unresolved results and one blocked component
+**per frontend**. Later completion evidence includes four paired zero-noise
+reference models and 17 accepted sampler records (272,000 retained draws)
+across four models. **0/28 supported models have completed the expanded campaign
+or its 50-case calibration stage**, as reviewed on 20 October 2026.
+
+These are scoped inference-pipeline results, not full-dimensional PE,
+independent physical accuracy or ensemble calibration. The separately reported
+[PhenomD/NRTidal reference](../validation/inference/nrtidal-convergence-pilot.md)
+and [Torch sampler](../validation/inference/native-sampler-validation.md) pilots
+retain their own settings and outcomes. None changes the physical qualification
+gates below.
+
 ## Family scopes
 
 | Family or scope | Source, reference and native evidence | External and physical limits |

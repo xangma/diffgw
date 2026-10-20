@@ -92,6 +92,46 @@ validation:
   absolute_links: info
   unrecognized_links: info
 
+# Operational records and investigation journals are not public documentation.
+exclude_docs: |
+  /validation/inference/pe-completion-20261003/
+  /validation/inference/matched-input-precision.md
+  /validation/inference/waveform-directional-derivatives.md
+  /validation/inference/relative-whittle-endpoints.md
+  /validation/inference/mode-grid-alignment.md
+  /validation/inference/parameter-estimation-native-loop-20261003.json
+  /validation/inference/parameter-estimation-stabilization-20261002.json
+  /validation/inference/parameter-estimation-endpoint-audit-20261001.json
+  /validation/inference/parameter-estimation-precision-20261002.json
+  /validation/inference/parameter-estimation-candidate-shadow-20261002.json
+  /validation/inference/parameter-estimation-native-mode-grid-20261003.json
+  /validation/inference/parameter-estimation-components-20261002.json
+  /validation/inference/parameter-estimation-native-multistart-20261003.json
+  /validation/inference/parameter-estimation-native-joint-20261002.json
+  /validation/inference/parameter-estimation-mode-alignment-20261001.json
+  /validation/inference/parameter-estimation-jit-operations-20261003.json
+  /validation/inference/parameter-estimation-jax-preflight-20261001.json
+  /validation/inference/parameter-estimation-loop-attribution-20261003.json
+  /validation/inference/parameter-estimation-operation-shadow-20261002.json
+  /validation/inference/parameter-estimation-waveform-derivatives-20261001.json
+  /validation/inference/parameter-estimation-term-input-shadow-20261002.json
+  /validation/inference/figures/pe-20261001-mode-grid-alignment.png
+  /validation/inference/figures/pe-20261001-relative-whittle-endpoints.png
+  /validation/inference/figures/pe-20261001-waveform-derivative-diagnostic.png
+  /validation/inference/figures/pe-20261002-candidate-shadow.png
+  /validation/inference/figures/pe-20261002-matched-input-precision.png
+  /validation/inference/figures/pe-20261002-native-components.png
+  /validation/inference/figures/pe-20261002-native-joint.png
+  /validation/inference/figures/pe-20261002-operation-shadow.png
+  /validation/inference/figures/pe-20261002-phase-stabilization.png
+  /validation/inference/figures/pe-20261002-term-input-shadow.png
+  /validation/inference/figures/pe-20261003-jit-operations.png
+  /validation/inference/figures/pe-20261003-loop-gain-attribution.png
+  /validation/inference/figures/pe-20261003-native-full-mode.png
+  /validation/inference/figures/pe-20261003-native-loop.png
+  /validation/inference/figures/pe-20261003-native-multistart.png
+
+
 nav:
   - Start here:
       - Overview: index.md
@@ -222,13 +262,22 @@ nav:
       - Waveform generation: guides/waveform-generation.md
       - Batching, devices and differentiation: guides/execution.md
       - Detectors and inference: guides/inference.md
+      - Parameter estimation: guides/parameter-estimation.md
       - Tutorials:
           - Fisher analysis: tutorials/02_fisher_analysis.md
           - NUTS API walkthrough: tutorials/03_parameter_estimation_nuts.md
+          - Public PE API: tutorials/04_public_parameter_estimation.md
   - Validation & evidence:
       - Evidence overview: validation.md
       - Differences from LAL: differences_from_lal.md
-      - Parameter estimation checks: validation/inference.md
+      - Parameter estimation:
+          - Protocol and inference checks: validation/inference.md
+          - Current results and interpretation: validation/inference/parameter-estimation-results.md
+          - Original grid campaign: validation/inference/parameter-estimation-campaign.md
+          - NRTidal convergence pilot: validation/inference/nrtidal-convergence-pilot.md
+          - Native Torch sampler: validation/inference/native-sampler-validation.md
+          - Noisy recovery and calibration: validation/inference/noisy-calibration.md
+          - Compiled noisy reference pilot: validation/inference/compiled-noisy-reference-pilot.md
       - Evidence receipts:
           - PhenomHM receipts:
               - Published composition: validation/imrphenomhm_published_composition_20260927.md
