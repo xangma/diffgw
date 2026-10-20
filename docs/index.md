@@ -29,6 +29,7 @@ Use the unified `diffgw` interface or either frontend directly.
 | Assess accuracy or derivative evidence | [Validation](validation.md) |
 | Evaluate speed for my workload | [Performance](performance.md) |
 | Use batching, gradients or inference tools | [User guide](usage.md) |
+| Run PE or understand its validation results | [PE guide](guides/parameter-estimation.md) and [results](validation/inference/parameter-estimation-results.md) |
 | Look up an exact function | [Unified API](api/diffgw.md), [PyTorch API](api/torchwave.md), [JAX API](api/jaxwave.md) |
 
 <a id="quickstart"></a>

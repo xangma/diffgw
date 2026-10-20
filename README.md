@@ -26,6 +26,7 @@ The original software is distributed under the **MIT License**, with PyTorch or 
 - **Automatic differentiation**: Supported model paths provide derivatives for Fisher forecasts, MAP optimization, and gradient-based sampling.
 - **Detector models**: Ground-detector projections and analytical noise models, plus LISA and pulsar-timing response utilities.
 - **Likelihoods**: Dense Whittle Gaussian likelihood and a relative-binning approximation that evaluates candidate waveforms at fewer frequencies. Accuracy and speed depend on the grid, binning, and reference waveform; see [likelihood validation](docs/validation/inference.md#relative-binning).
+- **Parameter estimation**: Public `diffgw.inference` priors, posteriors and NUTS sampling with explicit CPU/GPU devices. Native Torch NUTS and optional NumPyro/JAX return named physical samples and diagnostics; see [the PE guide](docs/guides/parameter-estimation.md). See [PE results and their interpretation](docs/validation/inference/parameter-estimation-results.md) for the tested scientific scope.
 
 ---
 

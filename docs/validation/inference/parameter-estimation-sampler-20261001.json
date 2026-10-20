@@ -1,0 +1,3371 @@
+{
+  "version": 1,
+  "date": "2026-10-01",
+  "status": "completed_restricted_sampler_validation",
+  "scope": "Torch native NUTS, CPU float64, dense two-mass SNR20 zero-noise common-data self-injection for IMRPhenomD and IMRPhenomD_NRTidal; fixed remaining parameters and original native uniform priors",
+  "limitations": [
+    "No physical-accuracy, independent-injection, noise-coverage, full-dimensional PE, or all-waveform qualification claim.",
+    "Initial failed runs remain separate; followup draws are neither combined with them nor selected by seed.",
+    "Neighbor probes inspect accepted states, not unarchived divergent leapfrog leaves.",
+    "Bulk chains, posterior arrays, test/support snapshots and logs remain externally retained; this JSON contains receipt scalars and file hashes."
+  ],
+  "retention_roots": {
+    "sampler": {
+      "remote": "/home/xangma/artifacts/diffgw-pe-sampler-20261001",
+      "local_mirror": "/Users/xangma/artifacts/diffgw-pe-sampler-20261001"
+    },
+    "pilot": {
+      "remote": "/home/xangma/artifacts/diffgw-pe-pilot-20261001",
+      "local_mirror": "/Users/xangma/artifacts/diffgw-pe-pilot-20261001"
+    },
+    "original": {
+      "remote": "/home/xangma/artifacts/diffgw-pe-20260930",
+      "local_mirror": "/Users/xangma/artifacts/diffgw-pe-20260930"
+    }
+  },
+  "source": {
+    "base_revision": "872462864aba09acf21a9767dcae366025272269",
+    "executed_snapshot": "sampler/source-sampler-v3.tar.gz",
+    "snapshot_includes_uncommitted_changes": true,
+    "comparison_receipt": "sampler/waveform-source-comparison-final-v3.json",
+    "comparison": {
+      "old": "/home/xangma/diffgw-pe-pilot-20261001/src",
+      "new": "/home/xangma/diffgw-pe-sampler-v3-20261001/src",
+      "files_checked": 361,
+      "changed": [
+        "torchwave/inference/mcmc.py"
+      ],
+      "excluded": "generated __pycache__, egg-info",
+      "archive_sha256": "fe1d37c7bde63815a4431063d06876435d939b1c8afddd18e7ed541a572b99b1"
+    },
+    "independent_mirror_archive_check": {
+      "old_source_snapshot": "pilot/source-pilot.tar.gz",
+      "files_checked": 361,
+      "changed_files": [
+        "torchwave/inference/mcmc.py"
+      ]
+    },
+    "mcmc_before_sha256": "4d42f756d72610676cf5b8266a43c852847b1f2f3a408aee06797657577213b4",
+    "mcmc_executed_sha256": "0c4d4406fd2aa7147010678524fc7b6ac7d7642254cd349d8fb2aec549233ee2",
+    "runtime_and_source_provenance": {
+      "device": "cpu",
+      "host": "len",
+      "pilot_source_sha256": "ed9a38efa1896053e6e2289f68f22d1262c81271d893c63ba94584654acd1ae7",
+      "platform": "Linux-6.8.0-138-generic-x86_64-with-glibc2.39",
+      "precision": "float64/complex128",
+      "python": "3.12.3",
+      "revision": "872462864aba09acf21a9767dcae366025272269",
+      "sampler_runner_sha256": "403a096e6b7c8b16578779426cc491f69097f1689fea9eaa51b633baf9a96cba",
+      "source_sha256": "d3596dbea38366c832094be116a4d2b45ebef078d7700aa3e8eb7d1b4689e5b1",
+      "thread_environment": {
+        "MKL_NUM_THREADS": "1",
+        "OMP_NUM_THREADS": "1",
+        "OPENBLAS_NUM_THREADS": "1",
+        "XLA_FLAGS": null
+      },
+      "versions": {
+        "arviz": "0.22.0",
+        "jax": "0.11.2",
+        "jaxlib": "0.11.2",
+        "numpy": "2.5.3",
+        "scipy": "1.18.1",
+        "torch": "2.14.0+cpu"
+      },
+      "waveform_source_sha256": "0de2bbceef58ad1e044fd94a1f0777b3e2ff8c1e9807f587c442aec59eef6082"
+    }
+  },
+  "sampler": {
+    "gates": {
+      "bulk_ess": 400,
+      "depth_limit_fraction": 0.01,
+      "divergences": 0,
+      "event_mcse": 0.02,
+      "mcse_multiplier": 5.0,
+      "mean_mcse_fraction_width90": 0.02,
+      "mean_quadrature_fraction_width90": 0.005,
+      "probability_quadrature_allowance": 0.002,
+      "quantile_fraction_width90": 0.03,
+      "rhat": 1.01,
+      "tail_ess": 400
+    },
+    "seeds": [
+      10201,
+      20302,
+      30403,
+      40504
+    ],
+    "chains": 4,
+    "strategy": "torch_compile"
+  },
+  "followup_design": {
+    "receipt": "sampler/bounded-followup-design-v4.json",
+    "status": "design_frozen_before_followup",
+    "reason": "Original finite runs failed effective-sample, MCSE and divergence gates; same reference distribution and thresholds retained. Higher acceptance targets integration stability; longer chains target sampling precision.",
+    "initial_runs": {
+      "IMRPhenomD": {
+        "receipt_sha256": "934db2733e46f9d13bcebd1607c000b1a8313fbfffe88d24d7addc6935fd129c",
+        "status": "failed_sampler_gates",
+        "failures": [
+          "mass1_mixing",
+          "mass2_mixing",
+          "chart_logit_x_mixing",
+          "chart_logit_v_mixing",
+          "chirp_mass_mixing",
+          "mass1_quantile_0.05",
+          "mass1_quantile_0.5",
+          "mass1_quantile_0.95",
+          "mass2_quantile_0.05",
+          "mass2_quantile_0.95",
+          "event1",
+          "event4",
+          "divergences"
+        ]
+      },
+      "IMRPhenomD_NRTidal": {
+        "receipt_sha256": "73899cb93a52184d80213d89db6946dc4950336fbc8cd58700042fce2956cf8e",
+        "status": "failed_sampler_gates",
+        "failures": [
+          "mass1_mixing",
+          "mass2_mixing",
+          "chart_logit_x_mixing",
+          "chart_logit_v_mixing",
+          "chirp_mass_mixing",
+          "mass1_mean",
+          "mass1_quantile_0.5",
+          "mass2_mean",
+          "mass2_quantile_0.5",
+          "event1",
+          "event4",
+          "divergences"
+        ]
+      }
+    },
+    "config": {
+      "warmup": 1000,
+      "draws": 4000,
+      "target_accept": 0.95,
+      "max_depth": 8
+    },
+    "chains": 4,
+    "seeds": [
+      10201,
+      20302,
+      30403,
+      40504
+    ],
+    "source_archive_sha256": "fe1d37c7bde63815a4431063d06876435d939b1c8afddd18e7ed541a572b99b1",
+    "change_scope": "Sampler settings only. All original priors, data, chart, metric, gates, waveforms, compiled strategy and runtime remain fixed.",
+    "maximum_additional_work": "One fresh 4-chain run per model; no repeated seed selection, combining old draws, or automatic extensions.",
+    "stop_condition": "Terminal gate outcome or 30 minutes per model; preserve all failures."
+  },
+  "cases": {
+    "IMRPhenomD": {
+      "case": {
+        "api_kind": "fd_dispatch",
+        "axes": [
+          {
+            "lower": 33.0,
+            "name": "mass1",
+            "truth": 36.0,
+            "unit": "Msun",
+            "upper": 39.0
+          },
+          {
+            "lower": 26.0,
+            "name": "mass2",
+            "truth": 29.0,
+            "unit": "Msun",
+            "upper": 32.0
+          }
+        ],
+        "backends": [
+          "torch",
+          "jax"
+        ],
+        "blocked_reason": null,
+        "domain": "frequency",
+        "id": "IMRPhenomD",
+        "model": "IMRPhenomD",
+        "settings": {
+          "batch_mode": "native",
+          "detectors": [
+            "H1",
+            "L1"
+          ],
+          "df": 1.0,
+          "f_max": 400.0,
+          "f_min": 20.0,
+          "grid_sizes": [
+            31,
+            61,
+            121,
+            241,
+            481
+          ],
+          "likelihood_kind": "detector_network",
+          "prior": "independent_uniform_native_axes",
+          "psd_names": {
+            "H1": "aLIGOZeroDetHighPower",
+            "L1": "aLIGOZeroDetHighPower"
+          },
+          "sky": {
+            "dec": -0.3,
+            "psi": 0.27,
+            "ra": 1.1,
+            "t_gps": 1126259462.0
+          },
+          "target_snr": 20.0
+        },
+        "truth": {
+          "distance": 400.0,
+          "f_ref": 20.0,
+          "inclination": 0.7,
+          "mass1": 36.0,
+          "mass2": 29.0,
+          "phic": 0.13,
+          "spin1z": 0.15,
+          "spin2z": -0.1,
+          "tc": 0.0
+        }
+      },
+      "chart": {
+        "lower": [
+          33.0,
+          26.0
+        ],
+        "scale": 0.031625357824682364,
+        "truth": [
+          36.0,
+          29.0
+        ],
+        "upper": [
+          39.0,
+          32.0
+        ]
+      },
+      "inverse_mass": [
+        3.289868133696453,
+        0.14536920675733264
+      ],
+      "frozen_reference_events": {
+        "events": [
+          {
+            "axis": 0,
+            "cut": 34.42565756399113,
+            "kind": "native_cdf",
+            "probability": 0.05
+          },
+          {
+            "axis": 0,
+            "cut": 36.128004307830174,
+            "kind": "native_cdf",
+            "probability": 0.5
+          },
+          {
+            "axis": 0,
+            "cut": 38.12610121042297,
+            "kind": "native_cdf",
+            "probability": 0.95
+          },
+          {
+            "axis": 1,
+            "cut": 27.527763627375304,
+            "kind": "native_cdf",
+            "probability": 0.05
+          },
+          {
+            "axis": 1,
+            "cut": 28.908736291310635,
+            "kind": "native_cdf",
+            "probability": 0.5
+          },
+          {
+            "axis": 1,
+            "cut": 30.153764693674532,
+            "kind": "native_cdf",
+            "probability": 0.95
+          },
+          {
+            "cell": [
+              0,
+              0
+            ],
+            "kind": "rosenblatt_bin",
+            "probability": 0.1111111111111111
+          },
+          {
+            "cell": [
+              0,
+              1
+            ],
+            "kind": "rosenblatt_bin",
+            "probability": 0.1111111111111111
+          },
+          {
+            "cell": [
+              0,
+              2
+            ],
+            "kind": "rosenblatt_bin",
+            "probability": 0.1111111111111111
+          },
+          {
+            "cell": [
+              1,
+              0
+            ],
+            "kind": "rosenblatt_bin",
+            "probability": 0.1111111111111111
+          },
+          {
+            "cell": [
+              1,
+              1
+            ],
+            "kind": "rosenblatt_bin",
+            "probability": 0.1111111111111111
+          },
+          {
+            "cell": [
+              1,
+              2
+            ],
+            "kind": "rosenblatt_bin",
+            "probability": 0.1111111111111111
+          },
+          {
+            "cell": [
+              2,
+              0
+            ],
+            "kind": "rosenblatt_bin",
+            "probability": 0.1111111111111111
+          },
+          {
+            "cell": [
+              2,
+              1
+            ],
+            "kind": "rosenblatt_bin",
+            "probability": 0.1111111111111111
+          },
+          {
+            "cell": [
+              2,
+              2
+            ],
+            "kind": "rosenblatt_bin",
+            "probability": 0.1111111111111111
+          }
+        ],
+        "reference_event_measure": "Native CDF cutoffs use retained pilot marginal quadrature; Rosenblatt marginal/conditional quadratic CDFs are exact for the retained 241x241 bilinear transformed posterior",
+        "quadrature_allowance_basis": "0.002 conservatively exceeds retained final refinement and Gauss-versus-grid joint density TV"
+      },
+      "bounded_extension_policy": "None automatic; any additional work requires a separately frozen protocol and retains this result",
+      "reference": {
+        "pilot_receipt": "pilot/IMRPhenomD/pilot_receipt.json",
+        "pilot_status": "completed_transformed_baseline",
+        "torch_final_grid": {
+          "axes": [
+            {
+              "boundary_mass_low_high": [
+                0.0013000414245957232,
+                0.011773703934077173
+              ],
+              "kl_from_uniform_prior": 0.28573603454937757,
+              "mean": 36.178536014024786,
+              "mode": 36.0,
+              "prior_dominated": false,
+              "prior_support_limited": true,
+              "quantiles_05_50_95": [
+                34.42565756399113,
+                36.128004307830174,
+                38.12610121042297
+              ],
+              "std": 1.1077104065413297,
+              "truth_cdf": 0.45508203435932376,
+              "width90": 3.700443646431843
+            },
+            {
+              "boundary_mass_low_high": [
+                1.7257459625440196e-25,
+                1.1102230246251565e-16
+              ],
+              "kl_from_uniform_prior": 0.6247114887121801,
+              "mean": 28.886092332344525,
+              "mode": 28.999999999999993,
+              "prior_dominated": false,
+              "prior_support_limited": false,
+              "quantiles_05_50_95": [
+                27.527763627375304,
+                28.908736291310635,
+                30.153764693674532
+              ],
+              "std": 0.7866564621184197,
+              "truth_cdf": 0.5448871916459154,
+              "width90": 2.626001066299228
+            }
+          ],
+          "kl_from_uniform_prior": 4.1129264044348055,
+          "log_integrated_likelihood": -5.07367847209771,
+          "marginal_kl_method": "2048 uniform native-coordinate CDF bins",
+          "maximum_log_likelihood": -1.0626662566277293e-22,
+          "posterior_integral": 1.0,
+          "prior_dominated": false,
+          "shape": [
+            241,
+            241
+          ],
+          "size": 241
+        },
+        "torch_final_refinement": {
+          "coarse": 121,
+          "converged": true,
+          "failures": [],
+          "fine": 241,
+          "metrics": {
+            "axes": [
+              {
+                "intervals_in_width90": 148.01774585724007,
+                "mode_drift_coarse_intervals": 0.0,
+                "quantile_drift_fraction_of_width90": 6.61109924276728e-05,
+                "width90_relative_drift": 9.408265979580686e-05
+              },
+              {
+                "intervals_in_width90": 12.551958062848458,
+                "mode_drift_coarse_intervals": 0.0,
+                "quantile_drift_fraction_of_width90": 2.617878868143701e-05,
+                "width90_relative_drift": 4.9490083720681906e-05
+              }
+            ],
+            "interpolated_coarse_posterior_integral": 1.0,
+            "joint_density_total_variation": 0.0015199117769447215,
+            "joint_tv_at_fine_nodes": 0.0015374336166822516,
+            "joint_tv_estimator_absolute_drift": 5.079623850656962e-06,
+            "joint_tv_refinement_factor2": 0.0015249914007953785,
+            "log_normalizer_absolute_drift": 7.726167278399032e-06,
+            "minimum_conditional_v_intervals_in_width90": 20.313490240527486
+          }
+        },
+        "frontend_parity": {
+          "grid_likelihood_parity": {
+            "max_absolute_difference": 1.0017231488745892e-09,
+            "passed": true,
+            "size": 241
+          },
+          "posterior_parity": {
+            "passed": true,
+            "threshold": 1e-05,
+            "total_variation": 4.541066552624823e-12
+          }
+        },
+        "all_retained_grid_artifacts": [
+          "pilot/IMRPhenomD/jax_grid_31.npz",
+          "pilot/IMRPhenomD/jax_grid_61.npz",
+          "pilot/IMRPhenomD/jax_grid_121.npz",
+          "pilot/IMRPhenomD/jax_grid_241.npz",
+          "pilot/IMRPhenomD/torch_grid_31.npz",
+          "pilot/IMRPhenomD/torch_grid_61.npz",
+          "pilot/IMRPhenomD/torch_grid_121.npz",
+          "pilot/IMRPhenomD/torch_grid_241.npz"
+        ],
+        "gauss_receipt": "pilot/IMRPhenomD/independent_gauss_receipt.json",
+        "gauss_status": "independent_quadrature_passed",
+        "gauss_final_order": {
+          "log_integrated_likelihood": -5.073675896432421,
+          "means": [
+            36.17853883584563,
+            28.886090415619197
+          ],
+          "order": 128,
+          "passed": true,
+          "refinement": {
+            "density_TV_estimator_absolute_drift": 4.013497500467448e-06,
+            "log_normalizer_absolute_drift": 1.7424509097807572e-06,
+            "native_mean_drift_fraction_width90": [
+              2.534732888009831e-06,
+              6.713586477820347e-07
+            ],
+            "native_std_relative_drift": [
+              1.322655035682909e-05,
+              2.657892195415387e-06
+            ]
+          },
+          "std": [
+            1.1077140392269433,
+            0.7866591331055905
+          ],
+          "versus_trapezoid": {
+            "density_TV_from_bilinear_trapezoid": 0.0005213902517361365,
+            "log_normalizer_difference_from_trapezoid": 2.5756652890507326e-06,
+            "native_mean_difference_fraction_width90": [
+              7.625628471574681e-07,
+              7.29902722579519e-07
+            ],
+            "native_std_relative_difference": [
+              3.2794435070876174e-06,
+              3.3953551906763033e-06
+            ],
+            "trapezoid_interpolation_Gauss_integral": 0.9999958565976017
+          }
+        },
+        "gauss_artifacts": [
+          "pilot/IMRPhenomD/independent_gauss_64.npz",
+          "pilot/IMRPhenomD/independent_gauss_128.npz"
+        ],
+        "shared_signals": "pilot/IMRPhenomD/shared_signals.npz",
+        "original_source_receipt": "original/results/IMRPhenomD/torch/snr20/zero_seed0/receipt.json"
+      },
+      "preflight": {
+        "status": "preflight_passed",
+        "gates": {
+          "chart_atol": 1e-12,
+          "gradient_atol": 0.0001,
+          "gradient_rtol": 0.0001,
+          "likelihood_atol": 1e-07,
+          "likelihood_rtol": 1e-08,
+          "newton_iterations": 24
+        },
+        "failures": [],
+        "strategy": "torch_compile",
+        "compile_requested": true,
+        "compile_error": null,
+        "execution": "CPU float64; dense original frequency bins; Torch torch_compile, eager JAX; no likelihood approximation",
+        "elapsed_seconds": 144.15159318735823,
+        "median_torch_value_gradient_seconds": 0.024252962321043015,
+        "compiled_value_gradient_seconds": [
+          58.23650274379179,
+          0.006418792996555567,
+          0.006323905196040869,
+          0.006277678068727255,
+          0.006350223906338215,
+          0.0063523193821311,
+          0.006311831995844841,
+          0.006393925752490759
+        ]
+      },
+      "preflight_checks": {
+        "point_count": 8,
+        "all_point_checks_passed": true,
+        "retained_likelihood_check": {
+          "atol": 1e-07,
+          "checks": [
+            {
+              "file": "torch_grid_241.npz",
+              "fresh_log_likelihood": [
+                -658.4245071969674,
+                -228.71650209919767,
+                -6.432952398018958,
+                -1.0286038682763743e-22,
+                -1.692689027735676,
+                -396.2804449254553,
+                -223.06897067431535
+              ],
+              "indices": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  240
+                ],
+                [
+                  60,
+                  120
+                ],
+                [
+                  120,
+                  120
+                ],
+                [
+                  180,
+                  120
+                ],
+                [
+                  240,
+                  0
+                ],
+                [
+                  240,
+                  240
+                ]
+              ],
+              "masses": [
+                [
+                  33.0,
+                  26.0
+                ],
+                [
+                  33.0,
+                  32.0
+                ],
+                [
+                  34.5,
+                  30.202834857514432
+                ],
+                [
+                  36.0,
+                  28.999999999999993
+                ],
+                [
+                  37.5,
+                  27.90900125442353
+                ],
+                [
+                  39.0,
+                  26.0
+                ],
+                [
+                  39.0,
+                  32.0
+                ]
+              ],
+              "max_absolute_difference": 4.483808879740536e-10,
+              "passed": true,
+              "retained_log_likelihood": [
+                -658.4245071969674,
+                -228.7165020992053,
+                -6.432952398018958,
+                -1.0626662566277293e-22,
+                -1.6926890276759101,
+                -396.2804449250069,
+                -223.06897067431535
+              ]
+            },
+            {
+              "file": "independent_gauss_128.npz",
+              "fresh_log_likelihood": [
+                -658.8893743105622,
+                -228.75131788653886,
+                -15.318303945019721,
+                -0.0005569984317301338,
+                -2.2535791858978005,
+                -396.00487337259494,
+                -221.25201621285956
+              ],
+              "indices": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  127
+                ],
+                [
+                  32,
+                  64
+                ],
+                [
+                  64,
+                  64
+                ],
+                [
+                  96,
+                  64
+                ],
+                [
+                  127,
+                  0
+                ],
+                [
+                  127,
+                  127
+                ]
+              ],
+              "masses": [
+                [
+                  33.0005253361586,
+                  26.00447082515833
+                ],
+                [
+                  33.0005253361586,
+                  31.999649833703895
+                ],
+                [
+                  33.911355874891456,
+                  30.709350366762557
+                ],
+                [
+                  36.03667109688185,
+                  28.974066662930525
+                ],
+                [
+                  38.140663133050765,
+                  27.477156209642096
+                ],
+                [
+                  38.9994746638414,
+                  26.000765743134615
+                ],
+                [
+                  38.9994746638414,
+                  31.99561378687677
+                ]
+              ],
+              "max_absolute_difference": 9.351026619697222e-10,
+              "passed": true,
+              "retained_log_likelihood": [
+                -658.8893743105622,
+                -228.75131788653886,
+                -15.318303945019721,
+                -0.0005569984317287347,
+                -2.2535791858170597,
+                -396.0048733725376,
+                -221.25201621379466
+              ]
+            }
+          ],
+          "passed": true,
+          "rtol": 1e-08
+        }
+      },
+      "initial": {
+        "status": "failed_sampler_gates",
+        "receipt": "sampler/sample-v3-IMRPhenomD/sampler_receipt.json",
+        "protocol": "sampler/freeze-v3-IMRPhenomD/frozen-protocol.json",
+        "freeze_receipt": "sampler/freeze-v3-IMRPhenomD/sampler_receipt.json",
+        "preflight_receipt": "sampler/preflight-v3-IMRPhenomD/preflight_receipt.json",
+        "source_snapshot": "sampler/source-sampler-v3.tar.gz",
+        "config": {
+          "draws": 1000,
+          "max_depth": 8,
+          "target_accept": 0.8,
+          "warmup": 500
+        },
+        "elapsed_seconds": 417.7859623422846,
+        "chains": [
+          {
+            "chain": 0,
+            "seed": 10201,
+            "elapsed_seconds": 276.2863014158793,
+            "artifact": "sampler/sample-v3-IMRPhenomD/chain_0_seed10201.npz"
+          },
+          {
+            "chain": 1,
+            "seed": 20302,
+            "elapsed_seconds": 47.23099753400311,
+            "artifact": "sampler/sample-v3-IMRPhenomD/chain_1_seed20302.npz"
+          },
+          {
+            "chain": 2,
+            "seed": 30403,
+            "elapsed_seconds": 44.862192292232066,
+            "artifact": "sampler/sample-v3-IMRPhenomD/chain_2_seed30403.npz"
+          },
+          {
+            "chain": 3,
+            "seed": 40504,
+            "elapsed_seconds": 43.35466236807406,
+            "artifact": "sampler/sample-v3-IMRPhenomD/chain_3_seed40504.npz"
+          }
+        ],
+        "posterior_samples": "sampler/sample-v3-IMRPhenomD/posterior_samples.npz",
+        "diagnostics": {
+          "acceptance_mean": 0.8267236761214942,
+          "depth_limit_fraction": 0.0,
+          "divergences": 3,
+          "energy_bfmi": [
+            {
+              "chain": 0,
+              "value": 1.1724134926765106,
+              "warning_below_0_3_or_nonfinite": false
+            },
+            {
+              "chain": 1,
+              "value": 1.2150371758161347,
+              "warning_below_0_3_or_nonfinite": false
+            },
+            {
+              "chain": 2,
+              "value": 0.826442174695969,
+              "warning_below_0_3_or_nonfinite": false
+            },
+            {
+              "chain": 3,
+              "value": 1.2410991818567814,
+              "warning_below_0_3_or_nonfinite": false
+            }
+          ],
+          "energy_bfmi_is_gate": false,
+          "events": [
+            {
+              "absolute_difference": 0.015,
+              "axis": 0,
+              "cut": 34.42565756399113,
+              "difference_limit": 0.055724635995938764,
+              "estimate": 0.065,
+              "indicator_ess": 526.5342180111141,
+              "indicator_mcse": 0.010744927199187753,
+              "kind": "native_cdf",
+              "passed": true,
+              "probability": 0.05
+            },
+            {
+              "absolute_difference": 0.013000000000000012,
+              "axis": 0,
+              "cut": 36.128004307830174,
+              "difference_limit": 0.13819113975481964,
+              "estimate": 0.513,
+              "indicator_ess": 336.8194895633022,
+              "indicator_mcse": 0.027238227950963926,
+              "kind": "native_cdf",
+              "passed": false,
+              "probability": 0.5
+            },
+            {
+              "absolute_difference": 0.0022500000000000853,
+              "axis": 0,
+              "cut": 38.12610121042297,
+              "difference_limit": 0.03944378792790616,
+              "estimate": 0.95225,
+              "indicator_ess": 810.9860790886125,
+              "indicator_mcse": 0.0074887575855812315,
+              "kind": "native_cdf",
+              "passed": true,
+              "probability": 0.95
+            },
+            {
+              "absolute_difference": 0.0010000000000000009,
+              "axis": 1,
+              "cut": 27.527763627375304,
+              "difference_limit": 0.040995883326065775,
+              "estimate": 0.049,
+              "indicator_ess": 766.2803133701469,
+              "indicator_mcse": 0.007799176665213154,
+              "kind": "native_cdf",
+              "passed": true,
+              "probability": 0.05
+            },
+            {
+              "absolute_difference": 0.01200000000000001,
+              "axis": 1,
+              "cut": 28.908736291310635,
+              "difference_limit": 0.13608146310793917,
+              "estimate": 0.488,
+              "indicator_ess": 347.5368801373631,
+              "indicator_mcse": 0.026816292621587835,
+              "kind": "native_cdf",
+              "passed": false,
+              "probability": 0.5
+            },
+            {
+              "absolute_difference": 0.015249999999999986,
+              "axis": 1,
+              "cut": 30.153764693674532,
+              "difference_limit": 0.05365409123999806,
+              "estimate": 0.93475,
+              "indicator_ess": 571.6301604615037,
+              "indicator_mcse": 0.01033081824799961,
+              "kind": "native_cdf",
+              "passed": true,
+              "probability": 0.95
+            },
+            {
+              "absolute_difference": 0.0011388888888888976,
+              "cell": [
+                0,
+                0
+              ],
+              "difference_limit": 0.06766648750021743,
+              "estimate": 0.11225,
+              "indicator_ess": 577.8805181399495,
+              "indicator_mcse": 0.013133297500043486,
+              "kind": "rosenblatt_bin",
+              "passed": true,
+              "probability": 0.1111111111111111
+            },
+            {
+              "absolute_difference": 0.0013888888888888978,
+              "cell": [
+                0,
+                1
+              ],
+              "difference_limit": 0.05873023073066935,
+              "estimate": 0.1125,
+              "indicator_ess": 775.7832173832294,
+              "indicator_mcse": 0.011346046146133871,
+              "kind": "rosenblatt_bin",
+              "passed": true,
+              "probability": 0.1111111111111111
+            },
+            {
+              "absolute_difference": 0.0038888888888889,
+              "cell": [
+                0,
+                2
+              ],
+              "difference_limit": 0.03610070805672773,
+              "estimate": 0.115,
+              "indicator_ess": 2188.582456490444,
+              "indicator_mcse": 0.006820141611345545,
+              "kind": "rosenblatt_bin",
+              "passed": true,
+              "probability": 0.1111111111111111
+            },
+            {
+              "absolute_difference": 0.00863888888888889,
+              "cell": [
+                1,
+                0
+              ],
+              "difference_limit": 0.04690662831691612,
+              "estimate": 0.11975,
+              "indicator_ess": 1307.1013240705302,
+              "indicator_mcse": 0.008981325663383223,
+              "kind": "rosenblatt_bin",
+              "passed": true,
+              "probability": 0.1111111111111111
+            },
+            {
+              "absolute_difference": 0.005361111111111108,
+              "cell": [
+                1,
+                1
+              ],
+              "difference_limit": 0.039139700426508064,
+              "estimate": 0.10575,
+              "indicator_ess": 1714.3959340768065,
+              "indicator_mcse": 0.007427940085301612,
+              "kind": "rosenblatt_bin",
+              "passed": true,
+              "probability": 0.1111111111111111
+            },
+            {
+              "absolute_difference": 0.0118611111111111,
+              "cell": [
+                1,
+                2
+              ],
+              "difference_limit": 0.04255825747778596,
+              "estimate": 0.09925,
+              "indicator_ess": 1359.0167397673783,
+              "indicator_mcse": 0.008111651495557192,
+              "kind": "rosenblatt_bin",
+              "passed": true,
+              "probability": 0.1111111111111111
+            },
+            {
+              "absolute_difference": 0.0076388888888888895,
+              "cell": [
+                2,
+                0
+              ],
+              "difference_limit": 0.048110659031382966,
+              "estimate": 0.11875,
+              "indicator_ess": 1230.77505476921,
+              "indicator_mcse": 0.009222131806276592,
+              "kind": "rosenblatt_bin",
+              "passed": true,
+              "probability": 0.1111111111111111
+            },
+            {
+              "absolute_difference": 0.006638888888888889,
+              "cell": [
+                2,
+                1
+              ],
+              "difference_limit": 0.05148935144411231,
+              "estimate": 0.11775,
+              "indicator_ess": 1060.6635728793956,
+              "indicator_mcse": 0.009897870288822462,
+              "kind": "rosenblatt_bin",
+              "passed": true,
+              "probability": 0.1111111111111111
+            },
+            {
+              "absolute_difference": 0.0121111111111111,
+              "cell": [
+                2,
+                2
+              ],
+              "difference_limit": 0.048751970648101745,
+              "estimate": 0.099,
+              "indicator_ess": 1020.4899645775788,
+              "indicator_mcse": 0.009350394129620349,
+              "kind": "rosenblatt_bin",
+              "passed": true,
+              "probability": 0.1111111111111111
+            }
+          ],
+          "failures": [
+            "mass1_mixing",
+            "mass2_mixing",
+            "chart_logit_x_mixing",
+            "chart_logit_v_mixing",
+            "chirp_mass_mixing",
+            "mass1_quantile_0.05",
+            "mass1_quantile_0.5",
+            "mass1_quantile_0.95",
+            "mass2_quantile_0.05",
+            "mass2_quantile_0.95",
+            "event1",
+            "event4",
+            "divergences"
+          ],
+          "means": [
+            {
+              "absolute_difference": 0.026566737107039273,
+              "axis": 0,
+              "difference_limit": 0.36802582944162693,
+              "estimate": 36.15196927691775,
+              "mcse": 0.06990472224189355,
+              "passed": true,
+              "reference": 36.178536014024786
+            },
+            {
+              "absolute_difference": 0.018709811326850456,
+              "axis": 1,
+              "difference_limit": 0.2589565691930156,
+              "estimate": 28.904802143671375,
+              "mcse": 0.04916531277230388,
+              "passed": true,
+              "reference": 28.886092332344525
+            }
+          ],
+          "parameters": {
+            "chart_logit_v": {
+              "bulk_ess": 213.39069614492794,
+              "finite": true,
+              "folded_rhat": 1.009711354198117,
+              "rank_rhat": 1.024722632628629,
+              "tail_ess": 553.0735141329884
+            },
+            "chart_logit_x": {
+              "bulk_ess": 268.1596108860752,
+              "finite": true,
+              "folded_rhat": 1.0077766463655053,
+              "rank_rhat": 1.022964414843471,
+              "tail_ess": 616.6863446560842
+            },
+            "chirp_mass": {
+              "bulk_ess": 212.35528398095568,
+              "finite": true,
+              "folded_rhat": 1.010671167567072,
+              "rank_rhat": 1.0265041865319393,
+              "tail_ess": 504.03133875708545
+            },
+            "log_likelihood": {
+              "bulk_ess": 892.1285136191569,
+              "finite": true,
+              "folded_rhat": 1.004731283082228,
+              "rank_rhat": 1.0061778948434446,
+              "tail_ess": 830.6513828381427
+            },
+            "mass1": {
+              "bulk_ess": 268.1596108860752,
+              "finite": true,
+              "folded_rhat": 1.0079573330036309,
+              "rank_rhat": 1.022964414843471,
+              "tail_ess": 616.6863446560842
+            },
+            "mass2": {
+              "bulk_ess": 277.6034223012503,
+              "finite": true,
+              "folded_rhat": 1.0076000210056362,
+              "rank_rhat": 1.022235825746077,
+              "tail_ess": 630.2364455880856
+            }
+          },
+          "passed": false,
+          "quantiles": [
+            {
+              "axis": 0,
+              "difference_fraction_width90": 0.042274792045292296,
+              "estimate": 34.2692220783629,
+              "mcse": 0.08982397479850235,
+              "passed": false,
+              "probability": 0.05,
+              "reference": 34.42565756399113
+            },
+            {
+              "axis": 0,
+              "difference_fraction_width90": 0.010266030376086985,
+              "estimate": 36.09001544095091,
+              "mcse": 0.07673497875586932,
+              "passed": false,
+              "probability": 0.5,
+              "reference": 36.128004307830174
+            },
+            {
+              "axis": 0,
+              "difference_fraction_width90": 0.007365759169247848,
+              "estimate": 38.09884463370398,
+              "mcse": 0.08478588229775141,
+              "passed": false,
+              "probability": 0.95,
+              "reference": 38.12610121042297
+            },
+            {
+              "axis": 1,
+              "difference_fraction_width90": 0.002545058767315443,
+              "estimate": 27.53444695441207,
+              "mcse": 0.05799397992152677,
+              "passed": false,
+              "probability": 0.05,
+              "reference": 27.527763627375304
+            },
+            {
+              "axis": 1,
+              "difference_fraction_width90": 0.008270381375095896,
+              "estimate": 28.93045432162034,
+              "mcse": 0.05148989668182047,
+              "passed": true,
+              "probability": 0.5,
+              "reference": 28.908736291310635
+            },
+            {
+              "axis": 1,
+              "difference_fraction_width90": 0.04316281211563723,
+              "estimate": 30.26711028431467,
+              "mcse": 0.06617264623525543,
+              "passed": false,
+              "probability": 0.95,
+              "reference": 30.153764693674532
+            }
+          ],
+          "total_leapfrog_count": 22582,
+          "warmup_divergences": 12
+        }
+      },
+      "followup": {
+        "status": "completed_sampler_validation",
+        "receipt": "sampler/sample-v4-IMRPhenomD/sampler_receipt.json",
+        "protocol": "sampler/freeze-v4-IMRPhenomD/frozen-protocol.json",
+        "freeze_receipt": "sampler/freeze-v4-IMRPhenomD/sampler_receipt.json",
+        "preflight_receipt": "sampler/preflight-v3-IMRPhenomD/preflight_receipt.json",
+        "source_snapshot": "sampler/source-sampler-v3.tar.gz",
+        "config": {
+          "draws": 4000,
+          "max_depth": 8,
+          "target_accept": 0.95,
+          "warmup": 1000
+        },
+        "elapsed_seconds": 1003.2805682718754,
+        "chains": [
+          {
+            "chain": 0,
+            "seed": 10201,
+            "elapsed_seconds": 362.8250171588734,
+            "artifact": "sampler/sample-v4-IMRPhenomD/chain_0_seed10201.npz"
+          },
+          {
+            "chain": 1,
+            "seed": 20302,
+            "elapsed_seconds": 201.7304704352282,
+            "artifact": "sampler/sample-v4-IMRPhenomD/chain_1_seed20302.npz"
+          },
+          {
+            "chain": 2,
+            "seed": 30403,
+            "elapsed_seconds": 218.71725200209767,
+            "artifact": "sampler/sample-v4-IMRPhenomD/chain_2_seed30403.npz"
+          },
+          {
+            "chain": 3,
+            "seed": 40504,
+            "elapsed_seconds": 210.06646158080548,
+            "artifact": "sampler/sample-v4-IMRPhenomD/chain_3_seed40504.npz"
+          }
+        ],
+        "posterior_samples": "sampler/sample-v4-IMRPhenomD/posterior_samples.npz",
+        "diagnostics": {
+          "acceptance_mean": 0.9496272200092798,
+          "depth_limit_fraction": 0.0,
+          "divergences": 0,
+          "energy_bfmi": [
+            {
+              "chain": 0,
+              "value": 1.1275206802358786,
+              "warning_below_0_3_or_nonfinite": false
+            },
+            {
+              "chain": 1,
+              "value": 1.0618549441880545,
+              "warning_below_0_3_or_nonfinite": false
+            },
+            {
+              "chain": 2,
+              "value": 0.8853019833481824,
+              "warning_below_0_3_or_nonfinite": false
+            },
+            {
+              "chain": 3,
+              "value": 0.9978116148319438,
+              "warning_below_0_3_or_nonfinite": false
+            }
+          ],
+          "energy_bfmi_is_gate": false,
+          "events": [
+            {
+              "absolute_difference": 0.002312499999999995,
+              "axis": 0,
+              "cut": 34.42565756399113,
+              "difference_limit": 0.023569744227363187,
+              "estimate": 0.0523125,
+              "indicator_ess": 2664.08323771486,
+              "indicator_mcse": 0.004313948845472637,
+              "kind": "native_cdf",
+              "passed": true,
+              "probability": 0.05
+            },
+            {
+              "absolute_difference": 0.005562500000000026,
+              "axis": 0,
+              "cut": 36.128004307830174,
+              "difference_limit": 0.07115437991298146,
+              "estimate": 0.4944375,
+              "indicator_ess": 1306.8147405692462,
+              "indicator_mcse": 0.013830875982596292,
+              "kind": "native_cdf",
+              "passed": true,
+              "probability": 0.5
+            },
+            {
+              "absolute_difference": 0.0001875000000000071,
+              "axis": 0,
+              "cut": 38.12610121042297,
+              "difference_limit": 0.0271027242103265,
+              "estimate": 0.9501875,
+              "indicator_ess": 1877.9027373232736,
+              "indicator_mcse": 0.0050205448420653,
+              "kind": "native_cdf",
+              "passed": true,
+              "probability": 0.95
+            },
+            {
+              "absolute_difference": 6.250000000000006e-05,
+              "axis": 1,
+              "cut": 27.527763627375304,
+              "difference_limit": 0.027202110867682074,
+              "estimate": 0.0499375,
+              "indicator_ess": 1867.550225305179,
+              "indicator_mcse": 0.0050404221735364145,
+              "kind": "native_cdf",
+              "passed": true,
+              "probability": 0.05
+            },
+            {
+              "absolute_difference": 0.0056874999999999565,
+              "axis": 1,
+              "cut": 28.908736291310635,
+              "difference_limit": 0.0693529791226633,
+              "estimate": 0.5056875,
+              "indicator_ess": 1377.645076284994,
+              "indicator_mcse": 0.013470595824532661,
+              "kind": "native_cdf",
+              "passed": true,
+              "probability": 0.5
+            },
+            {
+              "absolute_difference": 0.002062499999999967,
+              "axis": 1,
+              "cut": 30.153764693674532,
+              "difference_limit": 0.023159963411828466,
+              "estimate": 0.9479375,
+              "indicator_ess": 2755.7641810673667,
+              "indicator_mcse": 0.004231992682365693,
+              "kind": "native_cdf",
+              "passed": true,
+              "probability": 0.95
+            },
+            {
+              "absolute_difference": 0.0019236111111110982,
+              "cell": [
+                0,
+                0
+              ],
+              "difference_limit": 0.03329590692124076,
+              "estimate": 0.1091875,
+              "indicator_ess": 2482.8546430076176,
+              "indicator_mcse": 0.0062591813842481515,
+              "kind": "rosenblatt_bin",
+              "passed": true,
+              "probability": 0.1111111111111111
+            },
+            {
+              "absolute_difference": 0.005486111111111108,
+              "cell": [
+                0,
+                1
+              ],
+              "difference_limit": 0.026806132809364093,
+              "estimate": 0.105625,
+              "indicator_ess": 3838.268898326202,
+              "indicator_mcse": 0.004961226561872818,
+              "kind": "rosenblatt_bin",
+              "passed": true,
+              "probability": 0.1111111111111111
+            },
+            {
+              "absolute_difference": 0.0017638888888888982,
+              "cell": [
+                0,
+                2
+              ],
+              "difference_limit": 0.022775861431991062,
+              "estimate": 0.112875,
+              "indicator_ess": 5800.048890907162,
+              "indicator_mcse": 0.004155172286398213,
+              "kind": "rosenblatt_bin",
+              "passed": true,
+              "probability": 0.1111111111111111
+            },
+            {
+              "absolute_difference": 0.0029513888888888923,
+              "cell": [
+                1,
+                0
+              ],
+              "difference_limit": 0.02383397216868105,
+              "estimate": 0.1140625,
+              "indicator_ess": 5299.655251807552,
+              "indicator_mcse": 0.00436679443373621,
+              "kind": "rosenblatt_bin",
+              "passed": true,
+              "probability": 0.1111111111111111
+            },
+            {
+              "absolute_difference": 0.003951388888888893,
+              "cell": [
+                1,
+                1
+              ],
+              "difference_limit": 0.021227150730060963,
+              "estimate": 0.1150625,
+              "indicator_ess": 6886.264438791514,
+              "indicator_mcse": 0.0038454301460121923,
+              "kind": "rosenblatt_bin",
+              "passed": true,
+              "probability": 0.1111111111111111
+            },
+            {
+              "absolute_difference": 0.00020138888888888984,
+              "cell": [
+                1,
+                2
+              ],
+              "difference_limit": 0.02692982423307931,
+              "estimate": 0.1113125,
+              "indicator_ess": 3979.4378669468156,
+              "indicator_mcse": 0.0049859648466158615,
+              "kind": "rosenblatt_bin",
+              "passed": true,
+              "probability": 0.1111111111111111
+            },
+            {
+              "absolute_difference": 0.0065763888888888955,
+              "cell": [
+                2,
+                0
+              ],
+              "difference_limit": 0.02714526297345011,
+              "estimate": 0.1176875,
+              "indicator_ess": 4105.892348684955,
+              "indicator_mcse": 0.005029052594690021,
+              "kind": "rosenblatt_bin",
+              "passed": true,
+              "probability": 0.1111111111111111
+            },
+            {
+              "absolute_difference": 0.0007361111111111041,
+              "cell": [
+                2,
+                1
+              ],
+              "difference_limit": 0.02932729186957598,
+              "estimate": 0.110375,
+              "indicator_ess": 3287.393239748455,
+              "indicator_mcse": 0.005465458373915196,
+              "kind": "rosenblatt_bin",
+              "passed": true,
+              "probability": 0.1111111111111111
+            },
+            {
+              "absolute_difference": 0.007298611111111103,
+              "cell": [
+                2,
+                2
+              ],
+              "difference_limit": 0.027404205999085135,
+              "estimate": 0.1038125,
+              "indicator_ess": 3604.163078490007,
+              "indicator_mcse": 0.005080841199817027,
+              "kind": "rosenblatt_bin",
+              "passed": true,
+              "probability": 0.1111111111111111
+            }
+          ],
+          "failures": [],
+          "means": [
+            {
+              "absolute_difference": 0.006786003347968972,
+              "axis": 0,
+              "difference_limit": 0.19795272445925158,
+              "estimate": 36.185322017372755,
+              "mcse": 0.03589010124541847,
+              "passed": true,
+              "reference": 36.178536014024786
+            },
+            {
+              "absolute_difference": 0.005433084299024671,
+              "axis": 1,
+              "difference_limit": 0.13866549655609212,
+              "estimate": 28.8806592480455,
+              "mcse": 0.025107098244919197,
+              "passed": true,
+              "reference": 28.886092332344525
+            }
+          ],
+          "parameters": {
+            "chart_logit_v": {
+              "bulk_ess": 911.0579477331006,
+              "finite": true,
+              "folded_rhat": 1.0023072836529876,
+              "rank_rhat": 1.003269135500696,
+              "tail_ess": 2949.56342446665
+            },
+            "chart_logit_x": {
+              "bulk_ess": 960.5222373327563,
+              "finite": true,
+              "folded_rhat": 1.0007642352236,
+              "rank_rhat": 1.0040446770165958,
+              "tail_ess": 1876.2193530059785
+            },
+            "chirp_mass": {
+              "bulk_ess": 870.1055581246655,
+              "finite": true,
+              "folded_rhat": 1.0018349417417605,
+              "rank_rhat": 1.00378990092593,
+              "tail_ess": 2745.081321109439
+            },
+            "log_likelihood": {
+              "bulk_ess": 3384.258689587524,
+              "finite": true,
+              "folded_rhat": 1.000099099518902,
+              "rank_rhat": 1.0006615442235907,
+              "tail_ess": 5212.5681953910425
+            },
+            "mass1": {
+              "bulk_ess": 960.5222373327563,
+              "finite": true,
+              "folded_rhat": 1.0007080414335954,
+              "rank_rhat": 1.0040446770165958,
+              "tail_ess": 1876.2193530059785
+            },
+            "mass2": {
+              "bulk_ess": 990.2731583578308,
+              "finite": true,
+              "folded_rhat": 1.0006781753625664,
+              "rank_rhat": 1.003951724702,
+              "tail_ess": 1868.1756502469057
+            }
+          },
+          "passed": true,
+          "quantiles": [
+            {
+              "axis": 0,
+              "difference_fraction_width90": 0.005486117390756648,
+              "estimate": 34.405356495748926,
+              "mcse": 0.037820772196017316,
+              "passed": true,
+              "probability": 0.05,
+              "reference": 34.42565756399113
+            },
+            {
+              "axis": 0,
+              "difference_fraction_width90": 0.004875970318437442,
+              "estimate": 36.14604756121523,
+              "mcse": 0.042917759016035006,
+              "passed": true,
+              "probability": 0.5,
+              "reference": 36.128004307830174
+            },
+            {
+              "axis": 0,
+              "difference_fraction_width90": 0.0009638124125079906,
+              "estimate": 38.122534676904756,
+              "mcse": 0.050481116398263026,
+              "passed": true,
+              "probability": 0.95,
+              "reference": 38.12610121042297
+            },
+            {
+              "axis": 1,
+              "difference_fraction_width90": 0.0005008283410197323,
+              "estimate": 27.529078803132855,
+              "mcse": 0.03712553117145845,
+              "passed": true,
+              "probability": 0.05,
+              "reference": 27.527763627375304
+            },
+            {
+              "axis": 1,
+              "difference_fraction_width90": 0.004557450942069258,
+              "estimate": 28.896768420277155,
+              "mcse": 0.03044652173027984,
+              "passed": true,
+              "probability": 0.5,
+              "reference": 28.908736291310635
+            },
+            {
+              "axis": 1,
+              "difference_fraction_width90": 0.005283676876232239,
+              "estimate": 30.1676396347855,
+              "mcse": 0.030545566901746923,
+              "passed": true,
+              "probability": 0.95,
+              "reference": 30.153764693674532
+            }
+          ],
+          "total_leapfrog_count": 109380,
+          "warmup_divergences": 2
+        }
+      }
+    },
+    "IMRPhenomD_NRTidal": {
+      "case": {
+        "api_kind": "fd_dispatch",
+        "axes": [
+          {
+            "lower": 1.59,
+            "name": "mass1",
+            "truth": 1.6,
+            "unit": "Msun",
+            "upper": 1.61
+          },
+          {
+            "lower": 1.29,
+            "name": "mass2",
+            "truth": 1.3,
+            "unit": "Msun",
+            "upper": 1.31
+          }
+        ],
+        "backends": [
+          "torch",
+          "jax"
+        ],
+        "blocked_reason": null,
+        "domain": "frequency",
+        "id": "IMRPhenomD_NRTidal",
+        "model": "IMRPhenomD_NRTidal",
+        "settings": {
+          "batch_mode": "native",
+          "detectors": [
+            "H1",
+            "L1"
+          ],
+          "df": 1.0,
+          "f_max": 512.0,
+          "f_min": 30.0,
+          "grid_sizes": [
+            31,
+            61,
+            121,
+            241,
+            481
+          ],
+          "likelihood_kind": "detector_network",
+          "prior": "independent_uniform_native_axes",
+          "psd_names": {
+            "H1": "aLIGOZeroDetHighPower",
+            "L1": "aLIGOZeroDetHighPower"
+          },
+          "sky": {
+            "dec": -0.3,
+            "psi": 0.27,
+            "ra": 1.1,
+            "t_gps": 1126259462.0
+          },
+          "target_snr": 20.0
+        },
+        "truth": {
+          "distance": 400.0,
+          "f_ref": 30.0,
+          "inclination": 0.7,
+          "lambda1": 300.0,
+          "lambda2": 700.0,
+          "mass1": 1.6,
+          "mass2": 1.3,
+          "phic": 0.13,
+          "spin1z": 0.02,
+          "spin2z": -0.01,
+          "tc": 0.0
+        }
+      },
+      "chart": {
+        "lower": [
+          1.59,
+          1.29
+        ],
+        "scale": 1.5285226586348568e-05,
+        "truth": [
+          1.6,
+          1.3
+        ],
+        "upper": [
+          1.61,
+          1.31
+        ]
+      },
+      "inverse_mass": [
+        3.289868133696453,
+        0.07766446332137156
+      ],
+      "frozen_reference_events": {
+        "events": [
+          {
+            "axis": 0,
+            "cut": 1.5910317498186033,
+            "kind": "native_cdf",
+            "probability": 0.05
+          },
+          {
+            "axis": 0,
+            "cut": 1.599956326180985,
+            "kind": "native_cdf",
+            "probability": 0.5
+          },
+          {
+            "axis": 0,
+            "cut": 1.6089472632412611,
+            "kind": "native_cdf",
+            "probability": 0.95
+          },
+          {
+            "axis": 1,
+            "cut": 1.2930474961402119,
+            "kind": "native_cdf",
+            "probability": 0.05
+          },
+          {
+            "axis": 1,
+            "cut": 1.3000369035700823,
+            "kind": "native_cdf",
+            "probability": 0.5
+          },
+          {
+            "axis": 1,
+            "cut": 1.3070733351351598,
+            "kind": "native_cdf",
+            "probability": 0.95
+          },
+          {
+            "cell": [
+              0,
+              0
+            ],
+            "kind": "rosenblatt_bin",
+            "probability": 0.1111111111111111
+          },
+          {
+            "cell": [
+              0,
+              1
+            ],
+            "kind": "rosenblatt_bin",
+            "probability": 0.1111111111111111
+          },
+          {
+            "cell": [
+              0,
+              2
+            ],
+            "kind": "rosenblatt_bin",
+            "probability": 0.1111111111111111
+          },
+          {
+            "cell": [
+              1,
+              0
+            ],
+            "kind": "rosenblatt_bin",
+            "probability": 0.1111111111111111
+          },
+          {
+            "cell": [
+              1,
+              1
+            ],
+            "kind": "rosenblatt_bin",
+            "probability": 0.1111111111111111
+          },
+          {
+            "cell": [
+              1,
+              2
+            ],
+            "kind": "rosenblatt_bin",
+            "probability": 0.1111111111111111
+          },
+          {
+            "cell": [
+              2,
+              0
+            ],
+            "kind": "rosenblatt_bin",
+            "probability": 0.1111111111111111
+          },
+          {
+            "cell": [
+              2,
+              1
+            ],
+            "kind": "rosenblatt_bin",
+            "probability": 0.1111111111111111
+          },
+          {
+            "cell": [
+              2,
+              2
+            ],
+            "kind": "rosenblatt_bin",
+            "probability": 0.1111111111111111
+          }
+        ],
+        "reference_event_measure": "Native CDF cutoffs use retained pilot marginal quadrature; Rosenblatt marginal/conditional quadratic CDFs are exact for the retained 241x241 bilinear transformed posterior",
+        "quadrature_allowance_basis": "0.002 conservatively exceeds retained final refinement and Gauss-versus-grid joint density TV"
+      },
+      "bounded_extension_policy": "None automatic; any additional work requires a separately frozen protocol and retains this result",
+      "reference": {
+        "pilot_receipt": "pilot/IMRPhenomD_NRTidal/pilot_receipt.json",
+        "pilot_status": "completed_transformed_baseline",
+        "torch_final_grid": {
+          "axes": [
+            {
+              "boundary_mass_low_high": [
+                0.04845228119942542,
+                0.047476065105832355
+              ],
+              "kl_from_uniform_prior": 0.00024649791298965006,
+              "mean": 1.5999690600916228,
+              "mode": 1.6,
+              "prior_dominated": true,
+              "prior_support_limited": true,
+              "quantiles_05_50_95": [
+                1.5910317498186033,
+                1.599956326180985,
+                1.6089472632412611
+              ],
+              "std": 0.005717791837465561,
+              "truth_cdf": 0.502236649861277,
+              "width90": 0.017915513422657847
+            },
+            {
+              "boundary_mass_low_high": [
+                3.507605060152679e-57,
+                1.1102230246251565e-16
+              ],
+              "kl_from_uniform_prior": 0.35304680682941736,
+              "mean": 1.3000426702362846,
+              "mode": 1.3000000000000003,
+              "prior_dominated": false,
+              "prior_support_limited": false,
+              "quantiles_05_50_95": [
+                1.2930474961402119,
+                1.3000369035700823,
+                1.3070733351351598
+              ],
+              "std": 0.004476321663497513,
+              "truth_cdf": 0.49776331965431403,
+              "width90": 0.014025838994947915
+            }
+          ],
+          "kl_from_uniform_prior": 5.757159793978653,
+          "log_integrated_likelihood": -6.281267910303455,
+          "marginal_kl_method": "2048 uniform native-coordinate CDF bins",
+          "maximum_log_likelihood": -2.706449369077961e-23,
+          "posterior_integral": 1.0,
+          "prior_dominated": false,
+          "shape": [
+            241,
+            241
+          ],
+          "size": 241
+        },
+        "torch_final_refinement": {
+          "coarse": 121,
+          "converged": true,
+          "failures": [],
+          "fine": 241,
+          "metrics": {
+            "axes": [
+              {
+                "intervals_in_width90": 214.98616107163141,
+                "mode_drift_coarse_intervals": 0.0,
+                "quantile_drift_fraction_of_width90": 9.300922285477665e-08,
+                "width90_relative_drift": 2.8672765484762e-08
+              },
+              {
+                "intervals_in_width90": 14.473351995448231,
+                "mode_drift_coarse_intervals": 0.0,
+                "quantile_drift_fraction_of_width90": 0.00240679276597193,
+                "width90_relative_drift": 0.003148407220932519
+              }
+            ],
+            "interpolated_coarse_posterior_integral": 1.0,
+            "joint_density_total_variation": 0.0016834024746922003,
+            "joint_tv_at_fine_nodes": 0.0016944548920291955,
+            "joint_tv_estimator_absolute_drift": 3.2505318330376762e-06,
+            "joint_tv_refinement_factor2": 0.001686653006525238,
+            "log_normalizer_absolute_drift": 2.3983589017007034e-06,
+            "minimum_conditional_v_intervals_in_width90": 29.568602089679384
+          }
+        },
+        "frontend_parity": {
+          "grid_likelihood_parity": {
+            "max_absolute_difference": 2.4250539354397915e-09,
+            "passed": true,
+            "size": 241
+          },
+          "posterior_parity": {
+            "passed": true,
+            "threshold": 1e-05,
+            "total_variation": 1.6922037783655834e-12
+          }
+        },
+        "all_retained_grid_artifacts": [
+          "pilot/IMRPhenomD_NRTidal/jax_grid_31.npz",
+          "pilot/IMRPhenomD_NRTidal/jax_grid_61.npz",
+          "pilot/IMRPhenomD_NRTidal/jax_grid_121.npz",
+          "pilot/IMRPhenomD_NRTidal/jax_grid_241.npz",
+          "pilot/IMRPhenomD_NRTidal/torch_grid_31.npz",
+          "pilot/IMRPhenomD_NRTidal/torch_grid_61.npz",
+          "pilot/IMRPhenomD_NRTidal/torch_grid_121.npz",
+          "pilot/IMRPhenomD_NRTidal/torch_grid_241.npz"
+        ],
+        "gauss_receipt": "pilot/IMRPhenomD_NRTidal/independent_gauss_receipt.json",
+        "gauss_status": "independent_quadrature_passed",
+        "gauss_final_order": {
+          "log_integrated_likelihood": -6.281267110851976,
+          "means": [
+            1.5999690616959277,
+            1.3000426683884712
+          ],
+          "order": 128,
+          "passed": true,
+          "refinement": {
+            "density_TV_estimator_absolute_drift": 4.509793091590428e-05,
+            "log_normalizer_absolute_drift": 2.505988048184804e-07,
+            "native_mean_drift_fraction_width90": [
+              4.415194800958318e-08,
+              4.3961726961967575e-08
+            ],
+            "native_std_relative_drift": [
+              2.593479050907453e-07,
+              2.607996015566283e-07
+            ]
+          },
+          "std": [
+            0.005717700139497838,
+            0.0044762498445714005
+          ],
+          "versus_trapezoid": {
+            "density_TV_from_bilinear_trapezoid": 0.0005638458377074695,
+            "log_normalizer_difference_from_trapezoid": 7.994514792386553e-07,
+            "native_mean_difference_fraction_width90": [
+              8.954836366069766e-08,
+              1.3174352411046243e-07
+            ],
+            "native_std_relative_difference": [
+              1.603756151706969e-05,
+              1.604444090619971e-05
+            ],
+            "trapezoid_interpolation_Gauss_integral": 1.000002887073385
+          }
+        },
+        "gauss_artifacts": [
+          "pilot/IMRPhenomD_NRTidal/independent_gauss_64.npz",
+          "pilot/IMRPhenomD_NRTidal/independent_gauss_128.npz"
+        ],
+        "shared_signals": "pilot/IMRPhenomD_NRTidal/shared_signals.npz",
+        "original_source_receipt": "original/results/IMRPhenomD_NRTidal/torch/snr20/zero_seed0/receipt.json"
+      },
+      "preflight": {
+        "status": "preflight_passed",
+        "gates": {
+          "chart_atol": 1e-12,
+          "gradient_atol": 0.0001,
+          "gradient_rtol": 0.0001,
+          "likelihood_atol": 1e-07,
+          "likelihood_rtol": 1e-08,
+          "newton_iterations": 24
+        },
+        "failures": [],
+        "strategy": "torch_compile",
+        "compile_requested": true,
+        "compile_error": null,
+        "execution": "CPU float64; dense original frequency bins; Torch torch_compile, eager JAX; no likelihood approximation",
+        "elapsed_seconds": 226.1720337830484,
+        "median_torch_value_gradient_seconds": 0.027548108948394656,
+        "compiled_value_gradient_seconds": [
+          136.1225859001279,
+          0.007011130917817354,
+          0.006911903619766235,
+          0.006873080972582102,
+          0.007021269761025906,
+          0.0069595640525221825,
+          0.006936501245945692,
+          0.006952980998903513
+        ]
+      },
+      "preflight_checks": {
+        "point_count": 8,
+        "all_point_checks_passed": true,
+        "retained_likelihood_check": {
+          "atol": 1e-07,
+          "checks": [
+            {
+              "file": "torch_grid_241.npz",
+              "fresh_log_likelihood": [
+                -439.3838291977577,
+                -237.81533265175844,
+                -1.1053631584716221,
+                -2.706449369077961e-23,
+                -1.1534762926509763,
+                -364.45490326460987,
+                -448.82285181997497
+              ],
+              "indices": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  240
+                ],
+                [
+                  60,
+                  120
+                ],
+                [
+                  120,
+                  120
+                ],
+                [
+                  180,
+                  120
+                ],
+                [
+                  240,
+                  0
+                ],
+                [
+                  240,
+                  240
+                ]
+              ],
+              "masses": [
+                [
+                  1.59,
+                  1.29
+                ],
+                [
+                  1.59,
+                  1.31
+                ],
+                [
+                  1.5950000000000002,
+                  1.3039056556760493
+                ],
+                [
+                  1.6,
+                  1.3000000000000003
+                ],
+                [
+                  1.605,
+                  1.2961228806491598
+                ],
+                [
+                  1.61,
+                  1.29
+                ],
+                [
+                  1.61,
+                  1.31
+                ]
+              ],
+              "max_absolute_difference": 7.958078640513122e-12,
+              "passed": true,
+              "retained_log_likelihood": [
+                -439.3838291977577,
+                -237.81533265175844,
+                -1.1053631584716221,
+                -2.706449369077961e-23,
+                -1.1534762926494475,
+                -364.4549032646019,
+                -448.82285181997497
+              ]
+            },
+            {
+              "file": "independent_gauss_128.npz",
+              "fresh_log_likelihood": [
+                -442.200850396714,
+                -236.97826418046455,
+                -2.0396047588595527,
+                -0.007641085069999366,
+                -2.7495186022703835,
+                -363.2709095138731,
+                -446.2485223189774
+              ],
+              "indices": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  127
+                ],
+                [
+                  32,
+                  64
+                ],
+                [
+                  64,
+                  64
+                ],
+                [
+                  96,
+                  64
+                ],
+                [
+                  127,
+                  0
+                ],
+                [
+                  127,
+                  127
+                ]
+              ],
+              "masses": [
+                [
+                  1.5900017511205287,
+                  1.2900209242309357
+                ],
+                [
+                  1.5900017511205287,
+                  1.3099974820613758
+                ],
+                [
+                  1.593037852916305,
+                  1.3054468557375463
+                ],
+                [
+                  1.6001222369896062,
+                  1.299906206249234
+                ],
+                [
+                  1.607135543776836,
+                  1.2944781342683516
+                ],
+                [
+                  1.6099982488794715,
+                  1.290002660935529
+                ],
+                [
+                  1.6099982488794715,
+                  1.3099791393099391
+                ]
+              ],
+              "max_absolute_difference": 2.205524651799351e-10,
+              "passed": true,
+              "retained_log_likelihood": [
+                -442.200850396714,
+                -236.97826418046455,
+                -2.0396047588595527,
+                -0.007641085069991572,
+                -2.749518602270362,
+                -363.27090951365255,
+                -446.24852231898063
+              ]
+            }
+          ],
+          "passed": true,
+          "rtol": 1e-08
+        }
+      },
+      "initial": {
+        "status": "failed_sampler_gates",
+        "receipt": "sampler/sample-v3-IMRPhenomD_NRTidal/sampler_receipt.json",
+        "protocol": "sampler/freeze-v3-IMRPhenomD_NRTidal/frozen-protocol.json",
+        "freeze_receipt": "sampler/freeze-v3-IMRPhenomD_NRTidal/sampler_receipt.json",
+        "preflight_receipt": "sampler/preflight-v3-IMRPhenomD_NRTidal/preflight_receipt.json",
+        "source_snapshot": "sampler/source-sampler-v3.tar.gz",
+        "config": {
+          "draws": 1000,
+          "max_depth": 8,
+          "target_accept": 0.8,
+          "warmup": 500
+        },
+        "elapsed_seconds": 457.6776127330959,
+        "chains": [
+          {
+            "chain": 0,
+            "seed": 10201,
+            "elapsed_seconds": 294.0502087138593,
+            "artifact": "sampler/sample-v3-IMRPhenomD_NRTidal/chain_0_seed10201.npz"
+          },
+          {
+            "chain": 1,
+            "seed": 20302,
+            "elapsed_seconds": 51.039875303860754,
+            "artifact": "sampler/sample-v3-IMRPhenomD_NRTidal/chain_1_seed20302.npz"
+          },
+          {
+            "chain": 2,
+            "seed": 30403,
+            "elapsed_seconds": 52.28296805918217,
+            "artifact": "sampler/sample-v3-IMRPhenomD_NRTidal/chain_2_seed30403.npz"
+          },
+          {
+            "chain": 3,
+            "seed": 40504,
+            "elapsed_seconds": 53.82355675427243,
+            "artifact": "sampler/sample-v3-IMRPhenomD_NRTidal/chain_3_seed40504.npz"
+          }
+        ],
+        "posterior_samples": "sampler/sample-v3-IMRPhenomD_NRTidal/posterior_samples.npz",
+        "diagnostics": {
+          "acceptance_mean": 0.825581426742405,
+          "depth_limit_fraction": 0.0,
+          "divergences": 2,
+          "energy_bfmi": [
+            {
+              "chain": 0,
+              "value": 1.217204340403192,
+              "warning_below_0_3_or_nonfinite": false
+            },
+            {
+              "chain": 1,
+              "value": 1.0606767310630625,
+              "warning_below_0_3_or_nonfinite": false
+            },
+            {
+              "chain": 2,
+              "value": 1.0426495502707767,
+              "warning_below_0_3_or_nonfinite": false
+            },
+            {
+              "chain": 3,
+              "value": 1.210909229958747,
+              "warning_below_0_3_or_nonfinite": false
+            }
+          ],
+          "energy_bfmi_is_gate": false,
+          "events": [
+            {
+              "absolute_difference": 0.0015000000000000013,
+              "axis": 0,
+              "cut": 1.5910317498186033,
+              "difference_limit": 0.044884763105970955,
+              "estimate": 0.0485,
+              "indicator_ess": 627.4701874405292,
+              "indicator_mcse": 0.00857695262119419,
+              "kind": "native_cdf",
+              "passed": true,
+              "probability": 0.05
+            },
+            {
+              "absolute_difference": 0.005750000000000033,
+              "axis": 0,
+              "cut": 1.599956326180985,
+              "difference_limit": 0.1413491376567913,
+              "estimate": 0.50575,
+              "indicator_ess": 321.9011989996866,
+              "indicator_mcse": 0.02786982753135826,
+              "kind": "native_cdf",
+              "passed": false,
+              "probability": 0.5
+            },
+            {
+              "absolute_difference": 0.004249999999999976,
+              "axis": 0,
+              "cut": 1.6089472632412611,
+              "difference_limit": 0.04764369047450962,
+              "estimate": 0.94575,
+              "indicator_ess": 615.8333231084557,
+              "indicator_mcse": 0.009128738094901924,
+              "kind": "native_cdf",
+              "passed": true,
+              "probability": 0.95
+            },
+            {
+              "absolute_difference": 0.004499999999999997,
+              "axis": 1,
+              "cut": 1.2930474961402119,
+              "difference_limit": 0.04761068303591146,
+              "estimate": 0.0545,
+              "indicator_ess": 619.4032493697024,
+              "indicator_mcse": 0.009122136607182292,
+              "kind": "native_cdf",
+              "passed": true,
+              "probability": 0.05
+            },
+            {
+              "absolute_difference": 0.0050000000000000044,
+              "axis": 1,
+              "cut": 1.3000369035700823,
+              "difference_limit": 0.14114342161284313,
+              "estimate": 0.495,
+              "indicator_ess": 322.86414314318074,
+              "indicator_mcse": 0.027828684322568624,
+              "kind": "native_cdf",
+              "passed": false,
+              "probability": 0.5
+            },
+            {
+              "absolute_difference": 0.0020000000000000018,
+              "axis": 1,
+              "cut": 1.3070733351351598,
+              "difference_limit": 0.04484427970947448,
+              "estimate": 0.952,
+              "indicator_ess": 622.5024854038579,
+              "indicator_mcse": 0.008568855941894896,
+              "kind": "native_cdf",
+              "passed": true,
+              "probability": 0.95
+            },
+            {
+              "absolute_difference": 0.0016111111111111048,
+              "cell": [
+                0,
+                0
+              ],
+              "difference_limit": 0.04507395943383579,
+              "estimate": 0.1095,
+              "indicator_ess": 1314.2169053977918,
+              "indicator_mcse": 0.008614791886767158,
+              "kind": "rosenblatt_bin",
+              "passed": true,
+              "probability": 0.1111111111111111
+            },
+            {
+              "absolute_difference": 0.009388888888888891,
+              "cell": [
+                0,
+                1
+              ],
+              "difference_limit": 0.05730793606378788,
+              "estimate": 0.1205,
+              "indicator_ess": 866.3563886872003,
+              "indicator_mcse": 0.011061587212757577,
+              "kind": "rosenblatt_bin",
+              "passed": true,
+              "probability": 0.1111111111111111
+            },
+            {
+              "absolute_difference": 0.011138888888888893,
+              "cell": [
+                0,
+                2
+              ],
+              "difference_limit": 0.06486515752436114,
+              "estimate": 0.12225,
+              "indicator_ess": 678.9664041636835,
+              "indicator_mcse": 0.012573031504872227,
+              "kind": "rosenblatt_bin",
+              "passed": true,
+              "probability": 0.1111111111111111
+            },
+            {
+              "absolute_difference": 0.0033611111111111064,
+              "cell": [
+                1,
+                0
+              ],
+              "difference_limit": 0.04093095715683228,
+              "estimate": 0.10775,
+              "indicator_ess": 1586.2157890541957,
+              "indicator_mcse": 0.007786191431366456,
+              "kind": "rosenblatt_bin",
+              "passed": true,
+              "probability": 0.1111111111111111
+            },
+            {
+              "absolute_difference": 0.006111111111111109,
+              "cell": [
+                1,
+                1
+              ],
+              "difference_limit": 0.039638009709716565,
+              "estimate": 0.105,
+              "indicator_ess": 1658.851960311,
+              "indicator_mcse": 0.007527601941943313,
+              "kind": "rosenblatt_bin",
+              "passed": true,
+              "probability": 0.1111111111111111
+            },
+            {
+              "absolute_difference": 0.0121111111111111,
+              "cell": [
+                1,
+                2
+              ],
+              "difference_limit": 0.041090782882822696,
+              "estimate": 0.099,
+              "indicator_ess": 1459.6873519289686,
+              "indicator_mcse": 0.007818156576564539,
+              "kind": "rosenblatt_bin",
+              "passed": true,
+              "probability": 0.1111111111111111
+            },
+            {
+              "absolute_difference": 0.00711111111111111,
+              "cell": [
+                2,
+                0
+              ],
+              "difference_limit": 0.0581607266658224,
+              "estimate": 0.104,
+              "indicator_ess": 738.7959530379032,
+              "indicator_mcse": 0.01123214533316448,
+              "kind": "rosenblatt_bin",
+              "passed": true,
+              "probability": 0.1111111111111111
+            },
+            {
+              "absolute_difference": 0.0046111111111111075,
+              "cell": [
+                2,
+                1
+              ],
+              "difference_limit": 0.049902293789732634,
+              "estimate": 0.1065,
+              "indicator_ess": 1037.0033049249212,
+              "indicator_mcse": 0.009580458757946527,
+              "kind": "rosenblatt_bin",
+              "passed": true,
+              "probability": 0.1111111111111111
+            },
+            {
+              "absolute_difference": 0.014388888888888896,
+              "cell": [
+                2,
+                2
+              ],
+              "difference_limit": 0.06119494453294504,
+              "estimate": 0.1255,
+              "indicator_ess": 783.2184322466286,
+              "indicator_mcse": 0.011838988906589009,
+              "kind": "rosenblatt_bin",
+              "passed": true,
+              "probability": 0.1111111111111111
+            }
+          ],
+          "failures": [
+            "mass1_mixing",
+            "mass2_mixing",
+            "chart_logit_x_mixing",
+            "chart_logit_v_mixing",
+            "chirp_mass_mixing",
+            "mass1_mean",
+            "mass1_quantile_0.5",
+            "mass2_mean",
+            "mass2_quantile_0.5",
+            "event1",
+            "event4",
+            "divergences"
+          ],
+          "means": [
+            {
+              "absolute_difference": 5.373187151569425e-05,
+              "axis": 0,
+              "difference_limit": 0.001918529393113781,
+              "estimate": 1.599915328220107,
+              "mcse": 0.00036579036520009836,
+              "passed": false,
+              "reference": 1.5999690600916228
+            },
+            {
+              "absolute_difference": 4.313236491237937e-05,
+              "axis": 1,
+              "difference_limit": 0.0015032395227656222,
+              "estimate": 1.300085802601197,
+              "mcse": 0.0002866220655581765,
+              "passed": false,
+              "reference": 1.3000426702362846
+            }
+          ],
+          "parameters": {
+            "chart_logit_v": {
+              "bulk_ess": 248.70602477798255,
+              "finite": true,
+              "folded_rhat": 1.001912968041596,
+              "rank_rhat": 1.0103251870777188,
+              "tail_ess": 641.58031474141
+            },
+            "chart_logit_x": {
+              "bulk_ess": 254.4040699664497,
+              "finite": true,
+              "folded_rhat": 1.0048323783008632,
+              "rank_rhat": 1.0088382633667994,
+              "tail_ess": 593.3755831432987
+            },
+            "chirp_mass": {
+              "bulk_ess": 280.6670382751981,
+              "finite": true,
+              "folded_rhat": 0.9997923631866278,
+              "rank_rhat": 1.0102817152274874,
+              "tail_ess": 1082.183305316593
+            },
+            "log_likelihood": {
+              "bulk_ess": 2107.50605238478,
+              "finite": true,
+              "folded_rhat": 1.0010247583708474,
+              "rank_rhat": 1.0013061869258169,
+              "tail_ess": 2400.825781021508
+            },
+            "mass1": {
+              "bulk_ess": 254.4040699664497,
+              "finite": true,
+              "folded_rhat": 1.005023835907276,
+              "rank_rhat": 1.0088382633667994,
+              "tail_ess": 593.3755831432987
+            },
+            "mass2": {
+              "bulk_ess": 254.55871439682306,
+              "finite": true,
+              "folded_rhat": 1.0051038655675695,
+              "rank_rhat": 1.0088082961291345,
+              "tail_ess": 600.7536497540374
+            }
+          },
+          "passed": false,
+          "quantiles": [
+            {
+              "axis": 0,
+              "difference_fraction_width90": 0.0009941425043295195,
+              "estimate": 1.5910495603919836,
+              "mcse": 0.000167455510215464,
+              "passed": true,
+              "probability": 0.05,
+              "reference": 1.5910317498186033
+            },
+            {
+              "axis": 0,
+              "difference_fraction_width90": 0.0062457080465216554,
+              "estimate": 1.5998444311146436,
+              "mcse": 0.0005858808809355853,
+              "passed": false,
+              "probability": 0.5,
+              "reference": 1.599956326180985
+            },
+            {
+              "axis": 0,
+              "difference_fraction_width90": 0.004062330603163117,
+              "estimate": 1.6090200419797094,
+              "mcse": 0.00015020295243950432,
+              "passed": true,
+              "probability": 0.95,
+              "reference": 1.6089472632412611
+            },
+            {
+              "axis": 1,
+              "difference_fraction_width90": 0.004833493714425852,
+              "estimate": 1.2929797023355902,
+              "mcse": 0.00012174210514626083,
+              "passed": true,
+              "probability": 0.05,
+              "reference": 1.2930474961402119
+            },
+            {
+              "axis": 1,
+              "difference_fraction_width90": 0.006701444009019873,
+              "estimate": 1.3001308969447865,
+              "mcse": 0.0004598181082485775,
+              "passed": false,
+              "probability": 0.5,
+              "reference": 1.3000369035700823
+            },
+            {
+              "axis": 1,
+              "difference_fraction_width90": 0.0014150700833795219,
+              "estimate": 1.3070534875900037,
+              "mcse": 0.00012816897500100843,
+              "passed": true,
+              "probability": 0.95,
+              "reference": 1.3070733351351598
+            }
+          ],
+          "total_leapfrog_count": 25113,
+          "warmup_divergences": 28
+        }
+      },
+      "followup": {
+        "status": "completed_sampler_validation",
+        "receipt": "sampler/sample-v4-IMRPhenomD_NRTidal/sampler_receipt.json",
+        "protocol": "sampler/freeze-v4-IMRPhenomD_NRTidal/frozen-protocol.json",
+        "freeze_receipt": "sampler/freeze-v4-IMRPhenomD_NRTidal/sampler_receipt.json",
+        "preflight_receipt": "sampler/preflight-v3-IMRPhenomD_NRTidal/preflight_receipt.json",
+        "source_snapshot": "sampler/source-sampler-v3.tar.gz",
+        "config": {
+          "draws": 4000,
+          "max_depth": 8,
+          "target_accept": 0.95,
+          "warmup": 1000
+        },
+        "elapsed_seconds": 1184.159096983727,
+        "chains": [
+          {
+            "chain": 0,
+            "seed": 10201,
+            "elapsed_seconds": 400.71421308489516,
+            "artifact": "sampler/sample-v4-IMRPhenomD_NRTidal/chain_0_seed10201.npz"
+          },
+          {
+            "chain": 1,
+            "seed": 20302,
+            "elapsed_seconds": 256.77755183400586,
+            "artifact": "sampler/sample-v4-IMRPhenomD_NRTidal/chain_1_seed20302.npz"
+          },
+          {
+            "chain": 2,
+            "seed": 30403,
+            "elapsed_seconds": 257.0941344196908,
+            "artifact": "sampler/sample-v4-IMRPhenomD_NRTidal/chain_2_seed30403.npz"
+          },
+          {
+            "chain": 3,
+            "seed": 40504,
+            "elapsed_seconds": 257.9577165157534,
+            "artifact": "sampler/sample-v4-IMRPhenomD_NRTidal/chain_3_seed40504.npz"
+          }
+        ],
+        "posterior_samples": "sampler/sample-v4-IMRPhenomD_NRTidal/posterior_samples.npz",
+        "diagnostics": {
+          "acceptance_mean": 0.9562035952856802,
+          "depth_limit_fraction": 0.0,
+          "divergences": 0,
+          "energy_bfmi": [
+            {
+              "chain": 0,
+              "value": 1.0560269812008707,
+              "warning_below_0_3_or_nonfinite": false
+            },
+            {
+              "chain": 1,
+              "value": 1.0862128381215417,
+              "warning_below_0_3_or_nonfinite": false
+            },
+            {
+              "chain": 2,
+              "value": 1.0854730508376529,
+              "warning_below_0_3_or_nonfinite": false
+            },
+            {
+              "chain": 3,
+              "value": 1.0347211238319542,
+              "warning_below_0_3_or_nonfinite": false
+            }
+          ],
+          "energy_bfmi_is_gate": false,
+          "events": [
+            {
+              "absolute_difference": 0.0030625000000000027,
+              "axis": 0,
+              "cut": 1.5910317498186033,
+              "difference_limit": 0.02424726455600657,
+              "estimate": 0.0469375,
+              "indicator_ess": 2259.723231250276,
+              "indicator_mcse": 0.004449452911201314,
+              "kind": "native_cdf",
+              "passed": true,
+              "probability": 0.05
+            },
+            {
+              "absolute_difference": 0.017687499999999967,
+              "axis": 0,
+              "cut": 1.599956326180985,
+              "difference_limit": 0.06800714127787864,
+              "estimate": 0.5176875,
+              "indicator_ess": 1432.7865660514472,
+              "indicator_mcse": 0.013201428255575728,
+              "kind": "native_cdf",
+              "passed": true,
+              "probability": 0.5
+            },
+            {
+              "absolute_difference": 0.007062500000000083,
+              "axis": 0,
+              "cut": 1.6089472632412611,
+              "difference_limit": 0.0204843533983776,
+              "estimate": 0.9570625,
+              "indicator_ess": 3007.015598670725,
+              "indicator_mcse": 0.003696870679675519,
+              "kind": "native_cdf",
+              "passed": true,
+              "probability": 0.95
+            },
+            {
+              "absolute_difference": 0.006937500000000006,
+              "axis": 1,
+              "cut": 1.2930474961402119,
+              "difference_limit": 0.020335951632083148,
+              "estimate": 0.0430625,
+              "indicator_ess": 3064.383086681917,
+              "indicator_mcse": 0.0036671903264166293,
+              "kind": "native_cdf",
+              "passed": true,
+              "probability": 0.05
+            },
+            {
+              "absolute_difference": 0.017687500000000023,
+              "axis": 1,
+              "cut": 1.3000369035700823,
+              "difference_limit": 0.06801269430134038,
+              "estimate": 0.4823125,
+              "indicator_ess": 1432.5455226322351,
+              "indicator_mcse": 0.013202538860268075,
+              "kind": "native_cdf",
+              "passed": true,
+              "probability": 0.5
+            },
+            {
+              "absolute_difference": 0.003250000000000086,
+              "axis": 1,
+              "cut": 1.3070733351351598,
+              "difference_limit": 0.024340313886244094,
+              "estimate": 0.95325,
+              "indicator_ess": 2232.4258389901556,
+              "indicator_mcse": 0.004468062777248818,
+              "kind": "native_cdf",
+              "passed": true,
+              "probability": 0.95
+            },
+            {
+              "absolute_difference": 0.0008888888888888974,
+              "cell": [
+                0,
+                0
+              ],
+              "difference_limit": 0.024780984450003866,
+              "estimate": 0.112,
+              "indicator_ess": 4791.297812903911,
+              "indicator_mcse": 0.004556196890000774,
+              "kind": "rosenblatt_bin",
+              "passed": true,
+              "probability": 0.1111111111111111
+            },
+            {
+              "absolute_difference": 0.00851388888888889,
+              "cell": [
+                0,
+                1
+              ],
+              "difference_limit": 0.027641878703871046,
+              "estimate": 0.119625,
+              "indicator_ess": 4004.5813658444804,
+              "indicator_mcse": 0.005128375740774209,
+              "kind": "rosenblatt_bin",
+              "passed": true,
+              "probability": 0.1111111111111111
+            },
+            {
+              "absolute_difference": 0.0020486111111110983,
+              "cell": [
+                0,
+                2
+              ],
+              "difference_limit": 0.026896390333763884,
+              "estimate": 0.1090625,
+              "indicator_ess": 3919.377289444279,
+              "indicator_mcse": 0.004979278066752776,
+              "kind": "rosenblatt_bin",
+              "passed": true,
+              "probability": 0.1111111111111111
+            },
+            {
+              "absolute_difference": 0.001576388888888891,
+              "cell": [
+                1,
+                0
+              ],
+              "difference_limit": 0.024021173898963966,
+              "estimate": 0.1126875,
+              "indicator_ess": 5155.117441780795,
+              "indicator_mcse": 0.004404234779792793,
+              "kind": "rosenblatt_bin",
+              "passed": true,
+              "probability": 0.1111111111111111
+            },
+            {
+              "absolute_difference": 0.005763888888888902,
+              "cell": [
+                1,
+                1
+              ],
+              "difference_limit": 0.020458137242253878,
+              "estimate": 0.116875,
+              "indicator_ess": 7574.1728937831,
+              "indicator_mcse": 0.0036916274484507755,
+              "kind": "rosenblatt_bin",
+              "passed": true,
+              "probability": 0.1111111111111111
+            },
+            {
+              "absolute_difference": 0.00826388888888889,
+              "cell": [
+                1,
+                2
+              ],
+              "difference_limit": 0.02460594624003131,
+              "estimate": 0.119375,
+              "indicator_ess": 5143.11419245665,
+              "indicator_mcse": 0.004521189248006262,
+              "kind": "rosenblatt_bin",
+              "passed": true,
+              "probability": 0.1111111111111111
+            },
+            {
+              "absolute_difference": 0.0123611111111111,
+              "cell": [
+                2,
+                0
+              ],
+              "difference_limit": 0.02666926216967313,
+              "estimate": 0.09875,
+              "indicator_ess": 3656.261202880215,
+              "indicator_mcse": 0.004933852433934626,
+              "kind": "rosenblatt_bin",
+              "passed": true,
+              "probability": 0.1111111111111111
+            },
+            {
+              "absolute_difference": 0.015611111111111103,
+              "cell": [
+                2,
+                1
+              ],
+              "difference_limit": 0.02434908601761661,
+              "estimate": 0.0955,
+              "indicator_ess": 4323.739910878487,
+              "indicator_mcse": 0.0044698172035233215,
+              "kind": "rosenblatt_bin",
+              "passed": true,
+              "probability": 0.1111111111111111
+            },
+            {
+              "absolute_difference": 0.005013888888888901,
+              "cell": [
+                2,
+                2
+              ],
+              "difference_limit": 0.025762148614029708,
+              "estimate": 0.116125,
+              "indicator_ess": 4544.774240411425,
+              "indicator_mcse": 0.004752429722805942,
+              "kind": "rosenblatt_bin",
+              "passed": true,
+              "probability": 0.1111111111111111
+            }
+          ],
+          "failures": [],
+          "means": [
+            {
+              "absolute_difference": 0.00023950548625539803,
+              "axis": 0,
+              "difference_limit": 0.0009244168477315427,
+              "estimate": 1.5997295546053674,
+              "mcse": 0.0001669678561236507,
+              "passed": true,
+              "reference": 1.5999690600916228
+            },
+            {
+              "absolute_difference": 0.0001871803268105321,
+              "axis": 1,
+              "difference_limit": 0.0007242255665044508,
+              "estimate": 1.3002298505630951,
+              "mcse": 0.00013081927430594223,
+              "passed": true,
+              "reference": 1.3000426702362846
+            }
+          ],
+          "parameters": {
+            "chart_logit_v": {
+              "bulk_ess": 1107.292715475162,
+              "finite": true,
+              "folded_rhat": 1.0014211999464246,
+              "rank_rhat": 1.004644305862146,
+              "tail_ess": 3357.4654088510774
+            },
+            "chart_logit_x": {
+              "bulk_ess": 1118.8317864736819,
+              "finite": true,
+              "folded_rhat": 0.9999689176945903,
+              "rank_rhat": 1.0045373065443712,
+              "tail_ess": 2253.9606892348306
+            },
+            "chirp_mass": {
+              "bulk_ess": 1235.2157234946835,
+              "finite": true,
+              "folded_rhat": 1.0011316390960214,
+              "rank_rhat": 1.0039741167288192,
+              "tail_ess": 4065.7387665419237
+            },
+            "log_likelihood": {
+              "bulk_ess": 7743.850632639081,
+              "finite": true,
+              "folded_rhat": 0.9999776647835588,
+              "rank_rhat": 1.0000039859922225,
+              "tail_ess": 7353.732003147025
+            },
+            "mass1": {
+              "bulk_ess": 1118.8317864736819,
+              "finite": true,
+              "folded_rhat": 1.000017747556765,
+              "rank_rhat": 1.0045373065443712,
+              "tail_ess": 2253.9606892348306
+            },
+            "mass2": {
+              "bulk_ess": 1119.1727464022706,
+              "finite": true,
+              "folded_rhat": 1.000019525552095,
+              "rank_rhat": 1.0045430891768903,
+              "tail_ess": 2255.234555643016
+            }
+          },
+          "passed": true,
+          "quantiles": [
+            {
+              "axis": 0,
+              "difference_fraction_width90": 0.0033605585445513294,
+              "estimate": 1.5910919559503158,
+              "mcse": 0.0001004150457150077,
+              "passed": true,
+              "probability": 0.05,
+              "reference": 1.5910317498186033
+            },
+            {
+              "axis": 0,
+              "difference_fraction_width90": 0.01861133386461021,
+              "estimate": 1.59962289457932,
+              "mcse": 0.0002473955607511513,
+              "passed": true,
+              "probability": 0.5,
+              "reference": 1.599956326180985
+            },
+            {
+              "axis": 0,
+              "difference_fraction_width90": 0.011327564773253753,
+              "estimate": 1.6087443241025199,
+              "mcse": 9.949970169287337e-05,
+              "passed": true,
+              "probability": 0.95,
+              "reference": 1.6089472632412611
+            },
+            {
+              "axis": 1,
+              "difference_fraction_width90": 0.010379317811774948,
+              "estimate": 1.2931930747807172,
+              "mcse": 7.906078344688261e-05,
+              "passed": true,
+              "probability": 0.05,
+              "reference": 1.2930474961402119
+            },
+            {
+              "axis": 1,
+              "difference_fraction_width90": 0.018506692146230037,
+              "estimate": 1.3002964754544544,
+              "mcse": 0.00019347936123292886,
+              "passed": true,
+              "probability": 0.5,
+              "reference": 1.3000369035700823
+            },
+            {
+              "axis": 1,
+              "difference_fraction_width90": 0.0040101022939617184,
+              "estimate": 1.3070170900860314,
+              "mcse": 8.17725682485948e-05,
+              "passed": true,
+              "probability": 0.95,
+              "reference": 1.3070733351351598
+            }
+          ],
+          "total_leapfrog_count": 128776,
+          "warmup_divergences": 3
+        }
+      }
+    }
+  },
+  "accepted_neighbor_probe": {
+    "status": "completed_neighbor_checks",
+    "receipt": "sampler/divergence-neighbors-v3/probe_receipt.json",
+    "log": "sampler/divergence-neighbors-v3/probe.log",
+    "elapsed_seconds": 177.49231831729412,
+    "settings": {
+      "cases": [
+        "IMRPhenomD",
+        "IMRPhenomD_NRTidal"
+      ],
+      "compile_requested": true,
+      "decision_fd_step": 1e-05,
+      "finite_difference_steps": [
+        0.0001,
+        1e-05,
+        1e-06
+      ],
+      "jax": "Not run: frozen source had frontend parity; this probe targets Torch execution near divergences"
+    },
+    "cases": [
+      {
+        "case": "IMRPhenomD",
+        "selected_point_count": 7,
+        "passed_neighbor_checks": true,
+        "compile_setup": {
+          "seconds": 60.745971634984016,
+          "status": "completed"
+        }
+      },
+      {
+        "case": "IMRPhenomD_NRTidal",
+        "selected_point_count": 6,
+        "passed_neighbor_checks": true,
+        "compile_setup": {
+          "seconds": 56.64670903701335,
+          "status": "completed"
+        }
+      }
+    ],
+    "interpretation": "Agreement here tests accepted neighboring states only; it cannot establish the cause or finiteness of unarchived divergent leapfrog proposals, or qualify sampler convergence."
+  },
+  "tests": {
+    "successful_logs": [
+      {
+        "log": "sampler/native-fixed-full-tests.log",
+        "summary": "28 passed in 39.49s"
+      },
+      {
+        "log": "sampler/pe-final-with-test-support.log",
+        "summary": "71 passed in 65.58s (0:01:05)"
+      },
+      {
+        "log": "sampler/plot-focused-tests-v3.log",
+        "summary": "10 passed in 3.45s"
+      }
+    ],
+    "support_archives": [
+      "sampler/source-sampler-v2.tar.gz",
+      "sampler/source-core-fixed-v1.tar.gz",
+      "sampler/plot-test-support-v3.tar.gz"
+    ],
+    "pe71_execution": {
+      "host": "len",
+      "cwd": "/home/xangma/diffgw-pe-sampler-v3-20261001",
+      "pythonpath": "src:/home/xangma/diffgw-pe-sampler-v2-20261001/scripts/qualification",
+      "support": "Retained v2 plot_parameter_estimation.py and summarize_parameter_estimation.py supplied to the v3 test snapshot"
+    }
+  },
+  "figures": {
+    "manifest": "sampler/figures-v4/plot_manifest.json",
+    "plotter": "sampler/plot-test-support-v3.tar.gz::scripts/qualification/plot_parameter_estimation_sampler.py",
+    "supporting_source": [
+      "sampler/source-sampler-v3.tar.gz::scripts/qualification/parameter_estimation.py",
+      "sampler/source-sampler-v3.tar.gz::scripts/qualification/parameter_estimation_pilot.py",
+      "sampler/source-sampler-v3.tar.gz::scripts/qualification/parameter_estimation_sampler.py"
+    ],
+    "figures": [
+      "sampler/figures-v4/sampler-posterior.png",
+      "sampler/figures-v4/sampler-diagnostics.png"
+    ],
+    "drawing": {
+      "cdf_uses_all_draws": true,
+      "event_units": "Retained actual indicator MCSE; no KDE/total-variation estimate",
+      "full_native_prior_axes": true,
+      "max_scatter_points_per_chain": 1000,
+      "reference_contours": "Native density posterior_chart/J; native HPD mass via chart quadrature",
+      "warmup_positions_retained": false
+    },
+    "scope": "Restricted two-mass common-data zero-noise self-injection, SNR20, Torch NUTS CPU FP64"
+  },
+  "verification": {
+    "builder": "sampler/build-compact-sampler-receipt.py",
+    "method": "Extracted retained receipt scalars; checked every included artifact SHA256 and byte size; source archive-member hashes checked against executed source digests. No numerical scientific recalculation.",
+    "distinct_evidence_bindings": 93
+  },
+  "evidence_files": {
+    "original/results/IMRPhenomD/torch/snr20/zero_seed0/receipt.json": {
+      "bytes": 18907,
+      "sha256": "7ae3ad9be0693357c7dbabac02245570ba2da09e4fb62f00a39db6a27647af4e"
+    },
+    "original/results/IMRPhenomD/torch/snr20/zero_seed0/signals.npz": {
+      "bytes": 45071,
+      "sha256": "987fd6ab22771a3014841d76c17c47924b4eb8ac91d0492e7ca4b0a0896b4a8a"
+    },
+    "original/results/IMRPhenomD_NRTidal/torch/snr20/zero_seed0/receipt.json": {
+      "bytes": 19219,
+      "sha256": "47c4fd9ef8ed4f12e92aca19b8cc2ceda895787c4fc63390d7b6b1dce6f9e923"
+    },
+    "original/results/IMRPhenomD_NRTidal/torch/snr20/zero_seed0/signals.npz": {
+      "bytes": 56078,
+      "sha256": "f995dcd57b788ee1e87984cf175496c5ceb8aaaaf3774f80e5898e9ea7d4b638"
+    },
+    "pilot/IMRPhenomD/independent_gauss_128.npz": {
+      "bytes": 549657,
+      "sha256": "3798ed5f486b7153751ad612ca10b6c02be6d7d56688bab360313b6d3c8baaec"
+    },
+    "pilot/IMRPhenomD/independent_gauss_64.npz": {
+      "bytes": 133104,
+      "sha256": "805caf9cc2c2cd8392889f9da1a26c322ffab5d2a1a32ef7ad018bdf8090f5cd"
+    },
+    "pilot/IMRPhenomD/independent_gauss_receipt.json": {
+      "bytes": 5140,
+      "sha256": "a5b5ac61a3a558cbf791bd5faf92148284da21c19fb42535935772db2136ce25"
+    },
+    "pilot/IMRPhenomD/jax_grid_121.npz": {
+      "bytes": 440726,
+      "sha256": "dda4a48edd1fcc3e3285ead4fa95524d81494aa328ee08f1a3716d39fb812da3"
+    },
+    "pilot/IMRPhenomD/jax_grid_241.npz": {
+      "bytes": 1737587,
+      "sha256": "34812db7215cbd6d0f0b91f4bfa18bdc9eeca0088750f169d541812ab1cd3630"
+    },
+    "pilot/IMRPhenomD/jax_grid_31.npz": {
+      "bytes": 30187,
+      "sha256": "782b537a39954eae7a5a341596c164eada204d75b3edc029a95068190199e437"
+    },
+    "pilot/IMRPhenomD/jax_grid_61.npz": {
+      "bytes": 113124,
+      "sha256": "cd4800e4bb67198c1263a40cadcca67d0140ca7dd27cc59ae83b87bb6cb81185"
+    },
+    "pilot/IMRPhenomD/pilot_receipt.json": {
+      "bytes": 31801,
+      "sha256": "1fe9803f69aab7c7d6a63722dab2e30b2ab7755db098c6d5937c48f4c36d4e41"
+    },
+    "pilot/IMRPhenomD/preflight_receipt.json": {
+      "bytes": 7789,
+      "sha256": "376081fd178b2c11e43dd3a9a04a388e72044284f70e9b2539984987d5eac640"
+    },
+    "pilot/IMRPhenomD/shared_signals.npz": {
+      "bytes": 45071,
+      "sha256": "987fd6ab22771a3014841d76c17c47924b4eb8ac91d0492e7ca4b0a0896b4a8a"
+    },
+    "pilot/IMRPhenomD/torch_grid_121.npz": {
+      "bytes": 440738,
+      "sha256": "0d6c7bf2931b680179b023d6463ec29326bbc2fffac9f5ff60caf156e21a2167"
+    },
+    "pilot/IMRPhenomD/torch_grid_241.npz": {
+      "bytes": 1737546,
+      "sha256": "f7175550d64bfa4d1fdd9c0420cac35c771961bd4c1f171a41151c62ede42307"
+    },
+    "pilot/IMRPhenomD/torch_grid_31.npz": {
+      "bytes": 30200,
+      "sha256": "50d73e489dbca5472e2168b37ea8fbd1d046223bc48b77e3185c8cce24b93089"
+    },
+    "pilot/IMRPhenomD/torch_grid_61.npz": {
+      "bytes": 113140,
+      "sha256": "b043991f61f01f268e0a6f3e9711088ee8b6bf1f9558515e4f3fb9fa175b7b2c"
+    },
+    "pilot/IMRPhenomD_NRTidal/independent_gauss_128.npz": {
+      "bytes": 542417,
+      "sha256": "6bfbc85fc9850b7b8263edc03adb51dcb9b4986dcf6e9b9661cf2d1f1187117c"
+    },
+    "pilot/IMRPhenomD_NRTidal/independent_gauss_64.npz": {
+      "bytes": 131216,
+      "sha256": "1ebcf5b3d98d66223f0566bcb573de74fe88526163ef714efc43efc05cc8f079"
+    },
+    "pilot/IMRPhenomD_NRTidal/independent_gauss_receipt.json": {
+      "bytes": 5206,
+      "sha256": "cd8a0716940bcfe6794b3553f3e44ff81355f791a3cf22512c4123306fb5faba"
+    },
+    "pilot/IMRPhenomD_NRTidal/jax_grid_121.npz": {
+      "bytes": 433559,
+      "sha256": "25f5e4d6d3355a20dc12f85e3ea3c870bd4659f52d5228ba8a551b7a4a75ef58"
+    },
+    "pilot/IMRPhenomD_NRTidal/jax_grid_241.npz": {
+      "bytes": 1718526,
+      "sha256": "7dcfb8eba5e4d7aba0008b8268bc20bacd3ce6f9e95c2378d9039d5c0d6a9da2"
+    },
+    "pilot/IMRPhenomD_NRTidal/jax_grid_31.npz": {
+      "bytes": 29734,
+      "sha256": "29e072a4272ca84317965f7dee09a5df58e8b7f876bc49b4b04d07f54326eae3"
+    },
+    "pilot/IMRPhenomD_NRTidal/jax_grid_61.npz": {
+      "bytes": 110904,
+      "sha256": "ead6c62e1075ef5d6d3cfa62b39996de2bbaa2e2bb19e2a3587632e9c59c7980"
+    },
+    "pilot/IMRPhenomD_NRTidal/pilot_receipt.json": {
+      "bytes": 32028,
+      "sha256": "752b5b54ecaba9020fe6a54be35670ee7a5245810f62da9bf37a8dc6444c13f8"
+    },
+    "pilot/IMRPhenomD_NRTidal/preflight_receipt.json": {
+      "bytes": 7981,
+      "sha256": "e348da808ad77589f5716bd1b6503bee0bfee06ae8574881721e0f959f49dddd"
+    },
+    "pilot/IMRPhenomD_NRTidal/shared_signals.npz": {
+      "bytes": 56078,
+      "sha256": "f995dcd57b788ee1e87984cf175496c5ceb8aaaaf3774f80e5898e9ea7d4b638"
+    },
+    "pilot/IMRPhenomD_NRTidal/torch_grid_121.npz": {
+      "bytes": 433577,
+      "sha256": "0e04230f1ee08b1b5cfcfa484d4ddbb9cbc70502b755f674cdeaa6ea20cacde3"
+    },
+    "pilot/IMRPhenomD_NRTidal/torch_grid_241.npz": {
+      "bytes": 1718655,
+      "sha256": "afad5932f52d89d84610f6c4c88322e0bac30160e524c8fabd945697e157ae31"
+    },
+    "pilot/IMRPhenomD_NRTidal/torch_grid_31.npz": {
+      "bytes": 29732,
+      "sha256": "2e0c02db57179e54eb6249d3be36853f280b411c0cd58e77b29aaf322a151082"
+    },
+    "pilot/IMRPhenomD_NRTidal/torch_grid_61.npz": {
+      "bytes": 110904,
+      "sha256": "5cab07f2e4a6d3dbfe59dba8e9d3d49a4af5811e24db28d198b1e72d48c4e538"
+    },
+    "pilot/source-pilot.tar.gz": {
+      "bytes": 1982538,
+      "sha256": "7d220096be0acb5836cf494bca9505c6cb71e1673f7fbd9dc31830e1a6d8cce9"
+    },
+    "sampler/bounded-followup-design-v4.json": {
+      "bytes": 1996,
+      "sha256": "b033ee18d1838237c93afd17541d86191463e0257c82a5531ee4bb2b6b16e870"
+    },
+    "sampler/build-compact-sampler-receipt.py": {
+      "bytes": 27884,
+      "sha256": "426e05a4ea3c95c1debe207181a0fdba835056a00546feba00a9318500e0eff5"
+    },
+    "sampler/divergence-neighbors-v3/probe.log": {
+      "bytes": 4624,
+      "sha256": "5b58c2290653d07301e6f49427c11efe546461cfa421988765e16ae231bcbee6"
+    },
+    "sampler/divergence-neighbors-v3/probe_receipt.json": {
+      "bytes": 51411,
+      "sha256": "47bbc49eb5c193fd72d75198ebc82302de6123cc9b6a2832f655bb83ff93306f"
+    },
+    "sampler/figures-v4/plot_manifest.json": {
+      "bytes": 4670,
+      "sha256": "cd5a1d25c4e537474a572e35ad5813891ff33a407655d2b972e36a961439eb8c"
+    },
+    "sampler/figures-v4/sampler-diagnostics.png": {
+      "bytes": 1050027,
+      "sha256": "60d4e121199e7cb2f9ffad9ac50209c5dcbdff3c1fb5e38301ceedfe48179bf6"
+    },
+    "sampler/figures-v4/sampler-posterior.png": {
+      "bytes": 1015038,
+      "sha256": "d24e28ed980bb89166b363513620a303e7ea94a01956057818f93b5bd2c96fa8"
+    },
+    "sampler/freeze-v3-IMRPhenomD/frozen-protocol.json": {
+      "bytes": 7480,
+      "sha256": "897823fe32fa9f28181a53f0a8281845bf6b869fc25cce7f81c01e4d6b8e53e6"
+    },
+    "sampler/freeze-v3-IMRPhenomD/sampler_receipt.json": {
+      "bytes": 5430,
+      "sha256": "a4a9d5b6fc2e86ad9eb401e8af62d533fbefd4bf2ea6dd7802888e4f2df467bf"
+    },
+    "sampler/freeze-v3-IMRPhenomD_NRTidal/frozen-protocol.json": {
+      "bytes": 7582,
+      "sha256": "380998e8f41e153f75099de43f38335077c47633159fd5391952d1378e73c6db"
+    },
+    "sampler/freeze-v3-IMRPhenomD_NRTidal/sampler_receipt.json": {
+      "bytes": 5554,
+      "sha256": "596f3a1acff0bd1c131905db20fc8190bea9b6285fd0e687bc17cad237272a70"
+    },
+    "sampler/freeze-v4-IMRPhenomD/frozen-protocol.json": {
+      "bytes": 7482,
+      "sha256": "bf965b91ef994d2ee0a753616a3abd93ff1c49640d83acff2034294880193363"
+    },
+    "sampler/freeze-v4-IMRPhenomD/sampler_receipt.json": {
+      "bytes": 5431,
+      "sha256": "99450dd0f475a340c567348f5345f74609ff6aedddd30183274edd62bf0208b1"
+    },
+    "sampler/freeze-v4-IMRPhenomD_NRTidal/frozen-protocol.json": {
+      "bytes": 7584,
+      "sha256": "57ea90ec789d58635f5342eb960989b45392521b5d012ac81889a79aeaf85232"
+    },
+    "sampler/freeze-v4-IMRPhenomD_NRTidal/sampler_receipt.json": {
+      "bytes": 5554,
+      "sha256": "3ff4129f0f7ccec1345a52ff2e991cfb29f62deb92a8d9be0f540df595f62ba7"
+    },
+    "sampler/native-fixed-full-tests.log": {
+      "bytes": 100,
+      "sha256": "340dc5b9d07a7ea0747623840ed807e85a4daa0a0342f4051454d3df028d9c3c"
+    },
+    "sampler/pe-final-with-test-support.log": {
+      "bytes": 110,
+      "sha256": "d8a7f962f6de98d4fa23016f2c81f9922b15303f1d1a41cb89691331f9fc5e8d"
+    },
+    "sampler/plot-focused-tests-v3.log": {
+      "bytes": 99,
+      "sha256": "964a0ce272377009ff60ecf4eb09a4514d78bfc02f9a21aa9f2060226bf569f1"
+    },
+    "sampler/plot-test-support-v3.tar.gz": {
+      "bytes": 10756,
+      "sha256": "13a90945a5b62baab87bd7d15f264b0cee682174e46e9c3b3bfd659d9827dbba"
+    },
+    "sampler/plot-test-support-v3.tar.gz::scripts/qualification/plot_parameter_estimation_sampler.py": {
+      "bytes": 24100,
+      "sha256": "ed83db7bc4bbeeea12535219e2882e97e021fa0564cea86fc24a8a22dd85e88e",
+      "archive": "sampler/plot-test-support-v3.tar.gz",
+      "member": "scripts/qualification/plot_parameter_estimation_sampler.py"
+    },
+    "sampler/preflight-v3-IMRPhenomD/preflight_receipt.json": {
+      "bytes": 16347,
+      "sha256": "7314a3601fd8a1b170d2934cfa93a355ed293af81aecba7b0e4496632f976d0f"
+    },
+    "sampler/preflight-v3-IMRPhenomD/shared_signals.npz": {
+      "bytes": 45071,
+      "sha256": "987fd6ab22771a3014841d76c17c47924b4eb8ac91d0492e7ca4b0a0896b4a8a"
+    },
+    "sampler/preflight-v3-IMRPhenomD_NRTidal/preflight_receipt.json": {
+      "bytes": 16403,
+      "sha256": "52e6de5beb232551439e3f66afa38a74c9687ca3d3a86d53e45a2e1bc191d4d3"
+    },
+    "sampler/preflight-v3-IMRPhenomD_NRTidal/shared_signals.npz": {
+      "bytes": 56078,
+      "sha256": "f995dcd57b788ee1e87984cf175496c5ceb8aaaaf3774f80e5898e9ea7d4b638"
+    },
+    "sampler/probe-divergence-neighbors.py": {
+      "bytes": 19410,
+      "sha256": "2eecd49eddf2d24e20325e31874b653a772ac3d91dc5df1a09aab77808161e6a"
+    },
+    "sampler/sample-v3-IMRPhenomD/chain_0_seed10201.npz": {
+      "bytes": 55239,
+      "sha256": "1586207f721be657a18a486d0ad3b6357c647b2ac70abdbf9a327e5eacc54bb3"
+    },
+    "sampler/sample-v3-IMRPhenomD/chain_1_seed20302.npz": {
+      "bytes": 55253,
+      "sha256": "b8cab20a96ebf55a6047809f4ee74afe2aeae6913c2a5a35861200605c1658fe"
+    },
+    "sampler/sample-v3-IMRPhenomD/chain_2_seed30403.npz": {
+      "bytes": 53974,
+      "sha256": "c0b2f6a6d1202346fd50c2661d94581f98fcea93f51ef537b0bd9f256cd8c267"
+    },
+    "sampler/sample-v3-IMRPhenomD/chain_3_seed40504.npz": {
+      "bytes": 54064,
+      "sha256": "9c3f24d10f7c121b82408ecd85a42f067e17ba136870bb06cd139b4ca6844518"
+    },
+    "sampler/sample-v3-IMRPhenomD/posterior_samples.npz": {
+      "bytes": 239799,
+      "sha256": "bb1ec283cae05b824159b157cb79cd6c16a37f6aa50251d3dd3ba4d24fd5e1fe"
+    },
+    "sampler/sample-v3-IMRPhenomD/sampler_receipt.json": {
+      "bytes": 26133,
+      "sha256": "934db2733e46f9d13bcebd1607c000b1a8313fbfffe88d24d7addc6935fd129c"
+    },
+    "sampler/sample-v3-IMRPhenomD/shared_signals.npz": {
+      "bytes": 45071,
+      "sha256": "987fd6ab22771a3014841d76c17c47924b4eb8ac91d0492e7ca4b0a0896b4a8a"
+    },
+    "sampler/sample-v3-IMRPhenomD_NRTidal/chain_0_seed10201.npz": {
+      "bytes": 54457,
+      "sha256": "0433c5fb31050af13c02d7a567aa8d79702c199b55e48162c42a9c55caa58902"
+    },
+    "sampler/sample-v3-IMRPhenomD_NRTidal/chain_1_seed20302.npz": {
+      "bytes": 54235,
+      "sha256": "1495a7b3f872e1f828f28bc679fbbabc766a9e8c72734b92b7e32e05416c4634"
+    },
+    "sampler/sample-v3-IMRPhenomD_NRTidal/chain_2_seed30403.npz": {
+      "bytes": 54168,
+      "sha256": "1a3cb545eba7bcc5004511be637540672c91a34e0c17c0d05730f84fa65ba63d"
+    },
+    "sampler/sample-v3-IMRPhenomD_NRTidal/chain_3_seed40504.npz": {
+      "bytes": 54381,
+      "sha256": "5324bd60ea681e03a3c4969408312ee72dde817340ca65fdef78192cfa575412"
+    },
+    "sampler/sample-v3-IMRPhenomD_NRTidal/posterior_samples.npz": {
+      "bytes": 238011,
+      "sha256": "b7499958f5f199d15f1ff01d2e7986a15787fc51df6f4d80ce293aa6e402dee9"
+    },
+    "sampler/sample-v3-IMRPhenomD_NRTidal/sampler_receipt.json": {
+      "bytes": 26410,
+      "sha256": "73899cb93a52184d80213d89db6946dc4950336fbc8cd58700042fce2956cf8e"
+    },
+    "sampler/sample-v3-IMRPhenomD_NRTidal/shared_signals.npz": {
+      "bytes": 56078,
+      "sha256": "f995dcd57b788ee1e87984cf175496c5ceb8aaaaf3774f80e5898e9ea7d4b638"
+    },
+    "sampler/sample-v4-IMRPhenomD/chain_0_seed10201.npz": {
+      "bytes": 199825,
+      "sha256": "33e60b48b3d93e07a7759f0fbf23cf5915e502ebc1768ba3254308a59e31186a"
+    },
+    "sampler/sample-v4-IMRPhenomD/chain_1_seed20302.npz": {
+      "bytes": 200047,
+      "sha256": "fdf92e0ef676a64db6012e75f8eefb11f754c885d7000a594558e65fb51cb643"
+    },
+    "sampler/sample-v4-IMRPhenomD/chain_2_seed30403.npz": {
+      "bytes": 201301,
+      "sha256": "80ed59fe19776453b3733a58181328061e9e8e0472416ffaea2b0c42eaf90758"
+    },
+    "sampler/sample-v4-IMRPhenomD/chain_3_seed40504.npz": {
+      "bytes": 200689,
+      "sha256": "45eaa908296e61229754585adef7930986d7a6b517ca3dc1f55d88e1bee9791a"
+    },
+    "sampler/sample-v4-IMRPhenomD/posterior_samples.npz": {
+      "bytes": 914595,
+      "sha256": "9be8b5bb6af9ffa9c737dbd5eb2ad8e60041f007dab6c6d1eeecfb8a2bd39484"
+    },
+    "sampler/sample-v4-IMRPhenomD/sampler_receipt.json": {
+      "bytes": 25887,
+      "sha256": "8b7ab6d2fb4de272a18dea488c5b39223b66e92373a7828a160420f4c9b0405d"
+    },
+    "sampler/sample-v4-IMRPhenomD/shared_signals.npz": {
+      "bytes": 45071,
+      "sha256": "987fd6ab22771a3014841d76c17c47924b4eb8ac91d0492e7ca4b0a0896b4a8a"
+    },
+    "sampler/sample-v4-IMRPhenomD_NRTidal/chain_0_seed10201.npz": {
+      "bytes": 197356,
+      "sha256": "43d77fa748d93a079e2fe6eeccb7dcda804357b66bffb5d39106dce249511daf"
+    },
+    "sampler/sample-v4-IMRPhenomD_NRTidal/chain_1_seed20302.npz": {
+      "bytes": 199167,
+      "sha256": "44ef24554a3e35b4e06d65b8c6895266190b7d8dc07d2f2b0af940cd10ebad17"
+    },
+    "sampler/sample-v4-IMRPhenomD_NRTidal/chain_2_seed30403.npz": {
+      "bytes": 199017,
+      "sha256": "afaf8c9c9ab0dd7fbfdf7beb8b4ff53d650b9b54e60b500368aec74a2b67834e"
+    },
+    "sampler/sample-v4-IMRPhenomD_NRTidal/chain_3_seed40504.npz": {
+      "bytes": 199023,
+      "sha256": "fb13998644441a74002dcae4c7f36ce0ee2a90250fba1c53d26c239983876540"
+    },
+    "sampler/sample-v4-IMRPhenomD_NRTidal/posterior_samples.npz": {
+      "bytes": 906654,
+      "sha256": "eebb89509a367f157b3867c24f281c2b045d3191efbd41c1005c9d18540adf18"
+    },
+    "sampler/sample-v4-IMRPhenomD_NRTidal/sampler_receipt.json": {
+      "bytes": 26180,
+      "sha256": "da8de299e694a4c7f53638610bf4628b0518c0ddc35be200d7f5a9ea50a7f6da"
+    },
+    "sampler/sample-v4-IMRPhenomD_NRTidal/shared_signals.npz": {
+      "bytes": 56078,
+      "sha256": "f995dcd57b788ee1e87984cf175496c5ceb8aaaaf3774f80e5898e9ea7d4b638"
+    },
+    "sampler/source-core-fixed-v1.tar.gz": {
+      "bytes": 1991396,
+      "sha256": "cdca7b1b147da0ebb96be75a33711e46b25b86a9b66def539d1b412ebe1ea4d6"
+    },
+    "sampler/source-sampler-v2.tar.gz": {
+      "bytes": 2032664,
+      "sha256": "177857d87d74605e987b3969601b6442a8b3550ddddb7bcb36cfca394b9b9363"
+    },
+    "sampler/source-sampler-v3.tar.gz": {
+      "bytes": 2024663,
+      "sha256": "fe1d37c7bde63815a4431063d06876435d939b1c8afddd18e7ed541a572b99b1"
+    },
+    "sampler/source-sampler-v3.tar.gz::scripts/qualification/parameter_estimation.py": {
+      "bytes": 39133,
+      "sha256": "7094d82939244d3e49f916f41b0e034c368fc7f6f9c7679b3e1d90089d9db64d",
+      "archive": "sampler/source-sampler-v3.tar.gz",
+      "member": "scripts/qualification/parameter_estimation.py"
+    },
+    "sampler/source-sampler-v3.tar.gz::scripts/qualification/parameter_estimation_pilot.py": {
+      "bytes": 31843,
+      "sha256": "ed9a38efa1896053e6e2289f68f22d1262c81271d893c63ba94584654acd1ae7",
+      "archive": "sampler/source-sampler-v3.tar.gz",
+      "member": "scripts/qualification/parameter_estimation_pilot.py"
+    },
+    "sampler/source-sampler-v3.tar.gz::scripts/qualification/parameter_estimation_sampler.py": {
+      "bytes": 37399,
+      "sha256": "403a096e6b7c8b16578779426cc491f69097f1689fea9eaa51b633baf9a96cba",
+      "archive": "sampler/source-sampler-v3.tar.gz",
+      "member": "scripts/qualification/parameter_estimation_sampler.py"
+    },
+    "sampler/waveform-source-comparison-final-v3.json": {
+      "bytes": 331,
+      "sha256": "d71dcc8a0096bb22d749f004ee8cedb2f3dd5cf5cfa9f3c53613fbd862bbe790"
+    }
+  }
+}

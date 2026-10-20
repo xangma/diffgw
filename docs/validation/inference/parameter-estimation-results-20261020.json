@@ -1,0 +1,886 @@
+{
+  "schema": "diffgw.public.parameter-estimation-results.v1",
+  "reviewed_date": "2026-10-20",
+  "scope": "Restricted two-parameter numerical same-model injection/recovery; fixed remaining parameters. Not full-dimensional or independent physical validation.",
+  "counts": {
+    "inventory_entries": 29,
+    "supported_waveform_scopes": 28,
+    "component_only_entries": 1,
+    "original_grid_outcomes_per_frontend": {
+      "completed_grid_baseline": 18,
+      "unresolved_convergence": 10,
+      "blocked": 1
+    },
+    "completion_paired_zero_reference_models": 4,
+    "accepted_unique_sampler_records": 17,
+    "accepted_retained_draws": 272000,
+    "completed_expanded_campaign_models": 0,
+    "completed_N50_calibration_models": 0
+  },
+  "accepted_sampler_records": [
+    {
+      "record_id": "IMRPhenomPv2/zero/000",
+      "frontend": "jax",
+      "retained_draws": 16000,
+      "review_binding": {
+        "bytes": 11483,
+        "sha256": "dc742f762609ffb9959397ebaeb5523dc6ff46382d4fe2977cbfd38b45589100"
+      }
+    },
+    {
+      "record_id": "IMRPhenomPv2/zero/000",
+      "frontend": "torch",
+      "retained_draws": 16000,
+      "review_binding": {
+        "bytes": 5751,
+        "sha256": "1c668df22484adcbbc970fd3a6bbf2b56eb2a111669739b819f17884ba22908b"
+      }
+    },
+    {
+      "record_id": "IMRPhenomD/zero/000",
+      "frontend": "torch",
+      "retained_draws": 16000,
+      "review_binding": {
+        "bytes": 10574,
+        "sha256": "765146822d3ea9bd6a8914e838d5d7df7fd33218901a5f2a6e7bc6dc717f3abb"
+      }
+    },
+    {
+      "record_id": "IMRPhenomD/fixed/001",
+      "frontend": "torch",
+      "retained_draws": 16000,
+      "review_binding": {
+        "bytes": 10574,
+        "sha256": "765146822d3ea9bd6a8914e838d5d7df7fd33218901a5f2a6e7bc6dc717f3abb"
+      }
+    },
+    {
+      "record_id": "IMRPhenomD/fixed/002",
+      "frontend": "torch",
+      "retained_draws": 16000,
+      "review_binding": {
+        "bytes": 10574,
+        "sha256": "765146822d3ea9bd6a8914e838d5d7df7fd33218901a5f2a6e7bc6dc717f3abb"
+      }
+    },
+    {
+      "record_id": "IMRPhenomD/fixed/003",
+      "frontend": "torch",
+      "retained_draws": 16000,
+      "review_binding": {
+        "bytes": 10574,
+        "sha256": "765146822d3ea9bd6a8914e838d5d7df7fd33218901a5f2a6e7bc6dc717f3abb"
+      }
+    },
+    {
+      "record_id": "IMRPhenomD/fixed/000",
+      "frontend": "torch",
+      "retained_draws": 16000,
+      "review_binding": {
+        "bytes": 5424,
+        "sha256": "5768cd5b27e3a75c94ac5af9b8c8161ad7a62445408b445894bb659f8d15811f"
+      }
+    },
+    {
+      "record_id": "IMRPhenomPv2/fixed/000",
+      "frontend": "jax",
+      "retained_draws": 16000,
+      "review_binding": {
+        "bytes": 9233,
+        "sha256": "4cd6db16488f36a98446c19cba95a7a5c9592329f459a2505eba92ed5ede8da5"
+      }
+    },
+    {
+      "record_id": "IMRPhenomD/fixed/001",
+      "frontend": "jax",
+      "retained_draws": 16000,
+      "review_binding": {
+        "bytes": 5119,
+        "sha256": "a82a188ea5ab113f5399579ec137e0ac18b6fd4bcd5ec1257a822d755cd762eb"
+      }
+    },
+    {
+      "record_id": "IMRPhenomD/fixed/003",
+      "frontend": "jax",
+      "retained_draws": 16000,
+      "review_binding": {
+        "bytes": 5120,
+        "sha256": "9e56eecbd40a4bce808af042e1e87e9f261efaef92cb8476d6f4425d94dcef8d"
+      }
+    },
+    {
+      "record_id": "MemoryWaveform/zero/000",
+      "frontend": "torch",
+      "retained_draws": 16000,
+      "review_binding": {
+        "bytes": 5666,
+        "sha256": "269f42a7eb349c5f9561dd0ca30ffc69fc7ba5a20376efef354bc1b5e9475a8d"
+      }
+    },
+    {
+      "record_id": "MemoryWaveform/fixed/000",
+      "frontend": "torch",
+      "retained_draws": 16000,
+      "review_binding": {
+        "bytes": 5666,
+        "sha256": "269f42a7eb349c5f9561dd0ca30ffc69fc7ba5a20376efef354bc1b5e9475a8d"
+      }
+    },
+    {
+      "record_id": "MemoryWaveform/fixed/001",
+      "frontend": "torch",
+      "retained_draws": 16000,
+      "review_binding": {
+        "bytes": 5666,
+        "sha256": "269f42a7eb349c5f9561dd0ca30ffc69fc7ba5a20376efef354bc1b5e9475a8d"
+      }
+    },
+    {
+      "record_id": "MemoryWaveform/fixed/002",
+      "frontend": "torch",
+      "retained_draws": 16000,
+      "review_binding": {
+        "bytes": 5666,
+        "sha256": "269f42a7eb349c5f9561dd0ca30ffc69fc7ba5a20376efef354bc1b5e9475a8d"
+      }
+    },
+    {
+      "record_id": "MemoryWaveform/fixed/003",
+      "frontend": "torch",
+      "retained_draws": 16000,
+      "review_binding": {
+        "bytes": 5666,
+        "sha256": "269f42a7eb349c5f9561dd0ca30ffc69fc7ba5a20376efef354bc1b5e9475a8d"
+      }
+    },
+    {
+      "record_id": "NewtonianEccentricEMRI/zero/000",
+      "frontend": "jax",
+      "retained_draws": 16000,
+      "review_binding": {
+        "bytes": 8322,
+        "sha256": "f38ee7ca1997c0038c0cdc3c2b7c107541a6857df1bb8128512413e10b27d0de"
+      }
+    },
+    {
+      "record_id": "NewtonianEccentricEMRI/zero/000",
+      "frontend": "torch",
+      "retained_draws": 16000,
+      "review_binding": {
+        "bytes": 7034,
+        "sha256": "d814612a1cc421a90f8b9d09378562eff2e613174fb3504480fc4755835c9bd5"
+      }
+    }
+  ],
+  "waveforms": [
+    {
+      "waveform": "TaylorF2",
+      "supported_waveform_scope": true,
+      "original_grid_outcomes": {
+        "jax": "completed_grid_baseline",
+        "torch": "completed_grid_baseline"
+      },
+      "completion_zero_reference_accepted_in_both_frontends": false,
+      "accepted_individual_fixed_noise_reference_pairs": 0,
+      "combined_fixed4_reference_stage_accepted": false,
+      "accepted_sampler_conditions_by_frontend": {
+        "jax": [],
+        "torch": []
+      },
+      "expanded_campaign_complete": false,
+      "N50_calibration_complete": false,
+      "result_note": "Original grid baseline converged; no accepted completion reference or sampler.",
+      "last_result_review_utc": "2026-10-16T11:24:22.529671+00:00"
+    },
+    {
+      "waveform": "TaylorF2_HM",
+      "supported_waveform_scope": true,
+      "original_grid_outcomes": {
+        "jax": "completed_grid_baseline",
+        "torch": "completed_grid_baseline"
+      },
+      "completion_zero_reference_accepted_in_both_frontends": false,
+      "accepted_individual_fixed_noise_reference_pairs": 0,
+      "combined_fixed4_reference_stage_accepted": false,
+      "accepted_sampler_conditions_by_frontend": {
+        "jax": [],
+        "torch": []
+      },
+      "expanded_campaign_complete": false,
+      "N50_calibration_complete": false,
+      "result_note": "Original grid baseline converged; no accepted completion reference or sampler.",
+      "last_result_review_utc": "2026-10-16T11:24:22.529671+00:00"
+    },
+    {
+      "waveform": "IMRPhenomD",
+      "supported_waveform_scope": true,
+      "original_grid_outcomes": {
+        "jax": "completed_grid_baseline",
+        "torch": "completed_grid_baseline"
+      },
+      "completion_zero_reference_accepted_in_both_frontends": true,
+      "accepted_individual_fixed_noise_reference_pairs": 4,
+      "combined_fixed4_reference_stage_accepted": true,
+      "accepted_sampler_conditions_by_frontend": {
+        "jax": [
+          "fixed/001",
+          "fixed/003"
+        ],
+        "torch": [
+          "zero/000",
+          "fixed/001",
+          "fixed/002",
+          "fixed/003",
+          "fixed/000"
+        ]
+      },
+      "expanded_campaign_complete": false,
+      "N50_calibration_complete": false,
+      "result_note": "Paired zero and four noisy reference pairs accepted; missing JAX cases and ensemble stages remain.",
+      "last_result_review_utc": "2026-10-16T11:24:22.529671+00:00"
+    },
+    {
+      "waveform": "IMRPhenomHM",
+      "supported_waveform_scope": true,
+      "original_grid_outcomes": {
+        "jax": "completed_grid_baseline",
+        "torch": "completed_grid_baseline"
+      },
+      "completion_zero_reference_accepted_in_both_frontends": false,
+      "accepted_individual_fixed_noise_reference_pairs": 0,
+      "combined_fixed4_reference_stage_accepted": false,
+      "accepted_sampler_conditions_by_frontend": {
+        "jax": [],
+        "torch": []
+      },
+      "expanded_campaign_complete": false,
+      "N50_calibration_complete": false,
+      "result_note": "Original grid baseline converged; no accepted completion reference or sampler.",
+      "last_result_review_utc": "2026-10-16T11:24:22.529671+00:00"
+    },
+    {
+      "waveform": "IMRPhenomXAS",
+      "supported_waveform_scope": true,
+      "original_grid_outcomes": {
+        "jax": "completed_grid_baseline",
+        "torch": "completed_grid_baseline"
+      },
+      "completion_zero_reference_accepted_in_both_frontends": false,
+      "accepted_individual_fixed_noise_reference_pairs": 0,
+      "combined_fixed4_reference_stage_accepted": false,
+      "accepted_sampler_conditions_by_frontend": {
+        "jax": [],
+        "torch": []
+      },
+      "expanded_campaign_complete": false,
+      "N50_calibration_complete": false,
+      "result_note": "Original grid baseline converged; no accepted completion reference or sampler.",
+      "last_result_review_utc": "2026-10-16T11:24:22.529671+00:00"
+    },
+    {
+      "waveform": "IMRPhenomXHM",
+      "supported_waveform_scope": true,
+      "original_grid_outcomes": {
+        "jax": "completed_grid_baseline",
+        "torch": "completed_grid_baseline"
+      },
+      "completion_zero_reference_accepted_in_both_frontends": false,
+      "accepted_individual_fixed_noise_reference_pairs": 0,
+      "combined_fixed4_reference_stage_accepted": false,
+      "accepted_sampler_conditions_by_frontend": {
+        "jax": [],
+        "torch": []
+      },
+      "expanded_campaign_complete": false,
+      "N50_calibration_complete": false,
+      "result_note": "Original grid baseline converged; no accepted completion reference or sampler.",
+      "last_result_review_utc": "2026-10-16T11:24:22.529671+00:00"
+    },
+    {
+      "waveform": "TaylorF2_Eccentric",
+      "supported_waveform_scope": true,
+      "original_grid_outcomes": {
+        "jax": "completed_grid_baseline",
+        "torch": "completed_grid_baseline"
+      },
+      "completion_zero_reference_accepted_in_both_frontends": false,
+      "accepted_individual_fixed_noise_reference_pairs": 0,
+      "combined_fixed4_reference_stage_accepted": false,
+      "accepted_sampler_conditions_by_frontend": {
+        "jax": [],
+        "torch": []
+      },
+      "expanded_campaign_complete": false,
+      "N50_calibration_complete": false,
+      "result_note": "Original grid baseline converged; no accepted completion reference or sampler.",
+      "last_result_review_utc": "2026-10-16T11:24:22.529671+00:00"
+    },
+    {
+      "waveform": "IMRPhenomD_NRTidal",
+      "supported_waveform_scope": true,
+      "original_grid_outcomes": {
+        "jax": "unresolved_convergence",
+        "torch": "unresolved_convergence"
+      },
+      "completion_zero_reference_accepted_in_both_frontends": false,
+      "accepted_individual_fixed_noise_reference_pairs": 0,
+      "combined_fixed4_reference_stage_accepted": false,
+      "accepted_sampler_conditions_by_frontend": {
+        "jax": [],
+        "torch": []
+      },
+      "expanded_campaign_complete": false,
+      "N50_calibration_complete": false,
+      "result_note": "Separate common-data reference and Torch zero-noise sampler pilots pass;3/4 compiled noisy reference cases accepted, fixed002 unresolved. Compiled precision check unresolved. Original grid outcome preserved.",
+      "last_result_review_utc": "2026-10-16T11:24:22.529671+00:00"
+    },
+    {
+      "waveform": "IMRPhenomD_NRTidalv2",
+      "supported_waveform_scope": true,
+      "original_grid_outcomes": {
+        "jax": "unresolved_convergence",
+        "torch": "unresolved_convergence"
+      },
+      "completion_zero_reference_accepted_in_both_frontends": false,
+      "accepted_individual_fixed_noise_reference_pairs": 0,
+      "combined_fixed4_reference_stage_accepted": false,
+      "accepted_sampler_conditions_by_frontend": {
+        "jax": [],
+        "torch": []
+      },
+      "expanded_campaign_complete": false,
+      "N50_calibration_complete": false,
+      "result_note": "Reference cut-CDF convergence unresolved.",
+      "last_result_review_utc": "2026-10-16T11:24:22.529671+00:00"
+    },
+    {
+      "waveform": "IMRPhenomNSBH",
+      "supported_waveform_scope": true,
+      "original_grid_outcomes": {
+        "jax": "unresolved_convergence",
+        "torch": "unresolved_convergence"
+      },
+      "completion_zero_reference_accepted_in_both_frontends": false,
+      "accepted_individual_fixed_noise_reference_pairs": 0,
+      "combined_fixed4_reference_stage_accepted": false,
+      "accepted_sampler_conditions_by_frontend": {
+        "jax": [],
+        "torch": []
+      },
+      "expanded_campaign_complete": false,
+      "N50_calibration_complete": false,
+      "result_note": "3841 supplement passes two consecutive refinements, frontend parity and Gauss128; independentCDF gate fails. Reference not accepted.",
+      "last_result_review_utc": "2026-10-20T08:58:49.357356+00:00"
+    },
+    {
+      "waveform": "IMRPhenomP",
+      "supported_waveform_scope": true,
+      "original_grid_outcomes": {
+        "jax": "completed_grid_baseline",
+        "torch": "completed_grid_baseline"
+      },
+      "completion_zero_reference_accepted_in_both_frontends": false,
+      "accepted_individual_fixed_noise_reference_pairs": 0,
+      "combined_fixed4_reference_stage_accepted": false,
+      "accepted_sampler_conditions_by_frontend": {
+        "jax": [],
+        "torch": []
+      },
+      "expanded_campaign_complete": false,
+      "N50_calibration_complete": false,
+      "result_note": "Original grid baseline converged; no accepted completion reference or sampler.",
+      "last_result_review_utc": "2026-10-16T11:24:22.529671+00:00"
+    },
+    {
+      "waveform": "IMRPhenomXP",
+      "supported_waveform_scope": true,
+      "original_grid_outcomes": {
+        "jax": "completed_grid_baseline",
+        "torch": "completed_grid_baseline"
+      },
+      "completion_zero_reference_accepted_in_both_frontends": false,
+      "accepted_individual_fixed_noise_reference_pairs": 0,
+      "combined_fixed4_reference_stage_accepted": false,
+      "accepted_sampler_conditions_by_frontend": {
+        "jax": [],
+        "torch": []
+      },
+      "expanded_campaign_complete": false,
+      "N50_calibration_complete": false,
+      "result_note": "Original grids converged; additional convention/option checks unresolved.",
+      "last_result_review_utc": "2026-10-16T11:24:22.529671+00:00"
+    },
+    {
+      "waveform": "IMRPhenomXPHM",
+      "supported_waveform_scope": true,
+      "original_grid_outcomes": {
+        "jax": "completed_grid_baseline",
+        "torch": "completed_grid_baseline"
+      },
+      "completion_zero_reference_accepted_in_both_frontends": false,
+      "accepted_individual_fixed_noise_reference_pairs": 0,
+      "combined_fixed4_reference_stage_accepted": false,
+      "accepted_sampler_conditions_by_frontend": {
+        "jax": [],
+        "torch": []
+      },
+      "expanded_campaign_complete": false,
+      "N50_calibration_complete": false,
+      "result_note": "Original grids converged; additional convention/option checks unresolved.",
+      "last_result_review_utc": "2026-10-16T11:24:22.529671+00:00"
+    },
+    {
+      "waveform": "IMRPhenomPv2",
+      "supported_waveform_scope": true,
+      "original_grid_outcomes": {
+        "jax": "completed_grid_baseline",
+        "torch": "completed_grid_baseline"
+      },
+      "completion_zero_reference_accepted_in_both_frontends": true,
+      "accepted_individual_fixed_noise_reference_pairs": 4,
+      "combined_fixed4_reference_stage_accepted": true,
+      "accepted_sampler_conditions_by_frontend": {
+        "jax": [
+          "zero/000",
+          "fixed/000"
+        ],
+        "torch": [
+          "zero/000"
+        ]
+      },
+      "expanded_campaign_complete": false,
+      "N50_calibration_complete": false,
+      "result_note": "Paired zero and four noisy reference pairs accepted; four noisy Torch cases failed and remain unaccepted.",
+      "last_result_review_utc": "2026-10-16T11:24:22.529671+00:00"
+    },
+    {
+      "waveform": "IMRPhenomXPHMSpinTaylor",
+      "supported_waveform_scope": true,
+      "original_grid_outcomes": {
+        "jax": "unresolved_convergence",
+        "torch": "unresolved_convergence"
+      },
+      "completion_zero_reference_accepted_in_both_frontends": false,
+      "accepted_individual_fixed_noise_reference_pairs": 0,
+      "combined_fixed4_reference_stage_accepted": false,
+      "accepted_sampler_conditions_by_frontend": {
+        "jax": [],
+        "torch": []
+      },
+      "expanded_campaign_complete": false,
+      "N50_calibration_complete": false,
+      "result_note": "Interval-width refinement, additional parity and optimizer checks unresolved.",
+      "last_result_review_utc": "2026-10-16T11:24:22.529671+00:00"
+    },
+    {
+      "waveform": "IMRPhenomXPNR",
+      "supported_waveform_scope": true,
+      "original_grid_outcomes": {
+        "jax": "completed_grid_baseline",
+        "torch": "completed_grid_baseline"
+      },
+      "completion_zero_reference_accepted_in_both_frontends": false,
+      "accepted_individual_fixed_noise_reference_pairs": 0,
+      "combined_fixed4_reference_stage_accepted": false,
+      "accepted_sampler_conditions_by_frontend": {
+        "jax": [],
+        "torch": []
+      },
+      "expanded_campaign_complete": false,
+      "N50_calibration_complete": false,
+      "result_note": "Original grid baseline converged; no accepted completion reference or sampler.",
+      "last_result_review_utc": "2026-10-16T11:24:22.529671+00:00"
+    },
+    {
+      "waveform": "IMRPhenomT",
+      "supported_waveform_scope": true,
+      "original_grid_outcomes": {
+        "jax": "unresolved_convergence",
+        "torch": "unresolved_convergence"
+      },
+      "completion_zero_reference_accepted_in_both_frontends": false,
+      "accepted_individual_fixed_noise_reference_pairs": 0,
+      "combined_fixed4_reference_stage_accepted": false,
+      "accepted_sampler_conditions_by_frontend": {
+        "jax": [],
+        "torch": []
+      },
+      "expanded_campaign_complete": false,
+      "N50_calibration_complete": false,
+      "result_note": "Construction/derivative prerequisites passed; completion reference and samplers not accepted.",
+      "last_result_review_utc": "2026-10-20T08:58:49.357356+00:00"
+    },
+    {
+      "waveform": "IMRPhenomTHM",
+      "supported_waveform_scope": true,
+      "original_grid_outcomes": {
+        "jax": "unresolved_convergence",
+        "torch": "unresolved_convergence"
+      },
+      "completion_zero_reference_accepted_in_both_frontends": false,
+      "accepted_individual_fixed_noise_reference_pairs": 0,
+      "combined_fixed4_reference_stage_accepted": false,
+      "accepted_sampler_conditions_by_frontend": {
+        "jax": [],
+        "torch": []
+      },
+      "expanded_campaign_complete": false,
+      "N50_calibration_complete": false,
+      "result_note": "No accepted completion reference or sampler; original grid convergence unresolved.",
+      "last_result_review_utc": "2026-10-20T08:58:49.357356+00:00"
+    },
+    {
+      "waveform": "IMRPhenomTP",
+      "supported_waveform_scope": true,
+      "original_grid_outcomes": {
+        "jax": "unresolved_convergence",
+        "torch": "unresolved_convergence"
+      },
+      "completion_zero_reference_accepted_in_both_frontends": false,
+      "accepted_individual_fixed_noise_reference_pairs": 0,
+      "combined_fixed4_reference_stage_accepted": false,
+      "accepted_sampler_conditions_by_frontend": {
+        "jax": [],
+        "torch": []
+      },
+      "expanded_campaign_complete": false,
+      "N50_calibration_complete": false,
+      "result_note": "Reference convergence and onset/branch behavior unresolved.",
+      "last_result_review_utc": "2026-10-16T11:24:22.529671+00:00"
+    },
+    {
+      "waveform": "IMRPhenomTPHM",
+      "supported_waveform_scope": true,
+      "original_grid_outcomes": {
+        "jax": "unresolved_convergence",
+        "torch": "unresolved_convergence"
+      },
+      "completion_zero_reference_accepted_in_both_frontends": false,
+      "accepted_individual_fixed_noise_reference_pairs": 0,
+      "combined_fixed4_reference_stage_accepted": false,
+      "accepted_sampler_conditions_by_frontend": {
+        "jax": [],
+        "torch": []
+      },
+      "expanded_campaign_complete": false,
+      "N50_calibration_complete": false,
+      "result_note": "Reference convergence and onset/branch behavior unresolved.",
+      "last_result_review_utc": "2026-10-16T11:24:22.529671+00:00"
+    },
+    {
+      "waveform": "KerrRingdown",
+      "supported_waveform_scope": true,
+      "original_grid_outcomes": {
+        "jax": "completed_grid_baseline",
+        "torch": "completed_grid_baseline"
+      },
+      "completion_zero_reference_accepted_in_both_frontends": false,
+      "accepted_individual_fixed_noise_reference_pairs": 0,
+      "combined_fixed4_reference_stage_accepted": false,
+      "accepted_sampler_conditions_by_frontend": {
+        "jax": [],
+        "torch": []
+      },
+      "expanded_campaign_complete": false,
+      "N50_calibration_complete": false,
+      "result_note": "Original grid baseline converged; no accepted completion reference or sampler.",
+      "last_result_review_utc": "2026-10-16T11:24:22.529671+00:00"
+    },
+    {
+      "waveform": "KerrRingdownDirect",
+      "supported_waveform_scope": true,
+      "original_grid_outcomes": {
+        "jax": "completed_grid_baseline",
+        "torch": "completed_grid_baseline"
+      },
+      "completion_zero_reference_accepted_in_both_frontends": false,
+      "accepted_individual_fixed_noise_reference_pairs": 0,
+      "combined_fixed4_reference_stage_accepted": false,
+      "accepted_sampler_conditions_by_frontend": {
+        "jax": [],
+        "torch": []
+      },
+      "expanded_campaign_complete": false,
+      "N50_calibration_complete": false,
+      "result_note": "Original grid baseline converged; no accepted completion reference or sampler.",
+      "last_result_review_utc": "2026-10-16T11:24:22.529671+00:00"
+    },
+    {
+      "waveform": "SEOBNRv4_ROM",
+      "supported_waveform_scope": true,
+      "original_grid_outcomes": {
+        "jax": "completed_grid_baseline",
+        "torch": "completed_grid_baseline"
+      },
+      "completion_zero_reference_accepted_in_both_frontends": false,
+      "accepted_individual_fixed_noise_reference_pairs": 0,
+      "combined_fixed4_reference_stage_accepted": false,
+      "accepted_sampler_conditions_by_frontend": {
+        "jax": [],
+        "torch": []
+      },
+      "expanded_campaign_complete": false,
+      "N50_calibration_complete": false,
+      "result_note": "Original grid baseline converged; no accepted completion reference or sampler.",
+      "last_result_review_utc": "2026-10-16T11:24:22.529671+00:00"
+    },
+    {
+      "waveform": "ParameterizedPostEinstein",
+      "supported_waveform_scope": true,
+      "original_grid_outcomes": {
+        "jax": "completed_grid_baseline",
+        "torch": "completed_grid_baseline"
+      },
+      "completion_zero_reference_accepted_in_both_frontends": false,
+      "accepted_individual_fixed_noise_reference_pairs": 0,
+      "combined_fixed4_reference_stage_accepted": false,
+      "accepted_sampler_conditions_by_frontend": {
+        "jax": [],
+        "torch": []
+      },
+      "expanded_campaign_complete": false,
+      "N50_calibration_complete": false,
+      "result_note": "Original grids converged; later reference-density and matched-noise checks unresolved.",
+      "last_result_review_utc": "2026-10-16T11:24:22.529671+00:00"
+    },
+    {
+      "waveform": "EMRIKludge",
+      "supported_waveform_scope": true,
+      "original_grid_outcomes": {
+        "jax": "unresolved_convergence",
+        "torch": "unresolved_convergence"
+      },
+      "completion_zero_reference_accepted_in_both_frontends": false,
+      "accepted_individual_fixed_noise_reference_pairs": 0,
+      "combined_fixed4_reference_stage_accepted": false,
+      "accepted_sampler_conditions_by_frontend": {
+        "jax": [],
+        "torch": []
+      },
+      "expanded_campaign_complete": false,
+      "N50_calibration_complete": false,
+      "result_note": "Only one of two required consecutive refinement passes achieved.",
+      "last_result_review_utc": "2026-10-16T11:24:22.529671+00:00"
+    },
+    {
+      "waveform": "NewtonianEccentricEMRI",
+      "supported_waveform_scope": true,
+      "original_grid_outcomes": {
+        "jax": "completed_grid_baseline",
+        "torch": "completed_grid_baseline"
+      },
+      "completion_zero_reference_accepted_in_both_frontends": true,
+      "accepted_individual_fixed_noise_reference_pairs": 0,
+      "combined_fixed4_reference_stage_accepted": false,
+      "accepted_sampler_conditions_by_frontend": {
+        "torch": [
+          "zero/000"
+        ],
+        "jax": [
+          "zero/000"
+        ]
+      },
+      "expanded_campaign_complete": false,
+      "N50_calibration_complete": false,
+      "result_note": "Paired zero reference and zero samplers accepted in both frontends; no accepted fixed-noise or ensemble stage.",
+      "last_result_review_utc": "2026-10-20T08:58:49.357356+00:00"
+    },
+    {
+      "waveform": "ContinuousWave",
+      "supported_waveform_scope": true,
+      "original_grid_outcomes": {
+        "jax": "unresolved_convergence",
+        "torch": "unresolved_convergence"
+      },
+      "completion_zero_reference_accepted_in_both_frontends": false,
+      "accepted_individual_fixed_noise_reference_pairs": 0,
+      "combined_fixed4_reference_stage_accepted": false,
+      "accepted_sampler_conditions_by_frontend": {
+        "jax": [],
+        "torch": []
+      },
+      "expanded_campaign_complete": false,
+      "N50_calibration_complete": false,
+      "result_note": "Refinement and independent quadrature unresolved.",
+      "last_result_review_utc": "2026-10-16T11:24:22.529671+00:00"
+    },
+    {
+      "waveform": "MemoryWaveform",
+      "supported_waveform_scope": true,
+      "original_grid_outcomes": {
+        "jax": "completed_grid_baseline",
+        "torch": "completed_grid_baseline"
+      },
+      "completion_zero_reference_accepted_in_both_frontends": true,
+      "accepted_individual_fixed_noise_reference_pairs": 4,
+      "combined_fixed4_reference_stage_accepted": false,
+      "accepted_sampler_conditions_by_frontend": {
+        "jax": [],
+        "torch": [
+          "zero/000",
+          "fixed/000",
+          "fixed/001",
+          "fixed/002",
+          "fixed/003"
+        ]
+      },
+      "expanded_campaign_complete": false,
+      "N50_calibration_complete": false,
+      "result_note": "Paired zero and four individual noisy reference pairs accepted. Combined four-case stage remains incomplete; repeated zero checks add no unique case.",
+      "last_result_review_utc": "2026-10-16T11:24:22.529671+00:00"
+    },
+    {
+      "waveform": "TEOBResumSHamiltonian",
+      "supported_waveform_scope": false,
+      "original_grid_outcomes": {
+        "jax": "blocked",
+        "torch": "blocked"
+      },
+      "completion_zero_reference_accepted_in_both_frontends": false,
+      "accepted_individual_fixed_noise_reference_pairs": 0,
+      "combined_fixed4_reference_stage_accepted": false,
+      "accepted_sampler_conditions_by_frontend": {
+        "jax": [],
+        "torch": []
+      },
+      "expanded_campaign_complete": false,
+      "N50_calibration_complete": false,
+      "result_note": "Component-only; no public waveform API. Excluded from28 supported PE scopes.",
+      "last_result_review_utc": "2026-10-16T11:24:22.529671+00:00"
+    }
+  ],
+  "Newtonian_Torch_zero": {
+    "review_binding": {
+      "bytes": 7034,
+      "sha256": "d814612a1cc421a90f8b9d09378562eff2e613174fb3504480fc4755835c9bd5"
+    },
+    "protocol_sha256": "9b003d62b960e85064bca8813500121c8ea69446b379708b8b0b2007a8a9b996",
+    "data_sha256": "9b3aa5f31d562e5d4946ec86fb3c75c769e78adb57a30b745ae6ec90d6708777",
+    "priors": {
+      "e0": [
+        0.1,
+        0.3
+      ],
+      "p0": [
+        15.5,
+        16.5
+      ]
+    },
+    "truth": {
+      "p0": 16.0,
+      "e0": 0.2
+    },
+    "chains": 4,
+    "sampler_config": {
+      "draws": 4000,
+      "max_depth": 8,
+      "target_accept": 0.95,
+      "warmup": 1000
+    },
+    "gates": {
+      "bulk_ess": 400,
+      "depth_limit_fraction": 0.01,
+      "divergences": 0,
+      "event_mcse": 0.02,
+      "mcse_multiplier": 5.0,
+      "mean_mcse_fraction_width90": 0.02,
+      "mean_quadrature_fraction_width90": 0.005,
+      "probability_quadrature_allowance": 0.002,
+      "quantile_fraction_width90": 0.03,
+      "rhat": 1.01,
+      "tail_ess": 400
+    },
+    "diagnostics": {
+      "maximum_rhat": 1.0028718626061972,
+      "minimum_bulk_ess": 2688.8559782672805,
+      "minimum_tail_ess": 2884.492241694204,
+      "raw_transition_recomputation": {
+        "acceptance_mean": 0.9469702653068557,
+        "depth_limit_fraction": 0.0,
+        "divergences": 0,
+        "total_leapfrog_count": 218856,
+        "warmup_divergences": 1
+      },
+      "all_original_gates_pass": true,
+      "native_CDF_events_passed": 6,
+      "Rosenblatt_events_passed": 9,
+      "event_denominator": 16000
+    }
+  },
+  "NSBH_single3841": {
+    "review_binding": {
+      "bytes": 7968,
+      "sha256": "088a86ddffa318ee82555c0b2ba0f1f69f912cd231e4e953f2963dbfa1d6aca1"
+    },
+    "protocol_sha256": "1c4b1e6e812828a51b029d90de1cf4d1f727e0d4f5f3ad91a02ea2b3a6e4b992",
+    "data_sha256": "8de38e24ddec6e65f3ca01e9d37a99d341b3ee763d2c1916414dba63857a47de",
+    "reference_accepted": false,
+    "finest_grid": 3841,
+    "required_consecutive_refinement_passes": 2,
+    "actual_consecutive_refinement_passes_each": 2,
+    "frontend_parity_passed": true,
+    "independent_Gauss_passed": true,
+    "Gauss_order": 128,
+    "independent_CDF_passed": false,
+    "CDF_failure": {
+      "order256": {
+        "maximum_cut_CDF_drift": 0.00013725550339954706,
+        "failures": [
+          "axis1_quantile_0.05",
+          "axis1_quantile_0.5",
+          "axis1_quantile_0.95"
+        ]
+      },
+      "order512": {
+        "maximum_cut_CDF_drift": 0.003437839280484578,
+        "cut_CDF_drift_gate": 0.0002,
+        "failure_to_gate_ratio": 17.18919640242289,
+        "log_normalizer_absolute_drift": 7.775629029538322e-09,
+        "log_normalizer_drift_gate": 0.005,
+        "failures": [
+          "cut_cdf_refinement_absolute_drift",
+          "axis1_quantile_0.05",
+          "axis1_quantile_0.5",
+          "axis1_quantile_0.95"
+        ],
+        "axis1_quantile_actual_margin_decisions": [
+          {
+            "probability": 0.05,
+            "unmargined_bracket_pass": true,
+            "lower_plus_margin_plus_roundoff": 0.05010378604243192,
+            "upper_minus_margin_minus_roundoff": 0.050103786772021854,
+            "passed": false
+          },
+          {
+            "probability": 0.5,
+            "unmargined_bracket_pass": true,
+            "lower_plus_margin_plus_roundoff": 0.49827499573228073,
+            "upper_minus_margin_minus_roundoff": 0.4982749985854981,
+            "passed": false
+          },
+          {
+            "probability": 0.95,
+            "unmargined_bracket_pass": true,
+            "lower_plus_margin_plus_roundoff": 0.948665177758493,
+            "upper_minus_margin_minus_roundoff": 0.9484793315962237,
+            "passed": false
+          }
+        ]
+      },
+      "axis0_all_truth_quantile_gates_pass_at_512": true,
+      "axis1_truth_CDF_pass_at_512": true
+    }
+  },
+  "historical_grid_receipt": {
+    "document": "parameter-estimation-20260930.json",
+    "bytes": 352115,
+    "sha256": "b871b973bd54368ebfce6c5aa95e497328839039dae8eb86551a263f082ebe80"
+  },
+  "retention": "Compact scientific results only. Full reviewed chains, arrays, source/protocol/data receipts and reproduction records retained externally; review bindings identify originals. No public bulk-download claim.",
+  "claims": {
+    "full_dimensional_PE": false,
+    "independent_physical_injection_validation": false,
+    "real_detector_noise_robustness": false,
+    "ensemble_calibration_accepted": false
+  }
+}

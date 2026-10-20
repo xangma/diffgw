@@ -1,0 +1,1383 @@
+{
+  "version": 1,
+  "date": "2026-10-01",
+  "status": "stopped_noisy_campaign",
+  "scope": "matched Gaussian-noise two-mass self-injection; no physical accuracy or full-PE claim",
+  "limitations": [
+    "Noise audits passed; no noisy reference, sampler, recovery or calibration qualification is granted.",
+    "Partial grids remain diagnostics and are not accepted posterior baselines.",
+    "One hundred ensemble trials were blocked by the pilot and were not executed.",
+    "Earlier physical waveform failures remain unchanged.",
+    "Bulk arrays, source archives, logs and full inventory remain outside the repository."
+  ],
+  "retention_roots": {
+    "remote": "/home/xangma/artifacts/diffgw-pe-noisy-20261001",
+    "local_mirror": "/Users/xangma/artifacts/diffgw-pe-noisy-20261001"
+  },
+  "source_snapshot": {
+    "bytes": 3140077,
+    "path": "/home/xangma/artifacts/diffgw-pe-noisy-20261001/source-noisy-final-v1.tar.gz",
+    "sha256": "3f43030ea6ebeb37576c2b7fbd027049a0e5f18d8dc3975dd0cb9ee3bf495e09"
+  },
+  "freeze_receipt": {
+    "path": "/home/xangma/artifacts/diffgw-pe-noisy-20261001/noisy_freeze_receipt.json",
+    "bytes": 1557,
+    "sha256": "b49bc96229ba9e73982671f5ab486dd894525664fb5f14c2e282a60ec9f94176"
+  },
+  "protocol": {
+    "bytes": 54189,
+    "path": "/home/xangma/artifacts/diffgw-pe-noisy-20261001/noisy_protocol.json",
+    "sha256": "51020994f2b223a6d54289029c2003b40018729aa3791ddfc96581fdbe59e7ba"
+  },
+  "campaign_receipt": {
+    "path": "/home/xangma/artifacts/diffgw-pe-noisy-20261001/noisy_campaign_receipt.json",
+    "bytes": 267611,
+    "sha256": "fd568ecb21d3e84ad8fe52ee84b25b3dc57b51dc9ff4beb694173c168df95d88"
+  },
+  "provenance": {
+    "device": "cpu",
+    "host": "len",
+    "noisy_source_sha256": "f233e8e6373e72341c551f031bd13106ba42fcc19045e0c538a92f573f6e2e64",
+    "pilot_source_sha256": "3fefbd49886d176c0326bd17521906b624a8ea6592a09774bc903c72e887b0c8",
+    "platform": "Linux-6.8.0-138-generic-x86_64-with-glibc2.39",
+    "precision": "float64/complex128",
+    "python": "3.12.3",
+    "revision": "973399a5cb238e1b250b5b769a35f0861b2308ba",
+    "sampler_runner_sha256": "403a096e6b7c8b16578779426cc491f69097f1689fea9eaa51b633baf9a96cba",
+    "source_sha256": "d3596dbea38366c832094be116a4d2b45ebef078d7700aa3e8eb7d1b4689e5b1",
+    "thread_environment": {
+      "MKL_NUM_THREADS": "1",
+      "OMP_NUM_THREADS": "1",
+      "OPENBLAS_NUM_THREADS": "1",
+      "XLA_FLAGS": null
+    },
+    "versions": {
+      "arviz": "0.22.0",
+      "jax": "0.11.2",
+      "jaxlib": "0.11.2",
+      "numpy": "2.5.3",
+      "scipy": "1.18.1",
+      "torch": "2.14.0+cpu"
+    },
+    "waveform_source_sha256": "0de2bbceef58ad1e044fd94a1f0777b3e2ff8c1e9807f587c442aec59eef6082"
+  },
+  "executed_source_check": {
+    "files": 366,
+    "method": "SHA256 equality of every src Python file and five inference drivers",
+    "passed": true
+  },
+  "design": {
+    "config": {
+      "calibration": {
+        "cdf_numerical_allowance": 0.002,
+        "count_per_panel": 50,
+        "coverage_interval_alpha": 0.05,
+        "coverage_levels": [
+          0.5,
+          0.9
+        ],
+        "family_alpha": 0.05,
+        "method": "simultaneous DKW bound; weak calibration screen",
+        "panels": 4
+      },
+      "chain_seed_root": 660101,
+      "chunk_size": 32,
+      "discovery": {
+        "anchor_interior_fraction": 1e-07,
+        "chirp_separation_fraction": 0.01,
+        "curvature_step_powers": [
+          12,
+          13,
+          14,
+          15,
+          16
+        ],
+        "diagonal_points": 4097,
+        "global_objective_calls": 1920,
+        "mass1_fractions": [
+          0.1,
+          0.3,
+          0.5,
+          0.7,
+          0.9
+        ],
+        "maxfun_per_start": 80,
+        "maxiter": 60,
+        "peaks": 4,
+        "sigma_relative_spread": 0.05,
+        "width_method": "five native mass2 finite differences only"
+      },
+      "ensemble_count": 50,
+      "ensemble_noise_seed_base": {
+        "IMRPhenomD": 640101,
+        "IMRPhenomD_NRTidal": 650101
+      },
+      "extension": "none; failures and timeouts retained, no truth redraw or automatic extension",
+      "fixed_count": 4,
+      "fixed_noise_seeds": {
+        "IMRPhenomD": [
+          610101,
+          610102,
+          610103,
+          610104
+        ],
+        "IMRPhenomD_NRTidal": [
+          620101,
+          620102,
+          620103,
+          620104
+        ]
+      },
+      "gauss_orders": [
+        64,
+        128,
+        256,
+        512
+      ],
+      "grid_sizes": [
+        31,
+        61,
+        121,
+        241,
+        481
+      ],
+      "noise_audit": {
+        "effective_psd_floor": 1e-50,
+        "realizations": 1024,
+        "seeds": {
+          "IMRPhenomD": 600101,
+          "IMRPhenomD_NRTidal": 600102
+        },
+        "standard_errors": 5,
+        "timeout_seconds": 120
+      },
+      "prior_seeds": {
+        "IMRPhenomD": 630101,
+        "IMRPhenomD_NRTidal": 630102
+      },
+      "reference_gates": {
+        "gauss_density_tv": 0.002,
+        "gauss_tv_order_drift": 0.00025,
+        "joint_density_total_variation": 0.002,
+        "joint_tv_estimator_absolute_drift": 0.00025,
+        "maximum_log_likelihood_deficit": 0.05,
+        "native_mean_drift_fraction_width90": 0.005,
+        "native_quantile_drift_fraction_width90": 0.005,
+        "truth_cdf_absolute_drift": 0.002
+      },
+      "reference_timeout_seconds": 1200,
+      "sampler": {
+        "draws": 4000,
+        "max_depth": 8,
+        "target_accept": 0.95,
+        "warmup": 1000
+      },
+      "sampler_indices": [
+        0,
+        7,
+        14,
+        21,
+        28,
+        35,
+        42,
+        49
+      ],
+      "sampler_strategy": "torch_compile",
+      "scope": "matched Gaussian-noise two-mass self-injection; no physical accuracy or full-PE claim",
+      "source_checks": {
+        "likelihood_atol": 1e-07,
+        "likelihood_rtol": 1e-08,
+        "strain_atol": 1e-30,
+        "strain_rtol": 1e-08
+      },
+      "threads": 1,
+      "total_trial_timeout_seconds": 3600
+    },
+    "priors": {
+      "IMRPhenomD": {
+        "axes": [
+          "mass1",
+          "mass2"
+        ],
+        "lower": [
+          33.0,
+          26.0
+        ],
+        "upper": [
+          39.0,
+          32.0
+        ]
+      },
+      "IMRPhenomD_NRTidal": {
+        "axes": [
+          "mass1",
+          "mass2"
+        ],
+        "lower": [
+          1.59,
+          1.29
+        ],
+        "upper": [
+          1.61,
+          1.31
+        ]
+      }
+    },
+    "amplitude_policy": "One nominal SNR20 scale/model, fixed for every truth and template; no SNR selection"
+  },
+  "counts": {
+    "planned": 108,
+    "terminal_inventory_entries": 108,
+    "executed_fixed_trials": 8,
+    "blocked_unexecuted_ensemble_trials": 100,
+    "executed_statuses": {
+      "timed_out": 8
+    },
+    "accepted_references": 0,
+    "sampler_attempts": 0,
+    "sampler_passes": 0
+  },
+  "noise_audits": {
+    "IMRPhenomD": {
+      "receipt": {
+        "bytes": 7880,
+        "path": "/home/xangma/artifacts/diffgw-pe-noisy-20261001/noise-audit/IMRPhenomD/noise_audit_receipt.json",
+        "sha256": "f7d6b3eae2585efe7d21ea235b2b6cea810bef324484cccda2ba80ceff115582"
+      },
+      "status": "completed_noise_audit",
+      "external_wall_elapsed_seconds": 5.624716873280704,
+      "realizations": 1024,
+      "degrees_of_freedom": 1524,
+      "q_mean": 1521.898085234527,
+      "q_unbiased_variance": 3058.6224474391356,
+      "q_expected_mean": 1524,
+      "q_expected_variance": 3048,
+      "q_standard_errors": [
+        -1.218309408235318,
+        0.07866472828107009
+      ],
+      "max_absolute_component_mean_standard_errors": 1.2159844330561027,
+      "max_absolute_component_variance_standard_errors": 1.3354485910823963,
+      "max_absolute_correlation_standard_errors": 2.4464690340245783,
+      "moment_correlation_checks_passed": true,
+      "native_likelihood": {
+        "jax": {
+          "max_absolute_error_from_minus_q_over2": 2.2737367544323206e-13,
+          "passed": true
+        },
+        "torch": {
+          "max_absolute_error_from_minus_q_over2": 2.2737367544323206e-13,
+          "passed": true
+        }
+      }
+    },
+    "IMRPhenomD_NRTidal": {
+      "receipt": {
+        "bytes": 7906,
+        "path": "/home/xangma/artifacts/diffgw-pe-noisy-20261001/noise-audit/IMRPhenomD_NRTidal/noise_audit_receipt.json",
+        "sha256": "320390ce66f0312e9bbfd2181b27e9497a2e9bab31a379af8180fdb865fdae55"
+      },
+      "status": "completed_noise_audit",
+      "external_wall_elapsed_seconds": 5.826579843182117,
+      "realizations": 1024,
+      "degrees_of_freedom": 1932,
+      "q_mean": 1932.5768647541845,
+      "q_unbiased_variance": 3924.338038494597,
+      "q_expected_mean": 1932,
+      "q_expected_variance": 3864,
+      "q_standard_errors": [
+        0.296965107679151,
+        0.35261779084897676
+      ],
+      "max_absolute_component_mean_standard_errors": 1.0612161350087987,
+      "max_absolute_component_variance_standard_errors": 1.7432230158786672,
+      "max_absolute_correlation_standard_errors": 1.8002529996721899,
+      "moment_correlation_checks_passed": true,
+      "native_likelihood": {
+        "jax": {
+          "max_absolute_error_from_minus_q_over2": 3.410605131648481e-13,
+          "passed": true
+        },
+        "torch": {
+          "max_absolute_error_from_minus_q_over2": 2.2737367544323206e-13,
+          "passed": true
+        }
+      }
+    }
+  },
+  "fixed_trials": [
+    {
+      "id": "IMRPhenomD/fixed/000",
+      "model": "IMRPhenomD",
+      "index": 0,
+      "truth": [
+        36.0,
+        29.0
+      ],
+      "noise_seed": 610101,
+      "chain_seeds": [
+        581866014,
+        653520196,
+        1827000560,
+        282675100
+      ],
+      "status": "timed_out",
+      "reference_passed": false,
+      "receipt": {
+        "bytes": 3578,
+        "path": "/home/xangma/artifacts/diffgw-pe-noisy-20261001/trials/IMRPhenomD/fixed/000/noisy_trial_receipt.json",
+        "sha256": "86a09daaab3695ed3f04b9ff92309980ad900b7b205445604a674cbcaf4b219d"
+      },
+      "error_type": "TimeoutExpired",
+      "raw_sampler_status": "pending",
+      "sampler_attempted": false,
+      "sampler_display_status": "not_attempted_reference_failed",
+      "reference_elapsed_seconds": 1200.164966847282,
+      "external_wall_elapsed_seconds": 1200.1680797012523,
+      "job": {
+        "path": "/home/xangma/artifacts/diffgw-pe-noisy-20261001/logs/IMRPhenomD-fixed-0-job.json",
+        "bytes": 471,
+        "sha256": "a975c355de50c00faa94bd355e98a0cb153a79196d274d1b0a51a73478f16a8d"
+      },
+      "started_utc": "2026-10-01T12:28:28.304927+00:00",
+      "finished_utc": "2026-10-01T12:48:28.473018+00:00",
+      "actual_noiseless_snr": 20.0,
+      "source": {
+        "path": "/home/xangma/artifacts/diffgw-pe-noisy-20261001/trials/IMRPhenomD/fixed/000/noisy_source_receipt.json",
+        "bytes": 6372,
+        "sha256": "28e7f72b919192a81a257fc0f36d88ea2838e2839987de0208961aa5a9876c97"
+      },
+      "source_construction_checks": {
+        "path": "/home/xangma/artifacts/diffgw-pe-noisy-20261001/trials/IMRPhenomD/fixed/000/source_construction_checks.json",
+        "bytes": 655,
+        "sha256": "b4186f9ca9f6b37e34010e1e6ed1753b747f6ab54c27a14c73116040b1d1cdc3"
+      },
+      "source_construction_passed": true,
+      "discovery": {
+        "path": "/home/xangma/artifacts/diffgw-pe-noisy-20261001/trials/IMRPhenomD/fixed/000/discovery_receipt.json",
+        "bytes": 5585,
+        "sha256": "015fc972bbfbb01507c67fe8a9d26c9f54dd07c02e2639325927bdbca254b027"
+      },
+      "discovery_status": "completed_discovery",
+      "chart": {
+        "lower": [
+          33.0,
+          26.0
+        ],
+        "scale": 0.032270046169856285,
+        "truth": [
+          37.20825523193808,
+          28.13676156559204
+        ],
+        "upper": [
+          39.0,
+          32.0
+        ]
+      },
+      "partial_reference": {
+        "path": "/home/xangma/artifacts/diffgw-pe-noisy-20261001/trials/IMRPhenomD/fixed/000/noisy_reference_progress.json",
+        "bytes": 28184,
+        "sha256": "33906504d8bb4dcf678ac176a4854cd0f9a01ecaa9b007ebdbd6bfd140240c47"
+      },
+      "partial_reference_accepted": false,
+      "completed_paired_grid_sizes": [
+        31,
+        61,
+        121,
+        241
+      ],
+      "largest_attempted_grid_size": 481,
+      "last_attempted_backend": "jax",
+      "frontend_parity_passed_on_completed_paired_grids": true,
+      "last_completed_refinement": {
+        "jax": {
+          "coarse": 121,
+          "fine": 241,
+          "converged": true,
+          "failures": [],
+          "joint_density_total_variation": 0.0009315792674553314,
+          "truth_cdf_absolute_drift": 2.863093241334269e-05,
+          "consecutive_passing_refinements": 1
+        },
+        "torch": {
+          "coarse": 121,
+          "fine": 241,
+          "converged": true,
+          "failures": [],
+          "joint_density_total_variation": 0.0009315792674042239,
+          "truth_cdf_absolute_drift": 2.8630932414591692e-05,
+          "consecutive_passing_refinements": 1
+        }
+      },
+      "independent_gauss_attempted": false,
+      "operational_grid_241_timing": {
+        "torch_interval_seconds": 25.37319028,
+        "jax_interval_seconds": 228.499982891,
+        "interval_ratio_jax_over_torch": 9.00556770234413
+      },
+      "log": {
+        "path": "/home/xangma/artifacts/diffgw-pe-noisy-20261001/logs/IMRPhenomD-fixed-0.log",
+        "bytes": 1340,
+        "sha256": "dc69fa33ec16cdb3513ad3267281e9e73f3d56c7ecce4a3392c63d75f5dd5b0c"
+      }
+    },
+    {
+      "id": "IMRPhenomD/fixed/001",
+      "model": "IMRPhenomD",
+      "index": 1,
+      "truth": [
+        36.0,
+        29.0
+      ],
+      "noise_seed": 610102,
+      "chain_seeds": [
+        4199994415,
+        528093644,
+        1390612540,
+        1465421260
+      ],
+      "status": "timed_out",
+      "reference_passed": false,
+      "receipt": {
+        "bytes": 3583,
+        "path": "/home/xangma/artifacts/diffgw-pe-noisy-20261001/trials/IMRPhenomD/fixed/001/noisy_trial_receipt.json",
+        "sha256": "4d592654203a8977d67497f02e7e5f6fead413077b4795ed534b08ef5e328bfd"
+      },
+      "error_type": "TimeoutExpired",
+      "raw_sampler_status": "pending",
+      "sampler_attempted": false,
+      "sampler_display_status": "not_attempted_reference_failed",
+      "reference_elapsed_seconds": 1200.2155901119113,
+      "external_wall_elapsed_seconds": 1200.2184109678492,
+      "job": {
+        "path": "/home/xangma/artifacts/diffgw-pe-noisy-20261001/logs/IMRPhenomD-fixed-1-job.json",
+        "bytes": 472,
+        "sha256": "8a5896e4d6b812ddb93ed3f20fae62239af5fe8cb6c0df5427d6da2e7a33ddc9"
+      },
+      "started_utc": "2026-10-01T12:49:00.491953+00:00",
+      "finished_utc": "2026-10-01T13:09:00.710370+00:00",
+      "actual_noiseless_snr": 20.0,
+      "source": {
+        "path": "/home/xangma/artifacts/diffgw-pe-noisy-20261001/trials/IMRPhenomD/fixed/001/noisy_source_receipt.json",
+        "bytes": 6371,
+        "sha256": "1312157b356f627a04bb1585b27557da808addf0f0cbc34783b476285dfcda00"
+      },
+      "source_construction_checks": {
+        "path": "/home/xangma/artifacts/diffgw-pe-noisy-20261001/trials/IMRPhenomD/fixed/001/source_construction_checks.json",
+        "bytes": 655,
+        "sha256": "65e2377e085c819656ca94f4af928f82f8d18853834ce891b9022f0bc881527b"
+      },
+      "source_construction_passed": true,
+      "discovery": {
+        "path": "/home/xangma/artifacts/diffgw-pe-noisy-20261001/trials/IMRPhenomD/fixed/001/discovery_receipt.json",
+        "bytes": 5545,
+        "sha256": "c438295d4efe68b124d3964c91a1fc31770e93c3fe47da4fffaf787d4f00bc93"
+      },
+      "discovery_status": "completed_discovery",
+      "chart": {
+        "lower": [
+          33.0,
+          26.0
+        ],
+        "scale": 0.03120204643039492,
+        "truth": [
+          35.717544264791414,
+          29.174873646019282
+        ],
+        "upper": [
+          39.0,
+          32.0
+        ]
+      },
+      "partial_reference": {
+        "path": "/home/xangma/artifacts/diffgw-pe-noisy-20261001/trials/IMRPhenomD/fixed/001/noisy_reference_progress.json",
+        "bytes": 28149,
+        "sha256": "6b93bd440a08a23a9fef937b4bc65f6b325ac6f31fe91ee24e34dea4e61038f2"
+      },
+      "partial_reference_accepted": false,
+      "completed_paired_grid_sizes": [
+        31,
+        61,
+        121,
+        241
+      ],
+      "largest_attempted_grid_size": 481,
+      "last_attempted_backend": "jax",
+      "frontend_parity_passed_on_completed_paired_grids": true,
+      "last_completed_refinement": {
+        "jax": {
+          "coarse": 121,
+          "fine": 241,
+          "converged": true,
+          "failures": [],
+          "joint_density_total_variation": 0.0017613838218338532,
+          "truth_cdf_absolute_drift": 1.3011832185383376e-05,
+          "consecutive_passing_refinements": 1
+        },
+        "torch": {
+          "coarse": 121,
+          "fine": 241,
+          "converged": true,
+          "failures": [],
+          "joint_density_total_variation": 0.001761383821938139,
+          "truth_cdf_absolute_drift": 1.3011832244003152e-05,
+          "consecutive_passing_refinements": 1
+        }
+      },
+      "independent_gauss_attempted": false,
+      "operational_grid_241_timing": {
+        "torch_interval_seconds": 24.991313111,
+        "jax_interval_seconds": 231.003918758,
+        "interval_ratio_jax_over_torch": 9.243368594998833
+      },
+      "log": {
+        "path": "/home/xangma/artifacts/diffgw-pe-noisy-20261001/logs/IMRPhenomD-fixed-1.log",
+        "bytes": 1341,
+        "sha256": "399d552437a09d4d11fa30a00b7ea7bf35621c40cbf5fa713901dc1227286e6e"
+      }
+    },
+    {
+      "id": "IMRPhenomD/fixed/002",
+      "model": "IMRPhenomD",
+      "index": 2,
+      "truth": [
+        36.0,
+        29.0
+      ],
+      "noise_seed": 610103,
+      "chain_seeds": [
+        2812504751,
+        1211091493,
+        3346687281,
+        3773019552
+      ],
+      "status": "timed_out",
+      "reference_passed": false,
+      "receipt": {
+        "bytes": 3584,
+        "path": "/home/xangma/artifacts/diffgw-pe-noisy-20261001/trials/IMRPhenomD/fixed/002/noisy_trial_receipt.json",
+        "sha256": "01083897831b9d4b86e24c0e71fb8607bdc6605718336829fd4b636d322d1507"
+      },
+      "error_type": "TimeoutExpired",
+      "raw_sampler_status": "pending",
+      "sampler_attempted": false,
+      "sampler_display_status": "not_attempted_reference_failed",
+      "reference_elapsed_seconds": 1200.2161485869437,
+      "external_wall_elapsed_seconds": 1200.2188335261308,
+      "job": {
+        "path": "/home/xangma/artifacts/diffgw-pe-noisy-20261001/logs/IMRPhenomD-fixed-2-job.json",
+        "bytes": 472,
+        "sha256": "9556ec3d21a007973e3f56da423b538694cd2f242b1ecf13e4d4994d5d8f2a81"
+      },
+      "started_utc": "2026-10-01T12:49:00.492931+00:00",
+      "finished_utc": "2026-10-01T13:09:00.711777+00:00",
+      "actual_noiseless_snr": 20.0,
+      "source": {
+        "path": "/home/xangma/artifacts/diffgw-pe-noisy-20261001/trials/IMRPhenomD/fixed/002/noisy_source_receipt.json",
+        "bytes": 6368,
+        "sha256": "40c06232caf25d07b6a1ba7f9a3e64864a03dd9c16905117c897a8cfa8942d6c"
+      },
+      "source_construction_checks": {
+        "path": "/home/xangma/artifacts/diffgw-pe-noisy-20261001/trials/IMRPhenomD/fixed/002/source_construction_checks.json",
+        "bytes": 655,
+        "sha256": "b65fa641f5689c75cbda7067d8ac1abaa6aa058865d586449aa567822747aa68"
+      },
+      "source_construction_passed": true,
+      "discovery": {
+        "path": "/home/xangma/artifacts/diffgw-pe-noisy-20261001/trials/IMRPhenomD/fixed/002/discovery_receipt.json",
+        "bytes": 5572,
+        "sha256": "a58b61d5ce13d45f94a66859d7d59d6851b392857da7b02d3d9f8b800e95eec9"
+      },
+      "discovery_status": "completed_discovery",
+      "chart": {
+        "lower": [
+          33.0,
+          26.0
+        ],
+        "scale": 0.03138130456765374,
+        "truth": [
+          37.044369001726224,
+          28.23624357898199
+        ],
+        "upper": [
+          39.0,
+          32.0
+        ]
+      },
+      "partial_reference": {
+        "path": "/home/xangma/artifacts/diffgw-pe-noisy-20261001/trials/IMRPhenomD/fixed/002/noisy_reference_progress.json",
+        "bytes": 28181,
+        "sha256": "d3cb3ef82567e89a80a68c897281bec780df6fd399de9b4cf157846272d283a6"
+      },
+      "partial_reference_accepted": false,
+      "completed_paired_grid_sizes": [
+        31,
+        61,
+        121,
+        241
+      ],
+      "largest_attempted_grid_size": 481,
+      "last_attempted_backend": "jax",
+      "frontend_parity_passed_on_completed_paired_grids": true,
+      "last_completed_refinement": {
+        "jax": {
+          "coarse": 121,
+          "fine": 241,
+          "converged": true,
+          "failures": [],
+          "joint_density_total_variation": 0.0009800110507019195,
+          "truth_cdf_absolute_drift": 3.1967842838598326e-05,
+          "consecutive_passing_refinements": 1
+        },
+        "torch": {
+          "coarse": 121,
+          "fine": 241,
+          "converged": true,
+          "failures": [],
+          "joint_density_total_variation": 0.0009800110507390072,
+          "truth_cdf_absolute_drift": 3.196784285633414e-05,
+          "consecutive_passing_refinements": 1
+        }
+      },
+      "independent_gauss_attempted": false,
+      "operational_grid_241_timing": {
+        "torch_interval_seconds": 25.132314843,
+        "jax_interval_seconds": 229.656901397,
+        "interval_ratio_jax_over_torch": 9.137912796001974
+      },
+      "log": {
+        "path": "/home/xangma/artifacts/diffgw-pe-noisy-20261001/logs/IMRPhenomD-fixed-2.log",
+        "bytes": 1341,
+        "sha256": "c4b605065d41fc677e02387d81c3b8b4f5aeb99aff9b651cc96599e63a1d35c5"
+      }
+    },
+    {
+      "id": "IMRPhenomD/fixed/003",
+      "model": "IMRPhenomD",
+      "index": 3,
+      "truth": [
+        36.0,
+        29.0
+      ],
+      "noise_seed": 610104,
+      "chain_seeds": [
+        438032732,
+        362902783,
+        532272332,
+        1632325959
+      ],
+      "status": "timed_out",
+      "reference_passed": false,
+      "receipt": {
+        "bytes": 3581,
+        "path": "/home/xangma/artifacts/diffgw-pe-noisy-20261001/trials/IMRPhenomD/fixed/003/noisy_trial_receipt.json",
+        "sha256": "e1613808fa669e737ca7443315513e122e8baa08dbea55e1b9ca01fc9f47a496"
+      },
+      "error_type": "TimeoutExpired",
+      "raw_sampler_status": "pending",
+      "sampler_attempted": false,
+      "sampler_display_status": "not_attempted_reference_failed",
+      "reference_elapsed_seconds": 1200.2160474271514,
+      "external_wall_elapsed_seconds": 1200.2184247062542,
+      "job": {
+        "path": "/home/xangma/artifacts/diffgw-pe-noisy-20261001/logs/IMRPhenomD-fixed-3-job.json",
+        "bytes": 472,
+        "sha256": "decb4ac3d1241688e78f46008c5423db37faedb22cdc04db509aad806b916de9"
+      },
+      "started_utc": "2026-10-01T12:49:00.494374+00:00",
+      "finished_utc": "2026-10-01T13:09:00.712803+00:00",
+      "actual_noiseless_snr": 20.0,
+      "source": {
+        "path": "/home/xangma/artifacts/diffgw-pe-noisy-20261001/trials/IMRPhenomD/fixed/003/noisy_source_receipt.json",
+        "bytes": 6369,
+        "sha256": "55aacaaea653518d19190f087c7aaca02e2ee537ef2c1cd19414deb07cd07d17"
+      },
+      "source_construction_checks": {
+        "path": "/home/xangma/artifacts/diffgw-pe-noisy-20261001/trials/IMRPhenomD/fixed/003/source_construction_checks.json",
+        "bytes": 653,
+        "sha256": "cce980852a5c5f3e94eac553a1454fb85df3311de77ca21e6ad3559c03168b90"
+      },
+      "source_construction_passed": true,
+      "discovery": {
+        "path": "/home/xangma/artifacts/diffgw-pe-noisy-20261001/trials/IMRPhenomD/fixed/003/discovery_receipt.json",
+        "bytes": 5542,
+        "sha256": "c4859cf79ae6f9f3081a59f259a0ba31dcd6a57b031eddce3ba55622fee89fe1"
+      },
+      "discovery_status": "completed_discovery",
+      "chart": {
+        "lower": [
+          33.0,
+          26.0
+        ],
+        "scale": 0.03152016361945369,
+        "truth": [
+          35.26508020645137,
+          29.556701764503565
+        ],
+        "upper": [
+          39.0,
+          32.0
+        ]
+      },
+      "partial_reference": {
+        "path": "/home/xangma/artifacts/diffgw-pe-noisy-20261001/trials/IMRPhenomD/fixed/003/noisy_reference_progress.json",
+        "bytes": 28260,
+        "sha256": "c55ca2b68b64ba6bfb9587756240fddfae8b43b51b3c53984972c8993e270687"
+      },
+      "partial_reference_accepted": false,
+      "completed_paired_grid_sizes": [
+        31,
+        61,
+        121,
+        241
+      ],
+      "largest_attempted_grid_size": 481,
+      "last_attempted_backend": "jax",
+      "frontend_parity_passed_on_completed_paired_grids": true,
+      "last_completed_refinement": {
+        "jax": {
+          "coarse": 121,
+          "fine": 241,
+          "converged": false,
+          "failures": [
+            "noisy_joint_density_total_variation"
+          ],
+          "joint_density_total_variation": 0.00209625870154035,
+          "truth_cdf_absolute_drift": 3.052771220368733e-05,
+          "consecutive_passing_refinements": 0
+        },
+        "torch": {
+          "coarse": 121,
+          "fine": 241,
+          "converged": false,
+          "failures": [
+            "noisy_joint_density_total_variation"
+          ],
+          "joint_density_total_variation": 0.002096258701473597,
+          "truth_cdf_absolute_drift": 3.0527712087335956e-05,
+          "consecutive_passing_refinements": 0
+        }
+      },
+      "independent_gauss_attempted": false,
+      "operational_grid_241_timing": {
+        "torch_interval_seconds": 24.939312422,
+        "jax_interval_seconds": 228.646888514,
+        "interval_ratio_jax_over_torch": 9.168131207671191
+      },
+      "log": {
+        "path": "/home/xangma/artifacts/diffgw-pe-noisy-20261001/logs/IMRPhenomD-fixed-3.log",
+        "bytes": 1341,
+        "sha256": "4f02fa63ab884ea58a19d6e9745038ffaac6a087247e845f537de7b895d929e0"
+      }
+    },
+    {
+      "id": "IMRPhenomD_NRTidal/fixed/000",
+      "model": "IMRPhenomD_NRTidal",
+      "index": 0,
+      "truth": [
+        1.6,
+        1.3
+      ],
+      "noise_seed": 620101,
+      "chain_seeds": [
+        3452274348,
+        3864606993,
+        291406137,
+        3808665844
+      ],
+      "status": "timed_out",
+      "reference_passed": false,
+      "receipt": {
+        "bytes": 3629,
+        "path": "/home/xangma/artifacts/diffgw-pe-noisy-20261001/trials/IMRPhenomD_NRTidal/fixed/000/noisy_trial_receipt.json",
+        "sha256": "e504bb082ccbcbde1858f5e2d52901b31d43d7a2d147e4f50b4e194fcb8f3fbe"
+      },
+      "error_type": "TimeoutExpired",
+      "raw_sampler_status": "pending",
+      "sampler_attempted": false,
+      "sampler_display_status": "not_attempted_reference_failed",
+      "reference_elapsed_seconds": 1200.1656727776863,
+      "external_wall_elapsed_seconds": 1200.1684203329496,
+      "job": {
+        "path": "/home/xangma/artifacts/diffgw-pe-noisy-20261001/logs/IMRPhenomD_NRTidal-fixed-0-job.json",
+        "bytes": 471,
+        "sha256": "06f4955a34c9a0942829adad8049910a2a749b00a3963d109cc2bd10bf1dd756"
+      },
+      "started_utc": "2026-10-01T12:28:28.306320+00:00",
+      "finished_utc": "2026-10-01T12:48:28.474747+00:00",
+      "actual_noiseless_snr": 20.0,
+      "source": {
+        "path": "/home/xangma/artifacts/diffgw-pe-noisy-20261001/trials/IMRPhenomD_NRTidal/fixed/000/noisy_source_receipt.json",
+        "bytes": 6484,
+        "sha256": "cc62b6008c414e4b7110815f501f1f9330cd96c614253d683b95f6e4289cccbb"
+      },
+      "source_construction_checks": {
+        "path": "/home/xangma/artifacts/diffgw-pe-noisy-20261001/trials/IMRPhenomD_NRTidal/fixed/000/source_construction_checks.json",
+        "bytes": 655,
+        "sha256": "168d5fc1eee958bab7702246fd97dd9b850985283c44d6860b9e662e300e5b37"
+      },
+      "source_construction_passed": true,
+      "discovery": {
+        "path": "/home/xangma/artifacts/diffgw-pe-noisy-20261001/trials/IMRPhenomD_NRTidal/fixed/000/discovery_receipt.json",
+        "bytes": 9367,
+        "sha256": "f60fe81426a3d00fd89d84ac20671d69e5dca5d9208d4d27a24d5ad01b66f7cc"
+      },
+      "discovery_status": "completed_discovery",
+      "chart": {
+        "lower": [
+          1.59,
+          1.29
+        ],
+        "scale": 1.550286809808318e-05,
+        "truth": [
+          1.6099999980000002,
+          1.2922575721558014
+        ],
+        "upper": [
+          1.61,
+          1.31
+        ]
+      },
+      "partial_reference": {
+        "path": "/home/xangma/artifacts/diffgw-pe-noisy-20261001/trials/IMRPhenomD_NRTidal/fixed/000/noisy_reference_progress.json",
+        "bytes": 28784,
+        "sha256": "8ba40c1c4e3c1da58b5875a9ebdda64164b26208e7b2aa38a8e793fb45a9619d"
+      },
+      "partial_reference_accepted": false,
+      "completed_paired_grid_sizes": [
+        31,
+        61,
+        121,
+        241
+      ],
+      "largest_attempted_grid_size": 481,
+      "last_attempted_backend": "jax",
+      "frontend_parity_passed_on_completed_paired_grids": true,
+      "last_completed_refinement": {
+        "jax": {
+          "coarse": 121,
+          "fine": 241,
+          "converged": false,
+          "failures": [
+            "noisy_joint_density_total_variation"
+          ],
+          "joint_density_total_variation": 0.0030063126419213985,
+          "truth_cdf_absolute_drift": 0.0018533585402886743,
+          "consecutive_passing_refinements": 0
+        },
+        "torch": {
+          "coarse": 121,
+          "fine": 241,
+          "converged": false,
+          "failures": [
+            "noisy_joint_density_total_variation"
+          ],
+          "joint_density_total_variation": 0.003006312641913269,
+          "truth_cdf_absolute_drift": 0.0018533585401854236,
+          "consecutive_passing_refinements": 0
+        }
+      },
+      "independent_gauss_attempted": false,
+      "operational_grid_241_timing": {
+        "torch_interval_seconds": 32.856255544,
+        "jax_interval_seconds": 244.986201867,
+        "interval_ratio_jax_over_torch": 7.456303154780454
+      },
+      "log": {
+        "path": "/home/xangma/artifacts/diffgw-pe-noisy-20261001/logs/IMRPhenomD_NRTidal-fixed-0.log",
+        "bytes": 1421,
+        "sha256": "705ba3c2400e837dbe1e7c3e25b9ef4f014da92cc465c17fae19ebb09618967c"
+      }
+    },
+    {
+      "id": "IMRPhenomD_NRTidal/fixed/001",
+      "model": "IMRPhenomD_NRTidal",
+      "index": 1,
+      "truth": [
+        1.6,
+        1.3
+      ],
+      "noise_seed": 620102,
+      "chain_seeds": [
+        1376465064,
+        1322665871,
+        4142640851,
+        3707821136
+      ],
+      "status": "timed_out",
+      "reference_passed": false,
+      "receipt": {
+        "bytes": 3629,
+        "path": "/home/xangma/artifacts/diffgw-pe-noisy-20261001/trials/IMRPhenomD_NRTidal/fixed/001/noisy_trial_receipt.json",
+        "sha256": "492ab25e7723348ecbb1284438e2c014218efd811d369ab1ddd76530f6b50f33"
+      },
+      "error_type": "TimeoutExpired",
+      "raw_sampler_status": "pending",
+      "sampler_attempted": false,
+      "sampler_display_status": "not_attempted_reference_failed",
+      "reference_elapsed_seconds": 1200.2186299660243,
+      "external_wall_elapsed_seconds": 1200.2210373100825,
+      "job": {
+        "path": "/home/xangma/artifacts/diffgw-pe-noisy-20261001/logs/IMRPhenomD_NRTidal-fixed-1-job.json",
+        "bytes": 472,
+        "sha256": "f7b1f281630b797cb50c41101a75d48b15a7ab7dde58f3aa2b05fda0cf1b8da9"
+      },
+      "started_utc": "2026-10-01T12:49:00.497558+00:00",
+      "finished_utc": "2026-10-01T13:09:00.718601+00:00",
+      "actual_noiseless_snr": 20.0,
+      "source": {
+        "path": "/home/xangma/artifacts/diffgw-pe-noisy-20261001/trials/IMRPhenomD_NRTidal/fixed/001/noisy_source_receipt.json",
+        "bytes": 6485,
+        "sha256": "af4b59a0a3ec8784b9854acdb5af4999b4351cdbf5aa81c15aa564fed58613c8"
+      },
+      "source_construction_checks": {
+        "path": "/home/xangma/artifacts/diffgw-pe-noisy-20261001/trials/IMRPhenomD_NRTidal/fixed/001/source_construction_checks.json",
+        "bytes": 653,
+        "sha256": "1eca7539a7e647065beb8443c75f8d3640230c026bb0e21e6df92a85ba084762"
+      },
+      "source_construction_passed": true,
+      "discovery": {
+        "path": "/home/xangma/artifacts/diffgw-pe-noisy-20261001/trials/IMRPhenomD_NRTidal/fixed/001/discovery_receipt.json",
+        "bytes": 9417,
+        "sha256": "9df6a9631ea8bd8098c72b143cf5e0297949b68a8d5c60f904c107556e8abb4e"
+      },
+      "discovery_status": "completed_discovery",
+      "chart": {
+        "lower": [
+          1.59,
+          1.29
+        ],
+        "scale": 1.5796118882165074e-05,
+        "truth": [
+          1.590000002,
+          1.3078800118870149
+        ],
+        "upper": [
+          1.61,
+          1.31
+        ]
+      },
+      "partial_reference": {
+        "path": "/home/xangma/artifacts/diffgw-pe-noisy-20261001/trials/IMRPhenomD_NRTidal/fixed/001/noisy_reference_progress.json",
+        "bytes": 28444,
+        "sha256": "a9502d22650be7883198608f619282cf86fa43e349bef814a1f01f9d6878dd56"
+      },
+      "partial_reference_accepted": false,
+      "completed_paired_grid_sizes": [
+        31,
+        61,
+        121,
+        241
+      ],
+      "largest_attempted_grid_size": 481,
+      "last_attempted_backend": "jax",
+      "frontend_parity_passed_on_completed_paired_grids": true,
+      "last_completed_refinement": {
+        "jax": {
+          "coarse": 121,
+          "fine": 241,
+          "converged": false,
+          "failures": [
+            "noisy_joint_density_total_variation"
+          ],
+          "joint_density_total_variation": 0.0029966497074561524,
+          "truth_cdf_absolute_drift": 0.0005055700155940368,
+          "consecutive_passing_refinements": 0
+        },
+        "torch": {
+          "coarse": 121,
+          "fine": 241,
+          "converged": false,
+          "failures": [
+            "noisy_joint_density_total_variation"
+          ],
+          "joint_density_total_variation": 0.002996649707557018,
+          "truth_cdf_absolute_drift": 0.000505570015594925,
+          "consecutive_passing_refinements": 0
+        }
+      },
+      "independent_gauss_attempted": false,
+      "operational_grid_241_timing": {
+        "torch_interval_seconds": 33.533420938,
+        "jax_interval_seconds": 244.470095351,
+        "interval_ratio_jax_over_torch": 7.290341650587966
+      },
+      "log": {
+        "path": "/home/xangma/artifacts/diffgw-pe-noisy-20261001/logs/IMRPhenomD_NRTidal-fixed-1.log",
+        "bytes": 1422,
+        "sha256": "3249a9e4f2679bdc475cf2454940ad94bcafa207c5c3e4a2af6d487eb825a57c"
+      }
+    },
+    {
+      "id": "IMRPhenomD_NRTidal/fixed/002",
+      "model": "IMRPhenomD_NRTidal",
+      "index": 2,
+      "truth": [
+        1.6,
+        1.3
+      ],
+      "noise_seed": 620103,
+      "chain_seeds": [
+        3557299290,
+        1042771540,
+        3712826141,
+        1032608621
+      ],
+      "status": "timed_out",
+      "reference_passed": false,
+      "receipt": {
+        "bytes": 3630,
+        "path": "/home/xangma/artifacts/diffgw-pe-noisy-20261001/trials/IMRPhenomD_NRTidal/fixed/002/noisy_trial_receipt.json",
+        "sha256": "914ea699e03db9050820c4f691acb43cc8dcce5ddd6192c5bf3f884fb4af632c"
+      },
+      "error_type": "TimeoutExpired",
+      "raw_sampler_status": "pending",
+      "sampler_attempted": false,
+      "sampler_display_status": "not_attempted_reference_failed",
+      "reference_elapsed_seconds": 1200.2150024562143,
+      "external_wall_elapsed_seconds": 1200.2173640038818,
+      "job": {
+        "path": "/home/xangma/artifacts/diffgw-pe-noisy-20261001/logs/IMRPhenomD_NRTidal-fixed-2-job.json",
+        "bytes": 472,
+        "sha256": "7fd9bdf15cdb8fa52c90a133a47f6bdd81b553906d0340801736789bbe9051d7"
+      },
+      "started_utc": "2026-10-01T12:49:00.497441+00:00",
+      "finished_utc": "2026-10-01T13:09:00.714811+00:00",
+      "actual_noiseless_snr": 20.0,
+      "source": {
+        "path": "/home/xangma/artifacts/diffgw-pe-noisy-20261001/trials/IMRPhenomD_NRTidal/fixed/002/noisy_source_receipt.json",
+        "bytes": 6483,
+        "sha256": "09b17d6c45859ab0d4e1e37257deedfe7f5a572b12dda838a02032e41f814b29"
+      },
+      "source_construction_checks": {
+        "path": "/home/xangma/artifacts/diffgw-pe-noisy-20261001/trials/IMRPhenomD_NRTidal/fixed/002/source_construction_checks.json",
+        "bytes": 655,
+        "sha256": "f76b89b5607a2d5fa38c29c465ede7ab51a2346f91c32dd3840a66163410f42b"
+      },
+      "source_construction_passed": true,
+      "discovery": {
+        "path": "/home/xangma/artifacts/diffgw-pe-noisy-20261001/trials/IMRPhenomD_NRTidal/fixed/002/discovery_receipt.json",
+        "bytes": 9474,
+        "sha256": "4f519180f5c8d81b7a4acaf17d0054f14c0b2ac5a077298bb8f8589e831661cf"
+      },
+      "discovery_status": "completed_discovery",
+      "chart": {
+        "lower": [
+          1.59,
+          1.29
+        ],
+        "scale": 1.5957286576619182e-05,
+        "truth": [
+          1.5968021793380835,
+          1.3025167144377705
+        ],
+        "upper": [
+          1.61,
+          1.31
+        ]
+      },
+      "partial_reference": {
+        "path": "/home/xangma/artifacts/diffgw-pe-noisy-20261001/trials/IMRPhenomD_NRTidal/fixed/002/noisy_reference_progress.json",
+        "bytes": 28778,
+        "sha256": "4e25ffc6fd755ebe02d2d27fabfb4fed01b2487f318cd909f5e35a2b986215cb"
+      },
+      "partial_reference_accepted": false,
+      "completed_paired_grid_sizes": [
+        31,
+        61,
+        121,
+        241
+      ],
+      "largest_attempted_grid_size": 481,
+      "last_attempted_backend": "jax",
+      "frontend_parity_passed_on_completed_paired_grids": true,
+      "last_completed_refinement": {
+        "jax": {
+          "coarse": 121,
+          "fine": 241,
+          "converged": true,
+          "failures": [],
+          "joint_density_total_variation": 0.0017518107205172855,
+          "truth_cdf_absolute_drift": 0.0007969680019428438,
+          "consecutive_passing_refinements": 1
+        },
+        "torch": {
+          "coarse": 121,
+          "fine": 241,
+          "converged": true,
+          "failures": [],
+          "joint_density_total_variation": 0.0017518107203984001,
+          "truth_cdf_absolute_drift": 0.00079696800197121,
+          "consecutive_passing_refinements": 1
+        }
+      },
+      "independent_gauss_attempted": false,
+      "operational_grid_241_timing": {
+        "torch_interval_seconds": 33.118415722,
+        "jax_interval_seconds": 246.199117305,
+        "interval_ratio_jax_over_torch": 7.4339038247368245
+      },
+      "log": {
+        "path": "/home/xangma/artifacts/diffgw-pe-noisy-20261001/logs/IMRPhenomD_NRTidal-fixed-2.log",
+        "bytes": 1422,
+        "sha256": "06fb68fec235833d805430cafa19da1ef79ab93001c9692a1b25536cddaec7c9"
+      }
+    },
+    {
+      "id": "IMRPhenomD_NRTidal/fixed/003",
+      "model": "IMRPhenomD_NRTidal",
+      "index": 3,
+      "truth": [
+        1.6,
+        1.3
+      ],
+      "noise_seed": 620104,
+      "chain_seeds": [
+        4101321084,
+        2145940302,
+        3557673225,
+        3552324760
+      ],
+      "status": "timed_out",
+      "reference_passed": false,
+      "receipt": {
+        "bytes": 3629,
+        "path": "/home/xangma/artifacts/diffgw-pe-noisy-20261001/trials/IMRPhenomD_NRTidal/fixed/003/noisy_trial_receipt.json",
+        "sha256": "08e15b2f7ec75dcd2473fd894c07ba0eae6ffeafccac9f4aa1449a7f0fff0f44"
+      },
+      "error_type": "TimeoutExpired",
+      "raw_sampler_status": "pending",
+      "sampler_attempted": false,
+      "sampler_display_status": "not_attempted_reference_failed",
+      "reference_elapsed_seconds": 1200.2191344681196,
+      "external_wall_elapsed_seconds": 1200.221816380974,
+      "job": {
+        "path": "/home/xangma/artifacts/diffgw-pe-noisy-20261001/logs/IMRPhenomD_NRTidal-fixed-3-job.json",
+        "bytes": 471,
+        "sha256": "88462860592ed6f4718df25eee6babcd22cf5459b7de5b6519f2a38e8333af8b"
+      },
+      "started_utc": "2026-10-01T12:49:00.496288+00:00",
+      "finished_utc": "2026-10-01T13:09:00.718110+00:00",
+      "actual_noiseless_snr": 20.0,
+      "source": {
+        "path": "/home/xangma/artifacts/diffgw-pe-noisy-20261001/trials/IMRPhenomD_NRTidal/fixed/003/noisy_source_receipt.json",
+        "bytes": 6479,
+        "sha256": "1baae4bcbbfc9078fcb031adee82920b3dfa6a10748019114b7ce320d51ea4ad"
+      },
+      "source_construction_checks": {
+        "path": "/home/xangma/artifacts/diffgw-pe-noisy-20261001/trials/IMRPhenomD_NRTidal/fixed/003/source_construction_checks.json",
+        "bytes": 658,
+        "sha256": "17e5c831dff1ccf1ff8ab1d2194cc827b45b78423d61cb5f6aaf97f90fb88b7b"
+      },
+      "source_construction_passed": true,
+      "discovery": {
+        "path": "/home/xangma/artifacts/diffgw-pe-noisy-20261001/trials/IMRPhenomD_NRTidal/fixed/003/discovery_receipt.json",
+        "bytes": 9505,
+        "sha256": "117a6a58b55e0ef9bcfc2279a5f72c4d7ad58e1beec402cf6f7d48a53552d0e2"
+      },
+      "discovery_status": "completed_discovery",
+      "chart": {
+        "lower": [
+          1.59,
+          1.29
+        ],
+        "scale": 1.4857436996959559e-05,
+        "truth": [
+          1.6099999980000002,
+          1.2922256346839132
+        ],
+        "upper": [
+          1.61,
+          1.31
+        ]
+      },
+      "partial_reference": {
+        "path": "/home/xangma/artifacts/diffgw-pe-noisy-20261001/trials/IMRPhenomD_NRTidal/fixed/003/noisy_reference_progress.json",
+        "bytes": 28459,
+        "sha256": "f0566af2a6bf8702e18bfe7969a76356dffb36e4cc6f186aac5a7c6494800536"
+      },
+      "partial_reference_accepted": false,
+      "completed_paired_grid_sizes": [
+        31,
+        61,
+        121,
+        241
+      ],
+      "largest_attempted_grid_size": 481,
+      "last_attempted_backend": "jax",
+      "frontend_parity_passed_on_completed_paired_grids": true,
+      "last_completed_refinement": {
+        "jax": {
+          "coarse": 121,
+          "fine": 241,
+          "converged": false,
+          "failures": [
+            "noisy_joint_density_total_variation"
+          ],
+          "joint_density_total_variation": 0.0036391868523644845,
+          "truth_cdf_absolute_drift": 0.0002276190314486337,
+          "consecutive_passing_refinements": 0
+        },
+        "torch": {
+          "coarse": 121,
+          "fine": 241,
+          "converged": false,
+          "failures": [
+            "noisy_joint_density_total_variation"
+          ],
+          "joint_density_total_variation": 0.00363918685218792,
+          "truth_cdf_absolute_drift": 0.00022761903143131423,
+          "consecutive_passing_refinements": 0
+        }
+      },
+      "independent_gauss_attempted": false,
+      "operational_grid_241_timing": {
+        "torch_interval_seconds": 32.862412416,
+        "jax_interval_seconds": 244.308092663,
+        "interval_ratio_jax_over_torch": 7.434271397070401
+      },
+      "log": {
+        "path": "/home/xangma/artifacts/diffgw-pe-noisy-20261001/logs/IMRPhenomD_NRTidal-fixed-3.log",
+        "bytes": 1422,
+        "sha256": "2a215026b939a438eab47ce90ac5c70f56d131221f6510330780a5332930c01d"
+      }
+    }
+  ],
+  "timing": {
+    "first_fixed_started_utc": "2026-10-01T12:28:28.304927+00:00",
+    "last_fixed_finished_utc": "2026-10-01T13:09:00.718601+00:00",
+    "fixed_campaign_wall_seconds": 2432.413674,
+    "sum_parallel_trial_wall_seconds": 9601.652386929374,
+    "grid_interval_observation": {
+      "path": "/home/xangma/artifacts/diffgw-pe-noisy-20261001/operational-grid-timing.json",
+      "bytes": 10189,
+      "sha256": "4db16cbf263e38e77a9707856c8db7e350486fe466248bb974f2701a537d7066"
+    },
+    "grid_interval_method": "Filesystem modification timestamps of retained grid files; intervals follow sequential Torch/JAX grid completion in frozen run_reference",
+    "grid_interval_limitations": [
+      "Operational estimates include evaluation, saving, previous refinement and comparison work.",
+      "Intervals are not isolated waveform/likelihood benchmarks.",
+      "No compiled speedup has been measured."
+    ]
+  },
+  "calibration": {
+    "status": "unresolved",
+    "executed_ensemble_trials": 0,
+    "panels": [
+      {
+        "model": "IMRPhenomD",
+        "mass": "mass1",
+        "planned": 50,
+        "usable": 0,
+        "unknown": 50,
+        "unknown_cdf_envelope": [
+          0,
+          1
+        ],
+        "dkw_distance": null,
+        "coverage_fraction_bounds": [
+          0,
+          1
+        ]
+      },
+      {
+        "model": "IMRPhenomD",
+        "mass": "mass2",
+        "planned": 50,
+        "usable": 0,
+        "unknown": 50,
+        "unknown_cdf_envelope": [
+          0,
+          1
+        ],
+        "dkw_distance": null,
+        "coverage_fraction_bounds": [
+          0,
+          1
+        ]
+      },
+      {
+        "model": "IMRPhenomD_NRTidal",
+        "mass": "mass1",
+        "planned": 50,
+        "usable": 0,
+        "unknown": 50,
+        "unknown_cdf_envelope": [
+          0,
+          1
+        ],
+        "dkw_distance": null,
+        "coverage_fraction_bounds": [
+          0,
+          1
+        ]
+      },
+      {
+        "model": "IMRPhenomD_NRTidal",
+        "mass": "mass2",
+        "planned": 50,
+        "usable": 0,
+        "unknown": 50,
+        "unknown_cdf_envelope": [
+          0,
+          1
+        ],
+        "dkw_distance": null,
+        "coverage_fraction_bounds": [
+          0,
+          1
+        ]
+      }
+    ]
+  },
+  "postprocessing": {
+    "plot_manifest": {
+      "path": "/home/xangma/artifacts/diffgw-pe-noisy-20261001/figures/plot_manifest.json",
+      "bytes": 265604,
+      "sha256": "40249a77f88150857f701bab59a79c9fadabe6614793314cd23e43817ad9421c"
+    },
+    "plotter": {
+      "path": "/home/xangma/diffgw-pe-noisy-report-20261001/scripts/qualification/plot_parameter_estimation_noisy.py",
+      "bytes": 32339,
+      "sha256": "80b840be16c6f7449ad351253bf55f986035a890406e7de5fab7fa6992f0fc7f"
+    },
+    "curated_figure": {
+      "path": "/home/xangma/artifacts/diffgw-pe-noisy-20261001/figures/noisy-costs.png",
+      "bytes": 286489,
+      "sha256": "d592ecfa02dc7d15733cbdb3000ded9c7c634ae30f96f7e9d2da05a9b845ebab"
+    },
+    "source_snapshot": {
+      "path": "/home/xangma/artifacts/diffgw-pe-noisy-20261001/postprocessing-reporting-v2-presentation.tar.gz",
+      "bytes": 13633,
+      "sha256": "eb8e97fe314976b444f84f90633732ce53ad883ce64975bfd75932099b633734"
+    },
+    "curator": {
+      "path": "/home/xangma/artifacts/diffgw-pe-noisy-20261001/curate_noisy.py",
+      "bytes": 12508,
+      "sha256": "a82093f8cc9fee39bf7835f9b8cde3a9a6a08db072229d568eb3e1ba7ec73f0a"
+    },
+    "all_consumed_bindings_verified": true
+  },
+  "validation": {
+    "final_focused_tests": {
+      "path": "/home/xangma/artifacts/diffgw-pe-noisy-20261001/logs/final-focused-tests.log",
+      "bytes": 100,
+      "sha256": "5d4c1f9b295626a9b1e592376cce8755222f5a81d69c9fe77ad194c73f6a4b00"
+    },
+    "regression_tests": {
+      "path": "/home/xangma/artifacts/diffgw-pe-noisy-20261001/logs/final-regression-tests.log",
+      "bytes": 656,
+      "sha256": "8601faba35e26c196cf36c0ca817bb6d9ec60285e7f265ee542b85fd07b735f9"
+    },
+    "reporting_regression_tests": {
+      "path": "/home/xangma/artifacts/diffgw-pe-noisy-20261001/logs/reporting-regressions-presentation.log",
+      "bytes": 100,
+      "sha256": "2fde44622af91d8b60bc32485e8a18c2cf9107d1554aaf04f674062947ba01ee"
+    },
+    "watchdog_test": {
+      "path": "/home/xangma/artifacts/diffgw-pe-noisy-20261001/watchdog-test-final.json",
+      "bytes": 929,
+      "sha256": "c869268e9cc3e0c817ea4c5423e92597432c101de5dfc438c37037cfdd7def8c"
+    }
+  }
+}
