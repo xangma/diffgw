@@ -263,9 +263,9 @@ A P-P plot belongs only to an executed, appropriately generated calibration
 ensemble.
 
 The compact receipt links original receipts and retained grid/signal arrays
-with their actual locations, SHA256 and byte sizes. Maintained scripts/configs,
-compact receipts and these five figures accompany this report; bulk arrays, the
-full figure collection and reproduction records are retained externally. The original source archive and
+with their actual locations, SHA256 and byte sizes. Compact receipts and these five figures accompany this report. The executed
+scripts and configurations are preserved in the hash-bound source/reproduction
+archives; bulk arrays and the full figure collection are retained externally. The original source archive and
 actual executor configurations define reproduction of the executed experiment.
 
 Retained bundles are identified as `parameter-estimation-results.tar.gz`,
